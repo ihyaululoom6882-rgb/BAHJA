@@ -1,0 +1,134 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: #1a1a1a;
+}
+
+h1 {
+    color: #0056b3;
+    font-size: 3rem;
+    margin-top: 50px;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #333333;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+.btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    text-decoration: none;
+    border-radius: 25px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    transition: 0.3s;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.event-container {
+    margin-top: 60px;
+    padding: 20px;
+}
+
+.event-container h2 {
+    color: #1a1a1a;
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+.category-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto 40px auto;
+}
+
+.tab-btn {
+    background-color: #ffffff;
+    color: #007bff;
+    border: 2px solid #007bff;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.tab-btn:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.tab-btn.active {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,123,255,0.25);
+}
+
+.zone-content {
+    display: none;
+}
+
+.zone-content.active-zone {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.event-grid {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.event-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px 25px;
+    width: 220px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    border: 1px solid #dee2e6;
+    transition: 0.3s;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,86,179,0.15);
+    border-color: #007bff;
+}
+
+.event-card h3 {
+    margin: 0 0 12px 0;
+    color: #007bff;
+    font-size: 1.2rem;
+}
+
+.event-card p {
+    margin: 0;
+    color: #666666;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+}
