@@ -35,8 +35,8 @@
     .header-banner h1 { font-size: 32px; font-weight: 800; letter-spacing: 2px; }
     .header-banner p { font-size: 14px; color: #93c5fd; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
-    .admin-dots { position: absolute; top: 18px; right: 22px; color: #93c5fd; font-size: 24px; cursor: pointer; width: 36px; height: 36px; line-height: 36px; border-radius: 50%; text-align: center; }
-    .admin-dots:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .admin-dots { position: absolute; top: 18px; right: 22px; color: #93c5fd; font-size: 28px; cursor: pointer; width: 40px; height: 40px; line-height: 38px; border-radius: 50%; text-align: center; user-select: none; z-index: 10; }
+    .admin-dots:hover { background: rgba(255,255,255,0.2); color: #fff; }
     
     /* Card UI */
     .card { background: var(--card-bg); border-radius: 12px; padding: 25px; margin-bottom: 20px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
@@ -310,7 +310,7 @@
 <!-- 1. MAIN LOGIN POPUP -->
 <div id="loginModal" class="modal">
   <div class="modal-content">
-    <h3 style="margin-bottom:15px; text-align:center;">Login</h3>
+    <h3 style="margin-bottom:15px; text-align:center;">Admin Login</h3>
     <div class="form-group">
       <label>Username</label>
       <input type="text" id="mainUser" placeholder="Enter username">
@@ -387,8 +387,13 @@
   let isRegistrationOpen = true;
 
   // Helper Functions for Modals
-  function closeModal(id) { document.getElementById(id).style.display = "none"; }
-  function openModal(id) { document.getElementById(id).style.display = "block"; }
+  function closeModal(id) { 
+    document.getElementById(id).style.display = "none"; 
+  }
+  
+  function openModal(id) { 
+    document.getElementById(id).style.display = "block"; 
+  }
 
   // 3-Dots Click Handler
   function handleDotsClick() {
@@ -399,11 +404,12 @@
     }
   }
 
-  // Verify Main Admin Login (bahja@2026 / 12345678)
+  // Verify Main Admin Login
   function verifyMainLogin() {
     const u = document.getElementById('mainUser').value;
     const p = document.getElementById('mainPass').value;
 
+    // DIRECT ADMIN CREDENTIALS HERE
     if (u === "bahja@2026" && p === "12345678") {
       isAdminLoggedIn = true;
       closeModal('loginModal');
