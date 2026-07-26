@@ -22,7 +22,6 @@
 
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
     body { background-color: var(--bg-color); color: var(--text-main); padding: 20px 10px; }
-    
     .container { max-width: 950px; margin: 0 auto; }
 
     /* Header Banner */
@@ -35,26 +34,22 @@
     .header-banner h1 { font-size: 32px; font-weight: 800; letter-spacing: 2px; }
     .header-banner p { font-size: 14px; color: #93c5fd; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
 
-    .admin-dots { position: absolute; top: 18px; right: 22px; color: #93c5fd; font-size: 28px; cursor: pointer; width: 40px; height: 40px; line-height: 38px; border-radius: 50%; text-align: center; user-select: none; z-index: 10; }
-    .admin-dots:hover { background: rgba(255,255,255,0.2); color: #fff; }
+    .admin-dots { position: absolute; top: 18px; right: 22px; color: #93c5fd; font-size: 24px; cursor: pointer; width: 36px; height: 36px; line-height: 36px; border-radius: 50%; text-align: center; }
+    .admin-dots:hover { background: rgba(255,255,255,0.1); color: #fff; }
     
-    /* Card UI */
+    /* Card & Inputs */
     .card { background: var(--card-bg); border-radius: 12px; padding: 25px; margin-bottom: 20px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
     h2 { font-size: 20px; font-weight: 700; color: var(--text-main); margin-bottom: 18px; border-bottom: 2px solid var(--border-color); padding-bottom: 8px; }
     
-    /* Forms & Inputs */
     .form-group { margin-bottom: 16px; }
     label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: var(--text-muted); text-transform: uppercase; }
     input, select { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background-color: #f8fafc; }
-    input:focus, select:focus { outline: none; border-color: var(--primary); background-color: #fff; }
     
     /* Buttons */
     .btn-submit { background: var(--primary); color: white; border: none; padding: 12px; font-size: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 600; }
-    .btn-submit:hover { background: var(--primary-hover); }
-    
     .btn-edit { background: var(--accent-orange); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 4px; }
     .btn-delete { background: var(--accent-red); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-    .btn-action { border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; margin-left: 8px; }
+    .btn-action { border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; }
 
     /* Tables */
     .table-responsive { overflow-x: auto; margin-top: 15px; }
@@ -65,20 +60,17 @@
     /* Modals */
     .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
     .modal-content { background: #fff; margin: 8% auto; padding: 25px; border-radius: 16px; width: 90%; max-width: 450px; }
-    
     .menu-list-btn { width: 100%; padding: 12px; margin-bottom: 8px; background: #f1f5f9; border: 1px solid var(--border-color); border-radius: 8px; text-align: left; font-weight: 600; cursor: pointer; }
     .menu-list-btn:hover { background: var(--primary); color: white; }
 
     .hidden { display: none !important; }
 
-    /* A4 Printing Optimization */
+    /* A4 Print Setup */
     @media print {
-      body { background: white; padding: 0; }
-      .admin-dots, .btn-action, button, .form-group, #team-info, .header-banner p { display: none !important; }
-      .container { max-width: 100%; }
-      .card { border: none; box-shadow: none; padding: 0; }
-      table { border: 1px solid #000; }
-      th, td { border: 1px solid #000; padding: 8px; font-size: 12pt; }
+      body * { visibility: hidden; }
+      #printableArea, #printableArea * { visibility: visible; }
+      #printableArea { position: absolute; left: 0; top: 0; width: 100%; }
+      th, td { border: 1px solid #000; padding: 8px; font-size: 11pt; }
     }
   </style>
 </head>
@@ -86,7 +78,7 @@
 
 <div class="container">
   
-  <!-- HEADER BANNER WITH LOGO -->
+  <!-- HEADER BANNER -->
   <div class="header-banner">
     <div class="admin-dots" onclick="handleDotsClick()" title="Menu">⋮</div>
     <div class="logo-container">
@@ -98,10 +90,8 @@
 
   <div id="team-info" style="margin-bottom:20px; font-weight:600; color:var(--primary); display:none; background:#eff6ff; padding:12px 16px; border-radius:8px;"></div>
 
-  <!-- ==================== HOME PAGE: REGISTER PHASE ==================== -->
+  <!-- REGISTER PHASE -->
   <div id="register-phase-container">
-    
-    <!-- TEAM LOGIN FORM -->
     <div id="team-login-section" class="card">
       <h2>Team Login</h2>
       <form onsubmit="handleTeamLogin(event)">
@@ -117,14 +107,12 @@
       </form>
     </div>
 
-    <!-- PARTICIPANT REGISTRATION FORM -->
     <div id="team-portal-section" class="card hidden">
       <h2 id="form-title">Program Registration</h2>
       <div id="registration-closed-msg" class="hidden" style="color:var(--accent-red); font-weight:bold; margin-bottom:15px;">
-        ⚠️ Registrations are currently CLOSED by Committee.
+        ⚠️ Registrations are currently CLOSED.
       </div>
       <form id="programForm" onsubmit="submitProgram(event)">
-        
         <div class="form-group">
           <label>1. Select Category</label>
           <select id="categorySelect" onchange="updateEventsList()" required>
@@ -136,26 +124,21 @@
             <option value="General">General</option>
           </select>
         </div>
-
         <div class="form-group">
           <label>Search Program</label>
-          <input type="text" id="searchProgram" placeholder="Type to search program..." onkeyup="filterPrograms()">
+          <input type="text" id="searchProgram" placeholder="Type to search..." onkeyup="filterPrograms()">
         </div>
-
         <div class="form-group">
           <label>2. Select Program</label>
           <select id="eventSelect" onchange="generateParticipantFields()" required>
             <option value="">-- Choose Program --</option>
           </select>
         </div>
-
         <div class="form-group" id="participantsContainer"></div>
-
         <button type="submit" id="btn-save-entry" class="btn-submit" style="background:var(--accent-green);">Submit Entry</button>
       </form>
     </div>
 
-    <!-- TEAM'S SUBMITTED ENTRIES -->
     <div id="team-entries-section" class="card hidden">
       <h2>My Submitted Entries</h2>
       <div class="table-responsive">
@@ -164,7 +147,7 @@
             <tr>
               <th>Category</th>
               <th>Program</th>
-              <th>Stage Type</th>
+              <th>Stage</th>
               <th>Participants</th>
               <th>Actions</th>
             </tr>
@@ -173,12 +156,11 @@
         </table>
       </div>
     </div>
-
   </div>
 
-  <!-- ==================== HOME PAGE: RESULT PHASE ==================== -->
+  <!-- RESULT PHASE -->
   <div id="result-phase-container" class="card hidden">
-    <h2>All Festival Results & Entries</h2>
+    <h2>All Festival Registrations & Results</h2>
     <div class="table-responsive">
       <table>
         <thead>
@@ -196,35 +178,42 @@
     </div>
   </div>
 
-  <!-- ==================== COMMITTEE SECTION ==================== -->
+  <!-- COMMITTEE SECTION -->
   <div id="committee-section" class="hidden">
-    
-    <!-- Status Control Box -->
     <div class="card">
-      <h2>1. Registration Access Control</h2>
-      <div style="display:flex; gap:15px; align-items:center;">
-        <label><input type="radio" name="regAccess" id="regOpen" onchange="toggleRegAccess(true)" checked> Registration OPEN</label>
-        <label><input type="radio" name="regAccess" id="regClose" onchange="toggleRegAccess(false)"> Registration CLOSED</label>
+      <h2>1. Registration Open / Close Control</h2>
+      <div style="display:flex; gap:15px;">
+        <label><input type="radio" name="regAccess" id="regOpen" onchange="toggleRegAccess(true)" checked> Open Registration</label>
+        <label><input type="radio" name="regAccess" id="regClose" onchange="toggleRegAccess(false)"> Close Registration</label>
       </div>
     </div>
 
-    <!-- Add Team Credentials -->
+    <!-- Create / Manage Teams -->
     <div class="card">
-      <h2>2. Create Team Credentials</h2>
-      <form onsubmit="addTeam(event)">
+      <h2 id="team-form-title">2. Create & Manage Teams</h2>
+      <form onsubmit="saveTeam(event)">
         <div class="form-group">
           <input type="text" id="newTeamName" placeholder="Team Name" required style="margin-bottom:8px;">
           <input type="text" id="newTeamUser" placeholder="Assign Username" required style="margin-bottom:8px;">
           <input type="password" id="newTeamPass" placeholder="Assign Password" required>
         </div>
-        <button type="submit" class="btn-submit">Add Team Account</button>
+        <button type="submit" id="btn-team-save" class="btn-submit">Add Team Account</button>
       </form>
+      
+      <div class="table-responsive" style="margin-top:15px;">
+        <table>
+          <thead>
+            <tr><th>Team Name</th><th>Username</th><th>Password</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="teamsManageTable"></tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- Add Programs -->
+    <!-- Add / Manage Programs -->
     <div class="card">
-      <h2>3. Add Programs & Participant Count</h2>
-      <form onsubmit="addEvent(event)">
+      <h2 id="prog-form-title">3. Add & Manage Programs</h2>
+      <form onsubmit="saveEvent(event)">
         <div class="form-group">
           <select id="newEventCategory" required style="margin-bottom:8px;">
             <option value="">-- Select Category --</option>
@@ -235,33 +224,36 @@
             <option value="General">General</option>
           </select>
           <input type="text" id="newEventName" placeholder="Program Name" required style="margin-bottom:8px;">
-          <input type="number" id="newEventLimit" placeholder="Max Allowed Participant Count" min="1" required style="margin-bottom:8px;">
+          <input type="number" id="newEventLimit" placeholder="Max Participant Count" min="1" required style="margin-bottom:8px;">
           <select id="newEventStage" required>
             <option value="On Stage">On Stage</option>
             <option value="Off Stage">Off Stage</option>
           </select>
         </div>
-        <button type="submit" class="btn-submit" style="background:var(--accent-purple);">Add Program Option</button>
+        <button type="submit" id="btn-prog-save" class="btn-submit" style="background:var(--accent-purple);">Add Program Option</button>
       </form>
+
+      <div class="table-responsive" style="margin-top:15px;">
+        <table>
+          <thead>
+            <tr><th>Category</th><th>Program</th><th>Max Limit</th><th>Stage</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="progsManageTable"></tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- Comprehensive Filtered Lists & Printing -->
+    <!-- Printable Master Reports -->
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
         <h2>4. Master Reports & Lists</h2>
-        <div>
-          <button class="btn-action" style="background:#e2e8f0;" onclick="window.print()">🖨️ Print A4 Sheet</button>
-          <button class="btn-action" style="background:var(--accent-purple); color:white;" onclick="downloadCSV()">📥 Export CSV</button>
-        </div>
+        <button class="btn-action" style="background:#e2e8f0;" onclick="window.print()">🖨️ Print A4 Report</button>
       </div>
 
-      <!-- Filters -->
       <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:15px;">
         <div>
           <label>Filter Team</label>
-          <select id="filterTeam" onchange="filterMasterList()">
-            <option value="ALL">All Teams</option>
-          </select>
+          <select id="filterTeam" onchange="filterMasterList()"><option value="ALL">All Teams</option></select>
         </div>
         <div>
           <label>Filter Category</label>
@@ -284,33 +276,118 @@
         </div>
       </div>
 
-      <div class="table-responsive">
-        <table id="printableTable">
+      <div class="table-responsive" id="printableArea">
+        <h3 style="text-align:center; margin-bottom:10px;">BAHJA 2026 - Master Participant Report</h3>
+        <table>
           <thead>
-            <tr>
-              <th>#</th>
-              <th>Team</th>
-              <th>Category</th>
-              <th>Program</th>
-              <th>Stage</th>
-              <th>Participants</th>
-            </tr>
+            <tr><th>#</th><th>Team</th><th>Category</th><th>Program</th><th>Stage</th><th>Participants</th></tr>
           </thead>
           <tbody id="masterTableBody"></tbody>
         </table>
       </div>
     </div>
+  </div>
 
+  <!-- JUDGE CTRL SECTION -->
+  <div id="judge-ctrl-section" class="hidden">
+    <div class="card">
+      <h2>Judge Ctrl: Add Participant Score</h2>
+      <form onsubmit="saveJudgeCtrlEntry(event)">
+        <div class="form-group">
+          <label>Program Name</label>
+          <input type="text" id="jcProgName" placeholder="Enter Program Name" required>
+        </div>
+        <div class="form-group">
+          <label>Stage Type</label>
+          <select id="jcStage" required>
+            <option value="On Stage">On Stage</option>
+            <option value="Off Stage">Off Stage</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="jcCategory" required>
+            <option value="Lower Zone">Lower Zone</option>
+            <option value="Middle Zone">Middle Zone</option>
+            <option value="Higher Zone">Higher Zone</option>
+            <option value="Super Zone">Super Zone</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Participant Name</label>
+          <input type="text" id="jcPartName" placeholder="Participant Name" required>
+        </div>
+        <div class="form-group">
+          <label>Points</label>
+          <input type="number" id="jcPoints" placeholder="Points" min="0" required>
+        </div>
+        <button type="submit" id="btn-jc-save" class="btn-submit" style="background:var(--accent-green);">Add Score Entry</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Judge Ctrl Entries (Minimized List)</h2>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Participant</th><th>Program</th><th>Category</th><th>Stage</th><th>Points</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="jcTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- JUDGE LEADERBOARD SECTION -->
+  <div id="judge-section" class="hidden">
+    <div class="card">
+      <h2>Judge Panel: Total Scores & Leaderboard</h2>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:15px;">
+        <div>
+          <label>Stage Filter</label>
+          <select id="jFilterStage" onchange="renderJudgeLeaderboard()">
+            <option value="ALL">All Stages</option>
+            <option value="On Stage">On Stage</option>
+            <option value="Off Stage">Off Stage</option>
+          </select>
+        </div>
+        <div>
+          <label>Category Filter</label>
+          <select id="jFilterCategory" onchange="renderJudgeLeaderboard()">
+            <option value="ALL">All Categories</option>
+            <option value="Lower Zone">Lower Zone</option>
+            <option value="Middle Zone">Middle Zone</option>
+            <option value="Higher Zone">Higher Zone</option>
+            <option value="Super Zone">Super Zone</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:18px;">
+          <input type="checkbox" id="jExcludeGeneral" onchange="renderJudgeLeaderboard()" style="width:auto;">
+          <label for="jExcludeGeneral" style="margin:0; text-transform:none;">Exclude General Programs</label>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr><th>Rank</th><th>Participant Name</th><th>Total Combined Points</th></tr>
+          </thead>
+          <tbody id="judgeLeaderboardBody"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
 </div>
 
-<!-- ==================== POPUP MODALS ==================== -->
+<!-- MODALS -->
 
-<!-- 1. MAIN LOGIN POPUP -->
+<!-- MAIN LOGIN MODAL -->
 <div id="loginModal" class="modal">
   <div class="modal-content">
-    <h3 style="margin-bottom:15px; text-align:center;">Admin Login</h3>
+    <h3 style="margin-bottom:15px; text-align:center;">Login</h3>
     <div class="form-group">
       <label>Username</label>
       <input type="text" id="mainUser" placeholder="Enter username">
@@ -324,24 +401,24 @@
   </div>
 </div>
 
-<!-- 2. ADMIN MENU POPUP (SHOWS AFTER LOGIN) -->
+<!-- MENU SELECTION MODAL -->
 <div id="menuModal" class="modal">
   <div class="modal-content">
-    <h3 style="margin-bottom:15px; text-align:center;">Control Panel</h3>
+    <h3 style="margin-bottom:15px; text-align:center;">Control Options</h3>
     <button class="menu-list-btn" onclick="openSubAuth('Settings')">⚙️ Settings</button>
     <button class="menu-list-btn" onclick="openSubAuth('Committee')">👥 Committee</button>
-    <button class="menu-list-btn" onclick="alert('Judge Panel: Access Granted')">⚖️ Judge</button>
-    <button class="menu-list-btn" onclick="alert('Judge Ctrl Panel: Access Granted')">🎛️ Judge Ctrl</button>
-    <button style="background:var(--accent-red); color:white; border:none; width:100%; padding:10px; border-radius:8px; margin-top:10px; cursor:pointer;" onclick="adminLogout()">Logout Admin</button>
+    <button class="menu-list-btn" onclick="openSubAuth('JudgeCtrl')">🎛️ Judge Ctrl</button>
+    <button class="menu-list-btn" onclick="openSubAuth('Judge')">⚖️ Judge Panel</button>
+    <button style="background:var(--accent-red); color:white; border:none; width:100%; padding:10px; border-radius:8px; margin-top:10px; cursor:pointer;" onclick="adminLogout()">Logout</button>
   </div>
 </div>
 
-<!-- 3. SUB-AUTH PASSWORD POPUP -->
+<!-- SUB AUTHENTICATION MODAL -->
 <div id="subAuthModal" class="modal">
   <div class="modal-content">
-    <h3 id="subAuthTitle" style="margin-bottom:15px; text-align:center;">Auth Required</h3>
+    <h3 id="subAuthTitle" style="margin-bottom:15px; text-align:center;">Auth Password</h3>
     <div class="form-group">
-      <label>Enter Password</label>
+      <label>Password</label>
       <input type="password" id="subAuthPass" placeholder="••••••••">
     </div>
     <button class="btn-submit" onclick="verifySubAuth()">Authenticate</button>
@@ -349,12 +426,12 @@
   </div>
 </div>
 
-<!-- 4. SETTINGS CONTROL PANEL MODAL -->
+<!-- SETTINGS MODAL -->
 <div id="settingsModal" class="modal">
   <div class="modal-content">
-    <h3 style="margin-bottom:15px; text-align:center;">Settings Panel</h3>
+    <h3 style="margin-bottom:15px; text-align:center;">Phase Control</h3>
     <div class="form-group">
-      <label>Active Home Phase Display</label>
+      <label>Active Display Phase</label>
       <div style="margin-top:10px;">
         <label style="text-transform:none; margin-bottom:8px;">
           <input type="radio" name="phaseToggle" id="toggleReg" onchange="changePhaseDisplay('register')" checked>
@@ -366,69 +443,65 @@
         </label>
       </div>
     </div>
-    <button class="btn-submit" onclick="closeModal('settingsModal')">Save & Apply</button>
+    <button class="btn-submit" onclick="closeModal('settingsModal')">Apply Settings</button>
   </div>
 </div>
 
 <script>
-  // Initial Data
+  // Global Data Stores
   let teams = [{ name: "Team Alpha", user: "alpha", pass: "1234" }];
   let eventsData = [
     { category: "Lower Zone", name: "Elocution", limit: 1, stage: "On Stage" },
     { category: "Lower Zone", name: "Group Song", limit: 3, stage: "On Stage" },
     { category: "General", name: "Essay Writing", limit: 1, stage: "Off Stage" }
   ];
-  
   let submissions = [];
+  let judgeCtrlScores = [];
+
   let isAdminLoggedIn = false;
   let loggedInTeam = null;
-  let editingIndex = null;
+  let editingTeamIndex = null;
+  let editingProgIndex = null;
+  let editingEntryIndex = null;
+  let editingJcIndex = null;
   let currentSubAuthTarget = '';
-  let isRegistrationOpen = true;
 
-  // Helper Functions for Modals
-  function closeModal(id) { 
-    document.getElementById(id).style.display = "none"; 
-  }
-  
-  function openModal(id) { 
-    document.getElementById(id).style.display = "block"; 
-  }
+  function closeModal(id) { document.getElementById(id).style.display = "none"; }
+  function openModal(id) { document.getElementById(id).style.display = "block"; }
 
-  // 3-Dots Click Handler
   function handleDotsClick() {
-    if (!isAdminLoggedIn) {
-      openModal('loginModal');
-    } else {
-      openModal('menuModal');
-    }
+    if (!isAdminLoggedIn) openModal('loginModal');
+    else openModal('menuModal');
   }
 
-  // Verify Main Admin Login
+  // Main Login: bahja2026 / 2026bahja
   function verifyMainLogin() {
     const u = document.getElementById('mainUser').value;
     const p = document.getElementById('mainPass').value;
-
-    // DIRECT ADMIN CREDENTIALS HERE
-    if (u === "bahja@2026" && p === "12345678") {
+    if (u === "bahja2026" && p === "2026bahja") {
       isAdminLoggedIn = true;
       closeModal('loginModal');
       openModal('menuModal');
       document.getElementById('mainUser').value = '';
       document.getElementById('mainPass').value = '';
-    } else {
-      alert("Invalid Admin Credentials!");
-    }
+    } else { alert("Invalid Credentials!"); }
   }
 
   function adminLogout() {
     isAdminLoggedIn = false;
     closeModal('menuModal');
-    document.getElementById('committee-section').classList.add('hidden');
-    alert("Logged out from Admin");
+    hideAllSections();
+    document.getElementById('register-phase-container').classList.remove('hidden');
   }
 
-  // Open Secondary Auth for Settings & Committee
+  function hideAllSections() {
+    document.getElementById('register-phase-container').classList.add('hidden');
+    document.getElementById('result-phase-container').classList.add('hidden');
+    document.getElementById('committee-section').classList.add('hidden');
+    document.getElementById('judge-ctrl-section').classList.add('hidden');
+    document.getElementById('judge-section').classList.add('hidden');
+  }
+
   function openSubAuth(target) {
     currentSubAuthTarget = target;
     closeModal('menuModal');
@@ -437,82 +510,226 @@
     openModal('subAuthModal');
   }
 
-  // Verify Secondary Passwords
+  // Secondary Authentication Passwords
   function verifySubAuth() {
     const p = document.getElementById('subAuthPass').value;
 
     if (currentSubAuthTarget === 'Settings' && p === 'settings@2026') {
       closeModal('subAuthModal');
       openModal('settingsModal');
-    } else if (currentSubAuthTarget === 'Committee' && p === 'committee2026') {
+    } else if (currentSubAuthTarget === 'Committee' && p === 'committy2026') {
       closeModal('subAuthModal');
-      document.getElementById('register-phase-container').classList.add('hidden');
-      document.getElementById('result-phase-container').classList.add('hidden');
+      hideAllSections();
       document.getElementById('committee-section').classList.remove('hidden');
+      renderManageTeams();
+      renderManageProgs();
       updateTeamFilterDropdown();
       filterMasterList();
+    } else if (currentSubAuthTarget === 'JudgeCtrl' && p === '123judgebahja') {
+      closeModal('subAuthModal');
+      hideAllSections();
+      document.getElementById('judge-ctrl-section').classList.remove('hidden');
+      renderJudgeCtrlTable();
+    } else if (currentSubAuthTarget === 'Judge' && p === 'judgeserchingbahja') {
+      closeModal('subAuthModal');
+      hideAllSections();
+      document.getElementById('judge-section').classList.remove('hidden');
+      renderJudgeLeaderboard();
     } else {
       alert("Incorrect Password!");
     }
   }
 
-  // Settings: Switch Home Display Phase
   function changePhaseDisplay(phase) {
-    document.getElementById('committee-section').classList.add('hidden');
-    if (phase === 'register') {
-      document.getElementById('register-phase-container').classList.remove('hidden');
-      document.getElementById('result-phase-container').classList.add('hidden');
-    } else {
-      document.getElementById('register-phase-container').classList.add('hidden');
+    hideAllSections();
+    if (phase === 'register') document.getElementById('register-phase-container').classList.remove('hidden');
+    else {
       document.getElementById('result-phase-container').classList.remove('hidden');
       renderResultsTable();
     }
   }
 
-  // Committee Controls
-  function toggleRegAccess(isOpen) {
-    isRegistrationOpen = isOpen;
-    const form = document.getElementById('programForm');
-    const msg = document.getElementById('registration-closed-msg');
-    
-    if (!isOpen) {
-      form.classList.add('hidden');
-      msg.classList.remove('hidden');
-    } else {
-      form.classList.remove('hidden');
-      msg.classList.add('hidden');
-    }
-  }
-
-  function addTeam(e) {
+  // COMMITTEE: Team Management
+  function saveTeam(e) {
     e.preventDefault();
     const name = document.getElementById('newTeamName').value;
-    teams.push({
-      name: name,
-      user: document.getElementById('newTeamUser').value,
-      pass: document.getElementById('newTeamPass').value
-    });
-    alert(`Team '${name}' successfully created!`);
+    const user = document.getElementById('newTeamUser').value;
+    const pass = document.getElementById('newTeamPass').value;
+
+    if (editingTeamIndex !== null) {
+      teams[editingTeamIndex] = { name, user, pass };
+      editingTeamIndex = null;
+      document.getElementById('btn-team-save').innerText = "Add Team Account";
+    } else {
+      teams.push({ name, user, pass });
+    }
     document.getElementById('newTeamName').value = '';
     document.getElementById('newTeamUser').value = '';
     document.getElementById('newTeamPass').value = '';
+    renderManageTeams();
     updateTeamFilterDropdown();
   }
 
-  function addEvent(e) {
-    e.preventDefault();
-    eventsData.push({
-      category: document.getElementById('newEventCategory').value,
-      name: document.getElementById('newEventName').value,
-      limit: parseInt(document.getElementById('newEventLimit').value),
-      stage: document.getElementById('newEventStage').value
+  function renderManageTeams() {
+    const tbody = document.getElementById('teamsManageTable');
+    tbody.innerHTML = '';
+    teams.forEach((t, i) => {
+      tbody.innerHTML += `<tr>
+        <td><b>${t.name}</b></td><td>${t.user}</td><td>${t.pass}</td>
+        <td>
+          <button class="btn-edit" onclick="editTeam(${i})">Edit</button>
+          <button class="btn-delete" onclick="deleteTeam(${i})">Delete</button>
+        </td>
+      </tr>`;
     });
-    alert("Program successfully added!");
-    document.getElementById('newEventName').value = '';
-    document.getElementById('newEventLimit').value = '';
   }
 
-  // Team Portal Logic
+  function editTeam(i) {
+    const t = teams[i];
+    editingTeamIndex = i;
+    document.getElementById('newTeamName').value = t.name;
+    document.getElementById('newTeamUser').value = t.user;
+    document.getElementById('newTeamPass').value = t.pass;
+    document.getElementById('btn-team-save').innerText = "Update Team Account";
+  }
+
+  function deleteTeam(i) {
+    if (confirm("Delete this team?")) { teams.splice(i, 1); renderManageTeams(); updateTeamFilterDropdown(); }
+  }
+
+  // COMMITTEE: Program Management
+  function saveEvent(e) {
+    e.preventDefault();
+    const category = document.getElementById('newEventCategory').value;
+    const name = document.getElementById('newEventName').value;
+    const limit = parseInt(document.getElementById('newEventLimit').value);
+    const stage = document.getElementById('newEventStage').value;
+
+    if (editingProgIndex !== null) {
+      eventsData[editingProgIndex] = { category, name, limit, stage };
+      editingProgIndex = null;
+      document.getElementById('btn-prog-save').innerText = "Add Program Option";
+    } else {
+      eventsData.push({ category, name, limit, stage });
+    }
+    document.getElementById('newEventName').value = '';
+    document.getElementById('newEventLimit').value = '';
+    renderManageProgs();
+  }
+
+  function renderManageProgs() {
+    const tbody = document.getElementById('progsManageTable');
+    tbody.innerHTML = '';
+    eventsData.forEach((ev, i) => {
+      tbody.innerHTML += `<tr>
+        <td>${ev.category}</td><td><b>${ev.name}</b></td><td>${ev.limit}</td><td>${ev.stage}</td>
+        <td>
+          <button class="btn-edit" onclick="editProg(${i})">Edit</button>
+          <button class="btn-delete" onclick="deleteProg(${i})">Delete</button>
+        </td>
+      </tr>`;
+    });
+  }
+
+  function editProg(i) {
+    const ev = eventsData[i];
+    editingProgIndex = i;
+    document.getElementById('newEventCategory').value = ev.category;
+    document.getElementById('newEventName').value = ev.name;
+    document.getElementById('newEventLimit').value = ev.limit;
+    document.getElementById('newEventStage').value = ev.stage;
+    document.getElementById('btn-prog-save').innerText = "Update Program Option";
+  }
+
+  function deleteProg(i) {
+    if (confirm("Delete this program?")) { eventsData.splice(i, 1); renderManageProgs(); }
+  }
+
+  // JUDGE CTRL LOGIC
+  function saveJudgeCtrlEntry(e) {
+    e.preventDefault();
+    const prog = document.getElementById('jcProgName').value;
+    const stage = document.getElementById('jcStage').value;
+    const category = document.getElementById('jcCategory').value;
+    const participant = document.getElementById('jcPartName').value;
+    const points = parseFloat(document.getElementById('jcPoints').value);
+
+    if (editingJcIndex !== null) {
+      judgeCtrlScores[editingJcIndex] = { prog, stage, category, participant, points };
+      editingJcIndex = null;
+      document.getElementById('btn-jc-save').innerText = "Add Score Entry";
+    } else {
+      judgeCtrlScores.push({ prog, stage, category, participant, points });
+    }
+
+    document.getElementById('jcProgName').value = '';
+    document.getElementById('jcPartName').value = '';
+    document.getElementById('jcPoints').value = '';
+    renderJudgeCtrlTable();
+  }
+
+  function renderJudgeCtrlTable() {
+    const tbody = document.getElementById('jcTableBody');
+    tbody.innerHTML = '';
+    judgeCtrlScores.forEach((item, i) => {
+      tbody.innerHTML += `<tr>
+        <td>${i + 1}</td><td><b>${item.participant}</b></td><td>${item.prog}</td>
+        <td>${item.category}</td><td>${item.stage}</td><td><b>${item.points}</b></td>
+        <td>
+          <button class="btn-edit" onclick="editJcEntry(${i})">Edit</button>
+          <button class="btn-delete" onclick="deleteJcEntry(${i})">Delete</button>
+        </td>
+      </tr>`;
+    });
+  }
+
+  function editJcEntry(i) {
+    const item = judgeCtrlScores[i];
+    editingJcIndex = i;
+    document.getElementById('jcProgName').value = item.prog;
+    document.getElementById('jcStage').value = item.stage;
+    document.getElementById('jcCategory').value = item.category;
+    document.getElementById('jcPartName').value = item.participant;
+    document.getElementById('jcPoints').value = item.points;
+    document.getElementById('btn-jc-save').innerText = "Update Score Entry";
+  }
+
+  function deleteJcEntry(i) {
+    if (confirm("Delete score entry?")) { judgeCtrlScores.splice(i, 1); renderJudgeCtrlTable(); }
+  }
+
+  // JUDGE LEADERBOARD LOGIC
+  function renderJudgeLeaderboard() {
+    const stageFilter = document.getElementById('jFilterStage').value;
+    const catFilter = document.getElementById('jFilterCategory').value;
+    const excludeGeneral = document.getElementById('jExcludeGeneral').checked;
+
+    let totals = {};
+
+    judgeCtrlScores.forEach(item => {
+      if (stageFilter !== 'ALL' && item.stage !== stageFilter) return;
+      if (catFilter !== 'ALL' && item.category !== catFilter) return;
+      if (excludeGeneral && item.category === 'General') return;
+
+      if (!totals[item.participant]) totals[item.participant] = 0;
+      totals[item.participant] += item.points;
+    });
+
+    let sorted = Object.keys(totals).map(name => ({ name, points: totals[name] }));
+    sorted.sort((a, b) => b.points - a.points);
+
+    const tbody = document.getElementById('judgeLeaderboardBody');
+    tbody.innerHTML = '';
+    sorted.forEach((item, index) => {
+      tbody.innerHTML += `<tr>
+        <td><b>#${index + 1}</b></td>
+        <td><b>${item.name}</b></td>
+        <td><span style="color:var(--primary); font-weight:bold; font-size:16px;">${item.points} pts</span></td>
+      </tr>`;
+    });
+  }
+
+  // TEAM USER LOGIC & REGISTRATION
   function handleTeamLogin(e) {
     e.preventDefault();
     const u = document.getElementById('loginUser').value;
@@ -527,7 +744,7 @@
       document.getElementById('team-info').style.display = "block";
       document.getElementById('team-info').innerHTML = `Logged in Team: <strong>${loggedInTeam}</strong>`;
       renderMyEntries();
-    } else { alert("Invalid Username/Password!"); }
+    } else { alert("Invalid Credentials!"); }
   }
 
   function updateEventsList() {
@@ -538,7 +755,7 @@
     eventsData.filter(e => e.category === selectedCat).forEach(ev => {
       let opt = document.createElement('option');
       opt.value = ev.name;
-      opt.text = `${ev.name} (${ev.stage} - Max: ${ev.limit})`;
+      opt.text = `${ev.name} (${ev.stage} - Limit: ${ev.limit})`;
       opt.setAttribute('data-limit', ev.limit);
       opt.setAttribute('data-stage', ev.stage);
       eventSelect.add(opt);
@@ -557,7 +774,6 @@
     const eventSelect = document.getElementById('eventSelect');
     const selectedOption = eventSelect.options[eventSelect.selectedIndex];
     const limit = selectedOption ? selectedOption.getAttribute('data-limit') : 0;
-    
     const container = document.getElementById('participantsContainer');
     container.innerHTML = '';
 
@@ -581,14 +797,12 @@
       if(inp.value.trim()) names.push(inp.value.trim());
     });
 
-    if (editingIndex !== null) {
-      submissions[editingIndex] = { team: loggedInTeam, category, eventName, stage, names };
-      editingIndex = null;
-      alert("Entry updated!");
+    if (editingEntryIndex !== null) {
+      submissions[editingEntryIndex] = { team: loggedInTeam, category, eventName, stage, names };
+      editingEntryIndex = null;
       document.getElementById('btn-save-entry').innerText = "Submit Entry";
     } else {
       submissions.push({ team: loggedInTeam, category, eventName, stage, names });
-      alert("Entry registered!");
     }
 
     document.getElementById('programForm').reset();
@@ -599,14 +813,10 @@
   function renderMyEntries() {
     const myTable = document.getElementById('myEntriesTable');
     myTable.innerHTML = '';
-
     submissions.forEach((sub, idx) => {
       if (sub.team === loggedInTeam) {
         myTable.innerHTML += `<tr>
-          <td>${sub.category}</td>
-          <td><b>${sub.eventName}</b></td>
-          <td>${sub.stage}</td>
-          <td>${sub.names.join(', ')}</td>
+          <td>${sub.category}</td><td><b>${sub.eventName}</b></td><td>${sub.stage}</td><td>${sub.names.join(', ')}</td>
           <td>
             <button class="btn-edit" onclick="editEntry(${idx})">Edit</button>
             <button class="btn-delete" onclick="deleteEntry(${idx})">Delete</button>
@@ -618,24 +828,18 @@
 
   function editEntry(index) {
     const item = submissions[index];
-    editingIndex = index;
-
+    editingEntryIndex = index;
     document.getElementById('categorySelect').value = item.category;
     updateEventsList();
     document.getElementById('eventSelect').value = item.eventName;
     generateParticipantFields();
-
     const inputs = document.querySelectorAll('.participant-input');
     item.names.forEach((n, i) => { if(inputs[i]) inputs[i].value = n; });
-
     document.getElementById('btn-save-entry').innerText = "Update Entry";
   }
 
   function deleteEntry(index) {
-    if (confirm("Delete this registration?")) {
-      submissions.splice(index, 1);
-      renderMyEntries();
-    }
+    if (confirm("Delete entry?")) { submissions.splice(index, 1); renderMyEntries(); }
   }
 
   function renderResultsTable() {
@@ -643,24 +847,17 @@
     resTable.innerHTML = '';
     submissions.forEach((sub, idx) => {
       resTable.innerHTML += `<tr>
-        <td>${idx + 1}</td>
-        <td><b>${sub.team}</b></td>
-        <td>${sub.category}</td>
-        <td>${sub.eventName}</td>
-        <td>${sub.stage}</td>
-        <td>${sub.names.join(', ')}</td>
+        <td>${idx + 1}</td><td><b>${sub.team}</b></td><td>${sub.category}</td><td>${sub.eventName}</td><td>${sub.stage}</td><td>${sub.names.join(', ')}</td>
       </tr>`;
     });
   }
 
-  // Committee Master List Filtering
   function updateTeamFilterDropdown() {
     const teamSelect = document.getElementById('filterTeam');
     teamSelect.innerHTML = '<option value="ALL">All Teams</option>';
     teams.forEach(t => {
       let opt = document.createElement('option');
-      opt.value = t.name;
-      opt.text = t.name;
+      opt.value = t.name; opt.text = t.name;
       teamSelect.add(opt);
     });
   }
@@ -669,7 +866,6 @@
     const team = document.getElementById('filterTeam').value;
     const cat = document.getElementById('filterCategory').value;
     const stage = document.getElementById('filterStage').value;
-
     const tbody = document.getElementById('masterTableBody');
     tbody.innerHTML = '';
 
@@ -681,32 +877,16 @@
 
     filtered.forEach((sub, idx) => {
       tbody.innerHTML += `<tr>
-        <td>${idx + 1}</td>
-        <td><b>${sub.team}</b></td>
-        <td>${sub.category}</td>
-        <td>${sub.eventName}</td>
-        <td>${sub.stage}</td>
-        <td>${sub.names.join(', ')}</td>
+        <td>${idx + 1}</td><td><b>${sub.team}</b></td><td>${sub.category}</td><td>${sub.eventName}</td><td>${sub.stage}</td><td>${sub.names.join(', ')}</td>
       </tr>`;
     });
   }
 
-  function downloadCSV() {
-    let table = document.getElementById("printableTable");
-    let rows = table.querySelectorAll("tr");
-    let csv = [];
-    for (let i = 0; i < rows.length; i++) {
-      let row = [], cols = rows[i].querySelectorAll("td, th");
-      for (let j = 0; j < cols.length; j++) row.push('"' + cols[j].innerText + '"');
-      csv.push(row.join(","));
-    }
-    let csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
-    let downloadLink = document.createElement("a");
-    downloadLink.download = "BAHJA_2026_Master_List.csv";
-    downloadLink.href = window.URL.createObjectURL(csvFile);
-    downloadLink.style.display = "none";
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
+  function toggleRegAccess(isOpen) {
+    const form = document.getElementById('programForm');
+    const msg = document.getElementById('registration-closed-msg');
+    if (!isOpen) { form.classList.add('hidden'); msg.classList.remove('hidden'); }
+    else { form.classList.remove('hidden'); msg.classList.add('hidden'); }
   }
 </script>
 
