@@ -8,7 +8,6 @@
   <style>
     :root {
       --primary: #1e40af;
-      --primary-hover: #1d4ed8;
       --bg-color: #f8fafc;
       --card-bg: #ffffff;
       --text-main: #0f172a;
@@ -65,7 +64,6 @@
 
     .hidden { display: none !important; }
 
-    /* A4 Print Setup */
     @media print {
       body * { visibility: hidden; }
       #printableArea, #printableArea * { visibility: visible; }
@@ -88,29 +86,32 @@
     <p>Literary Festival 2k26</p>
   </div>
 
-  <div id="team-info" style="margin-bottom:20px; font-weight:600; color:var(--primary); display:none; background:#eff6ff; padding:12px 16px; border-radius:8px;"></div>
+  <div id="team-info" style="margin-bottom:20px; font-weight:600; color:var(--primary); display:none; background:#eff6ff; padding:12px 16px; border-radius:8px; justify-content:space-between; align-items:center;">
+    <span id="team-info-text"></span>
+    <button onclick="teamLogout()" style="background:var(--accent-red); color:white; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">Logout Team</button>
+  </div>
 
   <!-- REGISTER PHASE -->
   <div id="register-phase-container">
     <div id="team-login-section" class="card">
-      <h2>Team Login</h2>
+      <h2>Team Registration Login</h2>
       <form onsubmit="handleTeamLogin(event)">
         <div class="form-group">
           <label>Team Username</label>
-          <input type="text" id="loginUser" placeholder="Enter username" required>
+          <input type="text" id="loginUser" placeholder="Enter assigned username" required>
         </div>
         <div class="form-group">
           <label>Password</label>
           <input type="password" id="loginPass" placeholder="••••••••" required>
         </div>
-        <button type="submit" class="btn-submit">Login & Continue</button>
+        <button type="submit" class="btn-submit">Login to Register</button>
       </form>
     </div>
 
     <div id="team-portal-section" class="card hidden">
-      <h2 id="form-title">Program Registration</h2>
+      <h2 id="form-title">Program Registration Form</h2>
       <div id="registration-closed-msg" class="hidden" style="color:var(--accent-red); font-weight:bold; margin-bottom:15px;">
-        ⚠️ Registrations are currently CLOSED.
+        ⚠️ Registrations are currently CLOSED by Committee.
       </div>
       <form id="programForm" onsubmit="submitProgram(event)">
         <div class="form-group">
@@ -126,7 +127,7 @@
         </div>
         <div class="form-group">
           <label>Search Program</label>
-          <input type="text" id="searchProgram" placeholder="Type to search..." onkeyup="filterPrograms()">
+          <input type="text" id="searchProgram" placeholder="Type to filter..." onkeyup="filterPrograms()">
         </div>
         <div class="form-group">
           <label>2. Select Program</label>
@@ -135,12 +136,12 @@
           </select>
         </div>
         <div class="form-group" id="participantsContainer"></div>
-        <button type="submit" id="btn-save-entry" class="btn-submit" style="background:var(--accent-green);">Submit Entry</button>
+        <button type="submit" id="btn-save-entry" class="btn-submit" style="background:var(--accent-green);">Submit Registration</button>
       </form>
     </div>
 
     <div id="team-entries-section" class="card hidden">
-      <h2>My Submitted Entries</h2>
+      <h2>My Team Registrations</h2>
       <div class="table-responsive">
         <table>
           <thead>
@@ -160,7 +161,7 @@
 
   <!-- RESULT PHASE -->
   <div id="result-phase-container" class="card hidden">
-    <h2>All Festival Registrations & Results</h2>
+    <h2>All Festival Registrations</h2>
     <div class="table-responsive">
       <table>
         <thead>
@@ -322,7 +323,7 @@
           <label>Points</label>
           <input type="number" id="jcPoints" placeholder="Points" min="0" required>
         </div>
-        <button type="submit" id="btn-jc-save" class="btn-submit" style="background:var(--accent-green);">Add Score Entry</button>
+        <button type="submit" id="btn-jc-save" class="btn-submit" style="background:var(--accent-green);">Save Score</button>
       </form>
     </div>
 
@@ -383,11 +384,9 @@
 </div>
 
 <!-- MODALS -->
-
-<!-- MAIN LOGIN MODAL -->
 <div id="loginModal" class="modal">
   <div class="modal-content">
-    <h3 style="margin-bottom:15px; text-align:center;">Login</h3>
+    <h3 style="margin-bottom:15px; text-align:center;">Main Login</h3>
     <div class="form-group">
       <label>Username</label>
       <input type="text" id="mainUser" placeholder="Enter username">
@@ -401,7 +400,6 @@
   </div>
 </div>
 
-<!-- MENU SELECTION MODAL -->
 <div id="menuModal" class="modal">
   <div class="modal-content">
     <h3 style="margin-bottom:15px; text-align:center;">Control Options</h3>
@@ -409,11 +407,10 @@
     <button class="menu-list-btn" onclick="openSubAuth('Committee')">👥 Committee</button>
     <button class="menu-list-btn" onclick="openSubAuth('JudgeCtrl')">🎛️ Judge Ctrl</button>
     <button class="menu-list-btn" onclick="openSubAuth('Judge')">⚖️ Judge Panel</button>
-    <button style="background:var(--accent-red); color:white; border:none; width:100%; padding:10px; border-radius:8px; margin-top:10px; cursor:pointer;" onclick="adminLogout()">Logout</button>
+    <button style="background:var(--accent-red); color:white; border:none; width:100%; padding:10px; border-radius:8px; margin-top:10px; cursor:pointer;" onclick="adminLogout()">Logout Admin</button>
   </div>
 </div>
 
-<!-- SUB AUTHENTICATION MODAL -->
 <div id="subAuthModal" class="modal">
   <div class="modal-content">
     <h3 id="subAuthTitle" style="margin-bottom:15px; text-align:center;">Auth Password</h3>
@@ -426,7 +423,6 @@
   </div>
 </div>
 
-<!-- SETTINGS MODAL -->
 <div id="settingsModal" class="modal">
   <div class="modal-content">
     <h3 style="margin-bottom:15px; text-align:center;">Phase Control</h3>
@@ -448,13 +444,17 @@
 </div>
 
 <script>
-  // Global Data Stores
-  let teams = [{ name: "Team Alpha", user: "alpha", pass: "1234" }];
+  // Data Storage
+  let teams = [
+    { name: "Team Alpha", user: "alpha", pass: "1234" },
+    { name: "Team Beta", user: "beta", pass: "1234" }
+  ];
+  
   let eventsData = [
     { category: "Lower Zone", name: "Elocution", limit: 1, stage: "On Stage" },
-    { category: "Lower Zone", name: "Group Song", limit: 3, stage: "On Stage" },
-    { category: "General", name: "Essay Writing", limit: 1, stage: "Off Stage" }
+    { category: "Lower Zone", name: "Group Song", limit: 3, stage: "On Stage" }
   ];
+  
   let submissions = [];
   let judgeCtrlScores = [];
 
@@ -474,7 +474,6 @@
     else openModal('menuModal');
   }
 
-  // Main Login: bahja2026 / 2026bahja
   function verifyMainLogin() {
     const u = document.getElementById('mainUser').value;
     const p = document.getElementById('mainPass').value;
@@ -484,7 +483,7 @@
       openModal('menuModal');
       document.getElementById('mainUser').value = '';
       document.getElementById('mainPass').value = '';
-    } else { alert("Invalid Credentials!"); }
+    } else { alert("Invalid Admin Credentials!"); }
   }
 
   function adminLogout() {
@@ -510,7 +509,6 @@
     openModal('subAuthModal');
   }
 
-  // Secondary Authentication Passwords
   function verifySubAuth() {
     const p = document.getElementById('subAuthPass').value;
 
@@ -549,12 +547,44 @@
     }
   }
 
-  // COMMITTEE: Team Management
+  // DYNAMIC TEAM LOGIN LOGIC
+  function handleTeamLogin(e) {
+    e.preventDefault();
+    const u = document.getElementById('loginUser').value.trim();
+    const p = document.getElementById('loginPass').value.trim();
+    
+    // Check against dynamically created teams array
+    const foundTeam = teams.find(t => t.user === u && t.pass === p);
+
+    if (foundTeam) {
+      loggedInTeam = foundTeam.name;
+      document.getElementById('team-login-section').classList.add('hidden');
+      document.getElementById('team-portal-section').classList.remove('hidden');
+      document.getElementById('team-entries-section').classList.remove('hidden');
+      document.getElementById('team-info').style.display = "flex";
+      document.getElementById('team-info-text').innerHTML = `Logged in Team: <strong>${loggedInTeam}</strong>`;
+      renderMyEntries();
+    } else { 
+      alert("Invalid Username or Password! Please use credentials created by Committee."); 
+    }
+  }
+
+  function teamLogout() {
+    loggedInTeam = null;
+    document.getElementById('team-login-section').classList.remove('hidden');
+    document.getElementById('team-portal-section').classList.add('hidden');
+    document.getElementById('team-entries-section').classList.add('hidden');
+    document.getElementById('team-info').style.display = "none";
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+  }
+
+  // COMMITTEE: Manage Teams
   function saveTeam(e) {
     e.preventDefault();
-    const name = document.getElementById('newTeamName').value;
-    const user = document.getElementById('newTeamUser').value;
-    const pass = document.getElementById('newTeamPass').value;
+    const name = document.getElementById('newTeamName').value.trim();
+    const user = document.getElementById('newTeamUser').value.trim();
+    const pass = document.getElementById('newTeamPass').value.trim();
 
     if (editingTeamIndex !== null) {
       teams[editingTeamIndex] = { name, user, pass };
@@ -594,10 +624,10 @@
   }
 
   function deleteTeam(i) {
-    if (confirm("Delete this team?")) { teams.splice(i, 1); renderManageTeams(); updateTeamFilterDropdown(); }
+    if (confirm("Delete this team account?")) { teams.splice(i, 1); renderManageTeams(); updateTeamFilterDropdown(); }
   }
 
-  // COMMITTEE: Program Management
+  // COMMITTEE: Manage Programs
   function saveEvent(e) {
     e.preventDefault();
     const category = document.getElementById('newEventCategory').value;
@@ -645,108 +675,7 @@
     if (confirm("Delete this program?")) { eventsData.splice(i, 1); renderManageProgs(); }
   }
 
-  // JUDGE CTRL LOGIC
-  function saveJudgeCtrlEntry(e) {
-    e.preventDefault();
-    const prog = document.getElementById('jcProgName').value;
-    const stage = document.getElementById('jcStage').value;
-    const category = document.getElementById('jcCategory').value;
-    const participant = document.getElementById('jcPartName').value;
-    const points = parseFloat(document.getElementById('jcPoints').value);
-
-    if (editingJcIndex !== null) {
-      judgeCtrlScores[editingJcIndex] = { prog, stage, category, participant, points };
-      editingJcIndex = null;
-      document.getElementById('btn-jc-save').innerText = "Add Score Entry";
-    } else {
-      judgeCtrlScores.push({ prog, stage, category, participant, points });
-    }
-
-    document.getElementById('jcProgName').value = '';
-    document.getElementById('jcPartName').value = '';
-    document.getElementById('jcPoints').value = '';
-    renderJudgeCtrlTable();
-  }
-
-  function renderJudgeCtrlTable() {
-    const tbody = document.getElementById('jcTableBody');
-    tbody.innerHTML = '';
-    judgeCtrlScores.forEach((item, i) => {
-      tbody.innerHTML += `<tr>
-        <td>${i + 1}</td><td><b>${item.participant}</b></td><td>${item.prog}</td>
-        <td>${item.category}</td><td>${item.stage}</td><td><b>${item.points}</b></td>
-        <td>
-          <button class="btn-edit" onclick="editJcEntry(${i})">Edit</button>
-          <button class="btn-delete" onclick="deleteJcEntry(${i})">Delete</button>
-        </td>
-      </tr>`;
-    });
-  }
-
-  function editJcEntry(i) {
-    const item = judgeCtrlScores[i];
-    editingJcIndex = i;
-    document.getElementById('jcProgName').value = item.prog;
-    document.getElementById('jcStage').value = item.stage;
-    document.getElementById('jcCategory').value = item.category;
-    document.getElementById('jcPartName').value = item.participant;
-    document.getElementById('jcPoints').value = item.points;
-    document.getElementById('btn-jc-save').innerText = "Update Score Entry";
-  }
-
-  function deleteJcEntry(i) {
-    if (confirm("Delete score entry?")) { judgeCtrlScores.splice(i, 1); renderJudgeCtrlTable(); }
-  }
-
-  // JUDGE LEADERBOARD LOGIC
-  function renderJudgeLeaderboard() {
-    const stageFilter = document.getElementById('jFilterStage').value;
-    const catFilter = document.getElementById('jFilterCategory').value;
-    const excludeGeneral = document.getElementById('jExcludeGeneral').checked;
-
-    let totals = {};
-
-    judgeCtrlScores.forEach(item => {
-      if (stageFilter !== 'ALL' && item.stage !== stageFilter) return;
-      if (catFilter !== 'ALL' && item.category !== catFilter) return;
-      if (excludeGeneral && item.category === 'General') return;
-
-      if (!totals[item.participant]) totals[item.participant] = 0;
-      totals[item.participant] += item.points;
-    });
-
-    let sorted = Object.keys(totals).map(name => ({ name, points: totals[name] }));
-    sorted.sort((a, b) => b.points - a.points);
-
-    const tbody = document.getElementById('judgeLeaderboardBody');
-    tbody.innerHTML = '';
-    sorted.forEach((item, index) => {
-      tbody.innerHTML += `<tr>
-        <td><b>#${index + 1}</b></td>
-        <td><b>${item.name}</b></td>
-        <td><span style="color:var(--primary); font-weight:bold; font-size:16px;">${item.points} pts</span></td>
-      </tr>`;
-    });
-  }
-
-  // TEAM USER LOGIC & REGISTRATION
-  function handleTeamLogin(e) {
-    e.preventDefault();
-    const u = document.getElementById('loginUser').value;
-    const p = document.getElementById('loginPass').value;
-    const found = teams.find(t => t.user === u && t.pass === p);
-
-    if (found) {
-      loggedInTeam = found.name;
-      document.getElementById('team-login-section').classList.add('hidden');
-      document.getElementById('team-portal-section').classList.remove('hidden');
-      document.getElementById('team-entries-section').classList.remove('hidden');
-      document.getElementById('team-info').style.display = "block";
-      document.getElementById('team-info').innerHTML = `Logged in Team: <strong>${loggedInTeam}</strong>`;
-      renderMyEntries();
-    } else { alert("Invalid Credentials!"); }
-  }
-
+  // REGISTRATION & EDIT SUBMIT
   function updateEventsList() {
     const selectedCat = document.getElementById('categorySelect').value;
     const eventSelect = document.getElementById('eventSelect');
@@ -800,7 +729,8 @@
     if (editingEntryIndex !== null) {
       submissions[editingEntryIndex] = { team: loggedInTeam, category, eventName, stage, names };
       editingEntryIndex = null;
-      document.getElementById('btn-save-entry').innerText = "Submit Entry";
+      document.getElementById('btn-save-entry').innerText = "Submit Registration";
+      document.getElementById('btn-save-entry').style.background = "var(--accent-green)";
     } else {
       submissions.push({ team: loggedInTeam, category, eventName, stage, names });
     }
@@ -833,13 +763,100 @@
     updateEventsList();
     document.getElementById('eventSelect').value = item.eventName;
     generateParticipantFields();
+    
     const inputs = document.querySelectorAll('.participant-input');
     item.names.forEach((n, i) => { if(inputs[i]) inputs[i].value = n; });
-    document.getElementById('btn-save-entry').innerText = "Update Entry";
+    
+    document.getElementById('btn-save-entry').innerText = "Update Registration";
+    document.getElementById('btn-save-entry').style.background = "var(--accent-orange)";
   }
 
   function deleteEntry(index) {
     if (confirm("Delete entry?")) { submissions.splice(index, 1); renderMyEntries(); }
+  }
+
+  // JUDGE CTRL LOGIC
+  function saveJudgeCtrlEntry(e) {
+    e.preventDefault();
+    const prog = document.getElementById('jcProgName').value;
+    const stage = document.getElementById('jcStage').value;
+    const category = document.getElementById('jcCategory').value;
+    const participant = document.getElementById('jcPartName').value;
+    const points = parseFloat(document.getElementById('jcPoints').value);
+
+    if (editingJcIndex !== null) {
+      judgeCtrlScores[editingJcIndex] = { prog, stage, category, participant, points };
+      editingJcIndex = null;
+      document.getElementById('btn-jc-save').innerText = "Save Score";
+    } else {
+      judgeCtrlScores.push({ prog, stage, category, participant, points });
+    }
+
+    document.getElementById('jcProgName').value = '';
+    document.getElementById('jcPartName').value = '';
+    document.getElementById('jcPoints').value = '';
+    renderJudgeCtrlTable();
+  }
+
+  function renderJudgeCtrlTable() {
+    const tbody = document.getElementById('jcTableBody');
+    tbody.innerHTML = '';
+    judgeCtrlScores.forEach((item, i) => {
+      tbody.innerHTML += `<tr>
+        <td>${i + 1}</td><td><b>${item.participant}</b></td><td>${item.prog}</td>
+        <td>${item.category}</td><td>${item.stage}</td><td><b>${item.points}</b></td>
+        <td>
+          <button class="btn-edit" onclick="editJcEntry(${i})">Edit</button>
+          <button class="btn-delete" onclick="deleteJcEntry(${i})">Delete</button>
+        </td>
+      </tr>`;
+    });
+  }
+
+  function editJcEntry(i) {
+    const item = judgeCtrlScores[i];
+    editingJcIndex = i;
+    document.getElementById('jcProgName').value = item.prog;
+    document.getElementById('jcStage').value = item.stage;
+    document.getElementById('jcCategory').value = item.category;
+    document.getElementById('jcPartName').value = item.participant;
+    document.getElementById('jcPoints').value = item.points;
+    document.getElementById('btn-jc-save').innerText = "Update Score";
+  }
+
+  function deleteJcEntry(i) {
+    if (confirm("Delete score entry?")) { judgeCtrlScores.splice(i, 1); renderJudgeCtrlTable(); }
+  }
+
+  // JUDGE LEADERBOARD
+  function renderJudgeLeaderboard() {
+    const stageFilter = document.getElementById('jFilterStage').value;
+    const catFilter = document.getElementById('jFilterCategory').value;
+    const excludeGeneral = document.getElementById('jExcludeGeneral').checked;
+
+    let totals = {};
+
+    judgeCtrlScores.forEach(item => {
+      if (stageFilter !== 'ALL' && item.stage !== stageFilter) return;
+      if (catFilter !== 'ALL' && item.category !== catFilter) return;
+      if (excludeGeneral && item.category === 'General') return;
+
+      if (!totals[item.participant]) totals[item.participant] = 0;
+      totals[item.participant] += item.points;
+    });
+
+    let sorted = Object.keys(totals).map(name => ({ name, points: totals[name] }));
+    sorted.sort((a, b) => b.points - a.points);
+
+    const tbody = document.getElementById('judgeLeaderboardBody');
+    tbody.innerHTML = '';
+    sorted.forEach((item, index) => {
+      tbody.innerHTML += `<tr>
+        <td><b>#${index + 1}</b></td>
+        <td><b>${item.name}</b></td>
+        <td><span style="color:var(--primary); font-weight:bold; font-size:16px;">${item.points} pts</span></td>
+      </tr>`;
+    });
   }
 
   function renderResultsTable() {
