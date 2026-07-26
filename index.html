@@ -1,10 +1,708 @@
 <!DOCTYPE html>
-<html>
+<html lang="ml">
 <head>
-    <title>My Website</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAHJA 2026 | Literary Festival</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-hover: #1d4ed8;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --accent-orange: #f59e0b;
+      --accent-purple: #8b5cf6;
+    }
+
+    * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
+    body { background-color: var(--bg-color); color: var(--text-main); padding: 20px 10px; }
+    
+    .container { max-width: 950px; margin: 0 auto; }
+
+    /* Header Banner */
+    .header-banner { 
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); 
+      color: white; padding: 30px 20px; border-radius: 16px; text-align: center; margin-bottom: 25px; position: relative;
+      box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.3);
+    }
+    .logo-container img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #93c5fd; margin-bottom: 10px; }
+    .header-banner h1 { font-size: 32px; font-weight: 800; letter-spacing: 2px; }
+    .header-banner p { font-size: 14px; color: #93c5fd; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+
+    .admin-dots { position: absolute; top: 18px; right: 22px; color: #93c5fd; font-size: 24px; cursor: pointer; width: 36px; height: 36px; line-height: 36px; border-radius: 50%; text-align: center; }
+    .admin-dots:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    
+    /* Card UI */
+    .card { background: var(--card-bg); border-radius: 12px; padding: 25px; margin-bottom: 20px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    h2 { font-size: 20px; font-weight: 700; color: var(--text-main); margin-bottom: 18px; border-bottom: 2px solid var(--border-color); padding-bottom: 8px; }
+    
+    /* Forms & Inputs */
+    .form-group { margin-bottom: 16px; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: var(--text-muted); text-transform: uppercase; }
+    input, select { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background-color: #f8fafc; }
+    input:focus, select:focus { outline: none; border-color: var(--primary); background-color: #fff; }
+    
+    /* Buttons */
+    .btn-submit { background: var(--primary); color: white; border: none; padding: 12px; font-size: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 600; }
+    .btn-submit:hover { background: var(--primary-hover); }
+    
+    .btn-edit { background: var(--accent-orange); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 4px; }
+    .btn-delete { background: var(--accent-red); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .btn-action { border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; margin-left: 8px; }
+
+    /* Tables */
+    .table-responsive { overflow-x: auto; margin-top: 15px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th { background-color: #f1f5f9; color: var(--text-muted); font-weight: 600; text-align: left; padding: 12px; font-size: 12px; text-transform: uppercase; border-bottom: 2px solid var(--border-color); }
+    td { padding: 12px; border-bottom: 1px solid var(--border-color); }
+    
+    /* Modals */
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
+    .modal-content { background: #fff; margin: 8% auto; padding: 25px; border-radius: 16px; width: 90%; max-width: 450px; }
+    
+    .menu-list-btn { width: 100%; padding: 12px; margin-bottom: 8px; background: #f1f5f9; border: 1px solid var(--border-color); border-radius: 8px; text-align: left; font-weight: 600; cursor: pointer; }
+    .menu-list-btn:hover { background: var(--primary); color: white; }
+
+    .hidden { display: none !important; }
+
+    /* A4 Printing Optimization */
+    @media print {
+      body { background: white; padding: 0; }
+      .admin-dots, .btn-action, button, .form-group, #team-info, .header-banner p { display: none !important; }
+      .container { max-width: 100%; }
+      .card { border: none; box-shadow: none; padding: 0; }
+      table { border: 1px solid #000; }
+      th, td { border: 1px solid #000; padding: 8px; font-size: 12pt; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Welcome to My Website!</h1>
-    <p>This is my first website on GitHub Pages.</p>
+
+<div class="container">
+  
+  <!-- HEADER BANNER WITH LOGO -->
+  <div class="header-banner">
+    <div class="admin-dots" onclick="handleDotsClick()" title="Menu">⋮</div>
+    <div class="logo-container">
+      <img src="https://via.placeholder.com/100/1e40af/ffffff?text=BAHJA" id="programLogo" alt="BAHJA Logo">
+    </div>
+    <h1>BAHJA 2026</h1>
+    <p>Literary Festival 2k26</p>
+  </div>
+
+  <div id="team-info" style="margin-bottom:20px; font-weight:600; color:var(--primary); display:none; background:#eff6ff; padding:12px 16px; border-radius:8px;"></div>
+
+  <!-- ==================== HOME PAGE: REGISTER PHASE ==================== -->
+  <div id="register-phase-container">
+    
+    <!-- TEAM LOGIN FORM -->
+    <div id="team-login-section" class="card">
+      <h2>Team Login</h2>
+      <form onsubmit="handleTeamLogin(event)">
+        <div class="form-group">
+          <label>Team Username</label>
+          <input type="text" id="loginUser" placeholder="Enter username" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPass" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-submit">Login & Continue</button>
+      </form>
+    </div>
+
+    <!-- PARTICIPANT REGISTRATION FORM -->
+    <div id="team-portal-section" class="card hidden">
+      <h2 id="form-title">Program Registration</h2>
+      <div id="registration-closed-msg" class="hidden" style="color:var(--accent-red); font-weight:bold; margin-bottom:15px;">
+        ⚠️ Registrations are currently CLOSED by Committee.
+      </div>
+      <form id="programForm" onsubmit="submitProgram(event)">
+        
+        <div class="form-group">
+          <label>1. Select Category</label>
+          <select id="categorySelect" onchange="updateEventsList()" required>
+            <option value="">-- Choose Category --</option>
+            <option value="Lower Zone">Lower Zone</option>
+            <option value="Middle Zone">Middle Zone</option>
+            <option value="Higher Zone">Higher Zone</option>
+            <option value="Super Zone">Super Zone</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Search Program</label>
+          <input type="text" id="searchProgram" placeholder="Type to search program..." onkeyup="filterPrograms()">
+        </div>
+
+        <div class="form-group">
+          <label>2. Select Program</label>
+          <select id="eventSelect" onchange="generateParticipantFields()" required>
+            <option value="">-- Choose Program --</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="participantsContainer"></div>
+
+        <button type="submit" id="btn-save-entry" class="btn-submit" style="background:var(--accent-green);">Submit Entry</button>
+      </form>
+    </div>
+
+    <!-- TEAM'S SUBMITTED ENTRIES -->
+    <div id="team-entries-section" class="card hidden">
+      <h2>My Submitted Entries</h2>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Program</th>
+              <th>Stage Type</th>
+              <th>Participants</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="myEntriesTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== HOME PAGE: RESULT PHASE ==================== -->
+  <div id="result-phase-container" class="card hidden">
+    <h2>All Festival Results & Entries</h2>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Team</th>
+            <th>Category</th>
+            <th>Program</th>
+            <th>Stage</th>
+            <th>Participants</th>
+          </tr>
+        </thead>
+        <tbody id="resultsTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== COMMITTEE SECTION ==================== -->
+  <div id="committee-section" class="hidden">
+    
+    <!-- Status Control Box -->
+    <div class="card">
+      <h2>1. Registration Access Control</h2>
+      <div style="display:flex; gap:15px; align-items:center;">
+        <label><input type="radio" name="regAccess" id="regOpen" onchange="toggleRegAccess(true)" checked> Registration OPEN</label>
+        <label><input type="radio" name="regAccess" id="regClose" onchange="toggleRegAccess(false)"> Registration CLOSED</label>
+      </div>
+    </div>
+
+    <!-- Add Team Credentials -->
+    <div class="card">
+      <h2>2. Create Team Credentials</h2>
+      <form onsubmit="addTeam(event)">
+        <div class="form-group">
+          <input type="text" id="newTeamName" placeholder="Team Name" required style="margin-bottom:8px;">
+          <input type="text" id="newTeamUser" placeholder="Assign Username" required style="margin-bottom:8px;">
+          <input type="password" id="newTeamPass" placeholder="Assign Password" required>
+        </div>
+        <button type="submit" class="btn-submit">Add Team Account</button>
+      </form>
+    </div>
+
+    <!-- Add Programs -->
+    <div class="card">
+      <h2>3. Add Programs & Participant Count</h2>
+      <form onsubmit="addEvent(event)">
+        <div class="form-group">
+          <select id="newEventCategory" required style="margin-bottom:8px;">
+            <option value="">-- Select Category --</option>
+            <option value="Lower Zone">Lower Zone</option>
+            <option value="Middle Zone">Middle Zone</option>
+            <option value="Higher Zone">Higher Zone</option>
+            <option value="Super Zone">Super Zone</option>
+            <option value="General">General</option>
+          </select>
+          <input type="text" id="newEventName" placeholder="Program Name" required style="margin-bottom:8px;">
+          <input type="number" id="newEventLimit" placeholder="Max Allowed Participant Count" min="1" required style="margin-bottom:8px;">
+          <select id="newEventStage" required>
+            <option value="On Stage">On Stage</option>
+            <option value="Off Stage">Off Stage</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-submit" style="background:var(--accent-purple);">Add Program Option</button>
+      </form>
+    </div>
+
+    <!-- Comprehensive Filtered Lists & Printing -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h2>4. Master Reports & Lists</h2>
+        <div>
+          <button class="btn-action" style="background:#e2e8f0;" onclick="window.print()">🖨️ Print A4 Sheet</button>
+          <button class="btn-action" style="background:var(--accent-purple); color:white;" onclick="downloadCSV()">📥 Export CSV</button>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:15px;">
+        <div>
+          <label>Filter Team</label>
+          <select id="filterTeam" onchange="filterMasterList()">
+            <option value="ALL">All Teams</option>
+          </select>
+        </div>
+        <div>
+          <label>Filter Category</label>
+          <select id="filterCategory" onchange="filterMasterList()">
+            <option value="ALL">All Categories</option>
+            <option value="Lower Zone">Lower Zone</option>
+            <option value="Middle Zone">Middle Zone</option>
+            <option value="Higher Zone">Higher Zone</option>
+            <option value="Super Zone">Super Zone</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+        <div>
+          <label>Filter Stage</label>
+          <select id="filterStage" onchange="filterMasterList()">
+            <option value="ALL">All Stages</option>
+            <option value="On Stage">On Stage</option>
+            <option value="Off Stage">Off Stage</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table id="printableTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Team</th>
+              <th>Category</th>
+              <th>Program</th>
+              <th>Stage</th>
+              <th>Participants</th>
+            </tr>
+          </thead>
+          <tbody id="masterTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ==================== POPUP MODALS ==================== -->
+
+<!-- 1. MAIN LOGIN POPUP -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <h3 style="margin-bottom:15px; text-align:center;">Login</h3>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="mainUser" placeholder="Enter username">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="mainPass" placeholder="••••••••">
+    </div>
+    <button class="btn-submit" onclick="verifyMainLogin()">Login</button>
+    <button style="background:transparent; border:none; color:var(--text-muted); width:100%; padding:8px; margin-top:8px; cursor:pointer;" onclick="closeModal('loginModal')">Close</button>
+  </div>
+</div>
+
+<!-- 2. ADMIN MENU POPUP (SHOWS AFTER LOGIN) -->
+<div id="menuModal" class="modal">
+  <div class="modal-content">
+    <h3 style="margin-bottom:15px; text-align:center;">Control Panel</h3>
+    <button class="menu-list-btn" onclick="openSubAuth('Settings')">⚙️ Settings</button>
+    <button class="menu-list-btn" onclick="openSubAuth('Committee')">👥 Committee</button>
+    <button class="menu-list-btn" onclick="alert('Judge Panel: Access Granted')">⚖️ Judge</button>
+    <button class="menu-list-btn" onclick="alert('Judge Ctrl Panel: Access Granted')">🎛️ Judge Ctrl</button>
+    <button style="background:var(--accent-red); color:white; border:none; width:100%; padding:10px; border-radius:8px; margin-top:10px; cursor:pointer;" onclick="adminLogout()">Logout Admin</button>
+  </div>
+</div>
+
+<!-- 3. SUB-AUTH PASSWORD POPUP -->
+<div id="subAuthModal" class="modal">
+  <div class="modal-content">
+    <h3 id="subAuthTitle" style="margin-bottom:15px; text-align:center;">Auth Required</h3>
+    <div class="form-group">
+      <label>Enter Password</label>
+      <input type="password" id="subAuthPass" placeholder="••••••••">
+    </div>
+    <button class="btn-submit" onclick="verifySubAuth()">Authenticate</button>
+    <button style="background:transparent; border:none; color:var(--text-muted); width:100%; padding:8px; margin-top:8px; cursor:pointer;" onclick="closeModal('subAuthModal')">Cancel</button>
+  </div>
+</div>
+
+<!-- 4. SETTINGS CONTROL PANEL MODAL -->
+<div id="settingsModal" class="modal">
+  <div class="modal-content">
+    <h3 style="margin-bottom:15px; text-align:center;">Settings Panel</h3>
+    <div class="form-group">
+      <label>Active Home Phase Display</label>
+      <div style="margin-top:10px;">
+        <label style="text-transform:none; margin-bottom:8px;">
+          <input type="radio" name="phaseToggle" id="toggleReg" onchange="changePhaseDisplay('register')" checked>
+          Register Phase ON (Result Hidden)
+        </label>
+        <label style="text-transform:none;">
+          <input type="radio" name="phaseToggle" id="toggleRes" onchange="changePhaseDisplay('result')">
+          Result Phase ON (Register Hidden)
+        </label>
+      </div>
+    </div>
+    <button class="btn-submit" onclick="closeModal('settingsModal')">Save & Apply</button>
+  </div>
+</div>
+
+<script>
+  // Initial Data
+  let teams = [{ name: "Team Alpha", user: "alpha", pass: "1234" }];
+  let eventsData = [
+    { category: "Lower Zone", name: "Elocution", limit: 1, stage: "On Stage" },
+    { category: "Lower Zone", name: "Group Song", limit: 3, stage: "On Stage" },
+    { category: "General", name: "Essay Writing", limit: 1, stage: "Off Stage" }
+  ];
+  
+  let submissions = [];
+  let isAdminLoggedIn = false;
+  let loggedInTeam = null;
+  let editingIndex = null;
+  let currentSubAuthTarget = '';
+  let isRegistrationOpen = true;
+
+  // Helper Functions for Modals
+  function closeModal(id) { document.getElementById(id).style.display = "none"; }
+  function openModal(id) { document.getElementById(id).style.display = "block"; }
+
+  // 3-Dots Click Handler
+  function handleDotsClick() {
+    if (!isAdminLoggedIn) {
+      openModal('loginModal');
+    } else {
+      openModal('menuModal');
+    }
+  }
+
+  // Verify Main Admin Login (bahja@2026 / 12345678)
+  function verifyMainLogin() {
+    const u = document.getElementById('mainUser').value;
+    const p = document.getElementById('mainPass').value;
+
+    if (u === "bahja@2026" && p === "12345678") {
+      isAdminLoggedIn = true;
+      closeModal('loginModal');
+      openModal('menuModal');
+      document.getElementById('mainUser').value = '';
+      document.getElementById('mainPass').value = '';
+    } else {
+      alert("Invalid Admin Credentials!");
+    }
+  }
+
+  function adminLogout() {
+    isAdminLoggedIn = false;
+    closeModal('menuModal');
+    document.getElementById('committee-section').classList.add('hidden');
+    alert("Logged out from Admin");
+  }
+
+  // Open Secondary Auth for Settings & Committee
+  function openSubAuth(target) {
+    currentSubAuthTarget = target;
+    closeModal('menuModal');
+    document.getElementById('subAuthTitle').innerText = `${target} Password`;
+    document.getElementById('subAuthPass').value = '';
+    openModal('subAuthModal');
+  }
+
+  // Verify Secondary Passwords
+  function verifySubAuth() {
+    const p = document.getElementById('subAuthPass').value;
+
+    if (currentSubAuthTarget === 'Settings' && p === 'settings@2026') {
+      closeModal('subAuthModal');
+      openModal('settingsModal');
+    } else if (currentSubAuthTarget === 'Committee' && p === 'committee2026') {
+      closeModal('subAuthModal');
+      document.getElementById('register-phase-container').classList.add('hidden');
+      document.getElementById('result-phase-container').classList.add('hidden');
+      document.getElementById('committee-section').classList.remove('hidden');
+      updateTeamFilterDropdown();
+      filterMasterList();
+    } else {
+      alert("Incorrect Password!");
+    }
+  }
+
+  // Settings: Switch Home Display Phase
+  function changePhaseDisplay(phase) {
+    document.getElementById('committee-section').classList.add('hidden');
+    if (phase === 'register') {
+      document.getElementById('register-phase-container').classList.remove('hidden');
+      document.getElementById('result-phase-container').classList.add('hidden');
+    } else {
+      document.getElementById('register-phase-container').classList.add('hidden');
+      document.getElementById('result-phase-container').classList.remove('hidden');
+      renderResultsTable();
+    }
+  }
+
+  // Committee Controls
+  function toggleRegAccess(isOpen) {
+    isRegistrationOpen = isOpen;
+    const form = document.getElementById('programForm');
+    const msg = document.getElementById('registration-closed-msg');
+    
+    if (!isOpen) {
+      form.classList.add('hidden');
+      msg.classList.remove('hidden');
+    } else {
+      form.classList.remove('hidden');
+      msg.classList.add('hidden');
+    }
+  }
+
+  function addTeam(e) {
+    e.preventDefault();
+    const name = document.getElementById('newTeamName').value;
+    teams.push({
+      name: name,
+      user: document.getElementById('newTeamUser').value,
+      pass: document.getElementById('newTeamPass').value
+    });
+    alert(`Team '${name}' successfully created!`);
+    document.getElementById('newTeamName').value = '';
+    document.getElementById('newTeamUser').value = '';
+    document.getElementById('newTeamPass').value = '';
+    updateTeamFilterDropdown();
+  }
+
+  function addEvent(e) {
+    e.preventDefault();
+    eventsData.push({
+      category: document.getElementById('newEventCategory').value,
+      name: document.getElementById('newEventName').value,
+      limit: parseInt(document.getElementById('newEventLimit').value),
+      stage: document.getElementById('newEventStage').value
+    });
+    alert("Program successfully added!");
+    document.getElementById('newEventName').value = '';
+    document.getElementById('newEventLimit').value = '';
+  }
+
+  // Team Portal Logic
+  function handleTeamLogin(e) {
+    e.preventDefault();
+    const u = document.getElementById('loginUser').value;
+    const p = document.getElementById('loginPass').value;
+    const found = teams.find(t => t.user === u && t.pass === p);
+
+    if (found) {
+      loggedInTeam = found.name;
+      document.getElementById('team-login-section').classList.add('hidden');
+      document.getElementById('team-portal-section').classList.remove('hidden');
+      document.getElementById('team-entries-section').classList.remove('hidden');
+      document.getElementById('team-info').style.display = "block";
+      document.getElementById('team-info').innerHTML = `Logged in Team: <strong>${loggedInTeam}</strong>`;
+      renderMyEntries();
+    } else { alert("Invalid Username/Password!"); }
+  }
+
+  function updateEventsList() {
+    const selectedCat = document.getElementById('categorySelect').value;
+    const eventSelect = document.getElementById('eventSelect');
+    eventSelect.innerHTML = '<option value="">-- Choose Program --</option>';
+
+    eventsData.filter(e => e.category === selectedCat).forEach(ev => {
+      let opt = document.createElement('option');
+      opt.value = ev.name;
+      opt.text = `${ev.name} (${ev.stage} - Max: ${ev.limit})`;
+      opt.setAttribute('data-limit', ev.limit);
+      opt.setAttribute('data-stage', ev.stage);
+      eventSelect.add(opt);
+    });
+  }
+
+  function filterPrograms() {
+    const filter = document.getElementById('searchProgram').value.toLowerCase();
+    const options = document.getElementById('eventSelect').options;
+    for (let i = 1; i < options.length; i++) {
+      options[i].style.display = options[i].text.toLowerCase().includes(filter) ? "" : "none";
+    }
+  }
+
+  function generateParticipantFields() {
+    const eventSelect = document.getElementById('eventSelect');
+    const selectedOption = eventSelect.options[eventSelect.selectedIndex];
+    const limit = selectedOption ? selectedOption.getAttribute('data-limit') : 0;
+    
+    const container = document.getElementById('participantsContainer');
+    container.innerHTML = '';
+
+    if (limit) {
+      container.innerHTML = `<label>Enter Participant Name(s):</label>`;
+      for (let i = 1; i <= limit; i++) {
+        container.innerHTML += `<input type="text" class="participant-input" placeholder="Participant Name ${i}" required style="margin-bottom:8px;">`;
+      }
+    }
+  }
+
+  function submitProgram(e) {
+    e.preventDefault();
+    const category = document.getElementById('categorySelect').value;
+    const eventSelect = document.getElementById('eventSelect');
+    const eventName = eventSelect.value;
+    const stage = eventSelect.options[eventSelect.selectedIndex].getAttribute('data-stage');
+
+    let names = [];
+    document.querySelectorAll('.participant-input').forEach(inp => {
+      if(inp.value.trim()) names.push(inp.value.trim());
+    });
+
+    if (editingIndex !== null) {
+      submissions[editingIndex] = { team: loggedInTeam, category, eventName, stage, names };
+      editingIndex = null;
+      alert("Entry updated!");
+      document.getElementById('btn-save-entry').innerText = "Submit Entry";
+    } else {
+      submissions.push({ team: loggedInTeam, category, eventName, stage, names });
+      alert("Entry registered!");
+    }
+
+    document.getElementById('programForm').reset();
+    document.getElementById('participantsContainer').innerHTML = '';
+    renderMyEntries();
+  }
+
+  function renderMyEntries() {
+    const myTable = document.getElementById('myEntriesTable');
+    myTable.innerHTML = '';
+
+    submissions.forEach((sub, idx) => {
+      if (sub.team === loggedInTeam) {
+        myTable.innerHTML += `<tr>
+          <td>${sub.category}</td>
+          <td><b>${sub.eventName}</b></td>
+          <td>${sub.stage}</td>
+          <td>${sub.names.join(', ')}</td>
+          <td>
+            <button class="btn-edit" onclick="editEntry(${idx})">Edit</button>
+            <button class="btn-delete" onclick="deleteEntry(${idx})">Delete</button>
+          </td>
+        </tr>`;
+      }
+    });
+  }
+
+  function editEntry(index) {
+    const item = submissions[index];
+    editingIndex = index;
+
+    document.getElementById('categorySelect').value = item.category;
+    updateEventsList();
+    document.getElementById('eventSelect').value = item.eventName;
+    generateParticipantFields();
+
+    const inputs = document.querySelectorAll('.participant-input');
+    item.names.forEach((n, i) => { if(inputs[i]) inputs[i].value = n; });
+
+    document.getElementById('btn-save-entry').innerText = "Update Entry";
+  }
+
+  function deleteEntry(index) {
+    if (confirm("Delete this registration?")) {
+      submissions.splice(index, 1);
+      renderMyEntries();
+    }
+  }
+
+  function renderResultsTable() {
+    const resTable = document.getElementById('resultsTable');
+    resTable.innerHTML = '';
+    submissions.forEach((sub, idx) => {
+      resTable.innerHTML += `<tr>
+        <td>${idx + 1}</td>
+        <td><b>${sub.team}</b></td>
+        <td>${sub.category}</td>
+        <td>${sub.eventName}</td>
+        <td>${sub.stage}</td>
+        <td>${sub.names.join(', ')}</td>
+      </tr>`;
+    });
+  }
+
+  // Committee Master List Filtering
+  function updateTeamFilterDropdown() {
+    const teamSelect = document.getElementById('filterTeam');
+    teamSelect.innerHTML = '<option value="ALL">All Teams</option>';
+    teams.forEach(t => {
+      let opt = document.createElement('option');
+      opt.value = t.name;
+      opt.text = t.name;
+      teamSelect.add(opt);
+    });
+  }
+
+  function filterMasterList() {
+    const team = document.getElementById('filterTeam').value;
+    const cat = document.getElementById('filterCategory').value;
+    const stage = document.getElementById('filterStage').value;
+
+    const tbody = document.getElementById('masterTableBody');
+    tbody.innerHTML = '';
+
+    let filtered = submissions.filter(item => {
+      return (team === 'ALL' || item.team === team) &&
+             (cat === 'ALL' || item.category === cat) &&
+             (stage === 'ALL' || item.stage === stage);
+    });
+
+    filtered.forEach((sub, idx) => {
+      tbody.innerHTML += `<tr>
+        <td>${idx + 1}</td>
+        <td><b>${sub.team}</b></td>
+        <td>${sub.category}</td>
+        <td>${sub.eventName}</td>
+        <td>${sub.stage}</td>
+        <td>${sub.names.join(', ')}</td>
+      </tr>`;
+    });
+  }
+
+  function downloadCSV() {
+    let table = document.getElementById("printableTable");
+    let rows = table.querySelectorAll("tr");
+    let csv = [];
+    for (let i = 0; i < rows.length; i++) {
+      let row = [], cols = rows[i].querySelectorAll("td, th");
+      for (let j = 0; j < cols.length; j++) row.push('"' + cols[j].innerText + '"');
+      csv.push(row.join(","));
+    }
+    let csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+    let downloadLink = document.createElement("a");
+    downloadLink.download = "BAHJA_2026_Master_List.csv";
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+  }
+</script>
+
 </body>
 </html>
