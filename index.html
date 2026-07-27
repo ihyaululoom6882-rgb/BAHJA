@@ -924,3 +924,12 @@
     </script>
 </body>
 </html>
+public function toggleRegisterPhase(Request $request)
+{
+    Setting::updateOrCreate(
+        ['key' => 'register_phase_status'],
+        ['value' => $request->status ? 1 : 0]
+    );
+
+    return back()->with('success', 'Register Phase Status Updated!');
+}
