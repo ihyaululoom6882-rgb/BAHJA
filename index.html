@@ -310,7 +310,7 @@
                 <p style="color: #64748b;">Grand Cultural Championship Portal</p>
             </div>
 
-            <!-- FRONT PAGE REGISTRATION SECTION (Shows only when Register Phase is ON) -->
+            <!-- FRONT PAGE REGISTRATION SECTION -->
             <div id="front-registration-card" class="card" style="display: none; margin-top: 20px;">
                 <h2 class="card-title" style="margin-bottom: 15px; color: var(--primary-blue);">
                     <i class="fa-solid fa-user-plus"></i> Team Registration
@@ -375,7 +375,7 @@
             <div class="switch-wrap">
                 <div>
                     <strong>Register Phase Status</strong>
-                    <div style="font-size: 0.8rem; color: #64748b;">Enables team registration section on the home page</div>
+                    <div style="font-size: 0.8rem; color: #64748b;">Enables team registration section instantly on the home page</div>
                 </div>
                 <label class="switch">
                     <input type="checkbox" id="toggle-register-phase" onchange="handlePhaseToggle('register')">
@@ -385,7 +385,7 @@
             <div class="switch-wrap">
                 <div>
                     <strong>Result Phase Status</strong>
-                    <div style="font-size: 0.8rem; color: #64748b;">Publishes live result leaderboard</div>
+                    <div style="font-size: 0.8rem; color: #64748b;">Publishes live result leaderboard instantly</div>
                 </div>
                 <label class="switch">
                     <input type="checkbox" id="toggle-result-phase" onchange="handlePhaseToggle('result')">
@@ -722,6 +722,7 @@
             }
         }
 
+        /* Instant Toggle and Local Update Logic */
         function handlePhaseToggle(type) {
             let regVal = document.getElementById('toggle-register-phase').checked;
             let resVal = document.getElementById('toggle-result-phase').checked;
@@ -729,6 +730,20 @@
             if(type === 'register' && regVal) resVal = false;
             if(type === 'result' && resVal) regVal = false;
 
+            // Update local object immediately for instant UI change
+            dbData.settings = { registerPhase: regVal, resultPhase: resVal };
+            renderSettingsUI();
+
+            // Notify user
+            if(type === 'register') {
+                if(regVal) {
+                    alert("Register Phase Published Live! Home page was updated.");
+                } else {
+                    alert("Register Phase turned OFF.");
+                }
+            }
+
+            // Push to Firebase Realtime Database
             if (window.dbSet && window.dbRef && window.dbInstance) {
                 window.dbSet(window.dbRef(window.dbInstance, 'settings'), { registerPhase: regVal, resultPhase: resVal });
             }
@@ -736,6 +751,9 @@
 
         function toggleRegistrationState() {
             const nextState = dbData.regStatus === 'open' ? 'closed' : 'open';
+            dbData.regStatus = nextState;
+            document.getElementById('committee-reg-status-text').innerText = dbData.regStatus.toUpperCase();
+
             if (window.dbSet && window.dbRef && window.dbInstance) {
                 window.dbSet(window.dbRef(window.dbInstance, 'regStatus'), nextState);
             }
@@ -818,12 +836,17 @@
 
             if (window.dbPush && window.dbRef && window.dbInstance) {
                 window.dbPush(window.dbRef(window.dbInstance, 'registrations'), regData);
-                alert("Registration Successful!");
-                
-                document.getElementById('reg-part-name').value = '';
-                document.getElementById('reg-part-cat').value = '';
-                progSelect.innerHTML = '<option value="">Select Program</option>';
+            } else {
+                // Local fallback for offline testing
+                const newKey = 'reg_' + Date.now();
+                dbData.registrations[newKey] = regData;
+                renderReportsTable();
             }
+
+            alert("Registration Successful!");
+            document.getElementById('reg-part-name').value = '';
+            document.getElementById('reg-part-cat').value = '';
+            progSelect.innerHTML = '<option value="">Select Program</option>';
         }
 
         /* Committee Functions */
@@ -835,17 +858,26 @@
                 username: document.getElementById('team-username').value,
                 password: document.getElementById('team-password').value
             };
+
             if(key) {
-                window.dbUpdate(window.dbRef(window.dbInstance, `teams/${key}`), data);
+                if (window.dbUpdate && window.dbRef && window.dbInstance) {
+                    window.dbUpdate(window.dbRef(window.dbInstance, `teams/${key}`), data);
+                } else { dbData.teams[key] = data; renderCommitteeUI(); }
             } else {
-                window.dbPush(window.dbRef(window.dbInstance, 'teams'), data);
+                if (window.dbPush && window.dbRef && window.dbInstance) {
+                    window.dbPush(window.dbRef(window.dbInstance, 'teams'), data);
+                } else { dbData.teams['team_' + Date.now()] = data; renderCommitteeUI(); }
             }
             document.getElementById('team-edit-key').value = '';
             e.target.reset();
         }
 
         function deleteTeam(k) {
-            if(confirm("Delete team?")) window.dbRemove(window.dbRef(window.dbInstance, `teams/${k}`));
+            if(confirm("Delete team?")) {
+                if (window.dbRemove && window.dbRef && window.dbInstance) {
+                    window.dbRemove(window.dbRef(window.dbInstance, `teams/${k}`));
+                } else { delete dbData.teams[k]; renderCommitteeUI(); }
+            }
         }
 
         function editTeam(k) {
@@ -865,17 +897,26 @@
                 limit: document.getElementById('prog-limit').value,
                 stage: document.getElementById('prog-stage').value
             };
+
             if(key) {
-                window.dbUpdate(window.dbRef(window.dbInstance, `programs/${key}`), data);
+                if (window.dbUpdate && window.dbRef && window.dbInstance) {
+                    window.dbUpdate(window.dbRef(window.dbInstance, `programs/${key}`), data);
+                } else { dbData.programs[key] = data; renderCommitteeUI(); }
             } else {
-                window.dbPush(window.dbRef(window.dbInstance, 'programs'), data);
+                if (window.dbPush && window.dbRef && window.dbInstance) {
+                    window.dbPush(window.dbRef(window.dbInstance, 'programs'), data);
+                } else { dbData.programs['prog_' + Date.now()] = data; renderCommitteeUI(); }
             }
             document.getElementById('program-edit-key').value = '';
             e.target.reset();
         }
 
         function deleteProgram(k) {
-            if(confirm("Delete program?")) window.dbRemove(window.dbRef(window.dbInstance, `programs/${k}`));
+            if(confirm("Delete program?")) {
+                if (window.dbRemove && window.dbRef && window.dbInstance) {
+                    window.dbRemove(window.dbRef(window.dbInstance, `programs/${k}`));
+                } else { delete dbData.programs[k]; renderCommitteeUI(); }
+            }
         }
 
         function editProgram(k) {
@@ -969,16 +1010,24 @@
             };
 
             if(key) {
-                window.dbUpdate(window.dbRef(window.dbInstance, `judgePoints/${key}`), data);
+                if (window.dbUpdate && window.dbRef && window.dbInstance) {
+                    window.dbUpdate(window.dbRef(window.dbInstance, `judgePoints/${key}`), data);
+                } else { dbData.judgePoints[key] = data; renderJudgeCtrlUI(); renderLeaderboard(); }
             } else {
-                window.dbPush(window.dbRef(window.dbInstance, 'judgePoints'), data);
+                if (window.dbPush && window.dbRef && window.dbInstance) {
+                    window.dbPush(window.dbRef(window.dbInstance, 'judgePoints'), data);
+                } else { dbData.judgePoints['jp_' + Date.now()] = data; renderJudgeCtrlUI(); renderLeaderboard(); }
             }
             document.getElementById('judge-edit-key').value = '';
             e.target.reset();
         }
 
         function deleteJudgePoint(k) {
-            if(confirm("Delete score entry?")) window.dbRemove(window.dbRef(window.dbInstance, `judgePoints/${k}`));
+            if(confirm("Delete score entry?")) {
+                if (window.dbRemove && window.dbRef && window.dbInstance) {
+                    window.dbRemove(window.dbRef(window.dbInstance, `judgePoints/${k}`));
+                } else { delete dbData.judgePoints[k]; renderJudgeCtrlUI(); renderLeaderboard(); }
+            }
         }
 
         function editJudgePoint(k) {
