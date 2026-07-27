@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAHJA 2026 - Control Panel</title>
+    <title>BAHJA 2026 - DAWA FEST</title>
     
-    <!-- Firebase SDK Modules -->
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -17,8 +21,7 @@
             projectId: "bahja-2k26",
             storageBucket: "bahja-2k26.firebasestorage.app",
             messagingSenderId: "69268813734",
-            appId: "1:69268813734:web:da45071d7110c304288167",
-            measurementId: "G-2HHXCPZ5VD"
+            appId: "1:69268813734:web:da45071d7110c304288167"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -36,232 +39,449 @@
     </script>
 
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { margin: 0; padding: 0; background-color: #f0f2f5; color: #1c1e21; }
-        
-        /* Top Navigation Bar */
-        .navbar {
-            background-color: #0056b3;
-            color: white;
-            padding: 15px 20px;
+        :root {
+            --primary-blue: #007bff;
+            --hover-blue: #0056b3;
+            --bg-gray: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --border-color: #e2e8f0;
+            --danger-red: #dc3545;
+            --success-green: #28a745;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        /* Top Bar Header */
+        .header {
+            text-align: center;
+            padding: 30px 20px 10px;
+            position: relative;
+        }
+
+        .header h1 {
+            color: var(--primary-blue);
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            color: #6c757d;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+
+        /* Top-Right 3 Dots Button */
+        .dots-menu-wrap {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+        }
+
+        .dots-btn {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+
+        .dots-btn:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            min-width: 190px;
+            z-index: 1000;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .dropdown-menu.show { display: block; }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 18px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .dropdown-menu a:hover {
+            background: #f1f5f9;
+            color: var(--primary-blue);
+        }
+
+        /* Layout Container & Cards */
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+        }
+
+        .card-header-flex {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            margin-bottom: 25px;
         }
-        .navbar h1 { margin: 0; font-size: 1.5rem; }
-        
-        /* 3-Dot Menu Dropdown */
-        .menu-container { position: relative; display: inline-block; }
-        .dots-btn {
-            background: none; border: none; color: white;
-            font-size: 24px; cursor: pointer; padding: 0 10px;
-        }
-        .dropdown-content {
-            display: none; position: absolute; right: 0;
-            background-color: white; min-width: 180px;
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-            border-radius: 8px; z-index: 1000; overflow: hidden;
-        }
-        .dropdown-content a {
-            color: #333; padding: 12px 16px; text-decoration: none;
-            display: block; font-weight: bold; font-size: 0.95rem;
-        }
-        .dropdown-content a:hover { background-color: #f1f1f1; color: #0056b3; }
-        .show-menu { display: block; }
 
-        /* Container Layout */
-        .container { max-width: 1000px; margin: 30px auto; padding: 20px; }
-        .card {
-            background: white; border-radius: 12px; padding: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 25px;
+        .card-title {
+            color: var(--primary-blue);
+            font-size: 1.3rem;
+            font-weight: 600;
         }
-        .card h2 { margin-top: 0; color: #0056b3; border-bottom: 2px solid #e4e6eb; padding-bottom: 10px; }
 
-        /* Form Controls */
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+        /* Forms & Controls */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 6px;
+        }
+
         .form-control {
-            width: 100%; padding: 10px 12px; font-size: 1rem;
-            border: 1px solid #ccc; border-radius: 6px; outline: none;
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border 0.2s;
         }
+
+        .form-control:focus {
+            border-color: var(--primary-blue);
+        }
+
+        /* UI Buttons */
         .btn {
-            background-color: #0056b3; color: white; border: none;
-            padding: 10px 20px; font-size: 1rem; border-radius: 6px;
-            cursor: pointer; font-weight: bold; transition: 0.3s;
+            background: var(--primary-blue);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        .btn:hover { background-color: #003d82; }
-        .btn-danger { background-color: #dc3545; }
-        .btn-danger:hover { background-color: #a71d2a; }
-        .btn-warning { background-color: #ffc107; color: #212529; }
-        .btn-success { background-color: #28a745; }
 
-        /* Tables */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #dee2e6; padding: 10px; text-align: left; }
-        th { background-color: #0056b3; color: white; }
-        tr:nth-child(even) { background-color: #f8f9fa; }
+        .btn:hover { background: var(--hover-blue); }
+        .btn-block { width: 100%; }
+        .btn-danger { background: var(--danger-red); }
+        .btn-danger:hover { background: #b02a37; }
+        .btn-success { background: var(--success-green); }
+        .btn-success:hover { background: #218838; }
 
-        /* Views Control */
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+
+        /* Custom Status Box */
+        .status-banner {
+            background: #eef9f1;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        /* Filters Section */
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* Modern Table Style */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            background: white;
+        }
+
+        th {
+            background: var(--primary-blue);
+            color: white;
+            font-weight: 600;
+            padding: 14px 16px;
+            font-size: 0.9rem;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: #334155;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) { background-color: #f8fafc; }
+
+        /* Panel Visibility */
         .view-panel { display: none; }
         .active-panel { display: block; }
 
         /* Toggle Switches */
-        .switch-container { display: flex; align-items: center; gap: 15px; margin: 15px 0; }
-        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .switch-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .switch {
+            position: relative; display: inline-block; width: 46px; height: 24px;
+        }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
             position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc; transition: .4s; border-radius: 34px;
+            background-color: #cbd5e1; transition: .3s; border-radius: 30px;
         }
         .slider:before {
-            position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px;
-            background-color: white; transition: .4s; border-radius: 50%;
+            position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+            background-color: white; transition: .3s; border-radius: 50%;
         }
-        input:checked + .slider { background-color: #28a745; }
-        input:checked + .slider:before { transform: translateX(24px); }
+        input:checked + .slider { background-color: var(--primary-blue); }
+        input:checked + .slider:before { transform: translateX(22px); }
 
-        /* Print Layouts */
+        /* Print Media Style */
         @media print {
+            .dots-menu-wrap, .btn, .filter-grid, .no-print { display: none !important; }
             body { background: white; }
-            .navbar, .btn, .form-group, .no-print { display: none !important; }
-            .container, .card { max-width: 100%; box-shadow: none; padding: 0; margin: 0; }
+            .card { border: none; box-shadow: none; padding: 0; }
             th { background-color: #000 !important; color: #fff !important; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Top Navigation Header -->
-    <div class="navbar">
-        <h1>BAHJA 2026</h1>
-        <div class="menu-container">
-            <button class="dots-btn" onclick="toggleMenu()">&#8942;</button>
-            <div id="dotsDropdown" class="dropdown-content">
-                <a href="#" id="menu-login-btn" onclick="openLoginModal()">Login</a>
+    <!-- Header -->
+    <div class="header">
+        <h1>BAHJA 2026 - DAWA FEST</h1>
+        <p>WELCOME TO BAHJA 2K26</p>
+
+        <!-- 3-Dot Dropdown Menu -->
+        <div class="dots-menu-wrap">
+            <button class="dots-btn" onclick="toggleMenu()"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+            <div id="dotsDropdown" class="dropdown-menu">
+                <a href="#" id="menu-login-btn" onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
                 <div id="sub-menu-items" style="display: none;">
-                    <a href="#" onclick="accessModule('SETTINGS')">SETTINGS</a>
-                    <a href="#" onclick="accessModule('COMMITTEE')">COMMITTEE</a>
-                    <a href="#" onclick="accessModule('JUDGE_CTRL')">JUDGE CTRL</a>
-                    <a href="#" onclick="accessModule('JUDGE')">JUDGE</a>
+                    <a href="#" onclick="accessModule('SETTINGS')"><i class="fa-solid fa-gear"></i> SETTINGS</a>
+                    <a href="#" onclick="accessModule('COMMITTEE')"><i class="fa-solid fa-users-gear"></i> COMMITTEE</a>
+                    <a href="#" onclick="accessModule('JUDGE_CTRL')"><i class="fa-solid fa-sliders"></i> JUDGE CTRL</a>
+                    <a href="#" onclick="accessModule('JUDGE')"><i class="fa-solid fa-award"></i> JUDGE</a>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="container">
-        
-        <!-- MAIN HOME PANEL -->
-        <div id="panel-home" class="view-panel active-panel card">
-            <h2 id="home-title">WELCOME TO BAHJA 2026</h2>
-            <p id="home-status-msg">Select options from the top-right menu to manage the festival.</p>
+
+        <!-- HOME PANEL -->
+        <div id="panel-home" class="view-panel active-panel card" style="text-align: center; padding: 50px 20px;">
+            <i class="fa-solid fa-circle-user" style="font-size: 3.5rem; color: var(--primary-blue); margin-bottom: 15px;"></i>
+            <h2 class="card-title" style="margin-bottom: 10px;">Committee Control Panel</h2>
+            <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 25px;">Please login from the menu options to manage registrations and scoring.</p>
+            <button class="btn" onclick="openLoginModal()">Login Now</button>
         </div>
 
-        <!-- 1. SETTINGS MODULE PANEL -->
+        <!-- 1. SETTINGS PANEL -->
         <div id="panel-settings" class="view-panel card">
-            <h2>SETTINGS</h2>
-            <div class="switch-container">
+            <h2 class="card-title" style="margin-bottom: 20px;">Portal Settings</h2>
+            
+            <div class="switch-row">
+                <span><strong>Register Phase Status</strong></span>
                 <label class="switch">
                     <input type="checkbox" id="toggle-register-phase" onchange="handlePhaseToggle('register')">
                     <span class="slider"></span>
                 </label>
-                <span><strong>Register Phase Mode</strong></span>
             </div>
 
-            <div class="switch-container">
+            <div class="switch-row">
+                <span><strong>Result Phase Status</strong></span>
                 <label class="switch">
                     <input type="checkbox" id="toggle-result-phase" onchange="handlePhaseToggle('result')">
                     <span class="slider"></span>
                 </label>
-                <span><strong>Result Phase Mode</strong></span>
             </div>
         </div>
 
-        <!-- 2. COMMITTEE MODULE PANEL -->
+        <!-- 2. COMMITTEE PANEL -->
         <div id="panel-committee" class="view-panel card">
-            <h2>COMMITTEE CONTROL</h2>
-
-            <!-- Registration Status Toggle -->
-            <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <h3>Registration Status: <span id="committee-reg-status-text" style="color: green;">OPEN</span></h3>
-                <button class="btn btn-warning" onclick="toggleRegistrationState()">Toggle Reg Open/Close</button>
+            <div class="card-header-flex">
+                <h2 class="card-title">Committee Control Panel</h2>
+                <button class="btn btn-danger btn-sm" onclick="openLoginModal()">Logout</button>
             </div>
 
-            <!-- Create Team Section -->
-            <h3>Create / Manage Teams</h3>
+            <!-- Registration Status Box -->
+            <div class="status-banner">
+                <div>
+                    Registration Portal Status: <strong id="committee-reg-status-text">OPEN</strong>
+                </div>
+                <button class="btn btn-danger btn-sm" onclick="toggleRegistrationState()">CLOSE REGISTRATION</button>
+            </div>
+
+            <!-- Add / Edit Team Form -->
+            <h3 style="font-size: 1.1rem; margin: 20px 0 15px; color: var(--text-dark);">Manage Teams</h3>
             <form onsubmit="saveTeam(event)">
                 <input type="hidden" id="team-edit-key">
                 <div class="form-group">
                     <label>Team Name</label>
-                    <input type="text" id="team-name" class="form-control" required>
+                    <input type="text" id="team-name" class="form-control" placeholder="Enter team name" required>
                 </div>
-                <div class="form-group">
-                    <label>Login Username</label>
-                    <input type="text" id="team-username" class="form-control" required>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="team-username" class="form-control" placeholder="Create username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="team-password" class="form-control" placeholder="Create password" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Login Password</label>
-                    <input type="password" id="team-password" class="form-control" required>
-                </div>
-                <button type="submit" class="btn">Save Team</button>
+                <button type="submit" class="btn" style="margin-bottom: 20px;">Save Team</button>
             </form>
-            <table>
-                <thead>
-                    <tr><th>Team Name</th><th>Username</th><th>Actions</th></tr>
-                </thead>
-                <tbody id="team-table-body"></tbody>
-            </table>
 
-            <hr style="margin: 30px 0;">
+            <div class="table-responsive" style="margin-bottom: 30px;">
+                <table>
+                    <thead>
+                        <tr><th>Team Name</th><th>Username</th><th style="text-align: right;">Actions</th></tr>
+                    </thead>
+                    <tbody id="team-table-body"></tbody>
+                </table>
+            </div>
 
-            <!-- Add Program Section -->
-            <h3>Adding Programs</h3>
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 30px 0;">
+
+            <!-- Program Addition Form -->
+            <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: var(--text-dark);">Manage Programs</h3>
             <form onsubmit="saveProgram(event)">
                 <input type="hidden" id="program-edit-key">
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="prog-category" class="form-control" required>
-                        <option value="LOWER ZONE">LOWER ZONE</option>
-                        <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                        <option value="HIGHER ZONE">HIGHER ZONE</option>
-                        <option value="SUPER ZONE">SUPER ZONE</option>
-                        <option value="GENERAL">GENERAL</option>
-                    </select>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="prog-category" class="form-control" required>
+                            <option value="LOWER ZONE">LOWER ZONE</option>
+                            <option value="MIDDLE ZONE">MIDDLE ZONE</option>
+                            <option value="HIGHER ZONE">HIGHER ZONE</option>
+                            <option value="SUPER ZONE">SUPER ZONE</option>
+                            <option value="GENERAL">GENERAL</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Program Name</label>
+                        <input type="text" id="prog-name" class="form-control" placeholder="Program title" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Program Name</label>
-                    <input type="text" id="prog-name" class="form-control" required>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Max Participant Limit</label>
+                        <input type="number" id="prog-limit" class="form-control" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stage Type</label>
+                        <select id="prog-stage" class="form-control" required>
+                            <option value="On Stage">On Stage</option>
+                            <option value="Off Stage">Off Stage</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Allowed Participants Count</label>
-                    <input type="number" id="prog-limit" class="form-control" min="1" required>
-                </div>
-                <div class="form-group">
-                    <label>Stage Type</label>
-                    <select id="prog-stage" class="form-control" required>
-                        <option value="On Stage">On Stage</option>
-                        <option value="Off Stage">Off Stage</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn">Save Program</button>
+                <button type="submit" class="btn" style="margin-bottom: 20px;">Save Program</button>
             </form>
-            <table>
-                <thead>
-                    <tr><th>Category</th><th>Program</th><th>Limit</th><th>Stage</th><th>Actions</th></tr>
-                </thead>
-                <tbody id="program-table-body"></tbody>
-            </table>
 
-            <hr style="margin: 30px 0;">
+            <div class="table-responsive" style="margin-bottom: 30px;">
+                <table>
+                    <thead>
+                        <tr><th>Category</th><th>Program</th><th>Limit</th><th>Stage</th><th style="text-align: right;">Actions</th></tr>
+                    </thead>
+                    <tbody id="program-table-body"></tbody>
+                </table>
+            </div>
 
-            <!-- LISTS & PRINT SECTION -->
-            <div class="no-print">
-                <h3>REPORTS & LISTS</h3>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
-                    <select id="filter-list-team" class="form-control" style="width: auto;" onchange="renderReportsTable()">
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 30px 0;">
+
+            <!-- All Registrations Report -->
+            <div class="card-header-flex" style="margin-bottom: 15px;">
+                <h3 style="font-size: 1.2rem; color: var(--primary-blue);">All Registrations Report</h3>
+                <button class="btn btn-success" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Report</button>
+            </div>
+
+            <div class="filter-grid no-print">
+                <div class="form-group">
+                    <label>Filter by Team</label>
+                    <select id="filter-list-team" class="form-control" onchange="renderReportsTable()">
                         <option value="all">All Teams</option>
                     </select>
-                    <select id="filter-list-category" class="form-control" style="width: auto;" onchange="renderReportsTable()">
+                </div>
+                <div class="form-group">
+                    <label>Filter by Category</label>
+                    <select id="filter-list-category" class="form-control" onchange="renderReportsTable()">
                         <option value="all">All Categories</option>
                         <option value="LOWER ZONE">LOWER ZONE</option>
                         <option value="MIDDLE ZONE">MIDDLE ZONE</option>
@@ -269,82 +489,90 @@
                         <option value="SUPER ZONE">SUPER ZONE</option>
                         <option value="GENERAL">GENERAL</option>
                     </select>
-                    <select id="filter-list-stage" class="form-control" style="width: auto;" onchange="renderReportsTable()">
-                        <option value="all">All Stages</option>
+                </div>
+                <div class="form-group">
+                    <label>Filter by Stage</label>
+                    <select id="filter-list-stage" class="form-control" onchange="renderReportsTable()">
+                        <option value="all">All Events</option>
                         <option value="On Stage">On Stage</option>
                         <option value="Off Stage">Off Stage</option>
                     </select>
-                    <button class="btn btn-success" onclick="window.print()">Print / Save PDF (A4)</button>
                 </div>
             </div>
 
-            <div id="print-area">
-                <table id="reports-table">
+            <div class="table-responsive">
+                <table>
                     <thead>
-                        <tr><th>Participant</th><th>Team</th><th>Category</th><th>Program</th><th>Stage</th></tr>
+                        <tr><th>Participant Name</th><th>Team</th><th>Category</th><th>Events</th></tr>
                     </thead>
                     <tbody id="reports-table-body"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- 3. JUDGE CTRL MODULE PANEL -->
+        <!-- 3. JUDGE CONTROL PANEL -->
         <div id="panel-judge-ctrl" class="view-panel card">
-            <h2>JUDGE CONTROL</h2>
+            <h2 class="card-title" style="margin-bottom: 20px;">Judge Control Panel</h2>
             <form onsubmit="saveJudgePoint(event)">
                 <input type="hidden" id="judge-edit-key">
                 <div class="form-group">
                     <label>Select Program Name</label>
                     <select id="judge-ctrl-prog" class="form-control" required></select>
                 </div>
-                <div class="form-group">
-                    <label>Stage Type</label>
-                    <select id="judge-ctrl-stage" class="form-control" required>
-                        <option value="On Stage">On Stage</option>
-                        <option value="Off Stage">Off Stage</option>
-                    </select>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Stage Type</label>
+                        <select id="judge-ctrl-stage" class="form-control" required>
+                            <option value="On Stage">On Stage</option>
+                            <option value="Off Stage">Off Stage</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="judge-ctrl-cat" class="form-control" required>
+                            <option value="LOWER ZONE">LOWER ZONE</option>
+                            <option value="MIDDLE ZONE">MIDDLE ZONE</option>
+                            <option value="HIGHER ZONE">HIGHER ZONE</option>
+                            <option value="SUPER ZONE">SUPER ZONE</option>
+                            <option value="GENERAL">GENERAL</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="judge-ctrl-cat" class="form-control" required>
-                        <option value="LOWER ZONE">LOWER ZONE</option>
-                        <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                        <option value="HIGHER ZONE">HIGHER ZONE</option>
-                        <option value="SUPER ZONE">SUPER ZONE</option>
-                        <option value="GENERAL">GENERAL</option>
-                    </select>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Participant Name</label>
+                        <input type="text" id="judge-ctrl-name" class="form-control" placeholder="Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Points Earned</label>
+                        <input type="number" id="judge-ctrl-point" class="form-control" placeholder="Points" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Participant Name</label>
-                    <input type="text" id="judge-ctrl-name" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>Points Earned</label>
-                    <input type="number" id="judge-ctrl-point" class="form-control" required>
-                </div>
-                <button type="submit" class="btn">Add / Update Point</button>
+                <button type="submit" class="btn" style="margin-bottom: 25px;">Add / Update Score</button>
             </form>
 
-            <h3 style="margin-top: 30px;">Entered Scores & Details</h3>
-            <table>
-                <thead>
-                    <tr><th>Participant</th><th>Program</th><th>Category</th><th>Stage</th><th>Points</th><th>Actions</th></tr>
-                </thead>
-                <tbody id="judge-ctrl-table-body"></tbody>
-            </table>
+            <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Entered Marks List</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>Participant</th><th>Program</th><th>Category</th><th>Points</th><th style="text-align: right;">Actions</th></tr>
+                    </thead>
+                    <tbody id="judge-ctrl-table-body"></tbody>
+                </table>
+            </div>
         </div>
 
-        <!-- 4. JUDGE LEADERBOARD PANEL -->
+        <!-- 4. JUDGE RESULT LEADERBOARD PANEL -->
         <div id="panel-judge" class="view-panel card">
-            <h2>JUDGE LEADERBOARD</h2>
-            
-            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-                <select id="judge-filter-stage" class="form-control" style="width: auto;" onchange="renderLeaderboard()">
-                    <option value="all">All Stages (On/Off)</option>
+            <h2 class="card-title" style="margin-bottom: 20px;">Live Leaderboard</h2>
+
+            <div class="filter-grid" style="align-items: center;">
+                <select id="judge-filter-stage" class="form-control" onchange="renderLeaderboard()">
+                    <option value="all">All Stages</option>
                     <option value="On Stage">On Stage</option>
                     <option value="Off Stage">Off Stage</option>
                 </select>
-                <select id="judge-filter-cat" class="form-control" style="width: auto;" onchange="renderLeaderboard()">
+                <select id="judge-filter-cat" class="form-control" onchange="renderLeaderboard()">
                     <option value="all">All Categories</option>
                     <option value="LOWER ZONE">LOWER ZONE</option>
                     <option value="MIDDLE ZONE">MIDDLE ZONE</option>
@@ -352,27 +580,26 @@
                     <option value="SUPER ZONE">SUPER ZONE</option>
                     <option value="GENERAL">GENERAL</option>
                 </select>
-                <div class="switch-container" style="margin: 0;">
-                    <label class="switch">
-                        <input type="checkbox" id="judge-exclude-general" onchange="renderLeaderboard()">
-                        <span class="slider"></span>
-                    </label>
-                    <span>Exclude General Programs</span>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="judge-exclude-general" onchange="renderLeaderboard()" style="width: 18px; height: 18px;">
+                    <label for="judge-exclude-general" style="font-size: 0.85rem; font-weight: 600;">Exclude General</label>
                 </div>
             </div>
 
-            <table>
-                <thead>
-                    <tr><th>Rank</th><th>Participant Name</th><th>Total Accumulated Points</th></tr>
-                </thead>
-                <tbody id="leaderboard-table-body"></tbody>
-            </table>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>Rank</th><th>Participant Name</th><th>Total Score</th></tr>
+                    </thead>
+                    <tbody id="leaderboard-table-body"></tbody>
+                </table>
+            </div>
         </div>
 
     </div>
 
+    <!-- Script Operations -->
     <script>
-        // Module Password Standards
         const PASSWORDS = {
             MAIN_LOGIN: { user: "bahja2026", pass: "2026bahja" },
             SETTINGS: "settings@2026",
@@ -392,15 +619,12 @@
         };
 
         function toggleMenu() {
-            document.getElementById("dotsDropdown").classList.toggle("show-menu");
+            document.getElementById("dotsDropdown").classList.toggle("show");
         }
 
         window.onclick = function(e) {
-            if (!e.target.matches('.dots-btn')) {
-                const dropdowns = document.getElementsByClassName("dropdown-content");
-                for (let d of dropdowns) {
-                    if (d.classList.contains('show-menu')) d.classList.remove('show-menu');
-                }
+            if (!e.target.closest('.dots-menu-wrap')) {
+                document.getElementById("dotsDropdown").classList.remove("show");
             }
         }
 
@@ -408,9 +632,9 @@
             if(isLoggedIn) {
                 isLoggedIn = false;
                 document.getElementById('sub-menu-items').style.display = 'none';
-                document.getElementById('menu-login-btn').innerText = "Login";
+                document.getElementById('menu-login-btn').innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> Login`;
                 showPanel('panel-home');
-                alert("Logged Out Successfully");
+                alert("Logged Out");
                 return;
             }
 
@@ -419,10 +643,10 @@
             if(u === PASSWORDS.MAIN_LOGIN.user && p === PASSWORDS.MAIN_LOGIN.pass) {
                 isLoggedIn = true;
                 document.getElementById('sub-menu-items').style.display = 'block';
-                document.getElementById('menu-login-btn').innerText = "Logout";
-                alert("Login Successful! Options unlocked in the menu.");
+                document.getElementById('menu-login-btn').innerHTML = `<i class="fa-solid fa-right-from-bracket"></i> Logout`;
+                alert("Login Successful!");
             } else {
-                alert("Invalid Main Credentials!");
+                alert("Invalid Login Credentials!");
             }
         }
 
@@ -462,7 +686,6 @@
             });
         }
 
-        // --- SETTINGS LOGIC ---
         function renderSettingsUI() {
             document.getElementById('toggle-register-phase').checked = dbData.settings.registerPhase;
             document.getElementById('toggle-result-phase').checked = dbData.settings.resultPhase;
@@ -475,13 +698,9 @@
             if(type === 'register' && regVal) resVal = false;
             if(type === 'result' && resVal) regVal = false;
 
-            window.dbSet(window.dbRef(window.dbInstance, 'settings'), {
-                registerPhase: regVal,
-                resultPhase: resVal
-            });
+            window.dbSet(window.dbRef(window.dbInstance, 'settings'), { registerPhase: regVal, resultPhase: resVal });
         }
 
-        // --- COMMITTEE LOGIC ---
         function toggleRegistrationState() {
             const nextState = dbData.regStatus === 'open' ? 'closed' : 'open';
             window.dbSet(window.dbRef(window.dbInstance, 'regStatus'), nextState);
@@ -535,7 +754,7 @@
         }
 
         function deleteProgram(k) {
-            if(confirm("Delete Program?")) window.dbRemove(window.dbRef(window.dbInstance, `programs/${k}`));
+            if(confirm("Delete program?")) window.dbRemove(window.dbRef(window.dbInstance, `programs/${k}`));
         }
 
         function editProgram(k) {
@@ -548,11 +767,9 @@
         }
 
         function renderCommitteeUI() {
-            // Reg status
             document.getElementById('committee-reg-status-text').innerText = dbData.regStatus.toUpperCase();
-            document.getElementById('committee-reg-status-text').style.color = dbData.regStatus === 'open' ? 'green' : 'red';
-
-            // Teams Table & Filter
+            
+            // Render Teams Table
             const teamBody = document.getElementById('team-table-body');
             const teamFilterSelect = document.getElementById('filter-list-team');
             teamBody.innerHTML = '';
@@ -561,16 +778,17 @@
             for(let k in dbData.teams) {
                 const t = dbData.teams[k];
                 teamBody.innerHTML += `<tr>
-                    <td>${t.name}</td><td>${t.username}</td>
-                    <td>
-                        <button class="btn btn-warning" onclick="editTeam('${k}')">Edit</button>
-                        <button class="btn btn-danger" onclick="deleteTeam('${k}')">Delete</button>
+                    <td><strong>${t.name}</strong></td>
+                    <td>${t.username}</td>
+                    <td style="text-align: right;">
+                        <button class="btn btn-sm" style="background:#f59e0b;" onclick="editTeam('${k}')"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteTeam('${k}')"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>`;
                 teamFilterSelect.innerHTML += `<option value="${t.name}">${t.name}</option>`;
             }
 
-            // Programs Table
+            // Render Programs Table
             const progBody = document.getElementById('program-table-body');
             const ctrlProgSelect = document.getElementById('judge-ctrl-prog');
             progBody.innerHTML = '';
@@ -579,10 +797,13 @@
             for(let k in dbData.programs) {
                 const p = dbData.programs[k];
                 progBody.innerHTML += `<tr>
-                    <td>${p.category}</td><td>${p.name}</td><td>${p.limit}</td><td>${p.stage}</td>
-                    <td>
-                        <button class="btn btn-warning" onclick="editProgram('${k}')">Edit</button>
-                        <button class="btn btn-danger" onclick="deleteProgram('${k}')">Delete</button>
+                    <td>${p.category}</td>
+                    <td>${p.name}</td>
+                    <td>${p.limit}</td>
+                    <td>${p.stage}</td>
+                    <td style="text-align: right;">
+                        <button class="btn btn-sm" style="background:#f59e0b;" onclick="editProgram('${k}')"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteProgram('${k}')"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>`;
                 ctrlProgSelect.innerHTML += `<option value="${p.name}">${p.name} (${p.category})</option>`;
@@ -605,13 +826,15 @@
                    (fCat === 'all' || r.category === fCat) &&
                    (fStage === 'all' || r.stage === fStage)) {
                     tbody.innerHTML += `<tr>
-                        <td>${r.participant}</td><td>${r.team}</td><td>${r.category}</td><td>${r.program}</td><td>${r.stage}</td>
+                        <td>${r.participant}</td>
+                        <td><strong>${r.team}</strong></td>
+                        <td>${r.category}</td>
+                        <td>${r.program}</td>
                     </tr>`;
                 }
             }
         }
 
-        // --- JUDGE CTRL LOGIC ---
         function saveJudgePoint(e) {
             e.preventDefault();
             const key = document.getElementById('judge-edit-key').value;
@@ -652,16 +875,18 @@
             for(let k in dbData.judgePoints) {
                 const j = dbData.judgePoints[k];
                 tbody.innerHTML += `<tr>
-                    <td>${j.name}</td><td>${j.program}</td><td>${j.category}</td><td>${j.stage}</td><td>${j.point}</td>
-                    <td>
-                        <button class="btn btn-warning" onclick="editJudgePoint('${k}')">Edit</button>
-                        <button class="btn btn-danger" onclick="deleteJudgePoint('${k}')">Delete</button>
+                    <td>${j.name}</td>
+                    <td>${j.program}</td>
+                    <td>${j.category}</td>
+                    <td><strong>${j.point}</strong></td>
+                    <td style="text-align: right;">
+                        <button class="btn btn-sm" style="background:#f59e0b;" onclick="editJudgePoint('${k}')"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteJudgePoint('${k}')"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>`;
             }
         }
 
-        // --- JUDGE LEADERBOARD LOGIC ---
         function renderLeaderboard() {
             const fStage = document.getElementById('judge-filter-stage').value;
             const fCat = document.getElementById('judge-filter-cat').value;
@@ -680,7 +905,6 @@
                 scores[j.name] += Number(j.point);
             }
 
-            // Convert to array and sort descending
             let sorted = [];
             for(let name in scores) {
                 sorted.push({ name: name, points: scores[name] });
@@ -691,9 +915,9 @@
             tbody.innerHTML = '';
             sorted.forEach((item, index) => {
                 tbody.innerHTML += `<tr>
-                    <td>${index + 1}</td>
+                    <td><strong>#${index + 1}</strong></td>
                     <td>${item.name}</td>
-                    <td><strong>${item.points}</strong></td>
+                    <td><strong style="color: var(--primary-blue);">${item.points} Pts</strong></td>
                 </tr>`;
             });
         }
