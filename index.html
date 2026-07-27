@@ -73,7 +73,7 @@
             body * { visibility: hidden; }
             #print-area, #print-area * { visibility: visible; }
             #print-area { position: absolute; left: 0; top: 0; width: 100%; }
-            .no-print { display: none ! baseline; }
+            .no-print { display: none !important; }
         }
 
         /* Result Display Card */
@@ -247,6 +247,9 @@
                         <input type="password" id="add-team-pass" class="form-control" placeholder="Password" required>
                         <button type="submit" class="btn btn-success" style="white-space: nowrap;">Add Team</button>
                     </form>
+
+                    <!-- Teams List with Delete/Edit Option -->
+                    <div id="teams-list-box" style="margin-top:15px;"></div>
                 </div>
 
                 <!-- Add Program -->
@@ -269,6 +272,9 @@
                         </div>
                         <button type="submit" class="btn btn-success btn-block" style="margin-top: 10px;">Add Program</button>
                     </form>
+
+                    <!-- Programs List with Delete/Edit Option -->
+                    <div id="programs-list-box" style="margin-top:15px;"></div>
                 </div>
 
                 <!-- Registered Reports & Filters -->
@@ -336,6 +342,9 @@
                         </div>
                         <button type="submit" class="btn btn-success btn-block">Publish Result</button>
                     </form>
+
+                    <!-- Published Results List -->
+                    <div id="published-results-box" style="margin-top: 15px;"></div>
                 </div>
 
                 <!-- Upload Updates / Videos -->
@@ -404,6 +413,7 @@
             if(pwd === "committy2026") {
                 populateCommitteeDropdowns();
                 renderReportsTable();
+                renderManageLists();
                 showPanel('panel-committee');
             } else if(pwd) alert("Incorrect Password!");
         }
@@ -430,7 +440,6 @@
 
         /* Dynamic Home View Loader */
         function renderHomePhase() {
-            // Render Logo
             const logoEl = document.getElementById('site-logo');
             if(appState.logoUrl) {
                 logoEl.src = appState.logoUrl;
@@ -456,13 +465,11 @@
                 regHome.style.display = 'none';
                 resHome.style.display = 'block';
                 
-                // Render Team Status
                 const statusBox = document.getElementById('team-status-poster-box');
                 if(appState.teamStatusUrl) {
                     statusBox.innerHTML = `<img src="${appState.teamStatusUrl}" alt="Team Status">`;
                 }
 
-                // Render Updates
                 const updatesBox = document.getElementById('live-updates-feed');
                 updatesBox.innerHTML = appState.updates.map(u => `
                     <div style="background:#fff; border:1px solid #ddd; padding:15px; border-radius:10px; margin-bottom:15px;">
@@ -519,7 +526,7 @@
 
                 return `
                     <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:15px; border-radius:8px; margin-bottom:15px;">
-                        <div style="display:flex; justify-style:space-between; font-weight:700;">
+                        <div style="display:flex; justify-content:space-between; font-weight:700;">
                             <span>${p.name} (${p.stage})</span>
                             <span style="font-size:0.8rem; color:#666;">Max: ${p.limit}</span>
                         </div>
@@ -535,7 +542,6 @@
             const inputs = document.querySelectorAll(`.prog-part-input-${progId}`);
             const names = Array.from(inputs).map(i => i.value.trim()).filter(n => n !== '');
 
-            // Remove previous entry if any
             appState.registrations = appState.registrations.filter(r => !(r.team === loggedTeamUser && r.progId === progId));
 
             if(names.length > 0) {
@@ -580,8 +586,18 @@
             appState.teams.push({user: u, pass: p});
             saveData();
             populateCommitteeDropdowns();
+            renderManageLists();
             alert(`Team '${u}' added successfully!`);
             e.target.reset();
+        }
+
+        function deleteTeam(username) {
+            if(confirm(`Delete team ${username}?`)) {
+                appState.teams = appState.teams.filter(t => t.user !== username);
+                saveData();
+                populateCommitteeDropdowns();
+                renderManageLists();
+            }
         }
 
         function addProgramItem(e) {
@@ -600,8 +616,26 @@
             });
             saveData();
             populateCommitteeDropdowns();
+            renderManageLists();
             alert("Program added!");
             e.target.reset();
+        }
+
+        function deleteProgram(progId) {
+            if(confirm("Delete this program?")) {
+                appState.programs = appState.programs.filter(p => p.id !== progId);
+                saveData();
+                populateCommitteeDropdowns();
+                renderManageLists();
+            }
+        }
+
+        function deleteResult(progId) {
+            if(confirm("Delete this result poster?")) {
+                appState.results = appState.results.filter(r => r.progId !== progId);
+                saveData();
+                renderManageLists();
+            }
         }
 
         function populateCommitteeDropdowns() {
@@ -610,6 +644,37 @@
 
             const progSelect = document.getElementById('res-upload-prog');
             progSelect.innerHTML = '<option value="">-- Select Program --</option>' + appState.programs.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
+        }
+
+        function renderManageLists() {
+            // Render Teams
+            const tBox = document.getElementById('teams-list-box');
+            tBox.innerHTML = appState.teams.map(t => `
+                <span style="display:inline-block; background:#e2e8f0; padding:4px 10px; border-radius:15px; margin:3px; font-size:0.85rem;">
+                    ${t.user} <i class="fa-solid fa-xmark" style="color:red; cursor:pointer; margin-left:5px;" onclick="deleteTeam('${t.user}')"></i>
+                </span>
+            `).join('') || '<p style="font-size:0.8rem; color:#888;">No Teams Added</p>';
+
+            // Render Programs
+            const pBox = document.getElementById('programs-list-box');
+            pBox.innerHTML = appState.programs.map(p => `
+                <div style="display:flex; justify-content:space-between; background:#fff; padding:8px; border:1px solid #ddd; border-radius:6px; margin-top:5px; font-size:0.85rem;">
+                    <span><strong>${p.name}</strong> (${p.cat} | ${p.stage} | Max:${p.limit})</span>
+                    <button class="btn btn-danger btn-sm" onclick="deleteProgram('${p.id}')">Delete</button>
+                </div>
+            `).join('') || '<p style="font-size:0.8rem; color:#888;">No Programs Added</p>';
+
+            // Render Published Results
+            const rBox = document.getElementById('published-results-box');
+            rBox.innerHTML = appState.results.map(r => {
+                const prog = appState.programs.find(p => p.id === r.progId);
+                return `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:8px; border:1px solid #ddd; border-radius:6px; margin-top:5px; font-size:0.85rem;">
+                        <span>Result: <strong>${prog ? prog.name : 'Program'}</strong></span>
+                        <button class="btn btn-danger btn-sm" onclick="deleteResult('${r.progId}')">Delete</button>
+                    </div>
+                `;
+            }).join('') || '';
         }
 
         function renderReportsTable() {
@@ -668,6 +733,7 @@
                     appState.results = appState.results.filter(r => r.progId !== progId);
                     appState.results.push({ progId: progId, posterUrl: evt.target.result });
                     saveData();
+                    renderManageLists();
                     alert("Result Poster Uploaded Successfully!");
                 };
                 reader.readAsDataURL(file);
@@ -735,14 +801,12 @@
 
         /* Popit / Confetti Animation on Result Open */
         function triggerResultPopit(posterUrl) {
-            // Trigger Confetti Popit
             confetti({
                 particleCount: 120,
                 spread: 70,
                 origin: { y: 0.6 }
             });
 
-            // Show Result Image in alert/lightbox popup
             const w = window.open("");
             w.document.write(`<title>Result Poster</title><body style="margin:0; background:#111; display:flex; justify-content:center; align-items:center; height:100vh;"><img src="${posterUrl}" style="max-width:100%; max-height:100vh; object-fit:contain;"></body>`);
         }
