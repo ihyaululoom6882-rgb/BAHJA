@@ -61,7 +61,7 @@
         .menu-card-btn { background: #007bff; color: white; border: none; padding: 20px; border-radius: 16px; font-size: 1.3rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); transition: transform 0.2s; text-align: center; }
         .menu-card-btn:hover { transform: translateY(-3px); background: #0056b3; }
 
-        /* Gallery Grid Layout for UPDATES (Pinterest Style) */
+        /* Gallery Grid Layout for UPDATES */
         .updates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 20px; }
         .update-item-card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.08); border: 1px solid #eee; transition: 0.2s; }
         .update-item-card:hover { transform: translateY(-3px); }
@@ -102,9 +102,7 @@
     <!-- Top 3-Dots Menu -->
     <div class="menu-btn-container">
         <button class="dots-btn" onclick="toggleDropdown()"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-        <div id="mainDropdown" class="dropdown-menu">
-            <!-- Rendered dynamically in JS based on Login State -->
-        </div>
+        <div id="mainDropdown" class="dropdown-menu"></div>
     </div>
 
     <div class="container">
@@ -481,9 +479,29 @@
         </div>
     </div>
 
-    <script>
-        // Data State Storage
-        let appState = JSON.parse(localStorage.getItem('bahja_state_v3')) || {
+    <!-- FIREBASE MODULE & APPLICATION LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBVPGtuHPFRH05snj58ws6xr42O8HluaLY",
+            authDomain: "bahja-29712.firebaseapp.com",
+            databaseURL: "https://bahja-29712-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "bahja-29712",
+            storageBucket: "bahja-29712.firebasestorage.app",
+            messagingSenderId: "185705883083",
+            appId: "1:185705883083:web:7e7f5a9425e242b831024e",
+            measurementId: "G-SX6NX5K314"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+
+        // State Store
+        window.appState = {
             phase: 'register',
             portalOpen: true,
             logoUrl: '',
@@ -497,19 +515,42 @@
             highlights: []
         };
 
-        let loggedTeamUser = null;
-        let isMainLoggedIn = false;
+        window.loggedTeamUser = null;
+        window.isMainLoggedIn = false;
 
-        function saveData() {
-            localStorage.setItem('bahja_state_v3', JSON.stringify(appState));
+        // Firebase Sync
+        const dbRef = ref(db, 'bahja_fest_data');
+        onValue(dbRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                window.appState = {
+                    phase: data.phase || 'register',
+                    portalOpen: data.portalOpen ?? true,
+                    logoUrl: data.logoUrl || '',
+                    teamStatusUrl: data.teamStatusUrl || '',
+                    teams: data.teams || [],
+                    programs: data.programs || [],
+                    registrations: data.registrations || [],
+                    results: data.results || [],
+                    updates: data.updates || [],
+                    livelinks: data.livelinks || [],
+                    highlights: data.highlights || []
+                };
+            }
+            render3DotMenu();
+            renderHomePhase();
+        });
+
+        window.saveData = function() {
+            set(ref(db, 'bahja_fest_data'), window.appState);
         }
 
         // Navigation & Menu Security Control
-        function render3DotMenu() {
+        window.render3DotMenu = function() {
             const menuContainer = document.getElementById('mainDropdown');
             let html = `<button onclick="navHome()"><i class="fa-solid fa-house"></i> Home</button>`;
 
-            if(!isMainLoggedIn) {
+            if(!window.isMainLoggedIn) {
                 html += `<button onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> Main Login</button>`;
             } else {
                 html += `
@@ -524,47 +565,45 @@
             menuContainer.innerHTML = html;
         }
 
-        function toggleDropdown() { document.getElementById("mainDropdown").classList.toggle("show"); }
+        window.toggleDropdown = function() { document.getElementById("mainDropdown").classList.toggle("show"); }
         window.onclick = (e) => { if (!e.target.closest('.menu-btn-container')) document.getElementById("mainDropdown").classList.remove("show"); };
 
-        function showPanel(panelId) {
+        window.showPanel = function(panelId) {
             document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
             document.getElementById(panelId).classList.add('active-panel');
             document.getElementById("mainDropdown").classList.remove("show");
         }
 
-        function navHome() {
+        window.navHome = function() {
             renderHomePhase();
             showPanel('panel-home');
         }
 
-        function openSection(secId) {
-            showPanel(secId);
-        }
+        window.openSection = function(secId) { showPanel(secId); }
 
-        function toggleAccordion(boxId) {
+        window.toggleAccordion = function(boxId) {
             const el = document.getElementById(boxId);
             el.style.display = el.style.display === 'none' ? 'block' : 'none';
         }
 
         /* Modal Handlers */
-        function openLoginModal() {
+        window.openLoginModal = function() {
             document.getElementById('modal-overlay').style.display = 'flex';
             document.getElementById("mainDropdown").classList.remove("show");
         }
 
-        function closeModal() {
+        window.closeModal = function() {
             document.getElementById('modal-overlay').style.display = 'none';
         }
 
         /* Main Login Authentication */
-        function handleMainLogin(e) {
+        window.handleMainLogin = function(e) {
             e.preventDefault();
             const u = document.getElementById('main-user-input').value.trim();
             const p = document.getElementById('main-pass-input').value.trim();
 
             if(u === "bahja2026" && p === "2026@bahja") {
-                isMainLoggedIn = true;
+                window.isMainLoggedIn = true;
                 alert("Main Login Successful!");
                 closeModal();
                 render3DotMenu();
@@ -573,23 +612,23 @@
             }
         }
 
-        function logoutMain() {
-            isMainLoggedIn = false;
+        window.logoutMain = function() {
+            window.isMainLoggedIn = false;
             render3DotMenu();
             navHome();
             alert("Logged out successfully.");
         }
 
         /* Settings Save */
-        function applyPhaseSettings(e) {
+        window.applyPhaseSettings = function(e) {
             e.preventDefault();
-            appState.phase = document.getElementById('setting-phase-select').value;
+            window.appState.phase = document.getElementById('setting-phase-select').value;
             
             const logoFile = document.getElementById('setting-logo-input').files[0];
             if(logoFile) {
                 const reader = new FileReader();
                 reader.onload = function(evt) {
-                    appState.logoUrl = evt.target.result;
+                    window.appState.logoUrl = evt.target.result;
                     saveData();
                     navHome();
                 };
@@ -601,24 +640,24 @@
         }
 
         /* Render Home State */
-        function renderHomePhase() {
+        window.renderHomePhase = function() {
             const logoEl = document.getElementById('site-logo');
-            if(appState.logoUrl) {
-                logoEl.src = appState.logoUrl;
+            if(window.appState.logoUrl) {
+                logoEl.src = window.appState.logoUrl;
                 logoEl.style.display = 'inline-block';
             } else { logoEl.style.display = 'none'; }
 
             const regHome = document.getElementById('home-phase-register');
             const resHome = document.getElementById('home-phase-result');
 
-            if(appState.phase === 'register') {
+            if(window.appState.phase === 'register') {
                 regHome.style.display = 'block';
                 resHome.style.display = 'none';
 
-                if(loggedTeamUser) {
+                if(window.loggedTeamUser) {
                     document.getElementById('team-login-block').style.display = 'none';
                     document.getElementById('team-portal-block').style.display = 'block';
-                    document.getElementById('logged-team-name').innerText = loggedTeamUser;
+                    document.getElementById('logged-team-name').innerText = window.loggedTeamUser;
                 } else {
                     document.getElementById('team-login-block').style.display = 'block';
                     document.getElementById('team-portal-block').style.display = 'none';
@@ -630,12 +669,12 @@
             }
         }
 
-        function renderResultPhaseFeeds() {
-            document.getElementById('team-status-poster-box').innerHTML = appState.teamStatusUrl ? `<img src="${appState.teamStatusUrl}" style="max-width:100%; border-radius:10px;">` : '<p style="color:#777;">No Poster Available</p>';
+        window.renderResultPhaseFeeds = function() {
+            document.getElementById('team-status-poster-box').innerHTML = window.appState.teamStatusUrl ? `<img src="${window.appState.teamStatusUrl}" style="max-width:100%; border-radius:10px;">` : '<p style="color:#777;">No Poster Available</p>';
 
             renderUpdatesGallery();
 
-            document.getElementById('livelink-feed').innerHTML = appState.livelinks.map(l => `
+            document.getElementById('livelink-feed').innerHTML = window.appState.livelinks.map(l => `
                 <div style="margin-bottom:15px; border:1px solid #ddd; padding:10px; border-radius:8px;">
                     <h4>${l.title}</h4>
                     <a href="${l.url}" target="_blank">
@@ -644,7 +683,7 @@
                 </div>
             `).join('') || '<p style="color:#777;">No Live Streams</p>';
 
-            document.getElementById('highlights-feed').innerHTML = appState.highlights.map(h => `
+            document.getElementById('highlights-feed').innerHTML = window.appState.highlights.map(h => `
                 <div style="margin-bottom:15px; border:1px solid #ddd; padding:10px; border-radius:8px;">
                     <h4>${h.title}</h4>
                     <a href="${h.url}" target="_blank">
@@ -654,15 +693,15 @@
             `).join('') || '<p style="color:#777;">No Highlights Available</p>';
         }
 
-        /* UPDATES (3rd Box) Gallery Rendering */
-        function renderUpdatesGallery() {
+        /* UPDATES Gallery Rendering */
+        window.renderUpdatesGallery = function() {
             const feed = document.getElementById('live-updates-feed');
-            if(appState.updates.length === 0) {
+            if(window.appState.updates.length === 0) {
                 feed.innerHTML = '<p style="color:#777; grid-column: 1/-1; text-align:center;">No Updates Published Yet.</p>';
                 return;
             }
 
-            feed.innerHTML = appState.updates.map(u => `
+            feed.innerHTML = window.appState.updates.map(u => `
                 <div class="update-item-card">
                     ${u.type === 'photo' 
                         ? `<img src="${u.url}" class="update-media">`
@@ -676,13 +715,13 @@
         }
 
         /* Updates Management (Committee) */
-        function toggleUpdateInputType() {
+        window.toggleUpdateInputType = function() {
             const type = document.getElementById('update-type').value;
             document.getElementById('update-file-group').style.display = type === 'photo' ? 'block' : 'none';
             document.getElementById('update-url-group').style.display = type === 'video' ? 'block' : 'none';
         }
 
-        function uploadUpdateMedia(e) {
+        window.uploadUpdateMedia = function(e) {
             e.preventDefault();
             const editId = document.getElementById('edit-update-id').value;
             const title = document.getElementById('update-title').value.trim();
@@ -697,7 +736,7 @@
                     };
                     reader.readAsDataURL(file);
                 } else if(editId) {
-                    const existing = appState.updates.find(u => u.id === editId);
+                    const existing = window.appState.updates.find(u => u.id === editId);
                     if(existing) saveUpdateItem(editId, title, type, existing.url);
                 }
             } else {
@@ -708,9 +747,9 @@
 
         function saveUpdateItem(id, title, type, url) {
             if(!id) {
-                appState.updates.push({ id: 'up_' + Date.now(), title, type, url });
+                window.appState.updates.push({ id: 'up_' + Date.now(), title, type, url });
             } else {
-                const item = appState.updates.find(u => u.id === id);
+                const item = window.appState.updates.find(u => u.id === id);
                 if(item) { item.title = title; item.type = type; item.url = url; }
                 document.getElementById('edit-update-id').value = '';
                 document.getElementById('update-submit-btn').innerText = 'Publish Update';
@@ -722,11 +761,11 @@
             document.getElementById('update-title').value = '';
         }
 
-        function renderUpdatesManageList() {
+        window.renderUpdatesManageList = function() {
             const query = document.getElementById('search-updates-input').value.toLowerCase();
             const container = document.getElementById('updates-acc-box');
 
-            const filtered = appState.updates.filter(u => u.title.toLowerCase().includes(query));
+            const filtered = window.appState.updates.filter(u => u.title.toLowerCase().includes(query));
             container.innerHTML = filtered.map(u => `
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid #ddd; font-size:0.85rem;">
                     <span><strong>${u.title}</strong> (${u.type})</span>
@@ -738,8 +777,8 @@
             `).join('') || '<p style="color:#777; font-size:0.8rem;">No items.</p>';
         }
 
-        function editUpdate(id) {
-            const u = appState.updates.find(item => item.id === id);
+        window.editUpdate = function(id) {
+            const u = window.appState.updates.find(item => item.id === id);
             if(u) {
                 document.getElementById('edit-update-id').value = u.id;
                 document.getElementById('update-title').value = u.title;
@@ -750,9 +789,9 @@
             }
         }
 
-        function deleteUpdate(id) {
+        window.deleteUpdate = function(id) {
             if(confirm("Delete this update?")) {
-                appState.updates = appState.updates.filter(u => u.id !== id);
+                window.appState.updates = window.appState.updates.filter(u => u.id !== id);
                 saveData();
                 renderUpdatesManageList();
                 renderUpdatesGallery();
@@ -760,33 +799,33 @@
         }
 
         /* Registration Team Actions */
-        function handleTeamLogin(e) {
+        window.handleTeamLogin = function(e) {
             e.preventDefault();
-            if(!appState.portalOpen) { alert("Registration Portal Closed!"); return; }
+            if(!window.appState.portalOpen) { alert("Registration Portal Closed!"); return; }
             const u = document.getElementById('login-team-user').value.trim();
             const p = document.getElementById('login-team-pass').value.trim();
 
-            const found = appState.teams.find(t => t.user === u && t.pass === p);
+            const found = window.appState.teams.find(t => t.user === u && t.pass === p);
             if(found) {
-                loggedTeamUser = u;
+                window.loggedTeamUser = u;
                 renderHomePhase();
             } else alert("Invalid Team Credentials!");
         }
 
-        function logoutTeam() { loggedTeamUser = null; renderHomePhase(); }
+        window.logoutTeam = function() { window.loggedTeamUser = null; renderHomePhase(); }
 
-        function loadCategoryPrograms() {
+        window.loadCategoryPrograms = function() {
             const cat = document.getElementById('reg-cat-select').value;
             const search = document.getElementById('reg-prog-search').value.toLowerCase();
             const container = document.getElementById('category-programs-container');
 
             if(!cat) { container.innerHTML = ''; return; }
 
-            const filtered = appState.programs.filter(p => p.cat === cat && p.name.toLowerCase().includes(search));
+            const filtered = window.appState.programs.filter(p => p.cat === cat && p.name.toLowerCase().includes(search));
             if(filtered.length === 0) { container.innerHTML = '<p style="color:#777;">No programs found.</p>'; return; }
 
             container.innerHTML = filtered.map(p => {
-                const existing = appState.registrations.find(r => r.team === loggedTeamUser && r.progId === p.id) || { participants: [] };
+                const existing = window.appState.registrations.find(r => r.team === window.loggedTeamUser && r.progId === p.id) || { participants: [] };
                 let inputs = '';
                 for(let i=0; i<p.limit; i++) {
                     inputs += `<input type="text" class="form-control prog-part-${p.id}" value="${existing.participants[i] || ''}" placeholder="Participant ${i+1}" style="margin-top:5px;">`;
@@ -801,44 +840,44 @@
             }).join('');
         }
 
-        function saveRegItem(progId, cat) {
+        window.saveRegItem = function(progId, cat) {
             const inputs = document.querySelectorAll(`.prog-part-${progId}`);
             const names = Array.from(inputs).map(i => i.value.trim()).filter(n => n !== '');
 
-            appState.registrations = appState.registrations.filter(r => !(r.team === loggedTeamUser && r.progId === progId));
+            window.appState.registrations = window.appState.registrations.filter(r => !(r.team === window.loggedTeamUser && r.progId === progId));
             if(names.length > 0) {
-                appState.registrations.push({ team: loggedTeamUser, cat: cat, progId: progId, participants: names });
+                window.appState.registrations.push({ team: window.loggedTeamUser, cat: cat, progId: progId, participants: names });
             }
             saveData();
             alert("Registration Saved!");
         }
 
         /* Panel Openers */
-        function openCommitteePanel() {
+        window.openCommitteePanel = function() {
             populateCommitteeDropdowns();
             renderUpdatesManageList();
             showPanel('panel-committee');
         }
 
-        function openCommityControlPanel() {
+        window.openCommityControlPanel = function() {
             populateCommitteeDropdowns();
             renderReportsTable();
             renderManageLists();
             showPanel('panel-commitycontrol');
         }
 
-        function openParticipantsPanel() {
+        window.openParticipantsPanel = function() {
             renderParticipantsList();
             showPanel('panel-participants');
         }
 
-        function renderParticipantsList() {
+        window.renderParticipantsList = function() {
             const catFilter = document.getElementById('part-filter-cat').value;
             let rows = '';
 
-            appState.registrations.forEach(r => {
+            window.appState.registrations.forEach(r => {
                 if(catFilter && r.cat !== catFilter) return;
-                const prog = appState.programs.find(p => p.id === r.progId);
+                const prog = window.appState.programs.find(p => p.id === r.progId);
 
                 r.participants.forEach(pName => {
                     rows += `<tr>
@@ -853,14 +892,14 @@
             document.getElementById('participants-dir-body').innerHTML = rows || '<tr><td colspan="4" style="text-align:center;">No Participants Registered</td></tr>';
         }
 
-        function openJudgePanel() {
+        window.openJudgePanel = function() {
             const container = document.getElementById('judge-evaluation-list');
-            if(appState.programs.length === 0) {
+            if(window.appState.programs.length === 0) {
                 container.innerHTML = '<p style="color:#777;">No programs available for evaluation.</p>';
                 return;
             }
 
-            container.innerHTML = appState.programs.map(p => `
+            container.innerHTML = window.appState.programs.map(p => `
                 <div style="background:#f8fafc; border:1px solid #ddd; padding:15px; border-radius:8px; margin-bottom:12px;">
                     <h4>${p.name} <span style="font-size:0.8rem; color:#666;">(${p.cat})</span></h4>
                     <button class="btn btn-sm btn-primary" style="margin-top:8px;">Evaluate Program</button>
@@ -869,45 +908,45 @@
             showPanel('panel-judge');
         }
 
-        function togglePortalStatus() {
-            appState.portalOpen = !appState.portalOpen;
-            document.getElementById('portal-status-text').innerText = appState.portalOpen ? 'OPEN' : 'CLOSED';
-            document.getElementById('toggle-portal-btn').innerText = appState.portalOpen ? 'Close Registration' : 'Open Registration';
+        window.togglePortalStatus = function() {
+            window.appState.portalOpen = !window.appState.portalOpen;
+            document.getElementById('portal-status-text').innerText = window.appState.portalOpen ? 'OPEN' : 'CLOSED';
+            document.getElementById('toggle-portal-btn').innerText = window.appState.portalOpen ? 'Close Registration' : 'Open Registration';
             saveData();
         }
 
         /* Team & Program Operations */
-        function addOrEditTeam(e) {
+        window.addOrEditTeam = function(e) {
             e.preventDefault();
             const idx = parseInt(document.getElementById('edit-team-index').value);
             const u = document.getElementById('add-team-user').value.trim();
             const p = document.getElementById('add-team-pass').value.trim();
 
-            if(idx === -1) { appState.teams.push({user: u, pass: p}); }
-            else { appState.teams[idx] = {user: u, pass: p}; document.getElementById('edit-team-index').value = "-1"; }
+            if(idx === -1) { window.appState.teams.push({user: u, pass: p}); }
+            else { window.appState.teams[idx] = {user: u, pass: p}; document.getElementById('edit-team-index').value = "-1"; }
             saveData();
             populateCommitteeDropdowns();
             renderManageLists();
             e.target.reset();
         }
 
-        function editTeam(idx) {
-            const t = appState.teams[idx];
+        window.editTeam = function(idx) {
+            const t = window.appState.teams[idx];
             document.getElementById('edit-team-index').value = idx;
             document.getElementById('add-team-user').value = t.user;
             document.getElementById('add-team-pass').value = t.pass;
         }
 
-        function deleteTeam(idx) {
+        window.deleteTeam = function(idx) {
             if(confirm("Delete team?")) {
-                appState.teams.splice(idx, 1);
+                window.appState.teams.splice(idx, 1);
                 saveData();
                 populateCommitteeDropdowns();
                 renderManageLists();
             }
         }
 
-        function addOrEditProgram(e) {
+        window.addOrEditProgram = function(e) {
             e.preventDefault();
             const editId = document.getElementById('edit-prog-id').value;
             const title = document.getElementById('prog-title').value.trim();
@@ -916,9 +955,9 @@
             const limit = parseInt(document.getElementById('prog-limit').value);
 
             if(editId === "") {
-                appState.programs.push({ id: 'prog_' + Date.now(), name: title, cat: cat, stage: stage, limit: limit });
+                window.appState.programs.push({ id: 'prog_' + Date.now(), name: title, cat: cat, stage: stage, limit: limit });
             } else {
-                const prog = appState.programs.find(p => p.id === editId);
+                const prog = window.appState.programs.find(p => p.id === editId);
                 if(prog) { prog.name = title; prog.cat = cat; prog.stage = stage; prog.limit = limit; }
                 document.getElementById('edit-prog-id').value = "";
             }
@@ -928,8 +967,8 @@
             e.target.reset();
         }
 
-        function editProgram(progId) {
-            const p = appState.programs.find(item => item.id === progId);
+        window.editProgram = function(progId) {
+            const p = window.appState.programs.find(item => item.id === progId);
             if(p) {
                 document.getElementById('edit-prog-id').value = p.id;
                 document.getElementById('prog-title').value = p.name;
@@ -939,9 +978,9 @@
             }
         }
 
-        function deleteProgram(progId) {
+        window.deleteProgram = function(progId) {
             if(confirm("Delete program?")) {
-                appState.programs = appState.programs.filter(p => p.id !== progId);
+                window.appState.programs = window.appState.programs.filter(p => p.id !== progId);
                 saveData();
                 populateCommitteeDropdowns();
                 renderManageLists();
@@ -949,14 +988,14 @@
         }
 
         function populateCommitteeDropdowns() {
-            document.getElementById('filter-team').innerHTML = '<option value="">All Teams</option>' + appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
-            document.getElementById('filter-prog').innerHTML = '<option value="">All Programs</option>' + appState.programs.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-            document.getElementById('res-upload-prog').innerHTML = '<option value="">-- Select Program --</option>' + appState.programs.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
+            document.getElementById('filter-team').innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
+            document.getElementById('filter-prog').innerHTML = '<option value="">All Programs</option>' + window.appState.programs.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            document.getElementById('res-upload-prog').innerHTML = '<option value="">-- Select Program --</option>' + window.appState.programs.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
         }
 
-        function renderManageLists() {
-            document.getElementById('team-count').innerText = appState.teams.length;
-            document.getElementById('teams-acc-box').innerHTML = appState.teams.map((t, idx) => `
+        window.renderManageLists = function() {
+            document.getElementById('team-count').innerText = window.appState.teams.length;
+            document.getElementById('teams-acc-box').innerHTML = window.appState.teams.map((t, idx) => `
                 <div style="display:flex; justify-content:space-between; padding:6px; border-bottom:1px solid #ddd; font-size:0.85rem;">
                     <span>${t.user}</span>
                     <div>
@@ -967,7 +1006,7 @@
             `).join('');
 
             const pSearch = document.getElementById('prog-search-comm').value.toLowerCase();
-            document.getElementById('programs-acc-box').innerHTML = appState.programs.filter(p => p.name.toLowerCase().includes(pSearch)).map(p => `
+            document.getElementById('programs-acc-box').innerHTML = window.appState.programs.filter(p => p.name.toLowerCase().includes(pSearch)).map(p => `
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid #ddd; font-size:0.85rem;">
                     <span><strong>${p.name}</strong> (${p.cat} | ${p.stage})</span>
                     <div>
@@ -977,8 +1016,8 @@
                 </div>
             `).join('');
 
-            document.getElementById('results-acc-box').innerHTML = appState.results.map(r => {
-                const prog = appState.programs.find(p => p.id === r.progId);
+            document.getElementById('results-acc-box').innerHTML = window.appState.results.map(r => {
+                const prog = window.appState.programs.find(p => p.id === r.progId);
                 return `
                     <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid #ddd; font-size:0.85rem;">
                         <span>${prog ? prog.name : 'Result'}</span>
@@ -988,15 +1027,15 @@
             }).join('');
         }
 
-        function renderReportsTable() {
+        window.renderReportsTable = function() {
             const fTeam = document.getElementById('filter-team').value;
             const fCat = document.getElementById('filter-cat').value;
             const fStage = document.getElementById('filter-stage').value;
             const fProg = document.getElementById('filter-prog').value;
 
             let rows = '';
-            appState.registrations.forEach(r => {
-                const prog = appState.programs.find(p => p.id === r.progId);
+            window.appState.registrations.forEach(r => {
+                const prog = window.appState.programs.find(p => p.id === r.progId);
                 if(!prog) return;
 
                 if(fTeam && r.team !== fTeam) return;
@@ -1019,13 +1058,13 @@
         }
 
         /* Result Posters Upload */
-        function uploadTeamStatus(e) {
+        window.uploadTeamStatus = function(e) {
             e.preventDefault();
             const file = document.getElementById('status-file-input').files[0];
             if(file) {
                 const reader = new FileReader();
                 reader.onload = function(evt) {
-                    appState.teamStatusUrl = evt.target.result;
+                    window.appState.teamStatusUrl = evt.target.result;
                     saveData();
                     alert("Team Status Updated!");
                 };
@@ -1033,15 +1072,15 @@
             }
         }
 
-        function uploadProgramResult(e) {
+        window.uploadProgramResult = function(e) {
             e.preventDefault();
             const progId = document.getElementById('res-upload-prog').value;
             const file = document.getElementById('res-file-input').files[0];
             if(file && progId) {
                 const reader = new FileReader();
                 reader.onload = function(evt) {
-                    appState.results = appState.results.filter(r => r.progId !== progId);
-                    appState.results.push({ progId: progId, posterUrl: evt.target.result });
+                    window.appState.results = window.appState.results.filter(r => r.progId !== progId);
+                    window.appState.results.push({ progId: progId, posterUrl: evt.target.result });
                     saveData();
                     renderManageLists();
                     alert("Result Published!");
@@ -1050,15 +1089,15 @@
             }
         }
 
-        function deleteResult(progId) {
+        window.deleteResult = function(progId) {
             if(confirm("Delete result?")) {
-                appState.results = appState.results.filter(r => r.progId !== progId);
+                window.appState.results = window.appState.results.filter(r => r.progId !== progId);
                 saveData();
                 renderManageLists();
             }
         }
 
-        function addLiveLink(e) {
+        window.addLiveLink = function(e) {
             e.preventDefault();
             const title = document.getElementById('live-title').value;
             const url = document.getElementById('live-url').value;
@@ -1067,7 +1106,7 @@
             if(file) {
                 const reader = new FileReader();
                 reader.onload = function(evt) {
-                    appState.livelinks.push({ title, url, thumb: evt.target.result });
+                    window.appState.livelinks.push({ title, url, thumb: evt.target.result });
                     saveData();
                     alert("Live Link Added!");
                     e.target.reset();
@@ -1077,16 +1116,16 @@
         }
 
         /* Result View & Popit Animation */
-        function filterResultPrograms() {
+        window.filterResultPrograms = function() {
             const cat = document.getElementById('res-search-cat').value;
             const query = document.getElementById('res-search-input').value.toLowerCase();
             const container = document.getElementById('results-display-list');
 
-            const matched = appState.programs.filter(p => (!cat || p.cat === cat) && (!query || p.name.toLowerCase().includes(query)));
+            const matched = window.appState.programs.filter(p => (!cat || p.cat === cat) && (!query || p.name.toLowerCase().includes(query)));
             if(matched.length === 0) { container.innerHTML = '<p style="color:#777;">No results found.</p>'; return; }
 
             container.innerHTML = matched.map(p => {
-                const res = appState.results.find(r => r.progId === p.id);
+                const res = window.appState.results.find(r => r.progId === p.id);
                 return `
                     <div style="background:#fff; border:1px solid #ddd; border-radius:10px; padding:15px; margin-bottom:12px;">
                         <h4>${p.name} <span style="font-size:0.8rem; color:#666;">(${p.cat})</span></h4>
@@ -1096,15 +1135,14 @@
             }).join('');
         }
 
-        function triggerResultPopit(posterUrl) {
+        window.triggerResultPopit = function(posterUrl) {
             confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
             const w = window.open("");
             w.document.write(`<title>Result Poster</title><body style="margin:0; background:#111; display:flex; justify-content:center; align-items:center; height:100vh;"><img src="${posterUrl}" style="max-width:100%; max-height:100vh; object-fit:contain;"></body>`);
         }
 
-        // Initialize App
+        // Initial Menu Render
         render3DotMenu();
-        renderHomePhase();
     </script>
 </body>
 </html>
