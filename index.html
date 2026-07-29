@@ -808,27 +808,517 @@
             const found = window.appState.teams.find(t => t.user === u && t.pass === p);
             if(found) {
                 window.loggedTeamUser = u;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAHJA ARTS FEST 2026</title>
+
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #0284c7;
+            --accent-color: #f59e0b;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); padding-bottom: 30px; }
+
+        /* Header & Navigation */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white; padding: 15px 20px; display: flex;
+            justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;
+        }
+        .app-title { font-size: 1.3rem; font-weight: bold; }
+        .three-dots-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+        /* Dropdown Menu */
+        .dropdown-menu {
+            position: absolute; top: 60px; right: 15px; background: white;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-radius: 8px;
+            width: 200px; display: none; flex-direction: column; z-index: 101; overflow: hidden;
+        }
+        .dropdown-menu.show { display: flex; }
+        .dropdown-item {
+            padding: 12px 16px; color: var(--text-dark); text-decoration: none;
+            display: flex; align-items: center; gap: 10px; cursor: pointer; border-bottom: 1px solid #f1f5f9;
+        }
+        .dropdown-item:hover { background-color: #f8fafc; color: var(--secondary-color); }
+
+        /* Main Container & Panels */
+        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
+        .panel { display: none; background: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .panel.active { display: block; }
+
+        /* Navigation Tabs */
+        .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; overflow-x: auto; }
+        .tab-btn {
+            padding: 8px 16px; border: none; background: #e2e8f0; border-radius: 6px;
+            cursor: pointer; font-weight: 600; color: #475569; white-space: nowrap;
+        }
+        .tab-btn.active { background: var(--primary-color); color: white; }
+
+        /* Utility Classes */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.9rem; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; }
+        .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; text-align: center; }
+        .btn-primary { background: var(--primary-color); color: white; }
+        .btn-success { background: #16a34a; color: white; }
+        .btn-danger { background: #dc2626; color: white; }
+        .btn-warning { background: var(--accent-color); color: white; }
+        .btn-sm { padding: 5px 10px; font-size: 0.8rem; }
+
+        /* Tables */
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .data-table th, .data-table td { border: 1px solid #e2e8f0; padding: 10px; text-align: left; font-size: 0.85rem; }
+        .data-table th { background-color: #f8fafc; font-weight: 600; }
+
+        /* Gallery / Result Display */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; margin-top: 15px; }
+        .gallery-item { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .gallery-media { width: 100%; height: 180px; object-fit: cover; background: #000; }
+        .gallery-media.unminify { height: auto; max-height: 500px; object-fit: contain; }
+        .gallery-content { padding: 10px; }
+
+        /* Login Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; }
+        .modal.show { display: flex; }
+        .modal-body { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; }
+    </style>
+</head>
+<body>
+
+    <!-- App Header -->
+    <header class="app-header">
+        <div class="app-title"><i class="fa-solid fa-graduation-cap"></i> BAHJA FEST 2026</div>
+        <button class="three-dots-btn" onclick="toggleMenu()"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+        <div class="dropdown-menu" id="dropdown-menu"></div>
+    </header>
+
+    <div class="container">
+
+        <!-- PANEL: HOME PHASE -->
+        <div id="panel-home" class="panel active">
+            <h2>Welcome to Bahja Arts Fest 2026</h2>
+            <p style="color:#64748b; margin-top:5px;">Select an option from the menu to get started.</p>
+            <hr style="margin:15px 0;">
+            <div id="home-status-poster"></div>
+            <div id="live-links-display"></div>
+        </div>
+
+        <!-- PANEL: COMMITTEE MAIN (Strict Access Controlled) -->
+        <div id="panel-committee" class="panel">
+            <h2>Committee Management</h2>
+            <div class="nav-tabs">
+                <button class="tab-btn active" onclick="switchCommTab('comm-control-tab')">Committee</button>
+                <button class="tab-btn" onclick="switchCommTab('comm-reg-tab')">Register Page</button>
+                <button class="tab-btn" onclick="switchCommTab('comm-res-tab')">Result Page</button>
+            </div>
+
+            <!-- Tab 1: Committee Control -->
+            <div id="comm-control-tab" class="comm-sub-tab">
+                <h3>System Settings & Registrations</h3>
+                <p>Portal Status: <strong id="portal-status-text">CLOSED</strong></p>
+                <button class="btn btn-warning btn-sm" id="toggle-portal-btn" onclick="togglePortalStatus()" style="margin: 10px 0;">Open Registration</button>
+                
+                <h4 style="margin-top:20px;">Add / Edit Team Accounts (<span id="team-count">0</span>)</h4>
+                <form onsubmit="addOrEditTeam(event)" style="margin-top:10px;">
+                    <input type="hidden" id="edit-team-index" value="-1">
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="add-team-user" class="form-control" placeholder="Team Username" required>
+                        <input type="password" id="add-team-pass" class="form-control" placeholder="Password" required>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+                <div id="teams-acc-box" style="margin-top:10px;"></div>
+
+                <h4 style="margin-top:20px;">Manage Programs</h4>
+                <form onsubmit="addOrEditProgram(event)" style="margin-top:10px;">
+                    <input type="hidden" id="edit-prog-id" value="">
+                    <div class="form-group">
+                        <input type="text" id="prog-title" class="form-control" placeholder="Program Name" required>
+                    </div>
+                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                        <select id="prog-cat" class="form-control" required>
+                            <option value="Sub-Junior">Sub-Junior</option>
+                            <option value="Junior">Junior</option>
+                            <option value="Senior">Senior</option>
+                            <option value="General">General</option>
+                        </select>
+                        <select id="prog-stage" class="form-control" required>
+                            <option value="Stage">Stage</option>
+                            <option value="Non-Stage">Non-Stage</option>
+                        </select>
+                        <input type="number" id="prog-limit" class="form-control" placeholder="Limit" value="1" min="1" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Program</button>
+                </form>
+                <input type="text" id="prog-search-comm" class="form-control" placeholder="Search Programs..." style="margin-top:10px;" onkeyup="renderManageLists()">
+                <div id="programs-acc-box" style="margin-top:10px;"></div>
+            </div>
+
+            <!-- Tab 2: Register Page Control -->
+            <div id="comm-reg-tab" class="comm-sub-tab" style="display:none;">
+                <h3>Registration Reports & Directory</h3>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+                    <select id="filter-team" class="form-control" style="width:auto;" onchange="renderReportsTable()"></select>
+                    <select id="filter-cat" class="form-control" style="width:auto;" onchange="renderReportsTable()">
+                        <option value="">All Categories</option>
+                        <option value="Sub-Junior">Sub-Junior</option>
+                        <option value="Junior">Junior</option>
+                        <option value="Senior">Senior</option>
+                        <option value="General">General</option>
+                    </select>
+                    <select id="filter-stage" class="form-control" style="width:auto;" onchange="renderReportsTable()">
+                        <option value="">All Stages</option>
+                        <option value="Stage">Stage</option>
+                        <option value="Non-Stage">Non-Stage</option>
+                    </select>
+                    <select id="filter-prog" class="form-control" style="width:auto;" onchange="renderReportsTable()"></select>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Participant</th><th>Team</th><th>Category</th><th>Program</th><th>Stage</th></tr>
+                    </thead>
+                    <tbody id="reports-table-body"></tbody>
+                </table>
+            </div>
+
+            <!-- Tab 3: Result Page Control -->
+            <div id="comm-res-tab" class="comm-sub-tab" style="display:none;">
+                <h3>Result Media Management</h3>
+                <form onsubmit="uploadProgramResult(event)" style="margin-top:15px;">
+                    <div class="form-group">
+                        <label>Select Program</label>
+                        <select id="res-upload-prog" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Media Title</label>
+                        <input type="text" id="res-media-title" class="form-control" placeholder="e.g. Winner Announcement Poster" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Upload Photo / Video</label>
+                        <input type="file" id="res-file-input" class="form-control" accept="image/*,video/*" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Publish Result</button>
+                </form>
+
+                <h4 style="margin-top:20px;">Published Results</h4>
+                <div id="results-acc-box"></div>
+
+                <hr style="margin:20px 0;">
+                <h4>Upload Overall Team Status Poster</h4>
+                <form onsubmit="uploadTeamStatus(event)" style="margin-top:10px;">
+                    <input type="file" id="status-file-input" class="form-control" accept="image/*" required>
+                    <button type="submit" class="btn btn-primary" style="margin-top:10px;">Update Status Poster</button>
+                </form>
+
+                <h4 style="margin-top:20px;">Add Live Streams / Links</h4>
+                <form onsubmit="addLiveLink(event)">
+                    <input type="text" id="live-title" class="form-control" placeholder="Title" required style="margin-bottom:5px;">
+                    <input type="url" id="live-url" class="form-control" placeholder="Stream URL" required style="margin-bottom:5px;">
+                    <input type="file" id="live-thumb" class="form-control" accept="image/*" required style="margin-bottom:5px;">
+                    <button type="submit" class="btn btn-primary">Add Link</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- PANEL: TEAM REGISTRATION (Public / Login Required) -->
+        <div id="panel-teamreg" class="panel">
+            <h2>Team Registration Portal</h2>
+            <div id="team-login-sec">
+                <p>Login to register candidates for your team.</p>
+                <div class="form-group" style="margin-top:10px;">
+                    <input type="text" id="team-login-u" class="form-control" placeholder="Team Username">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="team-login-p" class="form-control" placeholder="Password">
+                </div>
+                <button class="btn btn-primary" onclick="loginTeam()">Login</button>
+            </div>
+            <div id="team-dashboard-sec" style="display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3>Logged in as: <span id="logged-team-name"></span></h3>
+                    <button class="btn btn-danger btn-sm" onclick="logoutTeam()">Logout</button>
+                </div>
+                <hr style="margin:15px 0;">
+                <div class="form-group">
+                    <label>Select Category</label>
+                    <select id="reg-cat-select" class="form-control" onchange="loadCategoryPrograms()">
+                        <option value="">-- Choose Category --</option>
+                        <option value="Sub-Junior">Sub-Junior</option>
+                        <option value="Junior">Junior</option>
+                        <option value="Senior">Senior</option>
+                        <option value="General">General</option>
+                    </select>
+                </div>
+                <input type="text" id="reg-prog-search" class="form-control" placeholder="Search Programs..." onkeyup="loadCategoryPrograms()">
+                <div id="category-programs-container" style="margin-top:15px;"></div>
+            </div>
+        </div>
+
+        <!-- PANEL: PARTICIPANTS DIRECTORY -->
+        <div id="panel-participants" class="panel">
+            <h2>Participants Directory</h2>
+            <div style="margin-bottom:15px;">
+                <select id="part-filter-cat" class="form-control" style="width:200px;" onchange="renderParticipantsList()">
+                    <option value="">All Categories</option>
+                    <option value="Sub-Junior">Sub-Junior</option>
+                    <option value="Junior">Junior</option>
+                    <option value="Senior">Senior</option>
+                    <option value="General">General</option>
+                </select>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Participant</th><th>Team</th><th>Category</th><th>Program</th></tr>
+                </thead>
+                <tbody id="participants-dir-body"></tbody>
+            </table>
+        </div>
+
+        <!-- PANEL: JUDGE PANEL -->
+        <div id="panel-judge" class="panel">
+            <h2>Judge Evaluation Panel</h2>
+            <div id="judge-evaluation-list"></div>
+        </div>
+
+        <!-- PANEL: RESULT PAGE (Gallery View) -->
+        <div id="panel-results" class="panel">
+            <h2>Results Gallery</h2>
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <select id="res-search-cat" class="form-control" onchange="filterResultPrograms()">
+                    <option value="">All Categories</option>
+                    <option value="Sub-Junior">Sub-Junior</option>
+                    <option value="Junior">Junior</option>
+                    <option value="Senior">Senior</option>
+                    <option value="General">General</option>
+                </select>
+                <input type="text" id="res-search-input" class="form-control" placeholder="Search program results..." onkeyup="filterResultPrograms()">
+            </div>
+            <div class="gallery-grid" id="results-display-list"></div>
+        </div>
+
+    </div>
+
+    <!-- MAIN ADMIN LOGIN MODAL -->
+    <div class="modal" id="login-modal">
+        <div class="modal-body">
+            <h3>Main Control Login</h3>
+            <div class="form-group" style="margin-top:15px;">
+                <input type="text" id="main-user-input" class="form-control" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <input type="password" id="main-pass-input" class="form-control" placeholder="Password">
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn" onclick="closeLoginModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="submitMainLogin()">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Firebase Config & App State ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDummyKeyForInitializationOnly",
+            authDomain: "bahja-fest.firebaseapp.com",
+            databaseURL: "https://bahja-fest-default-rtdb.firebaseio.com",
+            projectId: "bahja-fest",
+            storageBucket: "bahja-fest.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abc123def456"
+        };
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const db = firebase.database();
+
+        window.appState = {
+            isMainLoggedIn: false,
+            portalOpen: false,
+            teams: [],
+            programs: [],
+            registrations: [],
+            results: [],
+            teamStatusUrl: '',
+            livelinks: []
+        };
+
+        window.loggedTeamUser = null;
+
+        // Initialize Data
+        function loadData() {
+            db.ref('festState').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    window.appState.portalOpen = data.portalOpen || false;
+                    window.appState.teams = data.teams || [];
+                    window.appState.programs = data.programs || [];
+                    window.appState.registrations = data.registrations || [];
+                    window.appState.results = data.results || [];
+                    window.appState.teamStatusUrl = data.teamStatusUrl || '';
+                    window.appState.livelinks = data.livelinks || [];
+                }
                 renderHomePhase();
+                render3DotMenu();
+            });
+        }
+        loadData();
+
+        function saveData() {
+            db.ref('festState').set({
+                portalOpen: window.appState.portalOpen,
+                teams: window.appState.teams,
+                programs: window.appState.programs,
+                registrations: window.appState.registrations,
+                results: window.appState.results,
+                teamStatusUrl: window.appState.teamStatusUrl,
+                livelinks: window.appState.livelinks
+            });
+        }
+
+        // --- Menu & Navigation ---
+        function toggleMenu() {
+            document.getElementById('dropdown-menu').classList.toggle('show');
+        }
+
+        function render3DotMenu() {
+            const menu = document.getElementById('dropdown-menu');
+            let items = [
+                { label: 'Home', icon: 'fa-home', action: 'showPanel("panel-home")' }
+            ];
+
+            if (!window.appState.isMainLoggedIn) {
+                items.push({ label: 'Main Login', icon: 'fa-lock', action: 'openLoginModal()' });
+            } else {
+                items.push(
+                    { label: 'Committee Control', icon: 'fa-sliders', action: 'openCommitteePanel()' },
+                    { label: 'Team Registration', icon: 'fa-id-card', action: 'showPanel("panel-teamreg")' },
+                    { label: 'Participants Dir', icon: 'fa-users', action: 'openParticipantsPanel()' },
+                    { label: 'Judge Panel', icon: 'fa-gavel', action: 'openJudgePanel()' },
+                    { label: 'Result Page', icon: 'fa-trophy', action: 'openResultsPanel()' },
+                    { label: 'Logout Admin', icon: 'fa-sign-out-alt', action: 'logoutMain()' }
+                );
+            }
+
+            menu.innerHTML = items.map(i => `
+                <div class="dropdown-item" onclick="${i.action}; toggleMenu();">
+                    <i class="fa-solid ${i.icon}"></i> ${i.label}
+                </div>
+            `).join('');
+        }
+
+        function showPanel(panelId) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(panelId).classList.add('active');
+        }
+
+        // --- Main Admin Login ---
+        function openLoginModal() {
+            document.getElementById('login-modal').classList.add('show');
+        }
+        function closeLoginModal() {
+            document.getElementById('login-modal').classList.remove('show');
+        }
+        function submitMainLogin() {
+            const u = document.getElementById('main-user-input').value.trim();
+            const p = document.getElementById('main-pass-input').value.trim();
+
+            if (u === 'bahja2026' && p === '2026@bahja') {
+                window.appState.isMainLoggedIn = true;
+                closeLoginModal();
+                render3DotMenu();
+                openCommitteePanel();
+                alert("Successfully logged in as Main Control!");
+            } else {
+                alert("Invalid Admin Credentials!");
+            }
+        }
+        function logoutMain() {
+            window.appState.isMainLoggedIn = false;
+            render3DotMenu();
+            showPanel('panel-home');
+        }
+
+        // --- Committee Tabs ---
+        function switchCommTab(tabId) {
+            document.querySelectorAll('.comm-sub-tab').forEach(t => t.style.display = 'none');
+            document.querySelectorAll('.nav-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        // --- Render Home Phase ---
+        function renderHomePhase() {
+            const posterDiv = document.getElementById('home-status-poster');
+            if (window.appState.teamStatusUrl) {
+                posterDiv.innerHTML = `<h3>Overall Team Status</h3><img src="${window.appState.teamStatusUrl}" style="max-width:100%; border-radius:8px; margin-top:10px;">`;
+            } else { posterDiv.innerHTML = ''; }
+
+            const linksDiv = document.getElementById('live-links-display');
+            if (window.appState.livelinks.length > 0) {
+                linksDiv.innerHTML = '<h3 style="margin-top:20px;">Live Streams</h3>' + window.appState.livelinks.map(l => `
+                    <div style="margin-top:10px; border:1px solid #ddd; padding:10px; border-radius:8px; display:flex; gap:10px; align-items:center;">
+                        <img src="${l.thumb}" style="width:80px; height:50px; object-fit:cover; border-radius:4px;">
+                        <div>
+                            <strong>${l.title}</strong><br>
+                            <a href="${l.url}" target="_blank" style="color:var(--secondary-color);">Watch Stream</a>
+                        </div>
+                    </div>
+                `).join('');
+            } else { linksDiv.innerHTML = ''; }
+        }
+
+        // --- Team Logic & Registration ---
+        window.loginTeam = function() {
+            const u = document.getElementById('team-login-u').value.trim();
+            const p = document.getElementById('team-login-p').value.trim();
+
+            const found = window.appState.teams.find(t => t.user === u && t.pass === p);
+            if (found) {
+                window.loggedTeamUser = u;
+                document.getElementById('logged-team-name').innerText = u;
+                document.getElementById('team-login-sec').style.display = 'none';
+                document.getElementById('team-dashboard-sec').style.display = 'block';
             } else alert("Invalid Team Credentials!");
         }
 
-        window.logoutTeam = function() { window.loggedTeamUser = null; renderHomePhase(); }
+        window.logoutTeam = function() {
+            window.loggedTeamUser = null;
+            document.getElementById('team-login-sec').style.display = 'block';
+            document.getElementById('team-dashboard-sec').style.display = 'none';
+        }
 
         window.loadCategoryPrograms = function() {
             const cat = document.getElementById('reg-cat-select').value;
             const search = document.getElementById('reg-prog-search').value.toLowerCase();
             const container = document.getElementById('category-programs-container');
 
-            if(!cat) { container.innerHTML = ''; return; }
+            if (!cat) { container.innerHTML = ''; return; }
 
             const filtered = window.appState.programs.filter(p => p.cat === cat && p.name.toLowerCase().includes(search));
-            if(filtered.length === 0) { container.innerHTML = '<p style="color:#777;">No programs found.</p>'; return; }
+            if (filtered.length === 0) { container.innerHTML = '<p style="color:#777;">No programs found.</p>'; return; }
 
             container.innerHTML = filtered.map(p => {
                 const existing = window.appState.registrations.find(r => r.team === window.loggedTeamUser && r.progId === p.id) || { participants: [] };
                 let inputs = '';
-                for(let i=0; i<p.limit; i++) {
-                    inputs += `<input type="text" class="form-control prog-part-${p.id}" value="${existing.participants[i] || ''}" placeholder="Participant ${i+1}" style="margin-top:5px;">`;
+                for (let i = 0; i < p.limit; i++) {
+                    inputs += `<input type="text" class="form-control prog-part-${p.id}" value="${existing.participants[i] || ''}" placeholder="Participant ${i + 1}" style="margin-top:5px;">`;
                 }
                 return `
                     <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:15px; border-radius:8px; margin-bottom:15px;">
@@ -841,29 +1331,23 @@
         }
 
         window.saveRegItem = function(progId, cat) {
+            if (!window.appState.portalOpen) { alert("Registration portal is currently CLOSED!"); return; }
             const inputs = document.querySelectorAll(`.prog-part-${progId}`);
             const names = Array.from(inputs).map(i => i.value.trim()).filter(n => n !== '');
 
             window.appState.registrations = window.appState.registrations.filter(r => !(r.team === window.loggedTeamUser && r.progId === progId));
-            if(names.length > 0) {
+            if (names.length > 0) {
                 window.appState.registrations.push({ team: window.loggedTeamUser, cat: cat, progId: progId, participants: names });
             }
             saveData();
             alert("Registration Saved!");
         }
 
-        /* Panel Openers */
+        // --- Committee Control Methods ---
         window.openCommitteePanel = function() {
             populateCommitteeDropdowns();
-            renderUpdatesManageList();
-            showPanel('panel-committee');
-        }
-
-        window.openCommityControlPanel = function() {
-            populateCommitteeDropdowns();
-            renderReportsTable();
             renderManageLists();
-            showPanel('panel-commitycontrol');
+            showPanel('panel-committee');
         }
 
         window.openParticipantsPanel = function() {
@@ -871,12 +1355,17 @@
             showPanel('panel-participants');
         }
 
+        window.openResultsPanel = function() {
+            filterResultPrograms();
+            showPanel('panel-results');
+        }
+
         window.renderParticipantsList = function() {
             const catFilter = document.getElementById('part-filter-cat').value;
             let rows = '';
 
             window.appState.registrations.forEach(r => {
-                if(catFilter && r.cat !== catFilter) return;
+                if (catFilter && r.cat !== catFilter) return;
                 const prog = window.appState.programs.find(p => p.id === r.progId);
 
                 r.participants.forEach(pName => {
@@ -894,7 +1383,7 @@
 
         window.openJudgePanel = function() {
             const container = document.getElementById('judge-evaluation-list');
-            if(window.appState.programs.length === 0) {
+            if (window.appState.programs.length === 0) {
                 container.innerHTML = '<p style="color:#777;">No programs available for evaluation.</p>';
                 return;
             }
@@ -915,15 +1404,15 @@
             saveData();
         }
 
-        /* Team & Program Operations */
+        // --- Team & Program CRUD ---
         window.addOrEditTeam = function(e) {
             e.preventDefault();
             const idx = parseInt(document.getElementById('edit-team-index').value);
             const u = document.getElementById('add-team-user').value.trim();
             const p = document.getElementById('add-team-pass').value.trim();
 
-            if(idx === -1) { window.appState.teams.push({user: u, pass: p}); }
-            else { window.appState.teams[idx] = {user: u, pass: p}; document.getElementById('edit-team-index').value = "-1"; }
+            if (idx === -1) { window.appState.teams.push({ user: u, pass: p }); }
+            else { window.appState.teams[idx] = { user: u, pass: p }; document.getElementById('edit-team-index').value = "-1"; }
             saveData();
             populateCommitteeDropdowns();
             renderManageLists();
@@ -938,7 +1427,7 @@
         }
 
         window.deleteTeam = function(idx) {
-            if(confirm("Delete team?")) {
+            if (confirm("Delete team?")) {
                 window.appState.teams.splice(idx, 1);
                 saveData();
                 populateCommitteeDropdowns();
@@ -954,11 +1443,11 @@
             const stage = document.getElementById('prog-stage').value;
             const limit = parseInt(document.getElementById('prog-limit').value);
 
-            if(editId === "") {
+            if (editId === "") {
                 window.appState.programs.push({ id: 'prog_' + Date.now(), name: title, cat: cat, stage: stage, limit: limit });
             } else {
                 const prog = window.appState.programs.find(p => p.id === editId);
-                if(prog) { prog.name = title; prog.cat = cat; prog.stage = stage; prog.limit = limit; }
+                if (prog) { prog.name = title; prog.cat = cat; prog.stage = stage; prog.limit = limit; }
                 document.getElementById('edit-prog-id').value = "";
             }
             saveData();
@@ -969,7 +1458,7 @@
 
         window.editProgram = function(progId) {
             const p = window.appState.programs.find(item => item.id === progId);
-            if(p) {
+            if (p) {
                 document.getElementById('edit-prog-id').value = p.id;
                 document.getElementById('prog-title').value = p.name;
                 document.getElementById('prog-cat').value = p.cat;
@@ -979,7 +1468,7 @@
         }
 
         window.deleteProgram = function(progId) {
-            if(confirm("Delete program?")) {
+            if (confirm("Delete program?")) {
                 window.appState.programs = window.appState.programs.filter(p => p.id !== progId);
                 saveData();
                 populateCommitteeDropdowns();
@@ -1020,8 +1509,10 @@
                 const prog = window.appState.programs.find(p => p.id === r.progId);
                 return `
                     <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid #ddd; font-size:0.85rem;">
-                        <span>${prog ? prog.name : 'Result'}</span>
-                        <button class="btn btn-danger btn-sm" onclick="deleteResult('${r.progId}')">Delete</button>
+                        <span><strong>${prog ? prog.name : 'Result'}</strong>: ${r.title || 'Poster/Video'}</span>
+                        <div>
+                            <button class="btn btn-danger btn-sm" onclick="deleteResult('${r.progId}')">Delete</button>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -1036,12 +1527,12 @@
             let rows = '';
             window.appState.registrations.forEach(r => {
                 const prog = window.appState.programs.find(p => p.id === r.progId);
-                if(!prog) return;
+                if (!prog) return;
 
-                if(fTeam && r.team !== fTeam) return;
-                if(fCat && r.cat !== fCat) return;
-                if(fStage && prog.stage !== fStage) return;
-                if(fProg && prog.id !== fProg) return;
+                if (fTeam && r.team !== fTeam) return;
+                if (fCat && r.cat !== fCat) return;
+                if (fStage && prog.stage !== fStage) return;
+                if (fProg && prog.id !== fProg) return;
 
                 r.participants.forEach(pName => {
                     rows += `<tr>
@@ -1057,11 +1548,11 @@
             document.getElementById('reports-table-body').innerHTML = rows || '<tr><td colspan="5" style="text-align:center;">No Data</td></tr>';
         }
 
-        /* Result Posters Upload */
+        // --- Result Upload & Gallery Controls ---
         window.uploadTeamStatus = function(e) {
             e.preventDefault();
             const file = document.getElementById('status-file-input').files[0];
-            if(file) {
+            if (file) {
                 const reader = new FileReader();
                 reader.onload = function(evt) {
                     window.appState.teamStatusUrl = evt.target.result;
@@ -1075,22 +1566,31 @@
         window.uploadProgramResult = function(e) {
             e.preventDefault();
             const progId = document.getElementById('res-upload-prog').value;
+            const mediaTitle = document.getElementById('res-media-title').value.trim();
             const file = document.getElementById('res-file-input').files[0];
-            if(file && progId) {
+
+            if (file && progId) {
                 const reader = new FileReader();
                 reader.onload = function(evt) {
+                    const isVideo = file.type.startsWith('video/');
                     window.appState.results = window.appState.results.filter(r => r.progId !== progId);
-                    window.appState.results.push({ progId: progId, posterUrl: evt.target.result });
+                    window.appState.results.push({
+                        progId: progId,
+                        title: mediaTitle,
+                        posterUrl: evt.target.result,
+                        isVideo: isVideo
+                    });
                     saveData();
                     renderManageLists();
-                    alert("Result Published!");
+                    alert("Result Media Published!");
+                    e.target.reset();
                 };
                 reader.readAsDataURL(file);
             }
         }
 
         window.deleteResult = function(progId) {
-            if(confirm("Delete result?")) {
+            if (confirm("Delete result?")) {
                 window.appState.results = window.appState.results.filter(r => r.progId !== progId);
                 saveData();
                 renderManageLists();
@@ -1103,7 +1603,7 @@
             const url = document.getElementById('live-url').value;
             const file = document.getElementById('live-thumb').files[0];
 
-            if(file) {
+            if (file) {
                 const reader = new FileReader();
                 reader.onload = function(evt) {
                     window.appState.livelinks.push({ title, url, thumb: evt.target.result });
@@ -1115,30 +1615,62 @@
             }
         }
 
-        /* Result View & Popit Animation */
+        // --- Gallery Result & Popit View ---
         window.filterResultPrograms = function() {
             const cat = document.getElementById('res-search-cat').value;
             const query = document.getElementById('res-search-input').value.toLowerCase();
             const container = document.getElementById('results-display-list');
 
             const matched = window.appState.programs.filter(p => (!cat || p.cat === cat) && (!query || p.name.toLowerCase().includes(query)));
-            if(matched.length === 0) { container.innerHTML = '<p style="color:#777;">No results found.</p>'; return; }
+            if (matched.length === 0) { container.innerHTML = '<p style="color:#777;">No results found.</p>'; return; }
 
             container.innerHTML = matched.map(p => {
                 const res = window.appState.results.find(r => r.progId === p.id);
+                if (!res) {
+                    return `
+                        <div class="gallery-item" style="padding:15px;">
+                            <h4>${p.name}</h4>
+                            <p style="color:#666; font-size:0.8rem;">Category: ${p.cat}</p>
+                            <p style="color:red; font-size:0.8rem; margin-top:5px;">Not Published</p>
+                        </div>
+                    `;
+                }
+
+                const mediaElement = res.isVideo 
+                    ? `<video src="${res.posterUrl}" class="gallery-media" id="media-${p.id}" controls></video>`
+                    : `<img src="${res.posterUrl}" class="gallery-media" id="media-${p.id}">`;
+
                 return `
-                    <div style="background:#fff; border:1px solid #ddd; border-radius:10px; padding:15px; margin-bottom:12px;">
-                        <h4>${p.name} <span style="font-size:0.8rem; color:#666;">(${p.cat})</span></h4>
-                        ${res ? `<button class="btn btn-sm btn-success" style="margin-top:8px;" onclick="triggerResultPopit('${res.posterUrl}')">View Result Poster</button>` : '<p style="color:red; font-size:0.8rem; margin-top:5px;">Not Published</p>'}
+                    <div class="gallery-item">
+                        ${mediaElement}
+                        <div class="gallery-content">
+                            <h4>${p.name}</h4>
+                            <p style="font-size:0.85rem; color:#475569;"><strong>${res.title || 'Result Media'}</strong></p>
+                            <div style="display:flex; gap:5px; margin-top:10px;">
+                                <button class="btn btn-sm btn-primary" onclick="toggleMinify('${p.id}')">Minify / Unminify</button>
+                                <button class="btn btn-sm btn-success" onclick="triggerResultPopit('${res.posterUrl}', ${res.isVideo})">Popit View</button>
+                            </div>
+                        </div>
                     </div>
                 `;
             }).join('');
         }
 
-        window.triggerResultPopit = function(posterUrl) {
+        window.toggleMinify = function(progId) {
+            const media = document.getElementById(`media-${progId}`);
+            if (media) {
+                media.classList.toggle('unminify');
+            }
+        }
+
+        window.triggerResultPopit = function(posterUrl, isVideo) {
             confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
             const w = window.open("");
-            w.document.write(`<title>Result Poster</title><body style="margin:0; background:#111; display:flex; justify-content:center; align-items:center; height:100vh;"><img src="${posterUrl}" style="max-width:100%; max-height:100vh; object-fit:contain;"></body>`);
+            if (isVideo) {
+                w.document.write(`<title>Result Video</title><body style="margin:0; background:#111; display:flex; justify-content:center; align-items:center; height:100vh;"><video src="${posterUrl}" controls style="max-width:100%; max-height:100vh;"></video></body>`);
+            } else {
+                w.document.write(`<title>Result Poster</title><body style="margin:0; background:#111; display:flex; justify-content:center; align-items:center; height:100vh;"><img src="${posterUrl}" style="max-width:100%; max-height:100vh; object-fit:contain;"></body>`);
+            }
         }
 
         // Initial Menu Render
