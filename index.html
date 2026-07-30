@@ -885,760 +885,440 @@
         }
 
         function renderTeamPortal() {
-            if (!state.currentUser || state.currentUser.role !== 'team') return;
+      <!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arts Festival Management System</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+        }
 
-            const closedAlert = document.getElementById('registrationClosedAlert');
-            const btnSubmitReg = document.getElementById('btnSubmitReg');
-            if (!state.isRegOpen) {
-                closedAlert.classList.remove('hidden');
-                btnSubmitReg.disabled = true;
-                btnSubmitReg.classList.add('opacity-50', 'cursor-not-allowed');
-            } else {
-                closedAlert.classList.add('hidden');
-                btnSubmitReg.disabled = false;
-                btnSubmitReg.classList.remove('opacity-50', 'cursor-not-allowed');
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        /* Header & Navbar */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: white;
+            color: black;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: var(--text);
+            border-bottom: 1px solid #eee;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f1f5f9;
+        }
+
+        /* Layout Container */
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .hidden { display: none; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+
+        /* Forms & Buttons */
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover { opacity: 0.9; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th { background-color: #e2e8f0; }
+
+        .collapsible {
+            cursor: pointer;
+            background-color: #e2e8f0;
+            padding: 10px;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>Arts Festival Management</h2>
+        <button class="menu-btn" onclick="toggleMenu()">⋮</button>
+        <div id="dropdownMenu" class="dropdown-menu">
+            <a href="#" onclick="showSection('homeSection')">Home</a>
+            <a href="#" onclick="showLoginModal('main')">Main Login</a>
+            <a href="#" onclick="showLoginModal('participant')">Participants Login</a>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- ================= HOME SECTION ================= -->
+        <div id="homeSection">
+            <!-- Phase 1: Register Phase -->
+            <div id="phaseRegister" class="card">
+                <h2> Registration Phase Active</h2>
+                <p>ടീം ലീഡർമാർക്ക് ലോഗിൻ ചെയ്ത് കുട്ടികളുടെ പേരുകൾ രജിസ്റ്റർ ചെയ്യാം.</p>
+            </div>
+
+            <!-- Phase 2: Result Phase -->
+            <div id="phaseResult" class="card hidden">
+                <h2> Festival Results & Live Updates</h2>
+                <div class="grid">
+                    <div class="card"><h3>1. Team Status</h3><div id="resTeamStatus">പബ്ലിഷ് ചെയ്തിട്ടില്ല</div></div>
+                    <div class="card"><h3>2. Results</h3><div id="resResults">റിസൾട്ടുകൾ ലഭ്യമല്ല</div></div>
+                    <div class="card"><h3>3. Updates</h3><div id="resUpdates">അപ്ഡേറ്റുകൾ ഇല്ല</div></div>
+                    <div class="card"><h3>4. Live Streaming</h3><div id="resLive">ലൈവ് ലഭ്യമല്ല</div></div>
+                    <div class="card"><h3>5. Highlights</h3><div id="resHighlights">ഹൈലൈറ്റ്സ് ഇല്ല</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= MAIN ADMIN DASHBOARD ================= -->
+        <div id="adminDashboard" class="hidden">
+            <h1> Main Admin Control Panel</h1>
+            <nav style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button onclick="showAdminTab('settingsTab')">Settings</button>
+                <button onclick="showAdminTab('controlPanelTab')">Control Panel</button>
+                <button onclick="showAdminTab('pointRoomTab')">Point Room</button>
+                <button onclick="showAdminTab('judgeTab')">Judge Room</button>
+                <button onclick="showAdminTab('statusControlTab')">Status Control</button>
+            </nav>
+
+            <!-- SETTINGS -->
+            <div id="settingsTab" class="card admin-subtab">
+                <h3>Settings</h3>
+                <label>Active Phase Choice:</label>
+                <select id="phaseToggle" onchange="togglePhase(this.value)">
+                    <option value="register">Register Phase</option>
+                    <option value="result">Result Phase</option>
+                </select>
+                <hr>
+                <button style="background-color: red;" onclick="clearAllData()"> Clear All Data</button>
+            </div>
+
+            <!-- CONTROL PANEL -->
+            <div id="controlPanelTab" class="card admin-subtab hidden">
+                <h3>Control Panel</h3>
+                <h4>1. Registration Status</h4>
+                <select id="regStatusToggle">
+                    <option value="open">Open Registration</option>
+                    <option value="closed">Close Registration</option>
+                </select>
+
+                <hr>
+                <h4>2. Add Teams</h4>
+                <input type="text" id="newTeamName" placeholder="Team Name">
+                <input type="text" id="newTeamUser" placeholder="Username">
+                <input type="password" id="newTeamPass" placeholder="Password">
+                <button onclick="addTeam()">Add Team</button>
+
+                <hr>
+                <h4>3. Add Program</h4>
+                <input type="text" id="progName" placeholder="Program Name">
+                <select id="progCategory">
+                    <option>Lower Zone</option>
+                    <option>Middle Zone</option>
+                    <option>Higher Zone</option>
+                    <option>Super Zone</option>
+                    <option>General</option>
+                </select>
+                <select id="progType">
+                    <option value="On Stage">On Stage</option>
+                    <option value="Off Stage">Off Stage</option>
+                </select>
+                <button onclick="addProgram()">Add Program</button>
+
+                <h4>Program List</h4>
+                <div id="adminProgramList"></div>
+            </div>
+
+            <!-- POINT ROOM -->
+            <div id="pointRoomTab" class="card admin-subtab hidden">
+                <h3> Point Room (Mark Entry)</h3>
+                <label>Select Category:</label>
+                <select id="prCategory" onchange="loadPointRoomPrograms()">
+                    <option value="">-- Select --</option>
+                    <option>Lower Zone</option><option>Middle Zone</option>
+                    <option>Higher Zone</option><option>Super Zone</option><option>General</option>
+                </select>
+                
+                <label>Select Program:</label>
+                <select id="prProgram"></select>
+
+                <div id="pointRoomEntryArea"></div>
+            </div>
+
+            <!-- JUDGE ROOM -->
+            <div id="judgeTab" class="card admin-subtab hidden">
+                <h3> Individual Points & Leaderboard</h3>
+                <label>Filter Stage Type:</label>
+                <select id="judgeStageFilter" onchange="renderJudgeLeaderboard()">
+                    <option value="All">All Stage</option>
+                    <option value="On Stage">On Stage Only</option>
+                    <option value="Off Stage">Off Stage Only</option>
+                </select>
+                <div id="judgeLeaderboard"></div>
+            </div>
+
+            <!-- STATUS CONTROL -->
+            <div id="statusControlTab" class="card admin-subtab hidden">
+                <h3> Team Point Status</h3>
+                <div id="teamStatusBoard"></div>
+            </div>
+        </div>
+
+        <!-- ================= PARTICIPANT DASHBOARD ================= -->
+        <div id="participantDashboard" class="hidden">
+            <h2 id="teamWelcome">Team Dashboard</h2>
+            <div class="card">
+                <h3>Add Participants</h3>
+                <input type="text" id="partName" placeholder="Participant Name">
+                <select id="partCategory">
+                    <option>Lower Zone</option>
+                    <option>Middle Zone</option>
+                    <option>Higher Zone</option>
+                    <option>Super Zone</option>
+                    <option>General</option>
+                </select>
+                <button onclick="addParticipant()">Add Participant</button>
+            </div>
+
+            <div class="card">
+                <h3>Registered Participants List</h3>
+                <ul id="participantListUI"></ul>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Data Structure Initializations
+        let appData = JSON.parse(localStorage.getItem('artsAppData')) || {
+            phase: 'register',
+            regOpen: true,
+            teams: [],
+            programs: [],
+            participants: [],
+            marks: []
+        };
+
+        function saveData() {
+            localStorage.setItem('artsAppData', JSON.stringify(appData));
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('dropdownMenu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function showSection(id) {
+            document.getElementById('homeSection').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById('participantDashboard').classList.add('hidden');
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById('dropdownMenu').style.display = 'none';
+        }
+
+        function showLoginModal(type) {
+            if (type === 'main') {
+                let u = prompt("Username Enter Cheyyuka:");
+                let p = prompt("Password Enter Cheyyuka:");
+                if (u === "bahja2026" && p === "2026bahjacommitty") {
+                    alert("Main Admin Login Successful!");
+                    showSection('adminDashboard');
+                } else {
+                    alert("Incorrect Credentials!");
+                }
+            } else if (type === 'participant') {
+                let u = prompt("Team Username:");
+                let p = prompt("Team Password:");
+                let team = appData.teams.find(t => t.user === u && t.pass === p);
+                if (team) {
+                    alert("Welcome " + team.name);
+                    window.currentTeam = team.name;
+                    document.getElementById('teamWelcome').innerText = "Team: " + team.name;
+                    showSection('participantDashboard');
+                    renderParticipants();
+                } else {
+                    alert("Invalid Team Credentials!");
+                }
             }
+        }
 
-            const list = document.getElementById('myParticipantsList');
+        // Settings Phase Toggle
+        function togglePhase(val) {
+            appData.phase = val;
+            saveData();
+            if (val === 'register') {
+                document.getElementById('phaseRegister').classList.remove('hidden');
+                document.getElementById('phaseResult').classList.add('hidden');
+            } else {
+                document.getElementById('phaseRegister').classList.add('hidden');
+                document.getElementById('phaseResult').classList.remove('hidden');
+            }
+        }
+
+        function showAdminTab(tabId) {
+            document.querySelectorAll('.admin-subtab').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+        }
+
+        // Control Panel Actions
+        function addTeam() {
+            let name = document.getElementById('newTeamName').value;
+            let user = document.getElementById('newTeamUser').value;
+            let pass = document.getElementById('newTeamPass').value;
+            if (name && user && pass) {
+                appData.teams.push({ name, user, pass });
+                saveData();
+                alert("Team Added!");
+                document.getElementById('newTeamName').value = '';
+                document.getElementById('newTeamUser').value = '';
+                document.getElementById('newTeamPass').value = '';
+            }
+        }
+
+        function addProgram() {
+            let name = document.getElementById('progName').value;
+            let cat = document.getElementById('progCategory').value;
+            let type = document.getElementById('progType').value;
+            if (name) {
+                appData.programs.push({ id: Date.now(), name, cat, type });
+                saveData();
+                renderAdminPrograms();
+                alert("Program Added!");
+            }
+        }
+
+        function renderAdminPrograms() {
+            let list = document.getElementById('adminProgramList');
             list.innerHTML = '';
-            const myParts = state.participants.filter(p => p.team === state.currentUser.name);
-
-            if (myParts.length === 0) {
-                list.innerHTML = `<li class="p-3 text-xs text-slate-400">No participants added.</li>`;
-            } else {
-                myParts.forEach(p => {
-                    list.innerHTML += `
-                        <li class="p-2.5 flex justify-between items-center text-xs">
-                            <div>
-                                <span class="font-bold text-slate-700">${p.name}</span> 
-                                <span class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded ml-2">${p.cat}</span>
-                            </div>
-                            <button onclick="deleteParticipant(${p.id})" class="text-red-600 font-bold hover:underline">Delete</button>
-                        </li>
-                    `;
-                });
-            }
-        }
-
-        // --- CONTROL PANEL ACTIONS ---
-        function switchAdminTab(tab) {
-            document.getElementById('adminRegControlTab').classList.add('hidden');
-            document.getElementById('adminResControlTab').classList.add('hidden');
-
-            document.getElementById('tabBtnRegControl').className = "px-4 py-2.5 font-bold text-slate-500 text-xs";
-            document.getElementById('tabBtnResControl').className = "px-4 py-2.5 font-bold text-slate-500 text-xs";
-
-            if (tab === 'regControl') {
-                document.getElementById('adminRegControlTab').classList.remove('hidden');
-                document.getElementById('tabBtnRegControl').className = "px-4 py-2.5 font-bold border-b-2 border-blue-600 text-blue-600 text-xs";
-            } else if (tab === 'resControl') {
-                document.getElementById('adminResControlTab').classList.remove('hidden');
-                document.getElementById('tabBtnResControl').className = "px-4 py-2.5 font-bold border-b-2 border-blue-600 text-blue-600 text-xs";
-            }
-        }
-
-        function togglePhase(selectedPhase) {
-            state.phase = selectedPhase;
-            saveState();
-            applyPhaseUI();
-        }
-
-        function toggleRegistrationOpenClose() {
-            state.isRegOpen = !state.isRegOpen;
-            saveState();
-            renderAdminRegControl();
-            renderTeamPortal();
-        }
-
-        function saveGlobalLimit() {
-            const lim = document.getElementById('globalMaxProgLimit').value;
-            if (!lim) return;
-            state.globalMaxLimit = parseInt(lim);
-            saveState();
-            alert('Limit saved!');
-        }
-
-        function handleAddTeam(e) {
-            e.preventDefault();
-            const u = document.getElementById('newTeamUser').value;
-            const p = document.getElementById('newTeamPass').value;
-
-            state.teams.push({ id: Date.now(), user: u, pass: p });
-            document.getElementById('newTeamUser').value = '';
-            document.getElementById('newTeamPass').value = '';
-            saveState();
-            renderAdminRegControl();
-        }
-
-        function deleteTeam(id) {
-            state.teams = state.teams.filter(t => t.id !== id);
-            saveState();
-            renderAdminRegControl();
-        }
-
-        function editTeam(id) {
-            const t = state.teams.find(tm => tm.id === id);
-            if (!t) return;
-            const newU = prompt("Edit Team Username:", t.user);
-            const newP = prompt("Edit Team Password:", t.pass);
-            if (newU && newP) {
-                t.user = newU;
-                t.pass = newP;
-                saveState();
-                renderAdminRegControl();
-            }
-        }
-
-        function handleAddProgram(e) {
-            e.preventDefault();
-            const name = document.getElementById('progName').value;
-            const cat = document.getElementById('progCategory').value;
-            const stage = document.getElementById('progStage').value;
-            const max = document.getElementById('progMax').value;
-
-            state.programs.push({ id: Date.now(), name, cat, stage, max });
-            document.getElementById('progName').value = '';
-            document.getElementById('progMax').value = '';
-            saveState();
-            renderAdminRegControl();
+            appData.programs.forEach(p => {
+                list.innerHTML += `<div><strong>${p.name}</strong> (${p.cat} - ${p.type}) 
+                <button onclick="deleteProgram(${p.id})" style="width: auto; background: red;">Delete</button></div>`;
+            });
         }
 
         function deleteProgram(id) {
-            state.programs = state.programs.filter(p => p.id !== id);
-            saveState();
-            renderAdminRegControl();
+            appData.programs = appData.programs.filter(p => p.id !== id);
+            saveData();
+            renderAdminPrograms();
         }
 
-        function editProgram(id) {
-            const p = state.programs.find(pr => pr.id === id);
-            if (!p) return;
-            const newN = prompt("Edit Program Name:", p.name);
-            const newMax = prompt("Edit Max Limit:", p.max);
-            if (newN && newMax) {
-                p.name = newN;
-                p.max = newMax;
-                saveState();
-                renderAdminRegControl();
+        // Participant Actions
+        function addParticipant() {
+            let name = document.getElementById('partName').value;
+            let cat = document.getElementById('partCategory').value;
+            if (name) {
+                appData.participants.push({ id: Date.now(), name, cat, team: window.currentTeam });
+                saveData();
+                renderParticipants();
             }
         }
 
-        function toggleSection(id) {
-            document.getElementById(id).classList.toggle('hidden');
-        }
-
-        function renderAdminRegControl() {
-            document.getElementById('globalMaxProgLimit').value = state.globalMaxLimit;
-
-            const statusTxt = document.getElementById('adminRegStatusText');
-            const statusBtn = document.getElementById('adminRegStatusBtn');
-            if (state.isRegOpen) {
-                statusTxt.innerText = "OPEN";
-                statusTxt.className = "font-black text-green-600 text-xs";
-                statusBtn.innerText = "Close Registration";
-                statusBtn.className = "bg-red-600 text-white text-xs font-bold px-4 py-2 rounded-xl";
-            } else {
-                statusTxt.innerText = "CLOSED";
-                statusTxt.className = "font-black text-red-600 text-xs";
-                statusBtn.innerText = "Open Registration";
-                statusBtn.className = "bg-green-600 text-white text-xs font-bold px-4 py-2 rounded-xl";
-            }
-
-            const teamsList = document.getElementById('teamsList');
-            teamsList.innerHTML = '';
-            state.teams.forEach(t => {
-                teamsList.innerHTML += `
-                    <div class="py-2 flex justify-between items-center text-xs">
-                        <div><strong>${t.user}</strong> <span class="text-slate-400">(${t.pass})</span></div>
-                        <div class="flex gap-2">
-                            <button onclick="editTeam(${t.id})" class="text-blue-600 font-bold">Edit</button>
-                            <button onclick="deleteTeam(${t.id})" class="text-red-600 font-bold">Delete</button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            const progList = document.getElementById('adminProgList');
-            progList.innerHTML = '';
-            state.programs.forEach(p => {
-                progList.innerHTML += `
-                    <div class="py-2 flex justify-between items-center text-xs">
-                        <div><strong>${p.name}</strong> (${p.cat}) - ${p.stage}, Max: ${p.max}</div>
-                        <div class="flex gap-2">
-                            <button onclick="editProgram(${p.id})" class="text-blue-600 font-bold">Edit</button>
-                            <button onclick="deleteProgram(${p.id})" class="text-red-600 font-bold">Delete</button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            populateFilterOptions();
-            renderAdminReport();
-        }
-
-        function populateFilterOptions() {
-            const filterTeam = document.getElementById('filterTeam');
-            const filterCat = document.getElementById('filterCat');
-            const filterStage = document.getElementById('filterStage');
-            const filterProg = document.getElementById('filterProg');
-
-            filterTeam.innerHTML = '<option value="">All Teams</option>';
-            state.teams.forEach(t => filterTeam.innerHTML += `<option value="${t.user}">${t.user}</option>`);
-
-            filterCat.innerHTML = '<option value="">All Categories</option>';
-            ['LOWER ZONE', 'MIDDLE ZONE', 'HIGHER ZONE', 'SUPER ZONE', 'GENERAL'].forEach(c => filterCat.innerHTML += `<option value="${c}">${c}</option>`);
-
-            filterStage.innerHTML = '<option value="">All Stages</option><option value="ON STAGE">ON STAGE</option><option value="OFF STAGE">OFF STAGE</option>';
-
-            filterProg.innerHTML = '<option value="">All Programs</option>';
-            state.programs.forEach(p => filterProg.innerHTML += `<option value="${p.name}">${p.name}</option>`);
-        }
-
-        function renderAdminReport() {
-            const team = document.getElementById('filterTeam').value;
-            const cat = document.getElementById('filterCat').value;
-            const stage = document.getElementById('filterStage').value;
-            const prog = document.getElementById('filterProg').value;
-
-            const tbody = document.getElementById('reportTableBody');
-            tbody.innerHTML = '';
-
-            let filtered = state.registrations.filter(r => {
-                return (!team || r.team === team) &&
-                       (!cat || r.cat === cat) &&
-                       (!stage || r.stage === stage) &&
-                       (!prog || r.progName === prog);
-            });
-
-            filtered.forEach(r => {
-                tbody.innerHTML += `
-                    <tr class="border-b">
-                        <td class="p-2 border font-medium">${r.partName}</td>
-                        <td class="p-2 border">${r.team}</td>
-                        <td class="p-2 border">${r.cat}</td>
-                        <td class="p-2 border">${r.progName}</td>
-                        <td class="p-2 border">${r.stage}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        function openPrintModal() {
-            document.getElementById('modalOverlay').classList.remove('hidden');
-            document.getElementById('printModal').classList.remove('hidden');
-            
-            const tbody = document.getElementById('printTableBody');
-            tbody.innerHTML = document.getElementById('reportTableBody').innerHTML;
-        }
-
-        function closePrintModal() {
-            document.getElementById('printModal').classList.add('hidden');
-            document.getElementById('modalOverlay').classList.add('hidden');
-        }
-
-        function adjustPrintFont(val) {
-            document.getElementById('printFontVal').innerText = val + 'px';
-            document.getElementById('printableArea').style.fontSize = val + 'px';
-        }
-
-        // --- POINT ROOM ACTIONS ---
-        function updatePRPrograms() {
-            const cat = document.getElementById('prCategorySelect').value;
-            const select = document.getElementById('prProgramSelect');
-            select.innerHTML = '<option value="">-- Choose Program --</option>';
-
-            state.programs.filter(p => p.cat === cat).forEach(p => {
-                select.innerHTML += `<option value="${p.name}">${p.name}</option>`;
-            });
-        }
-
-        function renderPRParticipants() {
-            const cat = document.getElementById('prCategorySelect').value;
-            const progName = document.getElementById('prProgramSelect').value;
-            const form = document.getElementById('prPointForm');
-            const inputsContainer = document.getElementById('prParticipantInputs');
-            const stageBadge = document.getElementById('prStageBadge');
-            const stageTxt = document.getElementById('prStageTxt');
-
-            if (!cat || !progName) return;
-
-            const progObj = state.programs.find(p => p.name === progName && p.cat === cat);
-            stageBadge.classList.remove('hidden');
-            stageTxt.innerText = progObj ? progObj.stage : 'ON STAGE';
-
-            // Find all registered participants for this program
-            const regs = state.registrations.filter(r => r.progName === progName && r.cat === cat);
-            inputsContainer.innerHTML = '';
-
-            if (regs.length === 0) {
-                inputsContainer.innerHTML = `<p class="text-xs text-slate-400">No participants registered for this program.</p>`;
-            } else {
-                regs.forEach((r, idx) => {
-                    inputsContainer.innerHTML += `
-                        <div class="flex items-center justify-between gap-2 bg-slate-50 p-2 rounded-xl text-xs">
-                            <span class="font-bold text-slate-700">${r.partName} (${r.team})</span>
-                            <input type="number" data-part="${r.partName}" data-team="${r.team}" placeholder="Point" min="0" required class="border p-2 rounded-lg w-20 outline-none text-center">
-                        </div>
-                    `;
+        function renderParticipants() {
+            let ul = document.getElementById('participantListUI');
+            ul.innerHTML = '';
+            appData.participants
+                .filter(p => p.team === window.currentTeam)
+                .forEach(p => {
+                    ul.innerHTML += `<li>${p.name} (${p.cat}) <button onclick="deleteParticipant(${p.id})" style="width:auto; background:red;">Delete</button></li>`;
                 });
-            }
-
-            form.classList.remove('hidden');
         }
 
-        function handleSavePoints(e) {
-            e.preventDefault();
-            const cat = document.getElementById('prCategorySelect').value;
-            const progName = document.getElementById('prProgramSelect').value;
-            const progObj = state.programs.find(p => p.name === progName && p.cat === cat);
-            const stage = progObj ? progObj.stage : 'ON STAGE';
-
-            const inputs = document.querySelectorAll('#prParticipantInputs input');
-            let scores = [];
-
-            inputs.forEach(inp => {
-                scores.push({
-                    partName: inp.getAttribute('data-part'),
-                    team: inp.getAttribute('data-team'),
-                    point: parseFloat(inp.value) || 0
-                });
-            });
-
-            state.points.push({
-                id: Date.now(),
-                progName,
-                cat,
-                stage,
-                scores
-            });
-
-            saveState();
-            alert('Points Submitted Successfully!');
-            renderPointRoomList();
-        }
-
-        function renderPointRoomList() {
-            const list = document.getElementById('prSubmittedList');
-            list.innerHTML = '';
-
-            state.points.forEach((pt, idx) => {
-                list.innerHTML += `
-                    <div class="p-3 flex justify-between items-center">
-                        <div>
-                            <strong>${pt.progName}</strong> (${pt.cat}) - <span class="text-blue-600 font-bold">${pt.stage}</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="deletePointRecord(${pt.id})" class="text-red-600 font-bold">Delete</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function deletePointRecord(id) {
-            state.points = state.points.filter(pt => pt.id !== id);
-            saveState();
-            renderPointRoomList();
-        }
-
-        // --- JUDGE LEADERBOARD LOGIC ---
-        function renderJudgeLeaderboard() {
-            const filterStage = document.getElementById('judgeStageFilter').value;
-            const lb = document.getElementById('judgeLeaderboard');
-            lb.innerHTML = '';
-
-            // Aggregate participant total scores based on rules:
-            // 1. General programs marks EXCLUDED.
-            // 2. Stage filtering applied if chosen.
-            let partTotals = {}; // { partName: { team, cat, total: 0, breakdown: [] } }
-
-            state.points.forEach(pt => {
-                if (pt.cat === 'GENERAL') return; // EXCLUDE GENERAL
-                if (filterStage !== 'ALL' && pt.stage !== filterStage) return; // Stage match
-
-                pt.scores.forEach(s => {
-                    if (!partTotals[s.partName]) {
-                        partTotals[s.partName] = {
-                            team: s.team,
-                            cat: pt.cat,
-                            total: 0,
-                            breakdown: []
-                        };
-                    }
-                    partTotals[s.partName].total += s.point;
-                    partTotals[s.partName].breakdown.push({
-                        progName: pt.progName,
-                        cat: pt.cat,
-                        stage: pt.stage,
-                        point: s.point
-                    });
-                });
-            });
-
-            // Convert to array and sort DESCENDING
-            let arr = Object.keys(partTotals).map(k => ({
-                name: k,
-                ...partTotals[k]
-            })).sort((a, b) => b.total - a.total);
-
-            if (arr.length === 0) {
-                lb.innerHTML = `<p class="text-xs text-slate-400">No participant points registered yet.</p>`;
-            } else {
-                arr.forEach((item, idx) => {
-                    lb.innerHTML += `
-                        <div onclick="showPartDetails('${item.name}', '${item.team}')" class="p-3 bg-slate-50 hover:bg-slate-100 rounded-xl border flex justify-between items-center cursor-pointer transition">
-                            <div class="flex items-center gap-3">
-                                <span class="font-extrabold text-blue-700 text-sm">#${idx + 1}</span>
-                                <div>
-                                    <h4 class="font-bold text-xs text-slate-800">${item.name}</h4>
-                                    <p class="text-[10px] text-slate-500">${item.team} (${item.cat})</p>
-                                </div>
-                            </div>
-                            <span class="font-black text-sm text-emerald-600">${item.total} pts</span>
-                        </div>
-                    `;
-                });
-            }
-        }
-
-        function showPartDetails(partName, team) {
-            const modal = document.getElementById('detailsModal');
-            const title = document.getElementById('detailsTitle');
-            const content = document.getElementById('detailsContent');
-
-            title.innerText = `Points Breakdown: ${partName} (${team})`;
-            content.innerHTML = '';
-
-            state.points.forEach(pt => {
-                pt.scores.forEach(s => {
-                    if (s.partName === partName) {
-                        content.innerHTML += `
-                            <div class="py-2 flex justify-between items-center">
-                                <div>
-                                    <strong>${pt.progName}</strong> (${pt.cat})
-                                    <p class="text-[10px] text-slate-400">${pt.stage}</p>
-                                </div>
-                                <span class="font-bold text-emerald-600">+${s.point} pts</span>
-                            </div>
-                        `;
-                    }
-                });
-            });
-
-            document.getElementById('modalOverlay').classList.remove('hidden');
-            modal.classList.remove('hidden');
-        }
-
-        function closeDetailsModal() {
-            document.getElementById('detailsModal').classList.add('hidden');
-            document.getElementById('modalOverlay').classList.add('hidden');
-        }
-
-        // --- STATES CONTROL (TEAM TOTAL TALLY LOGIC) ---
-        function renderStatesControl() {
-            const container = document.getElementById('teamTallyList');
-            container.innerHTML = '';
-
-            // Aggregate team totals INCLUDING General program points
-            let teamTotals = {}; // { teamName: { total: 0 } }
-
-            state.teams.forEach(t => {
-                teamTotals[t.user] = { total: 0 };
-            });
-
-            state.points.forEach(pt => {
-                pt.scores.forEach(s => {
-                    if (teamTotals[s.team]) {
-                        teamTotals[s.team].total += s.point;
-                    }
-                });
-            });
-
-            let arr = Object.keys(teamTotals).map(k => ({
-                team: k,
-                total: teamTotals[k].total
-            })).sort((a, b) => b.total - a.total);
-
-            arr.forEach((item, idx) => {
-                container.innerHTML += `
-                    <div onclick="showTeamDetails('${item.team}')" class="p-4 bg-slate-50 hover:bg-slate-100 border rounded-2xl flex justify-between items-center cursor-pointer transition">
-                        <div class="flex items-center gap-3">
-                            <span class="font-black text-amber-600 text-base">#${idx + 1}</span>
-                            <h3 class="font-bold text-sm text-slate-800">${item.team}</h3>
-                        </div>
-                        <span class="font-black text-lg text-blue-700">${item.total} pts</span>
-                    </div>
-                `;
-            });
-        }
-
-        function showTeamDetails(team) {
-            const modal = document.getElementById('detailsModal');
-            const title = document.getElementById('detailsTitle');
-            const content = document.getElementById('detailsContent');
-
-            title.innerText = `Team Breakdown: ${team}`;
-            content.innerHTML = '';
-
-            state.points.forEach(pt => {
-                pt.scores.forEach(s => {
-                    if (s.team === team && s.point > 0) {
-                        content.innerHTML += `
-                            <div class="py-2 flex justify-between items-center">
-                                <div>
-                                    <strong>${s.partName}</strong> - ${pt.progName} (${pt.cat})
-                                    <p class="text-[10px] text-slate-400">${pt.stage}</p>
-                                </div>
-                                <span class="font-bold text-blue-600">+${s.point} pts</span>
-                            </div>
-                        `;
-                    }
-                });
-            });
-
-            document.getElementById('modalOverlay').classList.remove('hidden');
-            modal.classList.remove('hidden');
-        }
-
-        // --- RESULT CONTROL ACTIONS ---
-        function uploadTeamStatus() {
-            const file = document.getElementById('teamStatusFile').files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                state.teamStatuses.push(e.target.result);
-                saveState();
-                renderResControl();
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function deleteTeamStatus(idx) {
-            state.teamStatuses.splice(idx, 1);
-            saveState();
-            renderResControl();
-        }
-
-        function updateResProgSelect() {
-            const cat = document.getElementById('resCatSelect').value;
-            const select = document.getElementById('resProgSelect');
-            select.innerHTML = '<option value="">-- Choose Program --</option>';
-
-            state.programs.filter(p => p.cat === cat).forEach(p => {
-                select.innerHTML += `<option value="${p.name}">${p.name}</option>`;
-            });
-        }
-
-        function uploadResult() {
-            const cat = document.getElementById('resCatSelect').value;
-            const prog = document.getElementById('resProgSelect').value;
-            const posterFile = document.getElementById('resPosterFile').files[0];
-            const yt = document.getElementById('resYtLink').value;
-            const thumbFile = document.getElementById('resYtThumb').files[0];
-
-            if (!cat || !prog || !posterFile) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const posterBase64 = e.target.result;
-                if (thumbFile) {
-                    const tReader = new FileReader();
-                    tReader.onload = function(te) {
-                        saveResultItem(cat, prog, posterBase64, yt, te.target.result);
-                    };
-                    tReader.readAsDataURL(thumbFile);
-                } else {
-                    saveResultItem(cat, prog, posterBase64, yt, '');
-                }
-            };
-            reader.readAsDataURL(posterFile);
-        }
-
-        function saveResultItem(cat, prog, poster, yt, thumb) {
-            state.results.push({ id: Date.now(), cat, prog, poster, yt, thumb });
-            saveState();
-            renderResControl();
-            alert('Result Uploaded!');
-        }
-
-        function deleteResult(id) {
-            state.results = state.results.filter(r => r.id !== id);
-            saveState();
-            renderResControl();
-        }
-
-        function uploadUpdate() {
-            const file = document.getElementById('updateFile').files[0];
-            const type = document.getElementById('updateTypeSelect').value;
-            const title = document.getElementById('updateTitle').value;
-
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                state.updates.push({ id: Date.now(), file: e.target.result, type, title });
-                saveState();
-                renderResControl();
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function deleteUpdate(id) {
-            state.updates = state.updates.filter(u => u.id !== id);
-            saveState();
-            renderResControl();
-        }
-
-        function saveLiveStream() {
-            const link = document.getElementById('liveLink').value;
-            const thumbFile = document.getElementById('liveThumb').files[0];
-
-            if (thumbFile) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    state.live = { link, thumb: e.target.result };
-                    saveState();
-                    alert('Live Saved!');
-                };
-                reader.readAsDataURL(thumbFile);
-            } else {
-                state.live = { link, thumb: state.live.thumb || '' };
-                saveState();
-                alert('Live Saved!');
-            }
-        }
-
-        function saveHighlight() {
-            const title = document.getElementById('highlightTitle').value;
-            if (!title) return;
-            state.highlights.push({ id: Date.now(), title });
-            saveState();
-            alert('Highlight Added!');
-        }
-
-        function renderResControl() {
-            const prev = document.getElementById('teamStatusPreview');
-            prev.innerHTML = '';
-            state.teamStatuses.forEach((img, idx) => {
-                prev.innerHTML += `
-                    <div class="relative w-16 h-16 border rounded-lg overflow-hidden">
-                        <img src="${img}" class="w-full h-full object-cover">
-                        <button onclick="deleteTeamStatus(${idx})" class="absolute top-0 right-0 bg-red-600 text-white text-[10px] px-1 font-bold">&times;</button>
-                    </div>
-                `;
-            });
-
-            const resList = document.getElementById('adminResList');
-            resList.innerHTML = '';
-            state.results.forEach(r => {
-                resList.innerHTML += `
-                    <div class="py-2 flex justify-between items-center text-xs">
-                        <div><strong>${r.prog}</strong> (${r.cat})</div>
-                        <button onclick="deleteResult(${r.id})" class="text-red-600 font-bold">Delete</button>
-                    </div>
-                `;
-            });
-
-            const upList = document.getElementById('adminUpdatesList');
-            upList.innerHTML = '';
-            state.updates.forEach(u => {
-                upList.innerHTML += `
-                    <div class="py-2 flex justify-between items-center text-xs">
-                        <div><strong>${u.title || 'Untitled'}</strong> (${u.type})</div>
-                        <button onclick="deleteUpdate(${u.id})" class="text-red-600 font-bold">Delete</button>
-                    </div>
-                `;
-            });
+        function deleteParticipant(id) {
+            appData.participants = appData.participants.filter(p => p.id !== id);
+            saveData();
+            renderParticipants();
         }
 
         function clearAllData() {
-            if (confirm("Are you sure you want to CLEAR ALL SYSTEM DATA?")) {
-                localStorage.clear();
+            if (confirm("മുഴുവൻ ഡാറ്റയും ഡിലീറ്റ് ചെയ്യണം എന്ന് ഉറപ്പാണോ?")) {
+                localStorage.removeItem('artsAppData');
                 location.reload();
             }
         }
 
-        // --- RESULT PHASE MODALS ---
-        function openModal(modalId) {
-            document.getElementById('modalOverlay').classList.remove('hidden');
-            ['teamStatusModal', 'resultModal', 'updatesModal', 'liveModal', 'highlightsModal'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-
-            document.getElementById(modalId).classList.remove('hidden');
-
-            if (modalId === 'teamStatusModal') {
-                const c = document.getElementById('teamStatusContent');
-                c.innerHTML = state.teamStatuses.map(img => `
-                    <div class="border rounded-xl overflow-hidden shadow-sm p-1">
-                        <img src="${img}" class="w-full h-auto rounded-lg">
-                        <a href="${img}" download="TeamStatus.png" class="block text-center py-2 text-xs font-bold text-blue-600">Download Status</a>
-                    </div>
-                `).join('') || '<p class="text-slate-400 text-xs">No Status uploaded.</p>';
-            } 
-            else if (modalId === 'resultModal') {
-                const c = document.getElementById('resultContent');
-                c.innerHTML = state.results.map(r => `
-                    <div class="border rounded-2xl p-4 space-y-2">
-                        <h4 class="font-bold text-sm text-blue-700">${r.prog} <span class="text-xs text-slate-500">(${r.cat})</span></h4>
-                        <img src="${r.poster}" class="w-full rounded-xl shadow-sm">
-                        <a href="${r.poster}" download="Result.png" class="inline-block text-xs text-blue-600 font-bold">Download Poster</a>
-                        ${r.yt ? `
-                            <div class="pt-2 border-t">
-                                <a href="${r.yt}" target="_blank" class="text-xs text-red-600 font-bold block">Watch Video ➔</a>
-                                ${r.thumb ? `<img src="${r.thumb}" class="w-20 h-14 object-cover rounded mt-1">` : ''}
-                            </div>
-                        ` : ''}
-                    </div>
-                `).join('') || '<p class="text-slate-400 text-xs">No Results published.</p>';
-            }
-            else if (modalId === 'updatesModal') {
-                const c = document.getElementById('updatesContent');
-                c.innerHTML = state.updates.map(u => `
-                    <div class="pinterest-item bg-slate-50 border rounded-2xl overflow-hidden p-2 shadow-sm">
-                        ${u.type === 'video' ? `
-                            <video src="${u.file}" controls class="w-full rounded-xl"></video>
-                        ` : `
-                            <img src="${u.file}" class="w-full h-auto rounded-xl">
-                        `}
-                        <p class="font-bold text-xs mt-2 text-slate-700">${u.title || ''}</p>
-                        <a href="${u.file}" download="Update" class="text-[10px] text-blue-600 font-bold block mt-1">Download</a>
-                    </div>
-                `).join('') || '<p class="text-slate-400 text-xs">No Updates posted.</p>';
-            }
-            else if (modalId === 'liveModal') {
-                const c = document.getElementById('liveContent');
-                if (state.live.link) {
-                    c.innerHTML = `
-                        ${state.live.thumb ? `<img src="${state.live.thumb}" class="w-full h-40 object-cover rounded-2xl mb-2">` : ''}
-                        <a href="${state.live.link}" target="_blank" class="inline-block bg-red-600 text-white font-bold px-6 py-3 rounded-full text-xs shadow-lg">
-                            🔴 Watch Live Streaming
-                        </a>
-                    `;
-                } else {
-                    c.innerHTML = `<p class="text-slate-400 text-xs">Live Streaming Offline.</p>`;
-                }
-            }
-            else if (modalId === 'highlightsModal') {
-                const c = document.getElementById('highlightsContent');
-                c.innerHTML = state.highlights.map(h => `
-                    <div class="p-3 bg-slate-50 border rounded-xl text-xs font-bold text-slate-700">
-                        🌟 ${h.title}
-                    </div>
-                `).join('') || '<p class="text-slate-400 text-xs">No Highlights available.</p>';
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.add('hidden');
-        }
-
-        function renderAll() {
-            renderAdminRegControl();
-            renderResControl();
-            renderTeamPortal();
-            renderPointRoomList();
-        }
+        // Initialize Phase View
+        togglePhase(appData.phase);
+        renderAdminPrograms();
     </script>
 </body>
 </html>
