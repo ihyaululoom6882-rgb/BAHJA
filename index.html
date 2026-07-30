@@ -1641,5 +1641,25 @@
             renderPointRoomList();
         }
     </script>
+    <!-- Firebase SDK Setup -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBVPGtuHPFRH05snj58ws6xr42O8HluaLY",
+      authDomain: "bahja-29712.firebaseapp.com",
+      databaseURL: "https://bahja-29712-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "bahja-29712",
+      storageBucket: "bahja-29712.firebasestorage.app",
+      messagingSenderId: "185705883083",
+      appId: "1:185705883083:web:7e7f5a9425e242b831024e",
+      measurementId: "G-SX6NX5K314"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
 </body>
 </html>
