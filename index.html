@@ -1,1644 +1,415 @@
 <!DOCTYPE html>
-<html lang="ml">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BAHJA 2026 - DAWA FEST</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Print Rules */
-        @media print {
-            body * { visibility: hidden; }
-            #printableArea, #printableArea * { visibility: visible; }
-            #printableArea { position: absolute; left: 0; top: 0; width: 100%; }
-            .no-print { display: none !important; }
-        }
-        .pinterest-grid { column-count: 2; column-gap: 1rem; }
-        @media (min-width: 768px) { .pinterest-grid { column-count: 3; } }
-        .pinterest-item { break-inside: avoid; margin-bottom: 1rem; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BAHJA 2026 - DAWA FEST</title>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f4f6f9;
+      color: #333;
+    }
+
+    /* Navbar Header */
+    .navbar {
+      background-color: #ffffff;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .brand-logo {
+      height: 45px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand-title {
+      color: #1a56db;
+      font-weight: 800;
+      font-size: 22px;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: #718096;
+      text-transform: uppercase;
+    }
+
+    /* Kebab Menu Icon */
+    .menu-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #4a5568;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    /* Dropdown Menu Structure */
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 30px;
+      top: 65px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      width: 250px;
+      z-index: 1000;
+      list-style: none;
+      padding: 10px 0;
+    }
+
+    .dropdown-menu.show {
+      display: block;
+    }
+
+    .dropdown-menu li a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      color: #4a5568;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .dropdown-menu li a:hover {
+      background-color: #f7fafc;
+      color: #1a56db;
+    }
+
+    .dropdown-menu li a i {
+      width: 18px;
+      color: #00b4d8;
+    }
+
+    .dropdown-menu li a.logout-btn {
+      color: #e53e3e;
+      border-top: 1px solid #edf2f7;
+      margin-top: 5px;
+    }
+
+    .dropdown-menu li a.logout-btn i {
+      color: #e53e3e;
+    }
+
+    /* Content Area Layout */
+    .main-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      margin-bottom: 25px;
+    }
+
+    .page-section {
+      display: none;
+    }
+
+    .page-section.active {
+      display: block;
+    }
+
+    .hero-title {
+      font-size: 38px;
+      color: #1a56db;
+      text-align: center;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .hero-sub {
+      text-align: center;
+      color: #718096;
+      font-size: 13px;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+
+    /* Protection & Settings Form Styling */
+    .btn-action {
+      background-color: #1a56db;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.2s;
+    }
+
+    .btn-action:hover {
+      background-color: #1545b5;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+    }
+  </style>
 </head>
-<body class="bg-slate-100 font-sans min-h-screen flex flex-col justify-between">
+<body>
 
-    <!-- HEADER / NAVIGATION -->
-    <header class="bg-white shadow-sm p-4 sticky top-0 z-40">
-        <div class="max-w-6xl mx-auto flex justify-between items-center relative">
-            <!-- Left Corner Logo Display -->
-            <div class="flex items-center gap-3">
-                <div id="headerLogoContainer" class="hidden">
-                    <img id="headerLogoImg" src="" class="h-12 w-auto object-contain">
-                </div>
-                <div>
-                    <h1 class="text-xl font-extrabold text-blue-700 tracking-wider">BAHJA 2026</h1>
-                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Dawa Fest</p>
-                </div>
-            </div>
-
-            <!-- Professional 3-Dots Dropdown Menu -->
-            <div class="relative">
-                <button onclick="toggleMenu()" class="p-2.5 text-slate-600 hover:text-blue-600 text-xl font-bold focus:outline-none transition">
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                </button>
-                
-                <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-64 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 overflow-hidden divide-y divide-slate-100">
-                    <div class="py-1">
-                        <button onclick="navTo('home')" class="w-full text-left px-4 py-3 hover:bg-slate-50 text-xs font-semibold text-slate-700 flex items-center gap-3">
-                            <i class="fa-solid fa-house text-blue-500 w-4"></i> Home
-                        </button>
-                        <button onclick="navTo('main-login')" class="w-full text-left px-4 py-3 hover:bg-slate-50 text-xs font-semibold text-slate-700 flex items-center gap-3">
-                            <i class="fa-solid fa-key text-amber-500 w-4"></i> Main Login
-                        </button>
-                        <button onclick="navTo('participants-login')" class="w-full text-left px-4 py-3 hover:bg-slate-50 text-xs font-semibold text-slate-700 flex items-center gap-3">
-                            <i class="fa-solid fa-users text-emerald-500 w-4"></i> Team Login
-                        </button>
-                    </div>
-
-                    <!-- Dynamic Options shown ONLY after Main Login -->
-                    <div id="adminMenuOptions" class="hidden py-1 bg-slate-50">
-                        <button onclick="navTo('settings')" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 text-xs font-semibold text-slate-800 flex items-center gap-3">
-                            <i class="fa-solid fa-gear text-slate-600 w-4"></i> Settings
-                        </button>
-                        <button onclick="navTo('admin-panel')" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 text-xs font-semibold text-slate-800 flex items-center gap-3">
-                            <i class="fa-solid fa-sliders text-indigo-600 w-4"></i> Control Panel
-                        </button>
-                        <button onclick="navTo('pointroom')" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 text-xs font-semibold text-slate-800 flex items-center gap-3">
-                            <i class="fa-solid fa-calculator text-blue-600 w-4"></i> Point Room
-                        </button>
-                        <button onclick="navTo('judge')" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 text-xs font-semibold text-slate-800 flex items-center gap-3">
-                            <i class="fa-solid fa-gavel text-amber-600 w-4"></i> Judge (Individual Points)
-                        </button>
-                        <button onclick="navTo('states-control')" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 text-xs font-semibold text-slate-800 flex items-center gap-3">
-                            <i class="fa-solid fa-chart-pie text-emerald-600 w-4"></i> States Control (Team Tally)
-                        </button>
-                    </div>
-
-                    <div id="logoutOpt" class="hidden py-1">
-                        <button onclick="logout()" class="w-full text-left px-4 py-3 hover:bg-red-50 text-xs font-semibold text-red-600 flex items-center gap-3">
-                            <i class="fa-solid fa-right-from-bracket w-4"></i> Logout
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- CENTER HERO HEADER -->
-    <div class="text-center py-6 bg-white border-b mb-4">
-        <h1 class="text-3xl md:text-5xl font-black text-blue-700 tracking-wider uppercase">BAHJA 2026</h1>
-        <p class="text-xs md:text-sm font-bold text-slate-500 uppercase tracking-widest mt-1">Welcome to Bahja Fest</p>
+  <!-- Top Navigation Header -->
+  <nav class="navbar">
+    <div class="brand-section">
+      <!-- അപ്‌ലോഡ് ചെയ്യുന്ന ലോഗോ ഇവിടെ കാണിക്കും -->
+      <img id="nav-logo" src="https://via.placeholder.com/150x50?text=LOGO" alt="Logo" class="brand-logo">
+      <div>
+        <div class="brand-title">BAHJA 2026</div>
+        <div class="brand-subtitle">DAWA FEST</div>
+      </div>
     </div>
 
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-4xl mx-auto w-full p-3 md:p-6 flex-grow">
+    <!-- Dropdown Toggle Button -->
+    <button class="menu-btn" onclick="toggleMenu()">
+      <i class="fa-solid fa-ellipsis-vertical"></i>
+    </button>
 
-        <!-- ================= REGISTER PHASE (MOBILE OPTIMIZED) ================= -->
-        <section id="registerPhaseSection" class="space-y-6">
-            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200 text-center max-w-lg mx-auto">
-                <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-user-shield text-blue-600"></i> Team Leader Login
-                </h2>
-                <form onsubmit="handleTeamLogin(event)" class="space-y-4">
-                    <div>
-                        <input type="text" id="teamUser" required placeholder="Team Username" class="w-full border border-slate-300 rounded-xl p-3 text-sm outline-none focus:border-blue-600">
-                    </div>
-                    <div>
-                        <input type="password" id="teamPass" required placeholder="Password" class="w-full border border-slate-300 rounded-xl p-3 text-sm outline-none focus:border-blue-600">
-                    </div>
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-sm">
-                        Login to Portal
-                    </button>
-                </form>
-            </div>
-        </section>
+    <!-- Dropdown Menu items -->
+    <ul class="dropdown-menu" id="dropdownMenu">
+      <li><a href="#" onclick="showSection('home')"><i class="fa-solid fa-house"></i> Home</a></li>
+      <li><a href="#" onclick="showSection('main-login')"><i class="fa-solid fa-key"></i> Main Login</a></li>
+      
+      <!-- 1. Team Login എന്നത് Participant List എന്നാക്കി മാറ്റി -->
+      <li><a href="#" onclick="showSection('participant-list')"><i class="fa-solid fa-users"></i> Participant List</a></li>
+      
+      <li><a href="#" onclick="showSection('settings')"><i class="fa-solid fa-gear"></i> Settings</a></li>
+      <li><a href="#" onclick="showSection('control-panel')"><i class="fa-solid fa-sliders"></i> Control Panel</a></li>
+      <li><a href="#" onclick="showSection('point-room')"><i class="fa-solid fa-building"></i> Point Room</a></li>
+      <li><a href="#" onclick="showSection('judge')"><i class="fa-solid fa-gavel"></i> Judge (Individual Points)</a></li>
+      <li><a href="#" onclick="showSection('states-control')"><i class="fa-solid fa-globe"></i> States Control (Team Tally)</a></li>
+      
+      <!-- 2. States Control കഴിഞ്ഞു വരുന്ന Protection ഓപ്ഷൻ -->
+      <li><a href="#" onclick="showSection('protection')"><i class="fa-solid fa-shield-halved"></i> Protection</a></li>
+      
+      <li><a href="#" onclick="logout()" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+    </ul>
+  </nav>
 
-        <!-- ================= RESULT PHASE (FULL MOBILE PAGE FIT) ================= -->
-        <section id="resultPhaseSection" class="hidden space-y-3 max-w-lg mx-auto w-full px-2">
-            <button onclick="openModal('teamStatusModal')" class="w-full py-5 bg-blue-800 hover:bg-blue-900 text-white font-extrabold rounded-2xl shadow-md text-base tracking-wide flex items-center justify-center gap-3">
-                <i class="fa-solid fa-flag"></i> TEAM STATES
-            </button>
-            <button onclick="openModal('resultModal')" class="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-2xl shadow-md text-base tracking-wide flex items-center justify-center gap-3">
-                <i class="fa-solid fa-trophy"></i> RESULT
-            </button>
-            <button onclick="openModal('updatesModal')" class="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-2xl shadow-md text-base tracking-wide flex items-center justify-center gap-3">
-                <i class="fa-solid fa-newspaper"></i> UPDATES
-            </button>
-            <button onclick="openModal('liveModal')" class="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-2xl shadow-md text-base tracking-wide flex items-center justify-center gap-3">
-                <i class="fa-solid fa-video"></i> LIVE STREAMING
-            </button>
-            <button onclick="openModal('highlightsModal')" class="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-2xl shadow-md text-base tracking-wide flex items-center justify-center gap-3">
-                <i class="fa-solid fa-star"></i> HIGHLIGHTS
-            </button>
-        </section>
+  <!-- Main Display Container -->
+  <div class="main-container">
 
-        <!-- ================= MAIN LOGIN PAGE ================= -->
-        <section id="mainLoginSection" class="hidden max-w-lg mx-auto">
-            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200 text-center">
-                <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-lock text-amber-500"></i> Committee Main Login
-                </h2>
-                <form onsubmit="handleMainLogin(event)" class="space-y-4">
-                    <div>
-                        <input type="text" id="mainUser" placeholder="Username" required class="w-full border border-slate-300 rounded-xl p-3 text-sm outline-none focus:border-blue-600">
-                    </div>
-                    <div>
-                        <!-- Masked dots password -->
-                        <input type="password" id="mainPass" placeholder="Password" required class="w-full border border-slate-300 rounded-xl p-3 text-sm outline-none focus:border-blue-600">
-                    </div>
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg text-sm">
-                        Login Main
-                    </button>
-                </form>
-            </div>
-        </section>
+    <!-- HOME SECTION -->
+    <section id="home" class="page-section active">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <img id="home-logo" src="https://via.placeholder.com/150x50?text=LOGO" alt="Home Logo" style="max-height: 80px;">
+      </div>
+      <h1 class="hero-title">BAHJA 2026</h1>
+      <div class="hero-sub">WELCOME TO BAHJA FEST</div>
 
-        <!-- ================= TEAM LEADER PORTAL ================= -->
-        <section id="teamPortalSection" class="hidden space-y-6">
-            <div class="bg-white p-5 md:p-6 rounded-2xl border shadow-sm">
-                <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-user-plus text-emerald-600"></i> 1. Add Participants Pool
-                </h3>
-                <form onsubmit="handleAddParticipant(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <input type="text" id="partName" placeholder="Participant Name" required class="border rounded-xl p-3 text-xs outline-none">
-                    <select id="partCategory" class="border rounded-xl p-3 text-xs outline-none">
-                        <option value="LOWER ZONE">LOWER ZONE</option>
-                        <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                        <option value="HIGHER ZONE">HIGHER ZONE</option>
-                        <option value="SUPER ZONE">SUPER ZONE</option>
-                        <option value="GENERAL">GENERAL</option>
-                    </select>
-                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-xl text-xs">
-                        + Add Participant
-                    </button>
-                </form>
+      <div class="card">
+        <h3 style="color: #2d3748;"><i class="fa-solid fa-chart-pie" style="color:#38a169;"></i> States Control - Overall Team Tally</h3>
+      </div>
+    </section>
 
-                <div class="mt-4">
-                    <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">Added Participants Pool</h4>
-                    <ul id="myParticipantsList" class="divide-y border rounded-xl max-h-48 overflow-y-auto"></ul>
-                </div>
-            </div>
+    <!-- PARTICIPANT LIST SECTION (Old Team Login) -->
+    <section id="participant-list" class="page-section">
+      <div class="card">
+        <h2>Participant List</h2>
+        <p style="margin-top: 10px;">പാർട്ടിസിപ്പന്റ് ലിസ്റ്റ് വിവരങ്ങൾ ഇവിടെ കാണാം.</p>
+      </div>
+    </section>
 
-            <div class="bg-white p-5 md:p-6 rounded-2xl border shadow-sm">
-                <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-clipboard-list text-blue-600"></i> 2. Register Participants to Programs
-                </h3>
-                <div id="registrationClosedAlert" class="hidden p-3 bg-red-100 text-red-700 rounded-xl font-bold mb-4 text-center text-xs">
-                    ⚠️ Registration Portal is CLOSED by Committee.
-                </div>
-                <form onsubmit="handleRegisterProgram(event)" class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-500 mb-1">Select Category</label>
-                            <select id="regCategorySelect" onchange="updateProgramDropdown()" class="w-full border rounded-xl p-3 text-xs outline-none">
-                                <option value="">-- Choose Category --</option>
-                                <option value="LOWER ZONE">LOWER ZONE</option>
-                                <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                                <option value="HIGHER ZONE">HIGHER ZONE</option>
-                                <option value="SUPER ZONE">SUPER ZONE</option>
-                                <option value="GENERAL">GENERAL</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-500 mb-1">Select Program</label>
-                            <select id="regProgramSelect" onchange="updateParticipantDropdown()" class="w-full border rounded-xl p-3 text-xs outline-none">
-                                <option value="">-- Choose Program --</option>
-                            </select>
-                        </div>
-                    </div>
+    <!-- SETTINGS SECTION (Logo Uploading) -->
+    <section id="settings" class="page-section">
+      <div class="card">
+        <h2>Settings</h2>
+        <hr style="margin: 15px 0;">
+        <div class="form-group">
+          <label>Upload Fest Logo:</label>
+          <input type="file" id="logoInput" accept="image/*">
+        </div>
+        <button class="btn-action" onclick="saveLogo()"><i class="fa-solid fa-floppy-disk"></i> Save Logo</button>
+      </div>
+    </section>
 
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-500 mb-1">Select Participant</label>
-                        <select id="regParticipantSelect" class="w-full border rounded-xl p-3 text-xs outline-none">
-                            <option value="">-- Choose Participant --</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" id="btnSubmitReg" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-md text-xs">
-                        Submit Registration
-                    </button>
-                </form>
-            </div>
-        </section>
-
-        <!-- ================= SETTINGS (EXTRACTED SEPARATELY) ================= -->
-        <section id="settingsSection" class="hidden bg-white p-6 rounded-2xl border space-y-6">
-            <h2 class="text-xl font-bold text-slate-800 border-b pb-2"><i class="fa-solid fa-gear"></i> System Settings</h2>
-            
-            <!-- Logo Upload -->
-            <div class="bg-slate-50 p-4 rounded-xl space-y-3">
-                <h3 class="font-bold text-sm text-slate-700">Upload Header Logo</h3>
-                <input type="file" id="logoFileInput" accept="image/*" class="text-xs block">
-                <div class="flex gap-2">
-                    <button onclick="uploadLogo()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Save Logo</button>
-                    <button onclick="deleteLogo()" class="bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Delete Logo</button>
-                </div>
-            </div>
-
-            <!-- Phase Control -->
-            <div class="bg-slate-50 p-4 rounded-xl space-y-2">
-                <h3 class="font-bold text-sm text-slate-700">Phase Toggle</h3>
-                <div class="flex items-center gap-6">
-                    <label class="flex items-center gap-2 cursor-pointer text-xs font-bold">
-                        <input type="radio" name="phaseToggle" value="register" onchange="togglePhase('register')" id="phaseRegRadio">
-                        Register Phase ON
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer text-xs font-bold">
-                        <input type="radio" name="phaseToggle" value="result" onchange="togglePhase('result')" id="phaseResRadio">
-                        Result Phase ON
-                    </label>
-                </div>
-            </div>
-
-            <div class="border-t pt-4">
-                <button onclick="clearAllData()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs">
-                    Clear All System Data
-                </button>
-            </div>
-        </section>
-
-        <!-- ================= CONTROL PANEL ================= -->
-        <section id="adminPanelSection" class="hidden space-y-6">
-            <div class="flex border-b border-slate-300">
-                <button onclick="switchAdminTab('regControl')" id="tabBtnRegControl" class="px-4 py-2.5 font-bold border-b-2 border-blue-600 text-blue-600 text-xs">Register Control</button>
-                <button onclick="switchAdminTab('resControl')" id="tabBtnResControl" class="px-4 py-2.5 font-bold text-slate-500 text-xs">Result Control</button>
-            </div>
-
-            <!-- 1. REGISTER CONTROL -->
-            <div id="adminRegControlTab" class="space-y-6">
-                <div class="bg-white p-4 rounded-2xl border flex justify-between items-center">
-                    <div>
-                        <span class="text-xs font-bold text-slate-500">Registration Portal Status: </span>
-                        <span id="adminRegStatusText" class="font-black text-green-600 text-xs">OPEN</span>
-                    </div>
-                    <button onclick="toggleRegistrationOpenClose()" id="adminRegStatusBtn" class="bg-red-600 text-white text-xs font-bold px-4 py-2 rounded-xl">
-                        Close Registration
-                    </button>
-                </div>
-
-                <!-- Global Non-General Program Limit -->
-                <div class="bg-white p-5 rounded-2xl border">
-                    <h3 class="font-bold text-xs text-slate-800 mb-2">Non-General Program Limit Per Participant</h3>
-                    <div class="flex gap-2">
-                        <input type="number" id="globalMaxProgLimit" placeholder="Max Programs (e.g. 3)" class="border rounded-xl p-2.5 text-xs outline-none w-full">
-                        <button onclick="saveGlobalLimit()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Save Limit</button>
-                    </div>
-                </div>
-
-                <!-- Add / Edit / Delete Teams -->
-                <div class="bg-white p-5 rounded-2xl border">
-                    <h3 class="font-bold text-xs text-slate-800 mb-3">Add / Manage Teams</h3>
-                    <form onsubmit="handleAddTeam(event)" class="grid grid-cols-1 md:grid-cols-3 gap-2">
-                        <input type="text" id="newTeamUser" placeholder="Team Username" required class="border rounded-xl p-2.5 text-xs outline-none">
-                        <input type="text" id="newTeamPass" placeholder="Password" required class="border rounded-xl p-2.5 text-xs outline-none">
-                        <button type="submit" class="bg-blue-600 text-white font-bold rounded-xl p-2.5 text-xs">+ Add Team</button>
-                    </form>
-                    <div id="teamsList" class="mt-4 divide-y border rounded-xl p-2 max-h-36 overflow-y-auto"></div>
-                </div>
-
-                <!-- Add Programs -->
-                <div class="bg-white p-5 rounded-2xl border">
-                    <h3 class="font-bold text-xs text-slate-800 mb-3">Add / Manage Programs</h3>
-                    <form onsubmit="handleAddProgram(event)" class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <input type="text" id="progName" placeholder="Program Name" required class="border rounded-xl p-2.5 text-xs outline-none">
-                        <select id="progCategory" class="border rounded-xl p-2.5 text-xs outline-none">
-                            <option value="LOWER ZONE">LOWER ZONE</option>
-                            <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                            <option value="HIGHER ZONE">HIGHER ZONE</option>
-                            <option value="SUPER ZONE">SUPER ZONE</option>
-                            <option value="GENERAL">GENERAL</option>
-                        </select>
-                        <select id="progStage" class="border rounded-xl p-2.5 text-xs outline-none">
-                            <option value="ON STAGE">ON STAGE</option>
-                            <option value="OFF STAGE">OFF STAGE</option>
-                        </select>
-                        <input type="number" id="progMax" placeholder="Max participants allowed per team" min="1" required class="border rounded-xl p-2.5 text-xs outline-none">
-                        <button type="submit" class="md:col-span-2 bg-emerald-600 text-white font-bold rounded-xl p-2.5 text-xs">+ Add Program</button>
-                    </form>
-
-                    <div class="mt-4 border rounded-xl overflow-hidden">
-                        <button onclick="toggleSection('adminProgList')" class="w-full bg-slate-50 p-3 text-left font-bold text-slate-700 text-xs flex justify-between">
-                            <span>Programs List</span> <span>👇</span>
-                        </button>
-                        <div id="adminProgList" class="p-3 divide-y text-xs max-h-48 overflow-y-auto"></div>
-                    </div>
-                </div>
-
-                <!-- Printable All Registrations Report -->
-                <div class="bg-white p-5 rounded-2xl border space-y-4">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-bold text-xs text-slate-800">All Registrations Report</h3>
-                        <button onclick="openPrintModal()" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold">
-                            🖨️ Print Report Page
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                        <select id="filterTeam" onchange="renderAdminReport()" class="border p-2 rounded-xl"></select>
-                        <select id="filterCat" onchange="renderAdminReport()" class="border p-2 rounded-xl"></select>
-                        <select id="filterStage" onchange="renderAdminReport()" class="border p-2 rounded-xl"></select>
-                        <select id="filterProg" onchange="renderAdminReport()" class="border p-2 rounded-xl"></select>
-                    </div>
-
-                    <div id="reportTableContainer" class="border rounded-xl overflow-x-auto p-2">
-                        <table class="w-full text-left border-collapse text-xs">
-                            <thead>
-                                <tr class="bg-slate-50 border-b">
-                                    <th class="p-2 border">Participant</th>
-                                    <th class="p-2 border">Team</th>
-                                    <th class="p-2 border">Category</th>
-                                    <th class="p-2 border">Program</th>
-                                    <th class="p-2 border">Stage</th>
-                                </tr>
-                            </thead>
-                            <tbody id="reportTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2. RESULT CONTROL -->
-            <div id="adminResControlTab" class="hidden space-y-6">
-                <!-- Team Status Upload -->
-                <div class="bg-white p-5 rounded-2xl border space-y-3">
-                    <h3 class="font-bold text-xs text-slate-800">Team Status Poster Upload</h3>
-                    <input type="file" id="teamStatusFile" accept="image/*" class="text-xs block">
-                    <!-- ENLARGED BUTTON -->
-                    <button onclick="uploadTeamStatus()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-xs tracking-wider uppercase shadow-md">
-                        Upload Team Status Poster
-                    </button>
-                    <div id="teamStatusPreview" class="mt-2 flex gap-2 flex-wrap"></div>
-                </div>
-
-                <!-- Result Upload -->
-                <div class="bg-white p-5 rounded-2xl border space-y-3">
-                    <h3 class="font-bold text-xs text-slate-800">Result Poster & Video Upload</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                        <select id="resCatSelect" onchange="updateResProgSelect()" class="border p-2.5 rounded-xl outline-none">
-                            <option value="">-- Choose Category --</option>
-                            <option value="LOWER ZONE">LOWER ZONE</option>
-                            <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                            <option value="HIGHER ZONE">HIGHER ZONE</option>
-                            <option value="SUPER ZONE">SUPER ZONE</option>
-                            <option value="GENERAL">GENERAL</option>
-                        </select>
-                        <select id="resProgSelect" class="border p-2.5 rounded-xl outline-none">
-                            <option value="">-- Choose Program --</option>
-                        </select>
-                    </div>
-                    <input type="file" id="resPosterFile" accept="image/*" class="text-xs block">
-                    <input type="text" id="resYtLink" placeholder="YouTube Link (Optional)" class="w-full border p-2.5 text-xs rounded-xl outline-none">
-                    <input type="file" id="resYtThumb" accept="image/*" class="text-xs block">
-                    <!-- ENLARGED BUTTON -->
-                    <button onclick="uploadResult()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-xl text-xs tracking-wider uppercase shadow-md">
-                        Upload Result
-                    </button>
-                    
-                    <div class="mt-4 border rounded-xl overflow-hidden">
-                        <button onclick="toggleSection('adminResList')" class="w-full bg-slate-50 p-2.5 text-left font-bold text-slate-700 text-xs flex justify-between">
-                            <span>Uploaded Results List</span> <span>👇</span>
-                        </button>
-                        <div id="adminResList" class="p-2.5 divide-y text-xs max-h-40 overflow-y-auto"></div>
-                    </div>
-                </div>
-
-                <!-- Updates Upload (Photo / Video Separated) -->
-                <div class="bg-white p-5 rounded-2xl border space-y-3">
-                    <h3 class="font-bold text-xs text-slate-800">Updates Upload (Photo / Video)</h3>
-                    <select id="updateTypeSelect" class="w-full border p-2.5 rounded-xl text-xs outline-none">
-                        <option value="photo">Photo Update</option>
-                        <option value="video">Video Update</option>
-                    </select>
-                    <input type="file" id="updateFile" accept="image/*,video/*" class="text-xs block">
-                    <input type="text" id="updateTitle" placeholder="Title" class="w-full border p-2.5 text-xs rounded-xl outline-none">
-                    <!-- ENLARGED BUTTON -->
-                    <button onclick="uploadUpdate()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-xs tracking-wider uppercase shadow-md">
-                        Upload Update
-                    </button>
-
-                    <div class="mt-2 border rounded-xl overflow-hidden">
-                        <button onclick="toggleSection('adminUpdatesList')" class="w-full bg-slate-50 p-2 text-left font-bold text-slate-700 text-xs flex justify-between">
-                            <span>Uploaded Updates List</span> <span>👇</span>
-                        </button>
-                        <div id="adminUpdatesList" class="p-2 divide-y text-xs max-h-40 overflow-y-auto"></div>
-                    </div>
-                </div>
-
-                <!-- Live Stream & Highlights -->
-                <div class="bg-white p-5 rounded-2xl border space-y-3">
-                    <h3 class="font-bold text-xs text-slate-800">Live Streaming & Highlights</h3>
-                    <input type="text" id="liveLink" placeholder="Live Link" class="w-full border p-2.5 text-xs rounded-xl outline-none">
-                    <input type="file" id="liveThumb" accept="image/*" class="text-xs block">
-                    <button onclick="saveLiveStream()" class="w-full py-3 bg-red-600 text-white font-bold rounded-xl text-xs uppercase">Save Live Stream</button>
-
-                    <hr class="my-2">
-
-                    <input type="text" id="highlightTitle" placeholder="Highlight Title / Video Link" class="w-full border p-2.5 text-xs rounded-xl outline-none">
-                    <button onclick="saveHighlight()" class="w-full py-3 bg-purple-600 text-white font-bold rounded-xl text-xs uppercase">Add Highlight</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= POINT ROOM ================= -->
-        <section id="pointroomSection" class="hidden space-y-6">
-            <div class="bg-white p-5 md:p-6 rounded-2xl border shadow-sm">
-                <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-calculator text-blue-600"></i> Point Room - Add Participant Points
-                </h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-500 mb-1">Select Category</label>
-                        <select id="prCategorySelect" onchange="updatePRPrograms()" class="w-full border rounded-xl p-2.5 text-xs outline-none">
-                            <option value="">-- Choose Category --</option>
-                            <option value="LOWER ZONE">LOWER ZONE</option>
-                            <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                            <option value="HIGHER ZONE">HIGHER ZONE</option>
-                            <option value="SUPER ZONE">SUPER ZONE</option>
-                            <option value="GENERAL">GENERAL</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-500 mb-1">Select Program</label>
-                        <select id="prProgramSelect" onchange="renderPRParticipants()" class="w-full border rounded-xl p-2.5 text-xs outline-none">
-                            <option value="">-- Choose Program --</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="prStageBadge" class="hidden mb-4">
-                    <span id="prStageTxt" class="px-3 py-1 bg-blue-100 text-blue-700 font-extrabold rounded-full text-xs"></span>
-                </div>
-
-                <!-- Form to Add Points -->
-                <form onsubmit="handleSavePoints(event)" id="prPointForm" class="hidden space-y-3 border-t pt-4">
-                    <div id="prParticipantInputs" class="space-y-2 max-h-60 overflow-y-auto"></div>
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-xs shadow-md">
-                        Submit Points for Program
-                    </button>
-                </form>
-            </div>
-
-            <!-- List of Programs with Points Added -->
-            <div class="bg-white p-5 rounded-2xl border shadow-sm">
-                <h3 class="font-bold text-xs text-slate-800 mb-3">Programs with Points Submitted</h3>
-                <div id="prSubmittedList" class="divide-y border rounded-xl max-h-60 overflow-y-auto text-xs"></div>
-            </div>
-        </section>
-
-        <!-- ================= JUDGE (INDIVIDUAL PARTICIPANT MARKS) ================= -->
-        <section id="judgeSection" class="hidden space-y-6">
-            <div class="bg-white p-5 md:p-6 rounded-2xl border shadow-sm">
-                <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                        <i class="fa-solid fa-gavel text-amber-600"></i> Judge Leaderboard
-                    </h2>
-                    
-                    <!-- Filter Stage Toggle -->
-                    <select id="judgeStageFilter" onchange="renderJudgeLeaderboard()" class="border rounded-xl p-2 text-xs font-bold outline-none bg-slate-50">
-                        <option value="ALL">ALL STAGES</option>
-                        <option value="ON STAGE">ON STAGE ONLY</option>
-                        <option value="OFF STAGE">OFF STAGE ONLY</option>
-                    </select>
-                </div>
-
-                <div id="judgeLeaderboard" class="space-y-2"></div>
-            </div>
-        </section>
-
-        <!-- ================= STATES CONTROL (TEAM TOTAL TALLY) ================= -->
-        <section id="statesControlSection" class="hidden space-y-6">
-            <div class="bg-white p-5 md:p-6 rounded-2xl border shadow-sm">
-                <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-chart-pie text-emerald-600"></i> States Control - Overall Team Tally
-                </h2>
-                
-                <div id="teamTallyList" class="space-y-3"></div>
-            </div>
-        </section>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="bg-white border-t p-4 text-center text-[11px] text-slate-400 font-semibold">
-        &copy; BAHJA 2026 - DAWA FEST. All rights reserved.
-    </footer>
-
-    <!-- ================= MODALS & POPUPS ================= -->
-    <div id="modalOverlay" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-3">
+    <!-- PROTECTION SECTION -->
+    <section id="protection" class="page-section">
+      <div class="card">
+        <h2>PROTECTION</h2>
+        <p style="color: #718096; margin-bottom: 20px;">Security and Access Control</p>
         
-        <!-- TEAM STATUS MODAL -->
-        <div id="teamStatusModal" class="hidden bg-white rounded-2xl p-5 max-w-xl w-full max-h-[85vh] overflow-y-auto space-y-4">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-base">Team Status</h3>
-                <button onclick="closeModal()" class="text-xl font-bold">&times;</button>
-            </div>
-            <div id="teamStatusContent" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-        </div>
+        <!-- Main Password Change Trigger Button -->
+        <button class="btn-action" onclick="changeMainCredentials()">
+          <i class="fa-solid fa-lock"></i> Change Main Login User and Pass
+        </button>
+      </div>
+    </section>
 
-        <!-- RESULT MODAL -->
-        <div id="resultModal" class="hidden bg-white rounded-2xl p-5 max-w-xl w-full max-h-[85vh] overflow-y-auto space-y-4">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-base">Results</h3>
-                <button onclick="closeModal()" class="text-xl font-bold">&times;</button>
-            </div>
-            <div id="resultContent" class="space-y-4"></div>
-        </div>
+    <!-- OTHER SECTIONS (PLACEHOLDERS) -->
+    <section id="main-login" class="page-section"><div class="card"><h2>Main Login Section</h2></div></section>
+    <section id="control-panel" class="page-section"><div class="card"><h2>Control Panel</h2></div></section>
+    <section id="point-room" class="page-section"><div class="card"><h2>Point Room</h2></div></section>
+    <section id="judge" class="page-section"><div class="card"><h2>Judge Section</h2></div></section>
+    <section id="states-control" class="page-section"><div class="card"><h2>States Control Section</h2></div></section>
 
-        <!-- UPDATES MODAL (Separated Photo/Video) -->
-        <div id="updatesModal" class="hidden bg-white rounded-2xl p-5 max-w-2xl w-full max-h-[85vh] overflow-y-auto space-y-4">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-base">Updates</h3>
-                <button onclick="closeModal()" class="text-xl font-bold">&times;</button>
-            </div>
-            <div id="updatesContent" class="pinterest-grid"></div>
-        </div>
+  </div>
 
-        <!-- LIVE STREAM MODAL -->
-        <div id="liveModal" class="hidden bg-white rounded-2xl p-5 max-w-md w-full space-y-4">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-base">Live Streaming</h3>
-                <button onclick="closeModal()" class="text-xl font-bold">&times;</button>
-            </div>
-            <div id="liveContent" class="text-center space-y-3"></div>
-        </div>
+  <!-- JavaScript Logics -->
+  <script>
+    // 1. Dropdown toggle ചെയ്യാനുള്ള ഫംഗ്ഷൻ
+    function toggleMenu() {
+      document.getElementById("dropdownMenu").classList.toggle("show");
+    }
 
-        <!-- HIGHLIGHTS MODAL -->
-        <div id="highlightsModal" class="hidden bg-white rounded-2xl p-5 max-w-md w-full space-y-4">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-base">Highlights</h3>
-                <button onclick="closeModal()" class="text-xl font-bold">&times;</button>
-            </div>
-            <div id="highlightsContent" class="space-y-2"></div>
-        </div>
+    // വിൻഡോയിൽ എവിടെ ക്ലിക്ക് ചെയ്താലും ഡ്രോപ്ഡൗൺ ക്ലോസ് ആകാൻ
+    window.onclick = function(event) {
+      if (!event.target.matches('.menu-btn') && !event.target.matches('.menu-btn *')) {
+        var dropdowns = document.getElementsByClassName("dropdown-menu");
+        for (var i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
 
-        <!-- DETAILED MARKS MODAL (Judge / States Breakdown) -->
-        <div id="detailsModal" class="hidden bg-white rounded-2xl p-5 max-w-lg w-full max-h-[80vh] overflow-y-auto space-y-3">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h3 id="detailsTitle" class="font-bold text-sm text-blue-700"></h3>
-                <button onclick="closeDetailsModal()" class="text-xl font-bold">&times;</button>
-            </div>
-            <div id="detailsContent" class="space-y-2 text-xs divide-y"></div>
-        </div>
+    // 2. പേജുകൾ മാറി കാണിക്കാനുള്ള ഫംഗ്ഷൻ (Tab Switcher)
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll('.page-section');
+      sections.forEach(sec => sec.classList.remove('active'));
+      
+      const targetSection = document.getElementById(sectionId);
+      if(targetSection) {
+        targetSection.classList.add('active');
+      }
+    }
 
-        <!-- PRINT CONTROL MODAL -->
-        <div id="printModal" class="hidden bg-white rounded-2xl p-5 max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4">
-            <div class="flex justify-between items-center border-b pb-2 no-print">
-                <h3 class="font-bold text-base">Print Preview & Font Size Control</h3>
-                <button onclick="closePrintModal()" class="text-xl font-bold">&times;</button>
-            </div>
-            
-            <div class="flex items-center gap-3 no-print bg-slate-100 p-3 rounded-xl text-xs">
-                <label class="font-bold">Paper Text Font Size:</label>
-                <input type="range" id="printFontSlider" min="8" max="22" value="12" oninput="adjustPrintFont(this.value)" class="cursor-pointer">
-                <span id="printFontVal" class="font-bold">12px</span>
-                <button onclick="window.print()" class="ml-auto bg-blue-600 text-white px-4 py-2 rounded-xl font-bold">Print Sheet</button>
-            </div>
+    // 3. LOGO SAVE & DISPLAY LOGIC (Fixes the logo issue)
+    function saveLogo() {
+      const fileInput = document.getElementById('logoInput');
+      const file = fileInput.files[0];
 
-            <div id="printableArea" class="p-2 border rounded-xl">
-                <table class="w-full text-left border-collapse text-xs">
-                    <thead>
-                        <tr class="bg-slate-100 border-b">
-                            <th class="p-2 border">Participant</th>
-                            <th class="p-2 border">Team</th>
-                            <th class="p-2 border">Category</th>
-                            <th class="p-2 border">Program</th>
-                            <th class="p-2 border">Stage</th>
-                        </tr>
-                    </thead>
-                    <tbody id="printTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- APP LOGIC -->
-    <script>
-        const DB = {
-            get: (key) => JSON.parse(localStorage.getItem('BAHJA_' + key)) || null,
-            set: (key, val) => localStorage.setItem('BAHJA_' + key, JSON.stringify(val))
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const logoDataUrl = e.target.result;
+          
+          // LocalStorage-ൽ ലോഗോ സേവ് ചെയ്യുന്നു
+          localStorage.setItem('bahja_app_logo', logoDataUrl);
+          
+          // പേജിലെ ലോഗോകൾ തൽക്ഷണം അപ്ഡേറ്റ് ചെയ്യുന്നു
+          applyLogo(logoDataUrl);
+          
+          alert('Logo saved successfully!');
         };
+        reader.readAsDataURL(file);
+      } else {
+        alert('Please select an image file first!');
+      }
+    }
 
-        let state = {
-            phase: DB.get('phase') || 'register',
-            isRegOpen: DB.get('isRegOpen') !== null ? DB.get('isRegOpen') : true,
-            globalMaxLimit: DB.get('globalMaxLimit') || 3,
-            currentUser: DB.get('currentUser') || null,
-            logo: DB.get('logo') || '',
-            teams: DB.get('teams') || [],
-            programs: DB.get('programs') || [],
-            participants: DB.get('participants') || [],
-            registrations: DB.get('registrations') || [],
-            points: DB.get('points') || [], // [{progName, cat, stage, scores: [{partName, team, point}]}]
-            teamStatuses: DB.get('teamStatuses') || [],
-            results: DB.get('results') || [],
-            updates: DB.get('updates') || [],
-            live: DB.get('live') || { link: '', thumb: '' },
-            highlights: DB.get('highlights') || []
-        };
+    // സേവ് ചെയ്ത ലോഗോ പേജുകളിൽ പ്രയോഗിക്കാൻ
+    function loadSavedLogo() {
+      const savedLogo = localStorage.getItem('bahja_app_logo');
+      if (savedLogo) {
+        applyLogo(savedLogo);
+      }
+    }
 
-        function saveState() {
-            Object.keys(state).forEach(k => DB.set(k, state[k]));
+    function applyLogo(logoUrl) {
+      const navLogo = document.getElementById('nav-logo');
+      const homeLogo = document.getElementById('home-logo');
+      if(navLogo) navLogo.src = logoUrl;
+      if(homeLogo) homeLogo.src = logoUrl;
+    }
+
+    // 4. PROTECTION: PASSWORD CHANGE LOGIC
+    // ആപ്പിൽ ഡിഫോൾട്ട് ആയി ഉള്ള Username & Password
+    if (!localStorage.getItem('mainUser')) localStorage.setItem('mainUser', 'admin');
+    if (!localStorage.getItem('mainPass')) localStorage.setItem('mainPass', '1234');
+
+    function changeMainCredentials() {
+      let currentStoredUser = localStorage.getItem('mainUser');
+      let currentStoredPass = localStorage.getItem('mainPass');
+
+      // Step 1: നിലവിലുള്ള വിവരങ്ങൾ ചോദിക്കുന്നു
+      const inputUser = prompt("Enter current Main Login Username:");
+      if (inputUser === null) return; // Cancel അടിച്ചാൽ പുറത്തുകടക്കും
+
+      const inputPass = prompt("Enter current Main Login Password:");
+      if (inputPass === null) return;
+
+      // Step 2: നൽകിയ വിവരങ്ങൾ ശരിയാണോ എന്ന് പരിശോധിക്കുന്നു
+      if (inputUser === currentStoredUser && inputPass === currentStoredPass) {
+        
+        // Step 3: പുതിയ വിവരങ്ങൾ ചോദിക്കുന്നു
+        const newUser = prompt("Enter NEW Main Login Username:");
+        if (!newUser) {
+          alert("Username cannot be empty!");
+          return;
         }
 
-        window.onload = function() {
-            renderLogo();
-            applyPhaseUI();
-            checkSession();
-            renderAll();
-        };
-
-        // --- NAVIGATION & UI ---
-        function toggleMenu() {
-            document.getElementById('dropdownMenu').classList.toggle('hidden');
+        const newPass = prompt("Enter NEW Main Login Password:");
+        if (!newPass) {
+          alert("Password cannot be empty!");
+          return;
         }
 
-        function navTo(page) {
-            document.getElementById('dropdownMenu').classList.add('hidden');
-            
-            // Hide all sections
-            const sections = ['registerPhaseSection', 'resultPhaseSection', 'mainLoginSection', 
-                               'teamPortalSection', 'settingsSection', 'adminPanelSection', 
-                               'pointroomSection', 'judgeSection', 'statesControlSection'];
-            sections.forEach(s => document.getElementById(s).classList.add('hidden'));
-
-            if (page === 'home') {
-                applyPhaseUI();
-            } else if (page === 'main-login') {
-                document.getElementById('mainLoginSection').classList.remove('hidden');
-            } else if (page === 'participants-login') {
-                if (state.currentUser && state.currentUser.role === 'team') {
-                    document.getElementById('teamPortalSection').classList.remove('hidden');
-                } else {
-                    document.getElementById('registerPhaseSection').classList.remove('hidden');
-                }
-            } else if (page === 'settings') {
-                document.getElementById('settingsSection').classList.remove('hidden');
-            } else if (page === 'admin-panel') {
-                document.getElementById('adminPanelSection').classList.remove('hidden');
-            } else if (page === 'pointroom') {
-                document.getElementById('pointroomSection').classList.remove('hidden');
-            } else if (page === 'judge') {
-                document.getElementById('judgeSection').classList.remove('hidden');
-                renderJudgeLeaderboard();
-            } else if (page === 'states-control') {
-                document.getElementById('statesControlSection').classList.remove('hidden');
-                renderStatesControl();
-            }
-        }
-
-        function applyPhaseUI() {
-            if (state.phase === 'register') {
-                document.getElementById('registerPhaseSection').classList.remove('hidden');
-                document.getElementById('resultPhaseSection').classList.add('hidden');
-                document.getElementById('phaseRegRadio').checked = true;
-            } else {
-                document.getElementById('registerPhaseSection').classList.add('hidden');
-                document.getElementById('resultPhaseSection').classList.remove('hidden');
-                document.getElementById('phaseResRadio').checked = true;
-            }
-        }
-
-        function checkSession() {
-            const adminMenuOptions = document.getElementById('adminMenuOptions');
-            const logoutOpt = document.getElementById('logoutOpt');
-            
-            if (state.currentUser && state.currentUser.role === 'admin') {
-                adminMenuOptions.classList.remove('hidden');
-                logoutOpt.classList.remove('hidden');
-            } else if (state.currentUser) {
-                adminMenuOptions.classList.add('hidden');
-                logoutOpt.classList.remove('hidden');
-            } else {
-                adminMenuOptions.classList.add('hidden');
-                logoutOpt.classList.add('hidden');
-            }
-        }
-
-        // --- LOGO UPLOAD MANAGEMENT ---
-        function uploadLogo() {
-            const file = document.getElementById('logoFileInput').files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                state.logo = e.target.result;
-                saveState();
-                renderLogo();
-                alert('Logo Saved Successfully!');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function deleteLogo() {
-            state.logo = '';
-            saveState();
-            renderLogo();
-            alert('Logo Removed!');
-        }
-
-        function renderLogo() {
-            const container = document.getElementById('headerLogoContainer');
-            const img = document.getElementById('headerLogoImg');
-            if (state.logo) {
-                img.src = state.logo;
-                container.classList.remove('hidden');
-            } else {
-                container.classList.add('hidden');
-            }
-        }
-
-        // --- AUTHENTICATION ---
-        function handleMainLogin(e) {
-            e.preventDefault();
-            const u = document.getElementById('mainUser').value;
-            const p = document.getElementById('mainPass').value;
-
-            if (u === 'bahja2026' && p === '2026bahjacommitty') {
-                state.currentUser = { role: 'admin', name: 'Committee Main' };
-                saveState();
-                checkSession();
-                navTo('admin-panel');
-            } else {
-                alert('Invalid Main Credentials!');
-            }
-        }
-
-        function handleTeamLogin(e) {
-            e.preventDefault();
-            const u = document.getElementById('teamUser').value;
-            const p = document.getElementById('teamPass').value;
-
-            const foundTeam = state.teams.find(t => t.user === u && t.pass === p);
-            if (foundTeam) {
-                state.currentUser = { role: 'team', name: foundTeam.user };
-                saveState();
-                checkSession();
-                navTo('participants-login');
-                renderTeamPortal();
-            } else {
-                alert('Invalid Team Credentials!');
-            }
-        }
-
-        function logout() {
-            state.currentUser = null;
-            saveState();
-            checkSession();
-            navTo('home');
-        }
-
-        // --- TEAM LEADER PORTAL ACTIONS ---
-        function handleAddParticipant(e) {
-            e.preventDefault();
-            if (!state.currentUser || state.currentUser.role !== 'team') return;
-
-            const name = document.getElementById('partName').value;
-            const cat = document.getElementById('partCategory').value;
-
-            state.participants.push({
-                id: Date.now(),
-                name: name,
-                cat: cat,
-                team: state.currentUser.name
-            });
-
-            document.getElementById('partName').value = '';
-            saveState();
-            renderTeamPortal();
-        }
-
-        function deleteParticipant(id) {
-            state.participants = state.participants.filter(p => p.id !== id);
-            saveState();
-            renderTeamPortal();
-        }
-
-        function updateProgramDropdown() {
-            const cat = document.getElementById('regCategorySelect').value;
-            const progSelect = document.getElementById('regProgramSelect');
-            progSelect.innerHTML = '<option value="">-- Choose Program --</option>';
-
-            state.programs.filter(p => p.cat === cat).forEach(p => {
-                progSelect.innerHTML += `<option value="${p.name}">${p.name} (${p.stage})</option>`;
-            });
-        }
-
-        function updateParticipantDropdown() {
-            const cat = document.getElementById('regCategorySelect').value;
-            const partSelect = document.getElementById('regParticipantSelect');
-            partSelect.innerHTML = '<option value="">-- Choose Participant --</option>';
-
-            if (!state.currentUser) return;
-
-            if (cat === 'GENERAL') {
-                state.participants.filter(p => p.team === state.currentUser.name).forEach(p => {
-                    partSelect.innerHTML += `<option value="${p.name}">${p.name} (${p.cat})</option>`;
-                });
-            } else {
-                state.participants.filter(p => p.team === state.currentUser.name && p.cat === cat).forEach(p => {
-                    partSelect.innerHTML += `<option value="${p.name}">${p.name}</option>`;
-                });
-            }
-        }
-
-        function handleRegisterProgram(e) {
-            e.preventDefault();
-            if (!state.isRegOpen) {
-                alert('Registration portal is closed!');
-                return;
-            }
-
-            const cat = document.getElementById('regCategorySelect').value;
-            const progName = document.getElementById('regProgramSelect').value;
-            const partName = document.getElementById('regParticipantSelect').value;
-
-            if (!cat || !progName || !partName) return;
-
-            const progObj = state.programs.find(p => p.name === progName && p.cat === cat);
-
-            // 1. Check Non-General Limit per participant
-            if (cat !== 'GENERAL') {
-                const userNonGenRegs = state.registrations.filter(r => r.partName === partName && r.cat !== 'GENERAL').length;
-                if (userNonGenRegs >= parseInt(state.globalMaxLimit)) {
-                    alert(`Participant ${partName} has reached max limit of ${state.globalMaxLimit} non-general programs!`);
-                    return;
-                }
-            }
-
-            // 2. Check Team limit per program
-            const existingCount = state.registrations.filter(r => r.team === state.currentUser.name && r.progName === progName).length;
-            if (progObj && existingCount >= parseInt(progObj.max)) {
-                alert(`Limit reached! Max allowed participants for ${progName} is ${progObj.max}`);
-                return;
-            }
-
-            state.registrations.push({
-                id: Date.now(),
-                partName: partName,
-                team: state.currentUser.name,
-                cat: cat,
-                progName: progName,
-                stage: progObj ? progObj.stage : 'ON STAGE'
-            });
-
-            saveState();
-            alert('Registered Successfully!');
-            renderAdminReport();
-        }
-
-        function renderTeamPortal() {
-            if (!state.currentUser || state.currentUser.role !== 'team') return;
-
-            const closedAlert = document.getElementById('registrationClosedAlert');
-            const btnSubmitReg = document.getElementById('btnSubmitReg');
-            if (!state.isRegOpen) {
-                closedAlert.classList.remove('hidden');
-                btnSubmitReg.disabled = true;
-                btnSubmitReg.classList.add('opacity-50', 'cursor-not-allowed');
-            } else {
-                closedAlert.classList.add('hidden');
-                btnSubmitReg.disabled = false;
-                btnSubmitReg.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
-
-            const list = document.getElementById('myParticipantsList');
-            list.innerHTML = '';
-            const myParts = state.participants.filter(p => p.team === state.currentUser.name);
-
-            if (myParts.length === 0) {
-                list.innerHTML = `<li class="p-3 text-xs text-slate-400">No participants added.</li>`;
-            } else {
-                myParts.forEach(p => {
-                    list.innerHTML += `
-                        <li class="p-2.5 flex justify-between items-center text-xs">
-                            <div>
-                                <span class="font-bold text-slate-700">${p.name}</span> 
-                                <span class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded ml-2">${p.cat}</span>
-                            </div>
-                            <button onclick="deleteParticipant(${p.id})" class="text-red-600 font-bold hover:underline">Delete</button>
-                        </li>
-                    `;
-                });
-            }
-        }
-
-        // --- CONTROL PANEL ACTIONS ---
-        function switchAdminTab(tab) {
-            document.getElementById('adminRegControlTab').classList.add('hidden');
-            document.getElementById('adminResControlTab').classList.add('hidden');
-
-            document.getElementById('tabBtnRegControl').className = "px-4 py-2.5 font-bold text-slate-500 text-xs";
-            document.getElementById('tabBtnResControl').className = "px-4 py-2.5 font-bold text-slate-500 text-xs";
-
-            if (tab === 'regControl') {
-                document.getElementById('adminRegControlTab').classList.remove('hidden');
-                document.getElementById('tabBtnRegControl').className = "px-4 py-2.5 font-bold border-b-2 border-blue-600 text-blue-600 text-xs";
-            } else if (tab === 'resControl') {
-                document.getElementById('adminResControlTab').classList.remove('hidden');
-                document.getElementById('tabBtnResControl').className = "px-4 py-2.5 font-bold border-b-2 border-blue-600 text-blue-600 text-xs";
-            }
-        }
-
-        function togglePhase(selectedPhase) {
-            state.phase = selectedPhase;
-            saveState();
-            applyPhaseUI();
-        }
-
-        function toggleRegistrationOpenClose() {
-            state.isRegOpen = !state.isRegOpen;
-            saveState();
-            renderAdminRegControl();
-            renderTeamPortal();
-        }
-
-        function saveGlobalLimit() {
-            const lim = document.getElementById('globalMaxProgLimit').value;
-            if (!lim) return;
-            state.globalMaxLimit = parseInt(lim);
-            saveState();
-            alert('Limit saved!');
-        }
-
-        function handleAddTeam(e) {
-            e.preventDefault();
-            const u = document.getElementById('newTeamUser').value;
-            const p = document.getElementById('newTeamPass').value;
-
-            state.teams.push({ id: Date.now(), user: u, pass: p });
-            document.getElementById('newTeamUser').value = '';
-            document.getElementById('newTeamPass').value = '';
-            saveState();
-            renderAdminRegControl();
-        }
-
-        function deleteTeam(id) {
-            state.teams = state.teams.filter(t => t.id !== id);
-            saveState();
-            renderAdminRegControl();
-        }
-
-        function editTeam(id) {
-            const t = state.teams.find(tm => tm.id === id);
-            if (!t) return;
-            const newU = prompt("Edit Team Username:", t.user);
-            const newP = prompt("Edit Team Password:", t.pass);
-            if (newU && newP) {
-                t.user = newU;
-                t.pass = newP;
-                saveState();
-                renderAdminRegControl();
-            }
-        }
-
-        function handleAddProgram(e) {
-            e.preventDefault();
-            const name = document.getElementById('progName').value;
-            const cat = document.getElementById('progCategory').value;
-            const stage = document.getElementById('progStage').value;
-            const max = document.getElementById('progMax').value;
-
-            state.programs.push({ id: Date.now(), name, cat, stage, max });
-            document.getElementById('progName').value = '';
-            document.getElementById('progMax').value = '';
-            saveState();
-            renderAdminRegControl();
-        }
-
-        function deleteProgram(id) {
-            state.programs = state.programs.filter(p => p.id !== id);
-            saveState();
-            renderAdminRegControl();
-        }
-
-        function editProgram(id) {
-            const p = state.programs.find(pr => pr.id === id);
-            if (!p) return;
-            const newN = prompt("Edit Program Name:", p.name);
-            const newMax = prompt("Edit Max Limit:", p.max);
-            if (newN && newMax) {
-                p.name = newN;
-                p.max = newMax;
-                saveState();
-                renderAdminRegControl();
-            }
-        }
-
-        function toggleSection(id) {
-            document.getElementById(id).classList.toggle('hidden');
-        }
-
-        function renderAdminRegControl() {
-            document.getElementById('globalMaxProgLimit').value = state.globalMaxLimit;
-
-            const statusTxt = document.getElementById('adminRegStatusText');
-            const statusBtn = document.getElementById('adminRegStatusBtn');
-            if (state.isRegOpen) {
-                statusTxt.innerText = "OPEN";
-                statusTxt.className = "font-black text-green-600 text-xs";
-                statusBtn.innerText = "Close Registration";
-                statusBtn.className = "bg-red-600 text-white text-xs font-bold px-4 py-2 rounded-xl";
-            } else {
-                statusTxt.innerText = "CLOSED";
-                statusTxt.className = "font-black text-red-600 text-xs";
-                statusBtn.innerText = "Open Registration";
-                statusBtn.className = "bg-green-600 text-white text-xs font-bold px-4 py-2 rounded-xl";
-            }
-
-            const teamsList = document.getElementById('teamsList');
-            teamsList.innerHTML = '';
-            state.teams.forEach(t => {
-                teamsList.innerHTML += `
-                    <div class="py-2 flex justify-between items-center text-xs">
-                        <div><strong>${t.user}</strong> <span class="text-slate-400">(${t.pass})</span></div>
-                        <div class="flex gap-2">
-                            <button onclick="editTeam(${t.id})" class="text-blue-600 font-bold">Edit</button>
-                            <button onclick="deleteTeam(${t.id})" class="text-red-600 font-bold">Delete</button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            const progList = document.getElementById('adminProgList');
-            progList.innerHTML = '';
-            state.programs.forEach(p => {
-                progList.innerHTML += `
-                    <div class="py-2 flex justify-between items-center text-xs">
-                        <div><strong>${p.name}</strong> (${p.cat}) - ${p.stage}, Max: ${p.max}</div>
-                        <div class="flex gap-2">
-                            <button onclick="editProgram(${p.id})" class="text-blue-600 font-bold">Edit</button>
-                            <button onclick="deleteProgram(${p.id})" class="text-red-600 font-bold">Delete</button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            populateFilterOptions();
-            renderAdminReport();
-        }
-
-        function populateFilterOptions() {
-            const filterTeam = document.getElementById('filterTeam');
-            const filterCat = document.getElementById('filterCat');
-            const filterStage = document.getElementById('filterStage');
-            const filterProg = document.getElementById('filterProg');
-
-            filterTeam.innerHTML = '<option value="">All Teams</option>';
-            state.teams.forEach(t => filterTeam.innerHTML += `<option value="${t.user}">${t.user}</option>`);
-
-            filterCat.innerHTML = '<option value="">All Categories</option>';
-            ['LOWER ZONE', 'MIDDLE ZONE', 'HIGHER ZONE', 'SUPER ZONE', 'GENERAL'].forEach(c => filterCat.innerHTML += `<option value="${c}">${c}</option>`);
-
-            filterStage.innerHTML = '<option value="">All Stages</option><option value="ON STAGE">ON STAGE</option><option value="OFF STAGE">OFF STAGE</option>';
-
-            filterProg.innerHTML = '<option value="">All Programs</option>';
-            state.programs.forEach(p => filterProg.innerHTML += `<option value="${p.name}">${p.name}</option>`);
-        }
-
-        function renderAdminReport() {
-            const team = document.getElementById('filterTeam').value;
-            const cat = document.getElementById('filterCat').value;
-            const stage = document.getElementById('filterStage').value;
-            const prog = document.getElementById('filterProg').value;
-
-            const tbody = document.getElementById('reportTableBody');
-            tbody.innerHTML = '';
-
-            let filtered = state.registrations.filter(r => {
-                return (!team || r.team === team) &&
-                       (!cat || r.cat === cat) &&
-                       (!stage || r.stage === stage) &&
-                       (!prog || r.progName === prog);
-            });
-
-            filtered.forEach(r => {
-                tbody.innerHTML += `
-                    <tr class="border-b">
-                        <td class="p-2 border font-medium">${r.partName}</td>
-                        <td class="p-2 border">${r.team}</td>
-                        <td class="p-2 border">${r.cat}</td>
-                        <td class="p-2 border">${r.progName}</td>
-                        <td class="p-2 border">${r.stage}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        function openPrintModal() {
-            document.getElementById('modalOverlay').classList.remove('hidden');
-            document.getElementById('printModal').classList.remove('hidden');
-            
-            const tbody = document.getElementById('printTableBody');
-            tbody.innerHTML = document.getElementById('reportTableBody').innerHTML;
-        }
-
-        function closePrintModal() {
-            document.getElementById('printModal').classList.add('hidden');
-            document.getElementById('modalOverlay').classList.add('hidden');
-        }
-
-        function adjustPrintFont(val) {
-            document.getElementById('printFontVal').innerText = val + 'px';
-            document.getElementById('printableArea').style.fontSize = val + 'px';
-        }
-
-        // --- POINT ROOM ACTIONS ---
-        function updatePRPrograms() {
-            const cat = document.getElementById('prCategorySelect').value;
-            const select = document.getElementById('prProgramSelect');
-            select.innerHTML = '<option value="">-- Choose Program --</option>';
-
-            state.programs.filter(p => p.cat === cat).forEach(p => {
-                select.innerHTML += `<option value="${p.name}">${p.name}</option>`;
-            });
-        }
-
-        function renderPRParticipants() {
-            const cat = document.getElementById('prCategorySelect').value;
-            const progName = document.getElementById('prProgramSelect').value;
-            const form = document.getElementById('prPointForm');
-            const inputsContainer = document.getElementById('prParticipantInputs');
-            const stageBadge = document.getElementById('prStageBadge');
-            const stageTxt = document.getElementById('prStageTxt');
-
-            if (!cat || !progName) return;
-
-            const progObj = state.programs.find(p => p.name === progName && p.cat === cat);
-            stageBadge.classList.remove('hidden');
-            stageTxt.innerText = progObj ? progObj.stage : 'ON STAGE';
-
-            // Find all registered participants for this program
-            const regs = state.registrations.filter(r => r.progName === progName && r.cat === cat);
-            inputsContainer.innerHTML = '';
-
-            if (regs.length === 0) {
-                inputsContainer.innerHTML = `<p class="text-xs text-slate-400">No participants registered for this program.</p>`;
-            } else {
-                regs.forEach((r, idx) => {
-                    inputsContainer.innerHTML += `
-                        <div class="flex items-center justify-between gap-2 bg-slate-50 p-2 rounded-xl text-xs">
-                            <span class="font-bold text-slate-700">${r.partName} (${r.team})</span>
-                            <input type="number" data-part="${r.partName}" data-team="${r.team}" placeholder="Point" min="0" required class="border p-2 rounded-lg w-20 outline-none text-center">
-                        </div>
-                    `;
-                });
-            }
-
-            form.classList.remove('hidden');
-        }
-
-        function handleSavePoints(e) {
-            e.preventDefault();
-            const cat = document.getElementById('prCategorySelect').value;
-            const progName = document.getElementById('prProgramSelect').value;
-            const progObj = state.programs.find(p => p.name === progName && p.cat === cat);
-            const stage = progObj ? progObj.stage : 'ON STAGE';
-
-            const inputs = document.querySelectorAll('#prParticipantInputs input');
-            let scores = [];
-
-            inputs.forEach(inp => {
-                scores.push({
-                    partName: inp.getAttribute('data-part'),
-                    team: inp.getAttribute('data-team'),
-                    point: parseFloat(inp.value) || 0
-                });
-            });
-
-            state.points.push({
-                id: Date.now(),
-                progName,
-                cat,
-                stage,
-                scores
-            });
-
-            saveState();
-            alert('Points Submitted Successfully!');
-            renderPointRoomList();
-        }
-
-        function renderPointRoomList() {
-            const list = document.getElementById('prSubmittedList');
-            list.innerHTML = '';
-
-            state.points.forEach((pt, idx) => {
-                list.innerHTML += `
-                    <div class="p-3 flex justify-between items-center">
-                        <div>
-                            <strong>${pt.progName}</strong> (${pt.cat}) - <span class="text-blue-600 font-bold">${pt.stage}</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="deletePointRecord(${pt.id})" class="text-red-600 font-bold">Delete</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function deletePointRecord(id) {
-            state.points = state.points.filter(pt => pt.id !== id);
-            saveState();
-            renderPointRoomList();
-        }
-
-        // --- JUDGE LEADERBOARD LOGIC ---
-        function renderJudgeLeaderboard() {
-            const filterStage = document.getElementById('judgeStageFilter').value;
-            const lb = document.getElementById('judgeLeaderboard');
-            lb.innerHTML = '';
-
-            // Aggregate participant total scores based on rules:
-            // 1. General programs marks EXCLUDED.
-            // 2. Stage filtering applied if chosen.
-            let partTotals = {}; // { partName: { team, cat, total: 0, breakdown: [] } }
-
-            state.points.forEach(pt => {
-                if (pt.cat === 'GENERAL') return; // EXCLUDE GENERAL
-                if (filterStage !== 'ALL' && pt.stage !== filterStage) return; // Stage match
-
-                pt.scores.forEach(s => {
-                    if (!partTotals[s.partName]) {
-                        partTotals[s.partName] = {
-                            team: s.team,
-                            cat: pt.cat,
-                            total: 0,
-                            breakdown: []
-                        };
-                    }
-                    partTotals[s.partName].total += s.point;
-                    partTotals[s.partName].breakdown.push({
-                        progName: pt.progName,
-                        cat: pt.cat,
-                        stage: pt.stage,
-                        point: s.point
-                    });
-                });
-            });
-
-            // Convert to array and sort DESCENDING
-            let arr = Object.keys(partTotals).map(k => ({
-                name: k,
-                ...partTotals[k]
-            })).sort((a, b) => b.total - a.total);
-
-            if (arr.length === 0) {
-                lb.innerHTML = `<p class="text-xs text-slate-400">No participant points registered yet.</p>`;
-            } else {
-                arr.forEach((item, idx) => {
-                    lb.innerHTML += `
-                        <div onclick="showPartDetails('${item.name}', '${item.team}')" class="p-3 bg-slate-50 hover:bg-slate-100 rounded-xl border flex justify-between items-center cursor-pointer transition">
-                            <div class="flex items-center gap-3">
-                                <span class="font-extrabold text-blue-700 text-sm">#${idx + 1}</span>
-                                <div>
-                                    <h4 class="font-bold text-xs text-slate-800">${item.name}</h4>
-                                    <p class="text-[10px] text-slate-500">${item.team} (${item.cat})</p>
-                                </div>
-                            </div>
-                            <span class="font-black text-sm text-emerald-600">${item.total} pts</span>
-                        </div>
-                    `;
-                });
-            }
-        }
-
-        function showPartDetails(partName, team) {
-            const modal = document.getElementById('detailsModal');
-            const title = document.getElementById('detailsTitle');
-            const content = document.getElementById('detailsContent');
-
-            title.innerText = `Points Breakdown: ${partName} (${team})`;
-            content.innerHTML = '';
-
-            state.points.forEach(pt => {
-                pt.scores.forEach(s => {
-                    if (s.partName === partName) {
-                        content.innerHTML += `
-                            <div class="py-2 flex justify-between items-center">
-                                <div>
-                                    <strong>${pt.progName}</strong> (${pt.cat})
-                                    <p class="text-[10px] text-slate-400">${pt.stage}</p>
-                                </div>
-                                <span class="font-bold text-emerald-600">+${s.point} pts</span>
-                            </div>
-                        `;
-                    }
-                });
-            });
-
-            document.getElementById('modalOverlay').classList.remove('hidden');
-            modal.classList.remove('hidden');
-        }
-
-        function closeDetailsModal() {
-            document.getElementById('detailsModal').classList.add('hidden');
-            document.getElementById('modalOverlay').classList.add('hidden');
-        }
-
-        // --- STATES CONTROL (TEAM TOTAL TALLY LOGIC) ---
-        function renderStatesControl() {
-            const container = document.getElementById('teamTallyList');
-            container.innerHTML = '';
-
-            // Aggregate team totals INCLUDING General program points
-            let teamTotals = {}; // { teamName: { total: 0 } }
-
-            state.teams.forEach(t => {
-                teamTotals[t.user] = { total: 0 };
-            });
-
-            state.points.forEach(pt => {
-                pt.scores.forEach(s => {
-                    if (teamTotals[s.team]) {
-                        teamTotals[s.team].total += s.point;
-                    }
-                });
-            });
-
-            let arr = Object.keys(teamTotals).map(k => ({
-                team: k,
-                total: teamTotals[k].total
-            })).sort((a, b) => b.total - a.total);
-
-            arr.forEach((item, idx) => {
-                container.innerHTML += `
-                    <div onclick="showTeamDetails('${item.team}')" class="p-4 bg-slate-50 hover:bg-slate-100 border rounded-2xl flex justify-between items-center cursor-pointer transition">
-                        <div class="flex items-center gap-3">
-                            <span class="font-black text-amber-600 text-base">#${idx + 1}</span>
-                            <h3 class="font-bold text-sm text-slate-800">${item.team}</h3>
-                        </div>
-                        <span class="font-black text-lg text-blue-700">${item.total} pts</span>
-                    </div>
-                `;
-            });
-        }
-
-        function showTeamDetails(team) {
-            const modal = document.getElementById('detailsModal');
-            const title = document.getElementById('detailsTitle');
-            const content = document.getElementById('detailsContent');
-
-            title.innerText = `Team Breakdown: ${team}`;
-            content.innerHTML = '';
-
-            state.points.forEach(pt => {
-                pt.scores.forEach(s => {
-                    if (s.team === team && s.point > 0) {
-                        content.innerHTML += `
-                            <div class="py-2 flex justify-between items-center">
-                                <div>
-                                    <strong>${s.partName}</strong> - ${pt.progName} (${pt.cat})
-                                    <p class="text-[10px] text-slate-400">${pt.stage}</p>
-                                </div>
-                                <span class="font-bold text-blue-600">+${s.point} pts</span>
-                            </div>
-                        `;
-                    }
-                });
-            });
-
-            document.getElementById('modalOverlay').classList.remove('hidden');
-            modal.classList.remove('hidden');
-        }
-
-        // --- RESULT CONTROL ACTIONS ---
-        function uploadTeamStatus() {
-            const file = document.getElementById('teamStatusFile').files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                state.teamStatuses.push(e.target.result);
-                saveState();
-                renderResControl();
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function deleteTeamStatus(idx) {
-            state.teamStatuses.splice(idx, 1);
-            saveState();
-            renderResControl();
-        }
-
-        function updateResProgSelect() {
-            const cat = document.getElementById('resCatSelect').value;
-            const select = document.getElementById('resProgSelect');
-            select.innerHTML = '<option value="">-- Choose Program --</option>';
-
-            state.programs.filter(p => p.cat === cat).forEach(p => {
-                select.innerHTML += `<option value="${p.name}">${p.name}</option>`;
-            });
-        }
-
-        function uploadResult() {
-            const cat = document.getElementById('resCatSelect').value;
-            const prog = document.getElementById('resProgSelect').value;
-            const posterFile = document.getElementById('resPosterFile').files[0];
-            const yt = document.getElementById('resYtLink').value;
-            const thumbFile = document.getElementById('resYtThumb').files[0];
-
-            if (!cat || !prog || !posterFile) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const posterBase64 = e.target.result;
-                if (thumbFile) {
-                    const tReader = new FileReader();
-                    tReader.onload = function(te) {
-                        saveResultItem(cat, prog, posterBase64, yt, te.target.result);
-                    };
-                    tReader.readAsDataURL(thumbFile);
-                } else {
-                    saveResultItem(cat, prog, posterBase64, yt, '');
-                }
-            };
-            reader.readAsDataURL(posterFile);
-        }
-
-        function saveResultItem(cat, prog, poster, yt, thumb) {
-            state.results.push({ id: Date.now(), cat, prog, poster, yt, thumb });
-            saveState();
-            renderResControl();
-            alert('Result Uploaded!');
-        }
-
-        function deleteResult(id) {
-            state.results = state.results.filter(r => r.id !== id);
-            saveState();
-            renderResControl();
-        }
-
-        function uploadUpdate() {
-            const file = document.getElementById('updateFile').files[0];
-            const type = document.getElementById('updateTypeSelect').value;
-            const title = document.getElementById('updateTitle').value;
-
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                state.updates.push({ id: Date.now(), file: e.target.result, type, title });
-                saveState();
-                renderResControl();
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function deleteUpdate(id) {
-            state.updates = state.updates.filter(u => u.id !== id);
-            saveState();
-            renderResControl();
-        }
-
-        function saveLiveStream() {
-            const link = document.getElementById('liveLink').value;
-            const thumbFile = document.getElementById('liveThumb').files[0];
-
-            if (thumbFile) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    state.live = { link, thumb: e.target.result };
-                    saveState();
-                    alert('Live Saved!');
-                };
-                reader.readAsDataURL(thumbFile);
-            } else {
-                state.live = { link, thumb: state.live.thumb || '' };
-                saveState();
-                alert('Live Saved!');
-            }
-        }
-
-        function saveHighlight() {
-            const title = document.getElementById('highlightTitle').value;
-            if (!title) return;
-            state.highlights.push({ id: Date.now(), title });
-            saveState();
-            alert('Highlight Added!');
-        }
-
-        function renderResControl() {
-            const prev = document.getElementById('teamStatusPreview');
-            prev.innerHTML = '';
-            state.teamStatuses.forEach((img, idx) => {
-                prev.innerHTML += `
-                    <div class="relative w-16 h-16 border rounded-lg overflow-hidden">
-                        <img src="${img}" class="w-full h-full object-cover">
-                        <button onclick="deleteTeamStatus(${idx})" class="absolute top-0 right-0 bg-red-600 text-white text-[10px] px-1 font-bold">&times;</button>
-                    </div>
-                `;
-            });
-
-            const resList = document.getElementById('adminResList');
-            resList.innerHTML = '';
-            state.results.forEach(r => {
-                resList.innerHTML += `
-                    <div class="py-2 flex justify-between items-center text-xs">
-                        <div><strong>${r.prog}</strong> (${r.cat})</div>
-                        <button onclick="deleteResult(${r.id})" class="text-red-600 font-bold">Delete</button>
-                    </div>
-                `;
-            });
-
-            const upList = document.getElementById('adminUpdatesList');
-            upList.innerHTML = '';
-            state.updates.forEach(u => {
-                upList.innerHTML += `
-                    <div class="py-2 flex justify-between items-center text-xs">
-                        <div><strong>${u.title || 'Untitled'}</strong> (${u.type})</div>
-                        <button onclick="deleteUpdate(${u.id})" class="text-red-600 font-bold">Delete</button>
-                    </div>
-                `;
-            });
-        }
-
-        function clearAllData() {
-            if (confirm("Are you sure you want to CLEAR ALL SYSTEM DATA?")) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
-
-        // --- RESULT PHASE MODALS ---
-        function openModal(modalId) {
-            document.getElementById('modalOverlay').classList.remove('hidden');
-            ['teamStatusModal', 'resultModal', 'updatesModal', 'liveModal', 'highlightsModal'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-
-            document.getElementById(modalId).classList.remove('hidden');
-
-            if (modalId === 'teamStatusModal') {
-                const c = document.getElementById('teamStatusContent');
-                c.innerHTML = state.teamStatuses.map(img => `
-                    <div class="border rounded-xl overflow-hidden shadow-sm p-1">
-                        <img src="${img}" class="w-full h-auto rounded-lg">
-                        <a href="${img}" download="TeamStatus.png" class="block text-center py-2 text-xs font-bold text-blue-600">Download Status</a>
-                    </div>
-                `).join('') || '<p class="text-slate-400 text-xs">No Status uploaded.</p>';
-            } 
-            else if (modalId === 'resultModal') {
-                const c = document.getElementById('resultContent');
-                c.innerHTML = state.results.map(r => `
-                    <div class="border rounded-2xl p-4 space-y-2">
-                        <h4 class="font-bold text-sm text-blue-700">${r.prog} <span class="text-xs text-slate-500">(${r.cat})</span></h4>
-                        <img src="${r.poster}" class="w-full rounded-xl shadow-sm">
-                        <a href="${r.poster}" download="Result.png" class="inline-block text-xs text-blue-600 font-bold">Download Poster</a>
-                        ${r.yt ? `
-                            <div class="pt-2 border-t">
-                                <a href="${r.yt}" target="_blank" class="text-xs text-red-600 font-bold block">Watch Video ➔</a>
-                                ${r.thumb ? `<img src="${r.thumb}" class="w-20 h-14 object-cover rounded mt-1">` : ''}
-                            </div>
-                        ` : ''}
-                    </div>
-                `).join('') || '<p class="text-slate-400 text-xs">No Results published.</p>';
-            }
-            else if (modalId === 'updatesModal') {
-                const c = document.getElementById('updatesContent');
-                c.innerHTML = state.updates.map(u => `
-                    <div class="pinterest-item bg-slate-50 border rounded-2xl overflow-hidden p-2 shadow-sm">
-                        ${u.type === 'video' ? `
-                            <video src="${u.file}" controls class="w-full rounded-xl"></video>
-                        ` : `
-                            <img src="${u.file}" class="w-full h-auto rounded-xl">
-                        `}
-                        <p class="font-bold text-xs mt-2 text-slate-700">${u.title || ''}</p>
-                        <a href="${u.file}" download="Update" class="text-[10px] text-blue-600 font-bold block mt-1">Download</a>
-                    </div>
-                `).join('') || '<p class="text-slate-400 text-xs">No Updates posted.</p>';
-            }
-            else if (modalId === 'liveModal') {
-                const c = document.getElementById('liveContent');
-                if (state.live.link) {
-                    c.innerHTML = `
-                        ${state.live.thumb ? `<img src="${state.live.thumb}" class="w-full h-40 object-cover rounded-2xl mb-2">` : ''}
-                        <a href="${state.live.link}" target="_blank" class="inline-block bg-red-600 text-white font-bold px-6 py-3 rounded-full text-xs shadow-lg">
-                            🔴 Watch Live Streaming
-                        </a>
-                    `;
-                } else {
-                    c.innerHTML = `<p class="text-slate-400 text-xs">Live Streaming Offline.</p>`;
-                }
-            }
-            else if (modalId === 'highlightsModal') {
-                const c = document.getElementById('highlightsContent');
-                c.innerHTML = state.highlights.map(h => `
-                    <div class="p-3 bg-slate-50 border rounded-xl text-xs font-bold text-slate-700">
-                        🌟 ${h.title}
-                    </div>
-                `).join('') || '<p class="text-slate-400 text-xs">No Highlights available.</p>';
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.add('hidden');
-        }
-
-        function renderAll() {
-            renderAdminRegControl();
-            renderResControl();
-            renderTeamPortal();
-            renderPointRoomList();
-        }
-    </script>
+        // Step 4: പുതിയ വിവരങ്ങൾ LocalStorage-ൽ സേവ് ചെയ്യുന്നു
+        localStorage.setItem('mainUser', newUser);
+        localStorage.setItem('mainPass', newPass);
+
+        alert("Main Login Username and Password have been updated successfully!");
+
+      } else {
+        alert("Incorrect Current Username or Password! Access Denied.");
+      }
+    }
+
+    function logout() {
+      alert("Logging out...");
+    }
+
+    // പേജ് ലോഡ് ചെയ്യുമ്പോൾ സേവ് ചെയ്ത ലോഗോ ലോഡ് ചെയ്യുന്നു
+    window.onload = loadSavedLogo;
+  </script>
 </body>
 </html>
