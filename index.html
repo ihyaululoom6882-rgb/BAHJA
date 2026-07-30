@@ -18,15 +18,18 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-dark); padding-bottom: 50px; }
+        body { background-color: var(--bg-light); color: var(--text-dark); padding-bottom: 50px; position: relative; }
 
-        .header-title { text-align: center; padding: 25px 20px 10px 20px; }
-        .logo-img { max-height: 80px; margin-bottom: 10px; display: none; }
-        .header-title h1 { font-size: 2.2rem; color: #0066cc; font-weight: 800; letter-spacing: 1px; }
-        .header-title p { color: #555; font-size: 0.9rem; margin-top: 5px; font-weight: 600; }
+        /* Logo Top Left Position */
+        .corner-logo { position: absolute; top: 15px; left: 15px; max-height: 70px; display: none; z-index: 99; }
+
+        /* Header Title Area Enhanced */
+        .header-title { text-align: center; padding: 35px 20px 15px 20px; }
+        .header-title h1 { font-size: 3rem; color: #0066cc; font-weight: 800; letter-spacing: 1.5px; }
+        .header-title p { color: #007bff; font-size: 1.6rem; margin-top: 5px; font-weight: 800; letter-spacing: 2px; }
 
         .menu-btn-container { position: fixed; top: 20px; right: 25px; z-index: 1000; }
-        .dots-btn { background: white; border: 1px solid #ccc; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .dots-btn { background: white; border: 1px solid #ccc; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
         .dropdown-menu { display: none; position: absolute; right: 0; top: 50px; background: white; min-width: 220px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-radius: 10px; overflow: hidden; z-index: 1001; }
         .dropdown-menu.show { display: block; }
         .dropdown-menu button { width: 100%; padding: 12px 18px; border: none; background: none; text-align: left; cursor: pointer; font-size: 0.95rem; color: #333; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f0f0f0; font-weight: 600; }
@@ -45,6 +48,7 @@
         .btn { background-color: var(--primary-blue); color: white; border: none; padding: 11px 18px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.95rem; display: inline-block; text-align: center; }
         .btn:hover { background-color: var(--dark-blue); }
         .btn-block { width: 100%; }
+        .btn-xl { padding: 18px 25px; font-size: 1.2rem; }
         .btn-danger { background-color: #dc3545; } .btn-danger:hover { background-color: #bd2130; }
         .btn-success { background-color: #28a745; } .btn-success:hover { background-color: #218838; }
         .btn-warning { background-color: #ffc107; color: #212529; }
@@ -53,7 +57,6 @@
         .result-menu-box { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; }
         .menu-card-btn { background: #007bff; color: white; border: none; padding: 20px; border-radius: 16px; font-size: 1.3rem; font-weight: 800; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 10px rgba(0,123,255,0.3); text-align: center; }
 
-        /* Pinterest Layout for Updates */
         .pinterest-grid { columns: 2; column-gap: 15px; margin-top: 20px; }
         .pinterest-item { break-inside: avoid; background: white; border-radius: 12px; padding: 10px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #eee; text-align: center; }
         .pinterest-media { width: 100%; border-radius: 8px; display: block; margin-bottom: 8px; }
@@ -71,6 +74,9 @@
         .poster-container { position: relative; display: inline-block; max-width: 100%; }
         .download-btn { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: bold; }
 
+        .interactive-row { cursor: pointer; transition: 0.2s; }
+        .interactive-row:hover { background-color: #f0f4f8 !important; }
+
         @media print {
             body * { visibility: hidden; }
             #print-area, #print-area * { visibility: visible; }
@@ -81,10 +87,12 @@
 </head>
 <body>
 
+    <!-- Top Left Corner Logo -->
+    <img id="corner-logo-view" class="corner-logo" src="" alt="Logo">
+
     <div class="header-title">
-        <img id="site-logo" class="logo-img" src="" alt="Logo">
-        <p style="letter-spacing: 2px; color: #007bff; font-weight: 700;">WELCOME TO BAHJA FEST</p>
-        <h1 id="site-title">BAHJA 26</h1>
+        <p>WELCOME TO BAHJA FEST</p>
+        <h1 id="site-title">BAHJA 2026</h1>
     </div>
 
     <div class="menu-btn-container">
@@ -171,10 +179,15 @@
             <div id="results-display-list"></div>
         </div>
 
-        <!-- PINTEREST UPDATES FEED -->
+        <!-- UPDATES GALLERY WITH MEDIA SEPARATION FILTERS -->
         <div id="section-updates" class="view-panel card">
             <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 15px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <h2 style="color: #0056b3; margin-bottom: 15px;">Updates & Gallery</h2>
+            <div style="display:flex; gap:10px; margin-bottom:15px;" class="no-print">
+                <button class="btn btn-sm btn-warning" onclick="renderPinterestUpdates('all')">Show All</button>
+                <button class="btn btn-sm btn-primary" onclick="renderPinterestUpdates('photo')">Photos Only</button>
+                <button class="btn btn-sm btn-success" onclick="renderPinterestUpdates('video')">Videos Only</button>
+            </div>
             <div id="live-updates-feed" class="pinterest-grid"></div>
         </div>
 
@@ -239,10 +252,80 @@
                         <label><input type="radio" name="phase-toggle" id="phase-res-radio" value="result" onchange="togglePhaseControl('result')"> Result Phase</label>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-block">Save Phase Settings</button>
+                <div class="form-group">
+                    <label>Upload Logo</label>
+                    <input type="file" id="sys-logo-input" class="form-control" accept="image/*">
+                </div>
+                <button type="submit" class="btn btn-block">Save Phase & Logo Settings</button>
             </form>
+            <div id="logo-manage-box" style="margin-top:15px; display:none;">
+                <button class="btn btn-danger btn-sm" onclick="deleteSysLogo()">Delete Logo</button>
+            </div>
             <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">
             <button class="btn btn-danger btn-block" onclick="clearAllDataSystem()">Clear All System Data</button>
+        </div>
+
+        <!-- POINTROOM PORTAL -->
+        <div id="panel-pointroom" class="view-panel card">
+            <h2>Pointroom Management</h2>
+            <form onsubmit="savePointroomEntry(event)" style="margin-top:15px;">
+                <div class="form-group">
+                    <label>Select Category</label>
+                    <select id="pt-cat-select" class="form-control" onchange="populatePtProgs()" required>
+                        <option value="">-- Choose --</option>
+                        <option value="GENERAL">GENERAL</option>
+                        <option value="LOWER ZONE">LOWER ZONE</option>
+                        <option value="MIDDLE ZONE">MIDDLE ZONE</option>
+                        <option value="HIGHER ZONE">HIGHER ZONE</option>
+                        <option value="SUPER ZONE">SUPER ZONE</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Select Program</label>
+                    <select id="pt-prog-select" class="form-control" onchange="loadPtParticipants()" required></select>
+                </div>
+                <div id="pt-stage-badge" style="margin-bottom:15px; font-weight:bold; color:#0056b3;"></div>
+                
+                <div id="pt-candidates-inputs" style="margin-bottom:15px;"></div>
+                <button type="submit" class="btn btn-success btn-block btn-xl">Submit Point Records</button>
+            </form>
+
+            <div class="collapsible-header" onclick="toggleAccordion('box-pt-list')"><span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="box-pt-list" style="display:none; margin-top:10px;"></div>
+        </div>
+
+        <!-- JUDGE PORTAL -->
+        <div id="panel-judge" class="view-panel card">
+            <h2>Judge Evaluation Portal</h2>
+            <div class="form-group" style="margin-top:15px;">
+                <label>Filter Stage View</label>
+                <select id="jd-filter-stage" class="form-control" onchange="renderJudgeLeaderboard()">
+                    <option value="all">ALL STAGES</option>
+                    <option value="ON STAGE">ON STAGE</option>
+                    <option value="OFF STAGE">OFF STAGE</option>
+                </select>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>Student Name</th><th>Team</th><th>Category</th><th>Total Points</th></tr>
+                    </thead>
+                    <tbody id="judge-leaderboard-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- STATES CONTROL -->
+        <div id="panel-states-control" class="view-panel card">
+            <h2>States Control Dashboard</h2>
+            <div class="table-responsive" style="margin-top:15px;">
+                <table>
+                    <thead>
+                        <tr><th>Team Username</th><th>Aggregated Points</th></tr>
+                    </thead>
+                    <tbody id="states-table-body"></tbody>
+                </table>
+            </div>
         </div>
 
         <!-- CONTROL PANEL -->
@@ -259,7 +342,13 @@
                     <button id="lock-reg-btn" class="btn btn-sm" onclick="toggleRegLock()"></button>
                 </div>
                 
-                <h4>Add Team Credentials</h4>
+                <div class="form-group" style="background:white; padding:10px; border-radius:6px; border:1px solid #ddd;">
+                    <label>Max Non-General Programs Per Student</label>
+                    <input type="number" id="m-max-limit-input" class="form-control" value="3">
+                    <button class="btn btn-sm btn-primary" style="margin-top:5px;" onclick="saveMaxLimitMaster()">Set Limit</button>
+                </div>
+                
+                <h4 style="margin-top:15px;">Add Team Credentials</h4>
                 <form onsubmit="addTeamMaster(event)" style="margin-top:10px; display:flex; gap:10px; margin-bottom:15px;">
                     <input type="text" id="m-team-user" class="form-control" placeholder="Username" required>
                     <input type="password" id="m-team-pass" class="form-control" placeholder="Password" required>
@@ -288,12 +377,18 @@
                 </form>
                 <div id="master-progs-list" style="margin-top:15px;"></div>
 
-                <!-- Live Master Registration Report View -->
+                <!-- Registration Report Setup With Printable Dynamic Text Resizer -->
                 <div id="print-area" style="margin-top:25px; border-top:2px solid #ccc; padding-top:15px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <h3>Registration Report</h3>
                         <button class="btn btn-warning btn-sm no-print" onclick="window.print()">Print A4 Report</button>
                     </div>
+                    
+                    <div class="form-group no-print" style="margin-top:10px; max-width:300px;">
+                        <label>Adjust Print Sheet Font Size</label>
+                        <input type="range" min="10" max="26" value="14" id="print-font-slider" oninput="adjustPrintFontSize(this.value)">
+                    </div>
+
                     <div class="no-print" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:10px;">
                         <select id="rep-team" class="form-control" onchange="renderReportTable()"><option value="">All Teams</option></select>
                         <select id="rep-cat" class="form-control" onchange="renderReportTable()">
@@ -307,10 +402,10 @@
                         <select id="rep-stage" class="form-control" onchange="renderReportTable()">
                             <option value="">All Stages</option>
                             <option value="ON STAGE">ON STAGE</option>
-                            <option value="OFF STAGE">OFF STAGE</option>
+                            <option value="OFF SHIFT">OFF STAGE</option>
                         </select>
                     </div>
-                    <table class="table-responsive">
+                    <table class="table-responsive" id="report-resizable-table" style="font-size:14px;">
                         <thead>
                             <tr><th>Participant</th><th>Team</th><th>Category</th><th>Program</th><th>Stage</th></tr>
                         </thead>
@@ -324,7 +419,7 @@
                 <h4>Upload Team Status Poster</h4>
                 <form onsubmit="uploadTeamStatusPoster(event)" style="margin-top:10px; margin-bottom:20px;">
                     <input type="file" id="status-file" class="form-control" accept="image/*" required>
-                    <button type="submit" class="btn btn-success btn-sm" style="margin-top:5px;">Upload</button>
+                    <button type="submit" class="btn btn-success btn-block btn-xl" style="margin-top:5px;">Upload Team Status</button>
                 </form>
                 <div id="master-status-preview"></div>
 
@@ -336,7 +431,7 @@
                     <div class="form-group"><select id="res-upload-prog" class="form-control" required></select></div>
                     <div class="form-group"><label>Poster Image</label><input type="file" id="res-file" class="form-control" accept="image/*" required></div>
                     <div class="form-group"><label>YouTube Video Link (Optional)</label><input type="url" id="res-yt-url" class="form-control" placeholder="https://..."></div>
-                    <button type="submit" class="btn btn-block">Publish Result</button>
+                    <button type="submit" class="btn btn-success btn-block btn-xl">Publish Result Poster</button>
                 </form>
                 <div id="master-results-list" style="margin-bottom:20px;"></div>
 
@@ -351,7 +446,7 @@
                     </div>
                     <div class="form-group" id="up-file-block"><input type="file" id="up-file" class="form-control" accept="image/*"></div>
                     <div class="form-group" id="up-video-block" style="display:none;"><input type="url" id="up-video" class="form-control" placeholder="Embed URL"></div>
-                    <button type="submit" class="btn btn-block">Publish Update</button>
+                    <button type="submit" class="btn btn-success btn-block btn-xl">Publish New Update Block</button>
                 </form>
                 <div id="master-updates-list" style="margin-bottom:20px;"></div>
 
@@ -363,16 +458,14 @@
                     <div class="form-group">
                         <select id="st-mode" class="form-control"><option value="live">LIVE STREAMING</option><option value="highlight">HIGHLIGHTS</option></select>
                     </div>
-                    <button type="submit" class="btn btn-block">Add Link</button>
+                    <button type="submit" class="btn btn-success btn-block btn-xl">Add Stream Reference Link</button>
                 </form>
             </div>
         </div>
 
-        <!-- UNUSED PLACEHOLDER PANELS TO PRESERVE NAVIGATION -->
-        <div id="panel-judge" class="view-panel card"><h2>Judge Portal</h2><p>Configuration Active.</p></div>
-        <div id="panel-pointroom" class="view-panel card"><h2>Pointroom Portal</h2><p>Configuration Active.</p></div>
-        <div id="panel-protection" class="view-panel card"><h2>Protection Portal</h2><p>Configuration Active.</p></div>
-        <div id="panel-modify" class="view-panel card"><h2>Modify Portal</h2><p>Configuration Active.</p></div>
+        <!-- UNUSED PLACEHOLDER PANELS TO PRESERVE COMPATIBILITY -->
+        <div id="panel-protection" class="view-panel card"><h2>Protection Portal</h2><p>Configuration Secure.</p></div>
+        <div id="panel-modify" class="view-panel card"><h2>Modify Portal</h2><p>Configuration Verified.</p></div>
 
     </div>
 
@@ -386,6 +479,15 @@
                 <button type="submit" class="btn btn-block">Login</button>
                 <button type="button" class="btn btn-danger btn-block" style="margin-top:8px;" onclick="closeModal()">Cancel</button>
             </form>
+        </div>
+    </div>
+
+    <!-- DETAILS MODAL FOR EXPANDED LIST VIEWS -->
+    <div id="detail-modal-overlay" class="modal-overlay" onclick="this.style.display='none'">
+        <div class="modal-box" style="max-width:500px;" onclick="event.stopPropagation()">
+            <h3 id="det-modal-title" style="color:#0056b3; margin-bottom:10px;"></h3>
+            <div id="det-modal-content" style="max-height:350px; overflow-y:auto;"></div>
+            <button class="btn btn-block style-margin-top:10px;" onclick="document.getElementById('detail-modal-overlay').style.display='none'">Close</button>
         </div>
     </div>
 
@@ -412,6 +514,7 @@
             portalOpen: true,
             logoUrl: '',
             teamStatusUrl: '',
+            maxProgLimit: 3,
             teams: [],
             programs: [],
             registrations: [],
@@ -419,7 +522,8 @@
             updates: [],
             livelinks: [],
             highlights: [],
-            students: []
+            students: [],
+            points: []
         };
 
         window.loggedTeamUser = null;
@@ -435,6 +539,7 @@
                     portalOpen: data.portalOpen ?? true,
                     logoUrl: data.logoUrl || '',
                     teamStatusUrl: data.teamStatusUrl || '',
+                    maxProgLimit: data.maxProgLimit || 3,
                     teams: data.teams || [],
                     programs: data.programs || [],
                     registrations: data.registrations || [],
@@ -442,16 +547,40 @@
                     updates: data.updates || [],
                     livelinks: data.livelinks || [],
                     highlights: data.highlights || [],
-                    students: data.students || []
+                    students: data.students || [],
+                    points: data.points || []
                 };
             }
+            applyLogoView();
             render3DotMenu();
             renderHomePhase();
             syncControlPanelViews();
+            renderPtList();
+            renderJudgeLeaderboard();
+            renderStatesDashboard();
         });
 
         window.saveData = function() {
             set(ref(db, 'bahja_fest_data'), window.appState);
+        }
+
+        function applyLogoView() {
+            const el = document.getElementById('corner-logo-view');
+            const manageBox = document.getElementById('logo-manage-box');
+            if(window.appState.logoUrl) {
+                el.src = window.appState.logoUrl;
+                el.style.display = 'block';
+                if(manageBox) manageBox.style.display = 'block';
+            } else {
+                el.style.display = 'none';
+                if(manageBox) manageBox.style.display = 'none';
+            }
+        }
+
+        window.deleteSysLogo = function() {
+            window.appState.logoUrl = '';
+            saveData();
+            alert("Logo deleted successfully");
         }
 
         window.render3DotMenu = function() {
@@ -460,15 +589,16 @@
 
             if(!window.isMainLoggedIn) {
                 html += `<button onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> Main Login</button>`;
-                html += `<button onclick="showPanel('panel-participants-entry')"><i class="fa-solid fa-user-plus"></i> Participants</button>`;
+                if(window.appState.phase === 'register') {
+                    html += `<button onclick="showPanel('panel-participants-entry')"><i class="fa-solid fa-user-plus"></i> Participants Entry</button>`;
+                }
             } else {
                 html += `
                     <button onclick="showPanel('panel-settings')"><i class="fa-solid fa-gear"></i> Settings</button>
                     <button onclick="showPanel('panel-control-panel')"><i class="fa-solid fa-sliders"></i> Control Panel</button>
-                    <button onclick="showPanel('panel-judge')"><i class="fa-solid fa-gavel"></i> Judge</button>
                     <button onclick="showPanel('panel-pointroom')"><i class="fa-solid fa-trophy"></i> Pointroom</button>
-                    <button onclick="showPanel('panel-protection')"><i class="fa-solid fa-shield-halved"></i> Protection</button>
-                    <button onclick="showPanel('panel-modify')"><i class="fa-solid fa-pen-to-square"></i> Modify</button>
+                    <button onclick="showPanel('panel-judge')"><i class="fa-solid fa-gavel"></i> Judge Leaderboard</button>
+                    <button onclick="showPanel('panel-states-control')"><i class="fa-solid fa-flag"></i> States Control</button>
                     <button onclick="logoutMain()" style="color:red;"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
                 `;
             }
@@ -508,30 +638,48 @@
 
         window.logoutMain = function() { window.isMainLoggedIn = false; render3DotMenu(); navHome(); }
 
+        window.adjustPrintFontSize = function(val) {
+            document.getElementById('report-resizable-table').style.fontSize = val + 'px';
+        }
+
+        window.saveMaxLimitMaster = function() {
+            const v = parseInt(document.getElementById('m-max-limit-input').value);
+            window.appState.maxProgLimit = v || 3;
+            saveData();
+            alert("Program limit configuration saved.");
+        }
+
         window.togglePhaseControl = function(selectedPhase) {
-            const rReg = document.getElementById('phase-reg-radio');
-            const rRes = document.getElementById('phase-res-radio');
-            if(selectedPhase === 'register') {
-                rReg.checked = true; rRes.checked = false;
-            } else {
-                rReg.checked = false; rRes.checked = true;
-            }
+            document.getElementById('phase-reg-radio').checked = selectedPhase === 'register';
+            document.getElementById('phase-res-radio').checked = selectedPhase === 'result';
         }
 
         window.applyPhaseSettings = function(e) {
             e.preventDefault();
             const selected = document.querySelector('input[name="phase-toggle"]:checked').value;
             window.appState.phase = selected;
-            saveData();
-            alert("Phase Switched Successfully!");
-            navHome();
+            
+            const fileEl = document.getElementById('sys-logo-input').files[0];
+            if(fileEl) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    window.appState.logoUrl = evt.target.result;
+                    saveData();
+                    alert("System configuration modified!");
+                    navHome();
+                }
+                reader.readAsDataURL(fileEl);
+            } else {
+                saveData();
+                alert("Phase configuration updated!");
+                navHome();
+            }
         }
 
         window.clearAllDataSystem = function() {
-            if(confirm("Are you absolute sure you want to completely wipe all database entries?")) {
-                window.appState = { phase:'register', portalOpen:true, logoUrl:'', teamStatusUrl:'', teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[] };
+            if(confirm("Completely wipe out all database state records?")) {
+                window.appState = { phase:'register', portalOpen:true, logoUrl:'', teamStatusUrl:'', maxProgLimit:3, teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[], points:[] };
                 saveData();
-                alert("All completely cleared.");
                 navHome();
             }
         }
@@ -558,7 +706,7 @@
             }
         }
 
-        /* PARTICIPANTS SETUP */
+        /* PARTICIPANTS ENTRY DIRECTORY ENGINE */
         window.handlePartLogin = function(e) {
             e.preventDefault();
             const u = document.getElementById('part-user').value.trim();
@@ -570,7 +718,7 @@
                 document.getElementById('part-manage-block').style.display = 'block';
                 document.getElementById('part-active-team').innerText = u;
                 renderTeamStudentsList();
-            } else { alert("Invalid Team Credentials!"); }
+            } else { alert("Invalid Credentials!"); }
         }
 
         window.addTeamParticipant = function(e) {
@@ -591,7 +739,7 @@
                     <span><strong>${s.name}</strong> (${s.cat})</span>
                     <button class="btn btn-danger btn-sm" onclick="deleteStudent('${s.id}')">Delete</button>
                 </div>
-            `).join('') || '<p>No students listed yet.</p>';
+            `).join('') || '<p>No students recorded.</p>';
         }
 
         window.deleteStudent = function(id) {
@@ -600,7 +748,7 @@
             renderTeamStudentsList();
         }
 
-        /* REGISTRATION ENGINE */
+        /* REGISTRATION CORE LOGIC */
         window.handleTeamLogin = function(e) {
             e.preventDefault();
             const u = document.getElementById('login-team-user').value.trim();
@@ -616,9 +764,8 @@
             if(!cat) { container.innerHTML = ''; return; }
 
             const filtered = window.appState.programs.filter(p => p.cat === cat);
-            if(filtered.length === 0) { container.innerHTML = '<p>No programs matching.</p>'; return; }
+            if(filtered.length === 0) { container.innerHTML = '<p>No programs matching category descriptor.</p>'; return; }
 
-            // Fetch students under this team and category
             const allowedStudents = window.appState.students.filter(s => s.team === window.loggedTeamUser && s.cat === cat);
 
             container.innerHTML = filtered.map(p => {
@@ -647,73 +794,251 @@
         }
 
         window.saveRegistrationItem = function(progId, cat) {
-            if(!window.appState.portalOpen) { alert("Registration has been CLOSED by Committee Control!"); return; }
+            if(!window.appState.portalOpen) { alert("Registration Locked!"); return; }
+            
             const fields = document.querySelectorAll(`.prog-input-${progId}`);
             const names = Array.from(fields).map(f => f.value.trim()).filter(n => n !== '');
+
+            if(cat !== 'GENERAL') {
+                for (let studentName of names) {
+                    const matchCount = window.appState.registrations.filter(r => r.team === window.loggedTeamUser && r.cat !== 'GENERAL' && r.progId !== progId && r.participants.includes(studentName)).length;
+                    if(matchCount >= window.appState.maxProgLimit) {
+                        alert(`Limit violation! Student "${studentName}" is already registered for ${matchCount} non-general items.`);
+                        return;
+                    }
+                }
+            }
 
             window.appState.registrations = window.appState.registrations.filter(r => !(r.team === window.loggedTeamUser && r.progId === progId));
             if(names.length > 0) {
                 window.appState.registrations.push({ team: window.loggedTeamUser, cat, progId, participants: names });
             }
             saveData();
-            alert("Saved successfully!");
+            alert("Registration state captured!");
         }
 
-        /* CONTROL PANEL ENGINE */
-        window.toggleRegLock = function() {
-            window.appState.portalOpen = !window.appState.portalOpen;
+        /* POINTROOM SYSTEM CORE */
+        window.populatePtProgs = function() {
+            const cat = document.getElementById('pt-cat-select').value;
+            const drop = document.getElementById('pt-prog-select');
+            const matched = window.appState.programs.filter(p => p.cat === cat);
+            drop.innerHTML = '<option value="">-- Select --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            document.getElementById('pt-candidates-inputs').innerHTML = '';
+            document.getElementById('pt-stage-badge').innerText = '';
+        }
+
+        window.loadPtParticipants = function() {
+            const progId = document.getElementById('pt-prog-select').value;
+            const targetProg = window.appState.programs.find(p => p.id === progId);
+            const container = document.getElementById('pt-candidates-inputs');
+            
+            if(!targetProg) { container.innerHTML = ''; return; }
+            document.getElementById('pt-stage-badge').innerText = `Stage Allocation Mode: ${targetProg.stage}`;
+
+            const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
+            if(matchedRegs.length === 0) {
+                container.innerHTML = '<p style="color:red;">No participant enrollment records found for this program.</p>';
+                return;
+            }
+
+            let html = '';
+            matchedRegs.forEach(r => {
+                r.participants.forEach(pName => {
+                    const key = `${r.team}_${pName}`;
+                    const savedPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === pName) || { score: 0 };
+                    
+                    html += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:#f0f4f8; padding:10px; margin-bottom:5px; border-radius:6px;">
+                            <span><strong>${pName}</strong> (Team: ${r.team})</span>
+                            <input type="number" min="0" class="form-control pt-score-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.score}" style="width:100px;">
+                        </div>
+                    `;
+                });
+            });
+            container.innerHTML = html;
+        }
+
+        window.savePointroomEntry = function(e) {
+            e.preventDefault();
+            const progId = document.getElementById('pt-prog-select').value;
+            const cat = document.getElementById('pt-cat-select').value;
+            if(!progId || !cat) return;
+
+            window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
+
+            const fields = document.querySelectorAll('.pt-score-field');
+            fields.forEach(f => {
+                const score = parseFloat(f.value) || 0;
+                const team = f.getAttribute('data-team');
+                const student = f.getAttribute('data-student');
+                window.appState.points.push({ progId, cat, team, student, score });
+            });
+
             saveData();
+            alert("Point allocation parameters locked!");
+            loadPtParticipants();
+            renderPtList();
         }
 
+        function renderPtList() {
+            const container = document.getElementById('box-pt-list');
+            if(!container) return;
+            
+            const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
+            if(distinctProgs.length === 0) { container.innerHTML = '<p>No processed marks available.</p>'; return; }
+
+            container.innerHTML = distinctProgs.map(pid => {
+                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown Item', cat: 'N/A' };
+                const subPts = window.appState.points.filter(pt => pt.progId === pid);
+                
+                return `
+                    <div style="background:#fff; border:1px solid #ddd; padding:10px; border-radius:6px; margin-bottom:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong>${prog.name} (${prog.cat})</strong>
+                            <div>
+                                <button class="btn btn-danger btn-sm" onclick="deletePtGroup('${pid}')">Delete</button>
+                            </div>
+                        </div>
+                        <div style="font-size:0.85rem; color:#555; margin-top:5px;">
+                            ${subPts.map(s => `${s.student} (${s.team}): <strong>${s.score}</strong>`).join(' | ')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.deletePtGroup = function(progId) {
+            if(confirm("Purge point records for this program?")) {
+                window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
+                saveData();
+                renderPtList();
+            }
+        }
+
+        /* JUDGE LEADERBOARD ENGINE (AUTO SUMULATION) */
+        window.renderJudgeLeaderboard = function() {
+            const tbody = document.getElementById('judge-leaderboard-body');
+            if(!tbody) return;
+            const filterStage = document.getElementById('jd-filter-stage').value;
+
+            // Generate map aggregating non-general scores per candidate
+            const aggregate = {};
+            window.appState.points.forEach(pt => {
+                if(pt.cat === 'GENERAL') return; // Strict skip condition rule
+                
+                const prog = window.appState.programs.find(p => p.id === pt.progId);
+                if(!prog) return;
+                if(filterStage !== 'all' && prog.stage !== filterStage) return;
+
+                const key = `${pt.team}_${pt.student}`;
+                if(!aggregate[key]) {
+                    aggregate[key] = { name: pt.student, team: pt.team, cat: pt.cat, total: 0 };
+                }
+                aggregate[key].total += pt.score;
+            });
+
+            const sorted = Object.values(aggregate).sort((a,b) => b.total - a.total);
+
+            tbody.innerHTML = sorted.map(s => `
+                <tr class="interactive-row" onclick="viewCandidateBreakdown('${s.name}', '${s.team}')">
+                    <td><strong>${s.name}</strong></td>
+                    <td>${s.team}</td>
+                    <td>${s.cat}</td>
+                    <td><strong style="color:green;">${s.total}</strong></td>
+                </tr>
+            `).join('') || '<tr><td colspan="4">No scores accumulated matching filtering matrices.</td></tr>';
+        }
+
+        window.viewCandidateBreakdown = function(name, team) {
+            const records = window.appState.points.filter(pt => pt.student === name && pt.team === team && pt.cat !== 'GENERAL');
+            const modalTitle = document.getElementById('det-modal-title');
+            const modalContent = document.getElementById('det-modal-content');
+            
+            modalTitle.innerText = `Score Breakdown: ${name} (${team})`;
+            
+            let html = '<table style="width:100%;"><thead><tr><th>Program</th><th>Points</th></tr></thead><tbody>';
+            records.forEach(r => {
+                const prog = window.appState.programs.find(p => p.id === r.progId) || { name: 'N/A' };
+                html += `<tr><td>${prog.name}</td><td><strong>${r.score}</strong></td></tr>`;
+            });
+            html += '</tbody></table>';
+            
+            modalContent.innerHTML = html;
+            document.getElementById('detail-modal-overlay').style.display = 'flex';
+        }
+
+        /* STATES CONTROL DASHBOARD (AGGREGATED TEAMS) */
+        window.renderStatesDashboard = function() {
+            const tbody = document.getElementById('states-table-body');
+            if(!tbody) return;
+
+            const teamTotals = {};
+            window.appState.teams.forEach(t => { teamTotals[t.user] = 0; });
+
+            window.appState.points.forEach(pt => {
+                if(teamTotals[pt.team] !== undefined) {
+                    teamTotals[pt.team] += pt.score;
+                }
+            });
+
+            const sortedTeams = Object.entries(teamTotals).sort((a,b) => b[1] - a[1]);
+
+            tbody.innerHTML = sortedTeams.map(([tName, total]) => `
+                <tr class="interactive-row" onclick="viewTeamBreakdown('${tName}')">
+                    <td><strong>${tName}</strong></td>
+                    <td><strong style="color:blue; font-size:1.1rem;">${total}</strong></td>
+                </tr>
+            `).join('') || '<tr><td colspan="2">No data configured.</td></tr>';
+        }
+
+        window.viewTeamBreakdown = function(teamName) {
+            const records = window.appState.points.filter(pt => pt.team === teamName);
+            const modalTitle = document.getElementById('det-modal-title');
+            const modalContent = document.getElementById('det-modal-content');
+            
+            modalTitle.innerText = `Team Assessment View: ${teamName}`;
+            
+            let html = '<table style="width:100%;"><thead><tr><th>Student</th><th>Program</th><th>Points</th></tr></thead><tbody>';
+            records.forEach(r => {
+                const prog = window.appState.programs.find(p => p.id === r.progId) || { name: 'N/A' };
+                html += `<tr><td>${r.student}</td><td>${prog.name} <span style="font-size:0.75rem; color:gray;">(${r.cat})</span></td><td><strong>${r.score}</strong></td></tr>`;
+            });
+            html += '</tbody></table>';
+            
+            modalContent.innerHTML = html;
+            document.getElementById('detail-modal-overlay').style.display = 'flex';
+        }
+
+        /* COMMITTEE OPERATIONS LOGIC */
+        window.toggleRegLock = function() { window.appState.portalOpen = !window.appState.portalOpen; saveData(); }
         window.addTeamMaster = function(e) {
             e.preventDefault();
             const user = document.getElementById('m-team-user').value.trim();
             const pass = document.getElementById('m-team-pass').value.trim();
-            window.appState.teams.push({ user, pass });
-            saveData();
-            e.target.reset();
+            window.appState.teams.push({ user, pass }); saveData(); e.target.reset();
         }
-
-        window.deleteTeamMaster = function(idx) {
-            window.appState.teams.splice(idx, 1);
-            saveData();
-        }
-
+        window.deleteTeamMaster = function(idx) { window.appState.teams.splice(idx, 1); saveData(); }
         window.addProgramMaster = function(e) {
             e.preventDefault();
             const name = document.getElementById('m-prog-name').value.trim();
             const cat = document.getElementById('m-prog-cat').value;
             const stage = document.getElementById('m-prog-stage').value;
             const limit = parseInt(document.getElementById('m-prog-limit').value);
-            window.appState.programs.push({ id: 'pr_'+Date.now(), name, cat, stage, limit });
-            saveData();
-            e.target.reset();
+            window.appState.programs.push({ id: 'pr_'+Date.now(), name, cat, stage, limit }); saveData(); e.target.reset();
         }
-
-        window.deleteProgramMaster = function(id) {
-            window.appState.programs = window.appState.programs.filter(p => p.id !== id);
-            saveData();
-        }
-
+        window.deleteProgramMaster = function(id) { window.appState.programs = window.appState.programs.filter(p => p.id !== id); saveData(); }
+        
         window.uploadTeamStatusPoster = function(e) {
             e.preventDefault();
             const file = document.getElementById('status-file').files[0];
             if(file) {
                 const reader = new FileReader();
-                reader.onload = function(evt) {
-                    window.appState.teamStatusUrl = evt.target.result;
-                    saveData();
-                    alert("Status Uploaded!");
-                }
+                reader.onload = function(evt) { window.appState.teamStatusUrl = evt.target.result; saveData(); alert("Status Poster Uploaded!"); }
                 reader.readAsDataURL(file);
             }
         }
-
-        window.deleteStatusMaster = function() {
-            window.appState.teamStatusUrl = '';
-            saveData();
-        }
-
+        window.deleteStatusMaster = function() { window.appState.teamStatusUrl = ''; saveData(); }
+        
         window.populateResProgDropdown = function() {
             const cat = document.getElementById('res-upload-cat').value;
             const drop = document.getElementById('res-upload-prog');
@@ -724,7 +1049,6 @@
         window.uploadProgramResult = function(e) {
             e.preventDefault();
             const progId = document.getElementById('res-upload-prog').value;
-            const file = document.getElementById('res-file').value;
             const yt = document.getElementById('res-yt-url').value.trim();
             const fileEl = document.getElementById('res-file').files[0];
 
@@ -733,17 +1057,13 @@
                 reader.onload = function(evt) {
                     window.appState.results = window.appState.results.filter(r => r.progId !== progId);
                     window.appState.results.push({ progId, poster: evt.target.result, youtube: yt });
-                    saveData();
-                    alert("Result published successfully!");
+                    saveData(); alert("Result poster published!");
                 }
                 reader.readAsDataURL(fileEl);
             }
         }
 
-        window.deleteResultMaster = function(progId) {
-            window.appState.results = window.appState.results.filter(r => r.progId !== progId);
-            saveData();
-        }
+        window.deleteResultMaster = function(progId) { window.appState.results = window.appState.results.filter(r => r.progId !== progId); saveData(); }
 
         window.uploadUpdateFeed = function(e) {
             e.preventDefault();
@@ -754,23 +1074,15 @@
                 const f = document.getElementById('up-file').files[0];
                 if(f) {
                     const reader = new FileReader();
-                    reader.onload = function(evt) {
-                        window.appState.updates.push({ id:'up_'+Date.now(), title, type, url: evt.target.result });
-                        saveData(); alert("Update Added!");
-                    }
+                    reader.onload = function(evt) { window.appState.updates.push({ id:'up_'+Date.now(), title, type, url: evt.target.result }); saveData(); alert("Update Added!"); }
                     reader.readAsDataURL(f);
                 }
             } else {
                 const url = document.getElementById('up-video').value.trim();
-                window.appState.updates.push({ id:'up_'+Date.now(), title, type, url });
-                saveData(); alert("Update Added!");
+                window.appState.updates.push({ id:'up_'+Date.now(), title, type, url }); saveData(); alert("Update Added!");
             }
         }
-
-        window.deleteUpdateMaster = function(id) {
-            window.appState.updates = window.appState.updates.filter(u => u.id !== id);
-            saveData();
-        }
+        window.deleteUpdateMaster = function(id) { window.appState.updates = window.appState.updates.filter(u => u.id !== id); saveData(); }
 
         window.uploadStreamLinks = function(e) {
             e.preventDefault();
@@ -785,28 +1097,20 @@
                     const obj = { title, url, thumb: evt.target.result };
                     if(mode === 'live') window.appState.livelinks.push(obj);
                     else window.appState.highlights.push(obj);
-                    saveData();
-                    alert("Link Uploaded!");
+                    saveData(); alert("Reference Added!");
                 }
                 reader.readAsDataURL(thumbFile);
             }
         }
 
-        window.deleteStreamMaster = function(idx, mode) {
-            if(mode === 'live') window.appState.livelinks.splice(idx, 1);
-            else window.appState.highlights.splice(idx, 1);
-            saveData();
-        }
-
         function syncControlPanelViews() {
-            // Lock Status Button text
             const btn = document.getElementById('lock-reg-btn');
             if(btn) {
                 btn.innerText = window.appState.portalOpen ? "Lock Registration" : "Unlock Registration";
                 btn.className = window.appState.portalOpen ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
             }
+            document.getElementById('m-max-limit-input').value = window.appState.maxProgLimit;
 
-            // Master lists sync
             const tBox = document.getElementById('master-teams-list');
             if(tBox) tBox.innerHTML = window.appState.teams.map((t, idx) => `<div>${t.user} <button class="btn btn-danger btn-sm" onclick="deleteTeamMaster(${idx})">x</button></div>`).join('');
 
@@ -819,13 +1123,12 @@
             const rBox = document.getElementById('master-results-list');
             if(rBox) rBox.innerHTML = window.appState.results.map(r => {
                 const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Unknown' };
-                return `<div>Result: ${p.name} <button class="btn btn-danger btn-sm" onclick="deleteResultMaster('${r.progId}')">x</button></div>`;
+                return `<div>Result Poster: ${p.name} <button class="btn btn-danger btn-sm" onclick="deleteResultMaster('${r.progId}')">x</button></div>`;
             }).join('');
 
             const uBox = document.getElementById('master-updates-list');
-            if(uBox) uBox.innerHTML = window.appState.updates.map(u => `<div>Update: ${u.title} <button class="btn btn-danger btn-sm" onclick="deleteUpdateMaster('${u.id}')">x</button></div>`).join('');
+            if(uBox) uBox.innerHTML = window.appState.updates.map(u => `<div>Update Block: ${u.title} <button class="btn btn-danger btn-sm" onclick="deleteUpdateMaster('${u.id}')">x</button></div>`).join('');
 
-            // Fill Dropdowns inside report view
             const rTeam = document.getElementById('rep-team');
             if(rTeam && rTeam.children.length === 1) {
                 rTeam.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
@@ -852,10 +1155,10 @@
                     rows += `<tr><td>${name}</td><td><strong>${r.team}</strong></td><td>${r.cat}</td><td>${p.name}</td><td>${p.stage}</td></tr>`;
                 });
             });
-            tbody.innerHTML = rows || '<tr><td colspan="5">No registration logs matching conditions.</td></tr>';
+            tbody.innerHTML = rows || '<tr><td colspan="5">No registration configurations mapping parameters.</td></tr>';
         }
 
-        /* RESULT FEEDS RENDERING */
+        /* RESULT INTERFACE VISUALIZATIONS */
         function renderResultPhaseFeeds() {
             const statusBox = document.getElementById('team-status-poster-box');
             if(window.appState.teamStatusUrl) {
@@ -867,21 +1170,21 @@
             } else { statusBox.innerHTML = '<p>No Status Posted Yet.</p>'; }
 
             filterResultPrograms();
-            renderPinterestUpdates();
+            renderPinterestUpdates('all');
 
-            document.getElementById('livelink-feed').innerHTML = window.appState.livelinks.map((l, idx) => `
+            document.getElementById('livelink-feed').innerHTML = window.appState.livelinks.map(l => `
                 <div style="margin-bottom:15px; text-align:center;">
                     <h4>${l.title}</h4>
                     <a href="${l.url}" target="_blank"><img src="${l.thumb}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px; margin-top:5px;"></a>
                 </div>
-            `).join('') || '<p>No Active Live Streams.</p>';
+            `).join('') || '<p>No Active Streams.</p>';
 
-            document.getElementById('highlights-feed').innerHTML = window.appState.highlights.map((h, idx) => `
+            document.getElementById('highlights-feed').innerHTML = window.appState.highlights.map(h => `
                 <div style="margin-bottom:15px; text-align:center;">
                     <h4>${h.title}</h4>
                     <a href="${h.url}" target="_blank"><img src="${h.thumb}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px; margin-top:5px;"></a>
                 </div>
-            `).join('') || '<p>No Highlights Available.</p>';
+            `).join('') || '<p>No Highlights Added.</p>';
         }
 
         window.filterResultPrograms = function() {
@@ -903,7 +1206,7 @@
                                 <button class="btn btn-sm btn-success btn-block" onclick="triggerPopit('${res.poster}')">Pop Animation View</button>
                                 ${res.youtube ? `<div style="margin-top:8px;"><a href="${res.youtube}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-brands fa-youtube"></i> Watch Video</a></div>` : ''}
                             </div>
-                        ` : '<p style="color:gray; font-size:0.85rem; margin-top:5px;">Result Not Uploaded</p>'}
+                        ` : '<p style="color:gray; font-size:0.85rem; margin-top:5px;">Result Pending</p>'}
                     </div>
                 `;
             }).join('');
@@ -915,9 +1218,16 @@
             w.document.write(`<body style="margin:0; background:#111; display:flex; justify-content:center; align-items:center; height:100vh;"><img src="${imgData}" style="max-width:100%; max-height:100vh; object-fit:contain;"></body>`);
         }
 
-        function renderPinterestUpdates() {
+        window.renderPinterestUpdates = function(filterMode) {
             const feed = document.getElementById('live-updates-feed');
-            feed.innerHTML = window.appState.updates.map(u => `
+            if(!feed) return;
+            
+            const targetUpdates = window.appState.updates.filter(u => {
+                if(filterMode === 'all') return true;
+                return u.type === filterMode;
+            });
+
+            feed.innerHTML = targetUpdates.map(u => `
                 <div class="pinterest-item">
                     ${u.type === 'photo' ? `
                         <div class="poster-container" style="width:100%;">
@@ -928,10 +1238,10 @@
                     `}
                     <h5 style="margin-top:5px; font-weight:700;">${u.title}</h5>
                 </div>
-            `).join('') || '<p style="grid-column:1/-1;">No recent activity stream updates.</p>';
+            `).join('') || '<p style="grid-column:1/-1;">No updates cataloged under selection profile.</p>';
         }
 
-        // Initial Boot
+        // Boot Initial Menu Allocation
         render3DotMenu();
     </script>
 </body>
