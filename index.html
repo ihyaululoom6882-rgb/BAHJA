@@ -4,108 +4,233 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BAHJA 2026 - DAWA FEST</title>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts import -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Montserrat:wght@400;700;900&family=Open+Sans:wght@400;700&family=Poppins:wght@400;600;800&family=Roboto:wght@400;700&display=swap">
+    <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
     <style>
         :root {
-            --primary-blue: #007bff;
-            --dark-blue: #0056b3;
-            --bg-light: #fdfbf7;
-            --card-bg: #ffffff;
-            --text-dark: #2d3748;
-            --border-color: #e2e8f0;
+            --primary-gold: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            --gold-btn: linear-gradient(180deg, #e6c875 0%, #d4af37 50%, #aa820a 100%);
+            --bg-dark-mesh: radial-gradient(circle at 20% 20%, #2a2d32 0%, #111315 100%);
+            --glass-card-bg: rgba(255, 255, 255, 0.05);
+            --glass-card-border: rgba(255, 255, 255, 0.12);
+            --glass-modal-bg: rgba(28, 30, 34, 0.85);
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.15);
+            --main-font: 'Poppins', sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-dark); padding-bottom: 50px; position: relative; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--main-font); }
+        
+        body { 
+            background: var(--bg-dark-mesh); 
+            background-attachment: fixed;
+            color: var(--text-light); 
+            padding-bottom: 50px; 
+            min-height: 100vh;
+            position: relative; 
+        }
 
-        .corner-logo { position: absolute; top: 15px; left: 15px; max-height: 70px; display: none; z-index: 99; }
+        /* Dynamic Logo Positioning System */
+        .corner-logo { 
+            position: fixed; 
+            z-index: 99; 
+            display: none; 
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
 
-        /* Enhanced Header Style matching image palette */
-        .header-title { text-align: center; padding: 40px 20px 20px 20px; }
-        .header-title p { color: #517154; font-size: 1.4rem; margin-bottom: 5px; font-weight: 800; letter-spacing: 3px; text-shadow: 1px 1px 2px rgba(0,0,0,0.05); }
-        .header-title h1 { font-size: 3.2rem; color: #1e293b; font-weight: 900; letter-spacing: 2px; }
+        .logo-top-left { top: 15px; left: 15px; }
+        .logo-top-right { top: 15px; right: 75px; }
+        .logo-bottom-left { bottom: 15px; left: 15px; }
+        .logo-bottom-right { bottom: 15px; right: 15px; }
+        .logo-top-center { top: 15px; left: 50%; transform: translateX(-50%); }
 
-        .menu-btn-container { position: fixed; top: 20px; right: 25px; z-index: 1000; }
-        .dots-btn { background: white; border: 1px solid #ddd; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
-        .dropdown-menu { display: none; position: absolute; right: 0; top: 50px; background: white; min-width: 220px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border-radius: 12px; overflow: hidden; z-index: 1001; }
+        /* Header Styling */
+        .header-title { text-align: center; padding: 35px 20px 15px 20px; }
+        .header-title p { font-size: 1.1rem; margin-bottom: 6px; font-weight: 700; letter-spacing: 3px; color: #cbd5e1; }
+        .header-title h1 { font-size: 2.8rem; font-weight: 900; letter-spacing: 2px; color: #ffffff; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+
+        .menu-btn-container { position: fixed; top: 15px; right: 15px; z-index: 1000; }
+        .dots-btn { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-card-border); 
+            width: 44px; height: 44px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+            display: flex; align-items: center; justify-content: justify; justify-content: center; 
+            font-size: 1.2rem; color: #ffffff;
+        }
+        
+        .dropdown-menu { 
+            display: none; position: absolute; right: 0; top: 55px; 
+            background: rgba(22, 24, 28, 0.95); 
+            backdrop-filter: blur(20px);
+            min-width: 230px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            border-radius: 18px; overflow: hidden; z-index: 1001; 
+            border: 1px solid var(--glass-card-border);
+        }
         .dropdown-menu.show { display: block; }
-        .dropdown-menu button { width: 100%; padding: 13px 18px; border: none; background: none; text-align: left; cursor: pointer; font-size: 0.95rem; color: #333; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f3f4f6; font-weight: 600; }
-        .dropdown-menu button:hover { background-color: #f1f5f9; color: var(--primary-blue); }
+        .dropdown-menu button { 
+            width: 100%; padding: 13px 18px; border: none; background: none; 
+            text-align: left; cursor: pointer; font-size: 0.9rem; color: #e2e8f0; 
+            display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-weight: 600; 
+        }
+        .dropdown-menu button:hover { background-color: rgba(255,255,255,0.08); color: #f6d365; }
 
-        .container { max-width: 850px; margin: 20px auto; padding: 0 15px; }
-        .card { background: var(--card-bg); border-radius: 20px; padding: 30px; box-shadow: 0 4px 25px rgba(0,0,0,0.04); margin-bottom: 20px; border: 1px solid #f1f5f9; }
+        /* Container & Dark Glass Card Styling */
+        .container { max-width: 450px; margin: 10px auto; padding: 0 14px; }
+        
+        .card { 
+            background: var(--glass-card-bg); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px; 
+            padding: 22px 18px; 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); 
+            margin-bottom: 20px; 
+            border: 1px solid var(--glass-card-border); 
+        }
         
         .view-panel { display: none; }
         .active-panel { display: block; }
 
         .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 700; font-size: 0.88rem; color: #4a5568; }
-        .form-control { width: 100%; padding: 12px 14px; border: 1px solid #cbd5e1; border-radius: 10px; outline: none; font-size: 0.95rem; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; color: #cbd5e1; }
+        .form-control { 
+            width: 100%; padding: 12px 14px; 
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color); 
+            border-radius: 12px; outline: none; font-size: 0.95rem; color: #fff;
+        }
+        .form-control::placeholder { color: #64748b; }
         
-        .btn { background-color: var(--primary-blue); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.95rem; display: inline-block; text-align: center; transition: 0.2s; }
-        .btn:hover { background-color: var(--dark-blue); }
+        /* Dark Metallic Gold Buttons Matching Login Reference Image */
+        .btn { 
+            background: var(--gold-btn); color: #1e1e1e; border: none; 
+            padding: 12px 20px; border-radius: 14px; cursor: pointer; 
+            font-weight: 800; font-size: 0.95rem; display: inline-block; text-align: center; transition: 0.2s; 
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
         .btn-block { width: 100%; }
-        .btn-xl { padding: 18px 25px; font-size: 1.2rem; }
-        .btn-danger { background-color: #ef4444; } .btn-danger:hover { background-color: #dc2626; }
-        .btn-success { background-color: #22c55e; } .btn-success:hover { background-color: #16a34a; }
-        .btn-warning { background-color: #eab308; color: white; } .btn-warning:hover { background-color: #ca8a04; }
-        .btn-sm { padding: 7px 14px; font-size: 0.82rem; border-radius: 8px; }
+        .btn-xl { padding: 16px 20px; font-size: 1.1rem; }
+        .btn-danger { background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%); color: white; box-shadow: none; }
+        .btn-success { background: linear-gradient(180deg, #10b981 0%, #047857 100%); color: white; box-shadow: none; }
+        .btn-warning { background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%); color: white; box-shadow: none; }
+        .btn-sm { padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; }
 
-        /* Premium Pill Menu Layout exactly like user-provided image */
-        .result-menu-box { display: flex; flex-direction: column; gap: 18px; margin-top: 20px; }
-        .pill-menu-btn { display: flex; align-items: center; justify-content: space-between; border: none; padding: 22px 28px; border-radius: 50px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; position: relative; }
-        .pill-menu-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.05); }
-        .pill-left-content { display: flex; align-items: center; gap: 20px; }
-        .pill-icon-circle { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; background: rgba(255,255,255,0.7); }
+        /* Curved Pill Menu Layout Exactly Matching Reference Image */
+        .result-menu-box { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
+        .pill-menu-btn { 
+            display: flex; align-items: center; justify-content: space-between; 
+            border: none; padding: 18px 22px; border-radius: 50px; cursor: pointer; 
+            transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .pill-menu-btn:active { transform: scale(0.98); }
+        .pill-left-content { display: flex; align-items: center; gap: 16px; }
+        .pill-icon-circle { 
+            width: 46px; height: 46px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 1.25rem; background: rgba(255,255,255,0.85); 
+        }
         .pill-text-wrapper { text-align: left; }
-        .pill-title { font-size: 1.35rem; font-weight: 700; color: #1e293b; margin-bottom: 2px; }
-        .pill-desc { font-size: 0.88rem; color: #64748b; font-weight: 500; }
-        .pill-arrow { font-size: 1.2rem; color: #475569; }
+        .pill-title { font-size: 1.15rem; font-weight: 800; color: #0f172a; line-height: 1.2; }
+        .pill-desc { font-size: 0.78rem; color: #475569; font-weight: 500; margin-top: 3px; }
+        .pill-arrow { font-size: 1.1rem; color: #334155; }
 
-        /* Dynamic Background Color Palette for Pills from image */
-        .pill-green { background-color: #e3ebd6; } .pill-green .pill-icon-circle { color: #436d47; }
-        .pill-yellow { background-color: #f7edd4; } .pill-yellow .pill-icon-circle { color: #c28838; }
-        .pill-pink { background-color: #f9f0ed; } .pill-pink .pill-icon-circle { color: #b45349; }
+        .pill-green { background-color: #e2ebd8; } .pill-green .pill-icon-circle { color: #355e3b; }
+        .pill-yellow { background-color: #f7edd4; } .pill-yellow .pill-icon-circle { color: #b45309; }
+        .pill-pink { background-color: #fdf0ed; } .pill-pink .pill-icon-circle { color: #be123c; }
         .pill-blue { background-color: #e0f2fe; } .pill-blue .pill-icon-circle { color: #0369a1; }
-        .pill-purple { background-color: #f3e8ff; } .pill-purple .pill-icon-circle { color: #6b21a8; }
+        .pill-purple { background-color: #f3e8ff; } .pill-purple .pill-icon-circle { color: #7e22ce; }
 
-        .pinterest-grid { columns: 2; column-gap: 15px; margin-top: 20px; }
-        .pinterest-item { break-inside: avoid; background: white; border-radius: 14px; padding: 12px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; text-align: center; }
-        .pinterest-media { width: 100%; border-radius: 10px; display: block; margin-bottom: 8px; }
+        /* Gallery Cards */
+        .updates-grid { display: flex; flex-direction: column; gap: 16px; margin-top: 15px; }
+        .update-card { 
+            background: rgba(0,0,0,0.4); border-radius: 18px; padding: 14px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3); border: 1px solid var(--border-color); 
+            position: relative;
+        }
+        .update-media { width: 100%; border-radius: 12px; display: block; object-fit: cover; }
 
-        .collapsible-header { background: #f1f5f9; padding: 14px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border: 1px solid #e2e8f0; }
+        .collapsible-header { 
+            background: rgba(255, 255, 255, 0.08); padding: 12px 16px; border-radius: 12px; 
+            font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; 
+            align-items: center; margin-top: 12px; border: 1px solid var(--border-color); font-size: 0.9rem;
+        }
 
         .table-responsive { width: 100%; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        th { background-color: #f8fafc; font-weight: 700; color: #475569; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; color: #e2e8f0; }
+        th { background-color: rgba(255, 255, 255, 0.05); font-weight: 700; color: #cbd5e1; }
 
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-box { background: white; width: 90%; max-width: 450px; padding: 30px; border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .modal-overlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); z-index: 2000; 
+            justify-content: center; align-items: center; padding: 15px;
+        }
+        .modal-box { 
+            background: var(--glass-modal-bg); 
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-card-border);
+            width: 100%; max-width: 380px; padding: 26px; 
+            border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); 
+        }
 
-        .poster-container { position: relative; display: inline-block; max-width: 100%; margin-top: 10px; }
-        .download-btn { background: #1e293b; color: white; padding: 10px 16px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 700; display: inline-inline-block; margin-top: 8px; transition: 0.2s; border: none; cursor: pointer; }
-        .download-btn:hover { background: #0f172a; }
-        .inline-dl-btn { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.75); color: white; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; text-decoration: none; }
+        .poster-container { position: relative; width: 100%; margin-top: 8px; text-align: center; }
+        
+        .card-action-bar { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08); 
+        }
+        .card-dots-menu { position: relative; }
+        .card-dots-btn { 
+            background: rgba(255,255,255,0.1); border: none; width: 32px; height: 32px; 
+            border-radius: 50%; cursor: pointer; color: #cbd5e1; 
+        }
+        .card-menu-pop { 
+            display: none; position: absolute; right: 0; bottom: 38px; 
+            background: #1e293b; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+            width: 150px; z-index: 10; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;
+        }
+        .card-menu-pop.show { display: block; }
+        .card-menu-pop button { 
+            width: 100%; padding: 10px 12px; border: none; background: none; 
+            text-align: left; font-size: 0.8rem; cursor: pointer; color: #e2e8f0; 
+            display: flex; align-items: center; gap: 8px; font-weight: 600;
+        }
+        .card-menu-pop button:hover { background: rgba(255,255,255,0.1); color: #f6d365; }
 
-        .interactive-row { cursor: pointer; transition: 0.2s; }
-        .interactive-row:hover { background-color: #f8fafc !important; }
+        .inline-res-display { 
+            background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); padding: 12px; 
+            border-radius: 14px; margin-top: 10px; text-align: center; 
+        }
 
-        .inline-res-display { background: #ffffff; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; margin-top: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .collapsible-box { display: none; margin-top: 10px; }
+        .collapsible-box.show { display: block; }
 
         @media print {
             body * { visibility: hidden; }
             #print-area, #print-area * { visibility: visible; }
-            #print-area { position: absolute; left: 0; top: 0; width: 100%; }
+            #print-area { position: absolute; left: 0; top: 0; width: 100%; color: black; }
             .no-print { display: none !important; }
         }
     </style>
 </head>
 <body>
 
-    <img id="corner-logo-view" class="corner-logo" src="" alt="Logo">
+    <!-- Dynamic Positioned Logo -->
+    <img id="corner-logo-view" class="corner-logo logo-top-left" src="" alt="Logo">
 
     <div class="header-title" id="editable-header-area">
         <p id="txt-welcome-banner">WELCOME TO BAHJA FEST</p>
@@ -123,8 +248,8 @@
         <div id="panel-home" class="view-panel active-panel card">
             <!-- REGISTER PHASE -->
             <div id="home-phase-register" style="display: none;">
-                <div id="team-login-block" style="max-width: 450px; margin: 0 auto; text-align: center;">
-                    <h2 style="color: #0056b3; margin-bottom: 20px;">Team Leader Login</h2>
+                <div id="team-login-block" style="text-align: center;">
+                    <h3 style="color: #f6d365; margin-bottom: 15px;">Team Leader Login</h3>
                     <form onsubmit="handleTeamLogin(event)">
                         <div class="form-group" style="text-align: left;">
                             <label>Team Username</label>
@@ -134,18 +259,18 @@
                             <label>Password</label>
                             <input type="password" id="login-team-pass" class="form-control" required>
                         </div>
-                        <button type="submit" class="btn btn-block">Login to Portal</button>
+                        <button type="submit" class="btn btn-block">Sign In</button>
                     </form>
                 </div>
 
                 <div id="team-portal-block" style="display: none;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; background: #e0f2fe; padding: 12px 18px; border-radius: 8px; margin-bottom: 20px;">
-                        <span>Team: <strong id="logged-team-name" style="color: var(--primary-blue);"></strong></span>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.08); padding: 12px 15px; border-radius: 12px; margin-bottom: 15px;">
+                        <span style="font-size:0.9rem;">Team: <strong id="logged-team-name" style="color: #f6d365;"></strong></span>
                         <button class="btn btn-danger btn-sm" onclick="logoutTeam()">Logout</button>
                     </div>
 
                     <h3>Program Registration</h3>
-                    <div class="form-group" style="margin-top: 15px;">
+                    <div class="form-group" style="margin-top: 12px;">
                         <label>Select Category</label>
                         <select id="reg-cat-select" class="form-control" onchange="loadCategoryPrograms()">
                             <option value="">-- Choose Category --</option>
@@ -156,11 +281,11 @@
                             <option value="SUPER ZONE">SUPER ZONE</option>
                         </select>
                     </div>
-                    <div id="category-programs-container" style="margin-top: 20px;"></div>
+                    <div id="category-programs-container" style="margin-top: 15px;"></div>
                 </div>
             </div>
 
-            <!-- RESULT PHASE (Pill Box Styles Matching Image) -->
+            <!-- RESULT PHASE (Pill Box Styles Matching Photo 2) -->
             <div id="home-phase-result" style="display: none;">
                 <div class="result-menu-box">
                     <button class="pill-menu-btn pill-green" onclick="openSection('section-team-states')">
@@ -168,10 +293,10 @@
                             <div class="pill-icon-circle"><i class="fa-solid fa-flag"></i></div>
                             <div class="pill-text-wrapper">
                                 <div class="pill-title">TEAM STATUS</div>
-                                <div class="pill-desc">Announcements and current standings first.</div>
+                                <div class="pill-desc">Current standings and scores</div>
                             </div>
                         </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
                     </button>
 
                     <button class="pill-menu-btn pill-yellow" onclick="openSection('section-results-view')">
@@ -179,10 +304,10 @@
                             <div class="pill-icon-circle"><i class="fa-solid fa-trophy"></i></div>
                             <div class="pill-text-wrapper">
                                 <div class="pill-title">RESULT</div>
-                                <div class="pill-desc">See rounds finished and if you placed.</div>
+                                <div class="pill-desc">Finished rounds & winners</div>
                             </div>
                         </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
                     </button>
 
                     <button class="pill-menu-btn pill-pink" onclick="openSection('section-updates')">
@@ -190,10 +315,10 @@
                             <div class="pill-icon-circle"><i class="fa-solid fa-bolt"></i></div>
                             <div class="pill-text-wrapper">
                                 <div class="pill-title">UPDATES</div>
-                                <div class="pill-desc">Recent activity, media gallery items stream.</div>
+                                <div class="pill-desc">Recent photos & video feed</div>
                             </div>
                         </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
                     </button>
 
                     <button class="pill-menu-btn pill-blue" onclick="openSection('section-livelink')">
@@ -201,10 +326,10 @@
                             <div class="pill-icon-circle"><i class="fa-solid fa-video"></i></div>
                             <div class="pill-text-wrapper">
                                 <div class="pill-title">LIVE STREAMING</div>
-                                <div class="pill-desc">Watch broadcast programs live from venue.</div>
+                                <div class="pill-desc">Watch stage programs live</div>
                             </div>
                         </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
                     </button>
 
                     <button class="pill-menu-btn pill-purple" onclick="openSection('section-highlights')">
@@ -212,10 +337,10 @@
                             <div class="pill-icon-circle"><i class="fa-solid fa-star"></i></div>
                             <div class="pill-text-wrapper">
                                 <div class="pill-title">HIGHLIGHTS</div>
-                                <div class="pill-desc">Special event photos and compilation videos.</div>
+                                <div class="pill-desc">Special moments & reels</div>
                             </div>
                         </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
                     </button>
                 </div>
             </div>
@@ -223,15 +348,15 @@
 
         <!-- TEAM STATUS -->
         <div id="section-team-states" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 15px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h2 style="color: #0056b3; margin-bottom: 15px;">Team Status</h2>
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h3 style="color: #f6d365; margin-bottom: 12px;">Team Status</h3>
             <div id="team-status-poster-box" style="text-align: center;"></div>
         </div>
 
-        <!-- RESULT VIEW (Enhanced with Inline Placement + Auto Popit Animation on View) -->
+        <!-- RESULT VIEW -->
         <div id="section-results-view" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 15px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h2 style="color: #0056b3; margin-bottom: 15px;">Program Results</h2>
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h3 style="color: #f6d365; margin-bottom: 12px;">Program Results</h3>
             <div class="form-group">
                 <select id="res-search-cat" class="form-control" onchange="filterResultPrograms()">
                     <option value="">-- Select Category --</option>
@@ -247,45 +372,45 @@
 
         <!-- UPDATES GALLERY -->
         <div id="section-updates" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 15px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h2 style="color: #0056b3; margin-bottom: 15px;">Updates & Gallery</h2>
-            <div style="display:flex; gap:10px; margin-bottom:15px;" class="no-print">
-                <button class="btn btn-sm btn-warning" onclick="renderPinterestUpdates('all')">Show All</button>
-                <button class="btn btn-sm btn-primary" onclick="renderPinterestUpdates('photo')">Photos Only</button>
-                <button class="btn btn-sm btn-success" onclick="renderPinterestUpdates('video')">Videos Only</button>
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h3 style="color: #f6d365; margin-bottom: 12px;">Updates & Gallery</h3>
+            <div style="display:flex; gap:8px; margin-bottom:12px;" class="no-print">
+                <button class="btn btn-sm btn-warning" onclick="renderPinterestUpdates('all')">All</button>
+                <button class="btn btn-sm btn-primary" onclick="renderPinterestUpdates('photo')">Photos</button>
+                <button class="btn btn-sm btn-success" onclick="renderPinterestUpdates('video')">Videos</button>
             </div>
-            <div id="live-updates-feed" class="pinterest-grid"></div>
+            <div id="live-updates-feed" class="updates-grid"></div>
         </div>
 
         <!-- LIVE STREAM -->
         <div id="section-livelink" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 15px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h2 style="color: #0056b3; margin-bottom: 15px;">Live Streams</h2>
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h3 style="color: #f6d365; margin-bottom: 12px;">Live Streams</h3>
             <div id="livelink-feed"></div>
         </div>
 
         <!-- HIGHLIGHTS -->
         <div id="section-highlights" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 15px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h2 style="color: #0056b3; margin-bottom: 15px;">Highlights</h2>
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h3 style="color: #f6d365; margin-bottom: 12px;">Highlights</h3>
             <div id="highlights-feed"></div>
         </div>
 
         <!-- PARTICIPANTS ENTRY DIRECTORY -->
         <div id="panel-participants-entry" class="view-panel card">
             <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h2 style="color: #0056b3; margin-top: 15px;">Add Team Participants</h2>
+            <h3 style="color: #f6d365; margin-top: 12px;">Add Team Participants</h3>
             
             <div id="part-login-block">
-                <form onsubmit="handlePartLogin(event)" style="margin-top: 15px;">
+                <form onsubmit="handlePartLogin(event)" style="margin-top: 12px;">
                     <div class="form-group"><label>Team Username</label><input type="text" id="part-user" class="form-control" required></div>
                     <div class="form-group"><label>Password</label><input type="password" id="part-pass" class="form-control" required></div>
                     <button type="submit" class="btn btn-block">Verify & Open</button>
                 </form>
             </div>
 
-            <div id="part-manage-block" style="display:none; margin-top:20px;">
-                <h4 style="margin-bottom:10px;">Team: <span id="part-active-team" style="color:blue;"></span></h4>
+            <div id="part-manage-block" style="display:none; margin-top:15px;">
+                <h4 style="margin-bottom:10px;">Team: <span id="part-active-team" style="color:#f6d365;"></span></h4>
                 <form onsubmit="addTeamParticipant(event)">
                     <div class="form-group">
                         <label>Category</label>
@@ -301,44 +426,64 @@
                         <label>Participant Name</label>
                         <input type="text" id="part-name" class="form-control" required>
                     </div>
-                    <button type="submit" class="btn btn-success">Add Student</button>
+                    <button type="submit" class="btn btn-success btn-block">Add Student</button>
                 </form>
-                <div id="team-students-list" style="margin-top:20px;"></div>
+                <div id="team-students-list" style="margin-top:15px;"></div>
             </div>
         </div>
 
         <!-- SYSTEM SETTINGS -->
         <div id="panel-settings" class="view-panel card">
-            <h2 style="color: #0056b3; margin-bottom: 20px;">System Settings</h2>
+            <h3 style="color: #f6d365; margin-bottom: 15px;">System Settings</h3>
             <form onsubmit="applyPhaseSettings(event)">
                 <div class="form-group">
-                    <label>Active Phase</label>
-                    <div style="display:flex; gap: 20px; align-items:center;">
+                    <label>Active Festival Phase</label>
+                    <div style="display:flex; gap: 15px; align-items:center;">
                         <label><input type="radio" name="phase-toggle" id="phase-reg-radio" value="register" onchange="togglePhaseControl('register')"> Registration Phase</label>
                         <label><input type="radio" name="phase-toggle" id="phase-res-radio" value="result" onchange="togglePhaseControl('result')"> Result Phase</label>
                     </div>
                 </div>
+                
+                <hr style="margin:15px 0; border:0; border-top:1px solid var(--border-color);">
+                
                 <div class="form-group">
                     <label>Upload Logo</label>
                     <input type="file" id="sys-logo-input" class="form-control" accept="image/*">
                 </div>
+
+                <div class="form-group">
+                    <label>Logo Placement Position</label>
+                    <select id="sys-logo-pos" class="form-control" onchange="updateLogoStylesLocally()">
+                        <option value="logo-top-left">Top Left Corner</option>
+                        <option value="logo-top-right">Top Right Corner</option>
+                        <option value="logo-top-center">Center Top</option>
+                        <option value="logo-bottom-left">Bottom Left</option>
+                        <option value="logo-bottom-right">Bottom Right</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Logo Size Height (px): <span id="logo-size-val">60</span>px</label>
+                    <input type="range" min="30" max="120" value="60" id="sys-logo-size" class="form-control" oninput="updateLogoStylesLocally()">
+                </div>
+
                 <button type="submit" class="btn btn-block">Save Phase & Logo Settings</button>
             </form>
-            <div id="logo-manage-box" style="margin-top:15px; display:none;">
-                <button class="btn btn-danger btn-sm" onclick="deleteSysLogo()">Delete Logo</button>
+            <div id="logo-manage-box" style="margin-top:12px; display:none;">
+                <button class="btn btn-danger btn-sm btn-block" onclick="deleteSysLogo()">Delete Current Logo</button>
             </div>
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
             <button class="btn btn-danger btn-block" onclick="clearAllDataSystem()">Clear All System Data</button>
         </div>
 
         <!-- POINTROOM PORTAL -->
         <div id="panel-pointroom" class="view-panel card">
-            <h2>Pointroom Management</h2>
-            <form onsubmit="savePointroomEntry(event)" style="margin-top:15px;">
+            <h3>Pointroom Management</h3>
+            <form onsubmit="savePointroomEntry(event)" style="margin-top:12px;">
                 <div class="form-group">
                     <label>Select Category</label>
                     <select id="pt-cat-select" class="form-control" onchange="populatePtProgs()" required>
-                        <option value="">-- Choose --</option>
+                        <option value="">-- Choose Category --</option>
                         <option value="GENERAL">GENERAL</option>
                         <option value="LOWER ZONE">LOWER ZONE</option>
                         <option value="MIDDLE ZONE">MIDDLE ZONE</option>
@@ -350,20 +495,20 @@
                     <label>Select Program</label>
                     <select id="pt-prog-select" class="form-control" onchange="loadPtParticipants()" required></select>
                 </div>
-                <div id="pt-stage-badge" style="margin-bottom:15px; font-weight:bold; color:#0056b3;"></div>
+                <div id="pt-stage-badge" style="margin-bottom:12px; font-weight:bold; color:#f6d365;"></div>
                 
-                <div id="pt-candidates-inputs" style="margin-bottom:15px;"></div>
+                <div id="pt-candidates-inputs" style="margin-bottom:12px;"></div>
                 <button type="submit" class="btn btn-success btn-block btn-xl">Submit Point Records</button>
             </form>
 
             <div class="collapsible-header" onclick="toggleAccordion('box-pt-list')"><span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
-            <div id="box-pt-list" style="display:none; margin-top:10px;"></div>
+            <div id="box-pt-list" class="collapsible-box"></div>
         </div>
 
         <!-- JUDGE PORTAL -->
         <div id="panel-judge" class="view-panel card">
-            <h2>Judge Evaluation Portal</h2>
-            <div class="form-group" style="margin-top:15px;">
+            <h3>Judge Evaluation Portal</h3>
+            <div class="form-group" style="margin-top:12px;">
                 <label>Filter Stage View</label>
                 <select id="jd-filter-stage" class="form-control" onchange="renderJudgeLeaderboard()">
                     <option value="all">ALL STAGES</option>
@@ -374,7 +519,7 @@
             <div class="table-responsive">
                 <table>
                     <thead>
-                        <tr><th>Student Name</th><th>Team</th><th>Category</th><th>Total Points</th></tr>
+                        <tr><th>Student Name</th><th>Team</th><th>Cat</th><th>Points</th></tr>
                     </thead>
                     <tbody id="judge-leaderboard-body"></tbody>
                 </table>
@@ -383,8 +528,8 @@
 
         <!-- STATES CONTROL -->
         <div id="panel-states-control" class="view-panel card">
-            <h2>States Control Dashboard</h2>
-            <div class="table-responsive" style="margin-top:15px;">
+            <h3>States Control Dashboard</h3>
+            <div class="table-responsive" style="margin-top:12px;">
                 <table>
                     <thead>
                         <tr><th>Team Username</th><th>Aggregated Points</th></tr>
@@ -396,33 +541,33 @@
 
         <!-- PROTECTION SYSTEM PANEL -->
         <div id="panel-protection" class="view-panel card">
-            <h2>Protection Settings Dashboard</h2>
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:15px; border-radius:12px; margin-top:15px;">
-                <h4>Change Main Login Credentials</h4>
-                <div class="form-group" style="margin-top:10px;">
-                    <input type="text" id="prot-old-main-u" class="form-control" placeholder="Current Username">
-                    <input type="password" id="prot-old-main-p" class="form-control" placeholder="Current Password">
-                    <button class="btn btn-sm btn-primary" onclick="verifyAndOpenMainCredShift()">Verify Current Credentials</button>
+            <h3>Protection Settings Dashboard</h3>
+            <div style="background:rgba(0,0,0,0.3); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:12px;">
+                <h4 style="font-size:0.95rem; color:#f6d365;">Change Main Login Credentials</h4>
+                <div class="form-group" style="margin-top:8px;">
+                    <input type="text" id="prot-old-main-u" class="form-control" placeholder="Current Username" style="margin-bottom:6px;">
+                    <input type="password" id="prot-old-main-p" class="form-control" placeholder="Current Password" style="margin-bottom:6px;">
+                    <button class="btn btn-sm btn-primary btn-block" onclick="verifyAndOpenMainCredShift()">Verify Credentials</button>
                 </div>
-                <div id="prot-new-main-block" style="display:none; margin-top:10px; border-top:1px dashed #ccc; padding-top:10px;">
+                <div id="prot-new-main-block" style="display:none; margin-top:8px; border-top:1px dashed #64748b; padding-top:8px;">
                     <div class="form-group">
-                        <input type="text" id="prot-new-main-u" class="form-control" placeholder="New Username">
-                        <input type="password" id="prot-new-main-p" class="form-control" placeholder="New Password">
-                        <button class="btn btn-sm btn-success" onclick="commitMainCredShift()">Save New Main Login</button>
+                        <input type="text" id="prot-new-main-u" class="form-control" placeholder="New Username" style="margin-bottom:6px;">
+                        <input type="password" id="prot-new-main-p" class="form-control" placeholder="New Password" style="margin-bottom:6px;">
+                        <button class="btn btn-sm btn-success btn-block" onclick="commitMainCredShift()">Save New Credentials</button>
                     </div>
                 </div>
             </div>
 
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:15px; border-radius:12px; margin-top:20px;">
-                <h4>Modify Sub-Panel Access Passwords</h4>
-                <div id="sub-panel-pass-managers-container" style="margin-top:10px; display:flex; flex-direction:column; gap:12px;"></div>
+            <div style="background:rgba(0,0,0,0.3); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:15px;">
+                <h4 style="font-size:0.95rem; color:#f6d365;">Modify Sub-Panel Access Passwords</h4>
+                <div id="sub-panel-pass-managers-container" style="margin-top:8px; display:flex; flex-direction:column; gap:10px;"></div>
             </div>
         </div>
 
         <!-- MODIFY CUSTOMIZATION PANEL -->
         <div id="panel-modify" class="view-panel card">
-            <h2>Modify Visual Layout & Typography</h2>
-            <div style="margin-top:15px; display:flex; flex-direction:column; gap:15px;">
+            <h3>Modify Visuals & Fonts</h3>
+            <div style="margin-top:12px; display:flex; flex-direction:column; gap:12px;">
                 <div class="form-group">
                     <label>Welcome Banner Text</label>
                     <input type="text" id="mod-banner-text" class="form-control" oninput="liveUpdateVisuals()">
@@ -432,56 +577,71 @@
                     <input type="text" id="mod-title-text" class="form-control" oninput="liveUpdateVisuals()">
                 </div>
                 <div class="form-group">
+                    <label>Font Style Typography</label>
+                    <select id="mod-font-family" class="form-control" onchange="liveUpdateVisuals()">
+                        <option value="'Poppins', sans-serif">Poppins (Modern)</option>
+                        <option value="'Inter', sans-serif">Inter (Clean)</option>
+                        <option value="'Montserrat', sans-serif">Montserrat (Bold)</option>
+                        <option value="'Roboto', sans-serif">Roboto</option>
+                        <option value="'Open Sans', sans-serif">Open Sans</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>Welcome Banner Color</label>
-                    <input type="color" id="mod-banner-color" onchange="liveUpdateVisuals()">
+                    <input type="color" id="mod-banner-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;">
                 </div>
                 <div class="form-group">
                     <label>Main Title Color</label>
-                    <input type="color" id="mod-title-color" onchange="liveUpdateVisuals()">
+                    <input type="color" id="mod-title-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;">
                 </div>
                 <div class="form-group">
                     <label>Welcome Banner Font Size (rem)</label>
-                    <input type="range" min="1" max="4" step="0.1" id="mod-banner-size" oninput="liveUpdateVisuals()">
+                    <input type="range" min="0.8" max="2.5" step="0.1" id="mod-banner-size" class="form-control" oninput="liveUpdateVisuals()">
                 </div>
                 <div class="form-group">
                     <label>Main Title Font Size (rem)</label>
-                    <input type="range" min="1" max="5" step="0.1" id="mod-title-size" oninput="liveUpdateVisuals()">
+                    <input type="range" min="1.5" max="4.5" step="0.1" id="mod-title-size" class="form-control" oninput="liveUpdateVisuals()">
                 </div>
-                <button class="btn btn-success" onclick="saveVisualLayoutState()">Save Appearance Layout Changes</button>
+                <button class="btn btn-success" onclick="saveVisualLayoutState()">Save Appearance Layout</button>
             </div>
         </div>
 
         <!-- CONTROL PANEL -->
         <div id="panel-control-panel" class="view-panel card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2>Committee Control Panel</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3>Committee Control Panel</h3>
                 <button class="btn btn-danger btn-sm" onclick="navHome()">Exit</button>
             </div>
 
-            <div class="collapsible-header" onclick="toggleAccordion('box-reg-control')"><span>1. REGISTRATION CONTROL</span> <i class="fa-solid fa-chevron-down"></i></div>
-            <div id="box-reg-control" style="display:none; padding:15px; background:#f8fafc; border-radius:8px; margin-top:10px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; background:white; padding:10px; border-radius:6px; border:1px solid #ddd; margin-bottom:15px;">
-                    <span>Registration Lock Status:</span>
+            <!-- REGISTRATION CONTROL -->
+            <div class="collapsible-header" onclick="toggleAccordion('box-reg-control')">
+                <span>1. REGISTRATION CONTROL</span> <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div id="box-reg-control" class="collapsible-box" style="padding:12px; background:rgba(0,0,0,0.3); border-radius:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:12px;">
+                    <span style="font-size:0.85rem;">Registration Lock:</span>
                     <button id="lock-reg-btn" class="btn btn-sm" onclick="toggleRegLock()"></button>
                 </div>
                 
-                <div class="form-group" style="background:white; padding:10px; border-radius:6px; border:1px solid #ddd;">
-                    <label>Max Non-General Programs Per Student</label>
+                <div class="form-group" style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; border:1px solid var(--border-color);">
+                    <label>Max Items Per Student (Non-General)</label>
                     <input type="number" id="m-max-limit-input" class="form-control" value="3">
                     <button class="btn btn-sm btn-primary" style="margin-top:5px;" onclick="saveMaxLimitMaster()">Set Limit</button>
                 </div>
                 
-                <h4 style="margin-top:15px;">Add Team Credentials</h4>
-                <form onsubmit="addTeamMaster(event)" style="margin-top:10px; display:flex; gap:10px; margin-bottom:15px;">
-                    <input type="text" id="m-team-user" class="form-control" placeholder="Username" required>
-                    <input type="password" id="m-team-pass" class="form-control" placeholder="Password" required>
-                    <button type="submit" class="btn btn-success">Add Team</button>
-                </form>
-                <div id="master-teams-list" style="margin-bottom:20px;"></div>
+                <div class="collapsible-header" onclick="toggleAccordion('inner-teams-box')"><span>Teams Credentials Manager</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="inner-teams-box" class="collapsible-box">
+                    <form onsubmit="addTeamMaster(event)" style="display:flex; flex-direction:column; gap:6px; margin-bottom:10px;">
+                        <input type="text" id="m-team-user" class="form-control" placeholder="Username" required>
+                        <input type="password" id="m-team-pass" class="form-control" placeholder="Password" required>
+                        <button type="submit" class="btn btn-sm btn-success">Add Team</button>
+                    </form>
+                    <div id="master-teams-list"></div>
+                </div>
 
-                <h4>Add Program</h4>
-                <form onsubmit="addProgramMaster(event)" style="margin-top:10px;">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+                <div class="collapsible-header" onclick="toggleAccordion('inner-progs-box')"><span>Programs Master List</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="inner-progs-box" class="collapsible-box">
+                    <form onsubmit="addProgramMaster(event)" style="display:flex; flex-direction:column; gap:6px;">
                         <input type="text" id="m-prog-name" class="form-control" placeholder="Program Name" required>
                         <select id="m-prog-cat" class="form-control">
                             <option value="GENERAL">GENERAL</option>
@@ -494,24 +654,19 @@
                             <option value="ON STAGE">ON STAGE</option>
                             <option value="OFF STAGE">OFF STAGE</option>
                         </select>
-                        <input type="number" id="m-prog-limit" class="form-control" placeholder="Max Spots/Alugald" required>
-                    </div>
-                    <button type="submit" class="btn btn-block">Add Program</button>
-                </form>
-                <div id="master-progs-list" style="margin-top:15px;"></div>
+                        <input type="number" id="m-prog-limit" class="form-control" placeholder="Max Spots" required>
+                        <button type="submit" class="btn btn-sm btn-block">Add Program</button>
+                    </form>
+                    <div id="master-progs-list" style="margin-top:10px;"></div>
+                </div>
 
-                <div id="print-area" style="margin-top:25px; border-top:2px solid #ccc; padding-top:15px;">
+                <div id="print-area" style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:12px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3>Registration Report</h3>
-                        <button class="btn btn-warning btn-sm no-print" onclick="window.print()">Print A4 Report</button>
-                    </div>
-                    
-                    <div class="form-group no-print" style="margin-top:10px; max-width:300px;">
-                        <label>Adjust Print Sheet Font Size</label>
-                        <input type="range" min="10" max="26" value="14" id="print-font-slider" oninput="adjustPrintFontSize(this.value)">
+                        <h4>Registration Report</h4>
+                        <button class="btn btn-warning btn-sm no-print" onclick="window.print()">Print A4</button>
                     </div>
 
-                    <div class="no-print" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:10px;">
+                    <div class="no-print" style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
                         <select id="rep-team" class="form-control" onchange="renderReportTable()"><option value="">All Teams</option></select>
                         <select id="rep-cat" class="form-control" onchange="renderReportTable()">
                             <option value="">All Categories</option>
@@ -521,103 +676,113 @@
                             <option value="HIGHER ZONE">HIGHER ZONE</option>
                             <option value="SUPER ZONE">SUPER ZONE</option>
                         </select>
-                        <select id="rep-stage" class="form-control" onchange="renderReportTable()">
-                            <option value="">All Stages</option>
-                            <option value="ON STAGE">ON STAGE</option>
-                            <option value="OFF STAGE">OFF STAGE</option>
-                        </select>
                     </div>
-                    <table class="table-responsive" id="report-resizable-table" style="font-size:14px;">
+                    <table class="table-responsive" id="report-resizable-table">
                         <thead>
-                            <tr><th>Participant</th><th>Team</th><th>Category</th><th>Program</th><th>Stage</th></tr>
+                            <tr><th>Participant</th><th>Team</th><th>Cat</th><th>Prog</th></tr>
                         </thead>
                         <tbody id="report-table-body"></tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="collapsible-header" onclick="toggleAccordion('box-res-control')"><span>2. RESULT CONTROL</span> <i class="fa-solid fa-chevron-down"></i></div>
-            <div id="box-res-control" style="display:none; padding:15px; background:#f8fafc; border-radius:8px; margin-top:10px;">
-                <h4>Upload Team Status Poster</h4>
-                <form onsubmit="uploadTeamStatusPoster(event)" style="margin-top:10px; margin-bottom:20px;">
-                    <input type="file" id="status-file" class="form-control" accept="image/*" required>
-                    <button type="submit" class="btn btn-success btn-block" style="margin-top:5px;">Upload Team Status</button>
-                </form>
-                <div id="master-status-preview"></div>
+            <!-- RESULT CONTROL -->
+            <div class="collapsible-header" onclick="toggleAccordion('box-res-control')">
+                <span>2. RESULT & MEDIA PUBLISHER</span> <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div id="box-res-control" class="collapsible-box" style="padding:12px; background:rgba(0,0,0,0.3); border-radius:12px;">
+                
+                <div class="collapsible-header" onclick="toggleAccordion('sub-status-box')"><span>Upload Team Status Poster</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="sub-status-box" class="collapsible-box">
+                    <form onsubmit="uploadTeamStatusPoster(event)">
+                        <input type="file" id="status-file" class="form-control" accept="image/*" required>
+                        <button type="submit" class="btn btn-sm btn-success btn-block" style="margin-top:5px;">Upload Status Poster</button>
+                    </form>
+                    <div id="master-status-preview" style="margin-top:6px;"></div>
+                </div>
 
-                <h4>Upload Program Result</h4>
-                <form onsubmit="uploadProgramResult(event)" style="margin-top:10px; margin-bottom:20px;">
-                    <div class="form-group">
+                <div class="collapsible-header" onclick="toggleAccordion('sub-res-box')"><span>Publish Program Result</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="sub-res-box" class="collapsible-box">
+                    <form onsubmit="uploadProgramResult(event)" style="display:flex; flex-direction:column; gap:6px;">
                         <select id="res-upload-cat" class="form-control" onchange="populateResProgDropdown()"><option value="">-- Choose Category --</option><option value="GENERAL">GENERAL</option><option value="LOWER ZONE">LOWER ZONE</option><option value="MIDDLE ZONE">MIDDLE ZONE</option><option value="HIGHER ZONE">HIGHER ZONE</option><option value="SUPER ZONE">SUPER ZONE</option></select>
-                    </div>
-                    <div class="form-group"><select id="res-upload-prog" class="form-control" required></select></div>
-                    <div class="form-group"><label>Poster Image</label><input type="file" id="res-file" class="form-control" accept="image/*" required></div>
-                    <div class="form-group"><label>YouTube Video Link (Optional)</label><input type="url" id="res-yt-url" class="form-control" placeholder="https://..."></div>
-                    <button type="submit" class="btn btn-success btn-block">Publish Result Poster</button>
-                </form>
-                <div id="master-results-list" style="margin-bottom:20px;"></div>
+                        <select id="res-upload-prog" class="form-control" required></select>
+                        <label style="font-size:0.8rem; margin-top:2px;">Poster Image</label>
+                        <input type="file" id="res-file" class="form-control" accept="image/*" required>
+                        <input type="url" id="res-yt-url" class="form-control" placeholder="YouTube Video Link (Optional)">
+                        <button type="submit" class="btn btn-sm btn-success btn-block">Publish Result</button>
+                    </form>
+                    <div id="master-results-list" style="margin-top:10px;"></div>
+                </div>
 
-                <h4>Upload Updates (Photos / Videos)</h4>
-                <form onsubmit="uploadUpdateFeed(event)" style="margin-top:10px; margin-bottom:20px;">
-                    <div class="form-group"><input type="text" id="up-title" class="form-control" placeholder="Caption/Title" required></div>
-                    <div class="form-group">
+                <div class="collapsible-header" onclick="toggleAccordion('sub-up-box')"><span>Upload Updates Feed</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="sub-up-box" class="collapsible-box">
+                    <form onsubmit="uploadUpdateFeed(event)" style="display:flex; flex-direction:column; gap:6px;">
+                        <input type="text" id="up-title" class="form-control" placeholder="Caption/Title" required>
                         <select id="up-type" class="form-control" onchange="document.getElementById('up-file-block').style.display = this.value==='photo'?'block':'none'; document.getElementById('up-video-block').style.display = this.value==='video'?'block':'none';">
                             <option value="photo">Photo Poster</option>
                             <option value="video">Video Embed Link</option>
                         </select>
-                    </div>
-                    <div class="form-group" id="up-file-block"><input type="file" id="up-file" class="form-control" accept="image/*"></div>
-                    <div class="form-group" id="up-video-block" style="display:none;"><input type="url" id="up-video" class="form-control" placeholder="Embed URL"></div>
-                    <button type="submit" class="btn btn-success btn-block">Publish New Update Block</button>
-                </form>
-                <div id="master-updates-list" style="margin-bottom:20px;"></div>
+                        <div id="up-file-block"><input type="file" id="up-file" class="form-control" accept="image/*"></div>
+                        <div id="up-video-block" style="display:none;"><input type="url" id="up-video" class="form-control" placeholder="Embed/Video URL"></div>
+                        <button type="submit" class="btn btn-sm btn-success btn-block">Publish Update</button>
+                    </form>
+                    <div id="master-updates-list" style="margin-top:10px;"></div>
+                </div>
 
-                <h4>Add Live Streaming / Highlights Links</h4>
-                <form onsubmit="uploadStreamLinks(event)" style="margin-top:10px;">
-                    <div class="form-group"><input type="text" id="st-title" class="form-control" placeholder="Stream Title" required></div>
-                    <div class="form-group"><input type="url" id="st-url" class="form-control" placeholder="Video URL" required></div>
-                    <div class="form-group"><label>Thumbnail</label><input type="file" id="st-thumb" class="form-control" accept="image/*" required></div>
-                    <div class="form-group">
+                <div class="collapsible-header" onclick="toggleAccordion('sub-st-box')"><span>Live & Highlights Links</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="sub-st-box" class="collapsible-box">
+                    <form onsubmit="uploadStreamLinks(event)" style="display:flex; flex-direction:column; gap:6px;">
+                        <input type="text" id="st-title" class="form-control" placeholder="Stream Title" required>
+                        <input type="url" id="st-url" class="form-control" placeholder="Video Link" required>
+                        <label style="font-size:0.8rem;">Thumbnail</label>
+                        <input type="file" id="st-thumb" class="form-control" accept="image/*" required>
                         <select id="st-mode" class="form-control"><option value="live">LIVE STREAMING</option><option value="highlight">HIGHLIGHTS</option></select>
-                    </div>
-                    <button type="submit" class="btn btn-success btn-block">Add Stream Reference Link</button>
-                </form>
+                        <button type="submit" class="btn btn-sm btn-success btn-block">Add Reference</button>
+                    </form>
+                </div>
+
             </div>
         </div>
 
     </div>
 
-    <!-- MAIN LOGIN MODAL -->
+    <!-- MAIN LOGIN MODAL (Designed like Image 3) -->
     <div id="modal-overlay" class="modal-overlay">
-        <div id="modal-login" class="modal-box">
-            <h3 style="margin-bottom:15px; color:#0056b3;">Main Login</h3>
+        <div id="modal-login" class="modal-box" style="text-align: center;">
+            <h2 style="margin-bottom:20px; color:#ffffff; font-weight:700;">Welcome</h2>
             <form onsubmit="handleMainLogin(event)">
-                <div class="form-group"><label>Username</label><input type="text" id="main-user-input" class="form-control" required></div>
-                <div class="form-group"><label>Password</label><input type="password" id="main-pass-input" class="form-control" required></div>
-                <button type="submit" class="btn btn-block">Login</button>
-                <button type="button" class="btn btn-danger btn-block" style="margin-top:8px;" onclick="closeModal()">Cancel</button>
+                <div class="form-group" style="text-align: left;">
+                    <label>Username</label>
+                    <input type="text" id="main-user-input" class="form-control" required style="border-radius:20px; background:rgba(0,0,0,0.5);">
+                </div>
+                <div class="form-group" style="text-align: left;">
+                    <label>Password</label>
+                    <input type="password" id="main-pass-input" class="form-control" required style="border-radius:20px; background:rgba(0,0,0,0.5);">
+                </div>
+                <button type="submit" class="btn btn-block" style="border-radius:20px; margin-top:10px; font-size:1.05rem;">Sign In</button>
+                <button type="button" class="btn btn-danger btn-block" style="margin-top:8px; border-radius:20px; background:transparent; border:1px solid #ef4444;" onclick="closeModal()">Cancel</button>
             </form>
         </div>
     </div>
 
-    <!-- SUB-PANEL ROUTING GATEKEEPER PASS MODAL -->
+    <!-- GATEKEEPER PASS MODAL -->
     <div id="gatekeeper-modal-overlay" class="modal-overlay">
         <div class="modal-box">
-            <h3 id="gk-title" style="color:#e11d48; margin-bottom:12px;">Security Verification Required</h3>
+            <h3 id="gk-title" style="color:#ef4444; margin-bottom:10px; font-size:1.1rem;">Security Lock Required</h3>
             <div class="form-group">
-                <label>Access Password</label>
+                <label>Access Code</label>
                 <input type="password" id="gk-pass-field" class="form-control" placeholder="••••••••">
             </div>
-            <button class="btn btn-block btn-danger" onclick="commitGatekeeperVerification()">Unlock Panel Access</button>
-            <button class="btn btn-block style-margin-top:6px;" onclick="closeGatekeeper()">Cancel</button>
+            <button class="btn btn-block btn-danger" onclick="commitGatekeeperVerification()">Unlock Access</button>
+            <button class="btn btn-block" style="margin-top:6px; background:transparent; border:1px solid rgba(255,255,255,0.2); color:#fff;" onclick="closeGatekeeper()">Cancel</button>
         </div>
     </div>
 
-    <!-- DETAILS MODAL FOR EXPANDED LIST VIEWS -->
+    <!-- DETAILS MODAL -->
     <div id="detail-modal-overlay" class="modal-overlay" onclick="this.style.display='none'">
-        <div class="modal-box" style="max-width:500px;" onclick="event.stopPropagation()">
-            <h3 id="det-modal-title" style="color:#0056b3; margin-bottom:10px;"></h3>
-            <div id="det-modal-content" style="max-height:350px; overflow-y:auto;"></div>
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <h3 id="det-modal-title" style="color:#f6d365; margin-bottom:10px; font-size:1.1rem;"></h3>
+            <div id="det-modal-content" style="max-height:300px; overflow-y:auto;"></div>
             <button class="btn btn-block" style="margin-top:10px;" onclick="document.getElementById('detail-modal-overlay').style.display='none'">Close</button>
         </div>
     </div>
@@ -640,11 +805,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Core Protected State Structure
         window.appState = {
             phase: 'register',
             portalOpen: true,
             logoUrl: '',
+            logoPos: 'logo-top-left',
+            logoSize: '60',
             teamStatusUrl: '',
             maxProgLimit: 3,
             mainCreds: { user: 'bahja2026', pass: '2026bahjacommitty' },
@@ -653,16 +819,18 @@
                 control_panel: 'controlpanelbahja',
                 judge: 'judgebahja',
                 pointroom: 'pointroombahja',
+                states: 'statesbahja',
                 protection: 'Protectionbahja',
                 modify: 'modifymodifybahjag'
             },
             visuals: {
                 bannerText: 'WELCOME TO BAHJA FEST',
                 titleText: 'BAHJA 2026',
-                bannerColor: '#517154',
-                titleColor: '#1e293b',
-                bannerSize: '1.4',
-                titleSize: '3.2'
+                bannerColor: '#cbd5e1',
+                titleColor: '#ffffff',
+                bannerSize: '1.1',
+                titleSize: '2.8',
+                fontFamily: "'Poppins', sans-serif"
             },
             teams: [],
             programs: [],
@@ -688,11 +856,13 @@
                     phase: data.phase || 'register',
                     portalOpen: data.portalOpen ?? true,
                     logoUrl: data.logoUrl || '',
+                    logoPos: data.logoPos || 'logo-top-left',
+                    logoSize: data.logoSize || '60',
                     teamStatusUrl: data.teamStatusUrl || '',
                     maxProgLimit: data.maxProgLimit || 3,
                     mainCreds: data.mainCreds || { user: 'bahja2026', pass: '2026bahjacommitty' },
-                    subLocks: data.subLocks || { settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', protection:'Protectionbahja', modify:'modifymodifybahjag' },
-                    visuals: data.visuals || { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColor:'#517154', titleColor:'#1e293b', bannerSize:'1.4', titleSize:'3.2' },
+                    subLocks: data.subLocks || { settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag' },
+                    visuals: data.visuals || { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColor:'#cbd5e1', titleColor:'#ffffff', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif" },
                     teams: data.teams || [],
                     programs: data.programs || [],
                     registrations: data.registrations || [],
@@ -724,7 +894,10 @@
             const el = document.getElementById('corner-logo-view');
             const manageBox = document.getElementById('logo-manage-box');
             if(window.appState.logoUrl) {
-                el.src = window.appState.logoUrl; el.style.display = 'block';
+                el.src = window.appState.logoUrl; 
+                el.className = `corner-logo ${window.appState.logoPos || 'logo-top-left'}`;
+                el.style.height = `${window.appState.logoSize || 60}px`;
+                el.style.display = 'block';
                 if(manageBox) manageBox.style.display = 'block';
             } else {
                 el.style.display = 'none';
@@ -732,14 +905,29 @@
             }
         }
 
+        window.updateLogoStylesLocally = function() {
+            const pos = document.getElementById('sys-logo-pos').value;
+            const size = document.getElementById('sys-logo-size').value;
+            document.getElementById('logo-size-val').innerText = size;
+            
+            const el = document.getElementById('corner-logo-view');
+            el.className = `corner-logo ${pos}`;
+            el.style.height = `${size}px`;
+        }
+
         window.deleteSysLogo = function() {
-            window.appState.logoUrl = ''; saveData(); alert("Logo purged.");
+            window.appState.logoUrl = ''; saveData(); alert("Logo deleted.");
         }
 
         function applyVisualCustomizations() {
             const vis = window.appState.visuals;
             const bTxt = document.getElementById('txt-welcome-banner');
             const mTitle = document.getElementById('txt-main-title');
+            
+            if(vis.fontFamily) {
+                document.documentElement.style.setProperty('--main-font', vis.fontFamily);
+            }
+
             if(bTxt && mTitle) {
                 bTxt.innerText = vis.bannerText;
                 bTxt.style.color = vis.bannerColor;
@@ -750,6 +938,7 @@
                 mTitle.style.fontSize = vis.titleSize + 'rem';
             }
         }
+
         window.render3DotMenu = function() {
             const menuContainer = document.getElementById('mainDropdown');
             let html = `<button onclick="navHome()"><i class="fa-solid fa-house"></i> Home</button>`;
@@ -760,22 +949,21 @@
                     html += `<button onclick="showPanel('panel-participants-entry')"><i class="fa-solid fa-user-plus"></i> Participants Entry</button>`;
                 }
             } else {
-                // Routed via Security Gatekeeper Modal checks
                 html += `
                     <button onclick="interceptRoute('panel-settings', 'settings')"><i class="fa-solid fa-gear"></i> Settings</button>
                     <button onclick="interceptRoute('panel-control-panel', 'control_panel')"><i class="fa-solid fa-sliders"></i> Control Panel</button>
                     <button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Pointroom</button>
                     <button onclick="interceptRoute('panel-judge', 'judge')"><i class="fa-solid fa-gavel"></i> Judge Leaderboard</button>
-                    <button onclick="interceptRoute('panel-states-control', null)"><i class="fa-solid fa-flag"></i> States Control</button>
-                    <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Protection</button>
+                    <button onclick="interceptRoute('panel-states-control', 'states')"><i class="fa-solid fa-flag"></i> States Control</button>
+                    <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Protection Settings</button>
                     <button onclick="interceptRoute('panel-modify', 'modify')"><i class="fa-solid fa-pen-to-square"></i> Modify Appearance</button>
-                    <button onclick="logoutMain()" style="color:red;"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                    <button onclick="logoutMain()" style="color:#ef4444;"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
                 `;
             }
             menuContainer.innerHTML = html;
         }
 
-        /* ACCESS MANAGEMENT GATEKEEPER MECHANISM */
+        /* SECURITY GATEKEEPER ROUTING SYSTEM */
         window.interceptRoute = function(panelId, key) {
             document.getElementById("mainDropdown").classList.remove("show");
             if(!key || !window.appState.subLocks[key] || window.appState.subLocks[key] === "") {
@@ -784,7 +972,7 @@
             }
             window.gatekeeperTargetPanel = { id: panelId, lockKey: key };
             document.getElementById('gk-pass-field').value = '';
-            document.getElementById('gk-title').innerText = `Access Protection Code Required`;
+            document.getElementById('gk-title').innerText = `Security Code Required`;
             document.getElementById('gatekeeper-modal-overlay').style.display = 'flex';
         }
 
@@ -795,14 +983,16 @@
                 document.getElementById('gatekeeper-modal-overlay').style.display = 'none';
                 showPanel(window.gatekeeperTargetPanel.id);
             } else {
-                alert("Incorrect access validation password protection code blocked.");
+                alert("Incorrect Security Code.");
             }
         }
 
         window.closeGatekeeper = function() { document.getElementById('gatekeeper-modal-overlay').style.display = 'none'; }
-
         window.toggleDropdown = function() { document.getElementById("mainDropdown").classList.toggle("show"); }
-        window.onclick = (e) => { if (!e.target.closest('.menu-btn-container')) document.getElementById("mainDropdown").classList.remove("show"); };
+        window.onclick = (e) => { 
+            if (!e.target.closest('.menu-btn-container')) document.getElementById("mainDropdown").classList.remove("show"); 
+            if (!e.target.closest('.card-dots-menu')) document.querySelectorAll('.card-menu-pop').forEach(m => m.classList.remove('show'));
+        };
 
         window.showPanel = function(panelId) {
             document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
@@ -812,7 +1002,16 @@
         window.navHome = function() { renderHomePhase(); showPanel('panel-home'); }
         window.openSection = function(secId) { showPanel(secId); }
         window.toggleAccordion = function(boxId) {
-            const el = document.getElementById(boxId); el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            const el = document.getElementById(boxId); 
+            el.classList.toggle('show');
+        }
+
+        window.toggleCardPopMenu = function(popId) {
+            document.querySelectorAll('.card-menu-pop').forEach(m => {
+                if(m.id !== popId) m.classList.remove('show');
+            });
+            const pop = document.getElementById(popId);
+            if(pop) pop.classList.toggle('show');
         }
 
         window.openLoginModal = function() { document.getElementById('modal-overlay').style.display = 'flex'; }
@@ -837,21 +1036,19 @@
             const op = document.getElementById('prot-old-main-p').value.trim();
             if(ou === window.appState.mainCreds.user && op === window.appState.mainCreds.pass) {
                 document.getElementById('prot-new-main-block').style.display = 'block';
-                alert("Verification success! Input new target keys.");
-            } else { alert("Verification failed. Current credentials input mismatched."); }
+                alert("Verified! Enter new credentials.");
+            } else { alert("Verification failed."); }
         }
 
         window.commitMainCredShift = function() {
             const nu = document.getElementById('prot-new-main-u').value.trim();
             const np = document.getElementById('prot-new-main-p').value.trim();
-            if(!nu || !np) { alert("Fields cannot remain blank."); return; }
+            if(!nu || !np) { alert("Fields cannot be empty."); return; }
             window.appState.mainCreds.user = nu;
             window.appState.mainCreds.pass = np;
             saveData();
-            alert("Main authorization credentials shifted.");
+            alert("Main authorization credentials updated.");
             document.getElementById('prot-new-main-block').style.display = 'none';
-            document.getElementById('prot-old-main-u').value = '';
-            document.getElementById('prot-old-main-p').value = '';
         }
 
         function syncProtectionFields() {
@@ -859,23 +1056,24 @@
             if(!container) return;
             
             const schema = [
-                { key: 'settings', name: 'Settings Allocation Portal Lock' },
-                { key: 'control_panel', name: 'Committee Control Panel Lock' },
-                { key: 'judge', name: 'Judge Evaluation Leaderboard Lock' },
-                { key: 'pointroom', name: 'Pointroom Assessment Input Lock' },
-                { key: 'protection', name: 'System Protection Safety Matrix Lock' },
-                { key: 'modify', name: 'Appearance Visual Layout Customizer Lock' }
+                { key: 'settings', name: 'Settings Lock Password' },
+                { key: 'control_panel', name: 'Control Panel Lock Password' },
+                { key: 'judge', name: 'Judge Leaderboard Lock' },
+                { key: 'pointroom', name: 'Pointroom Input Lock' },
+                { key: 'states', name: 'States Control Lock' },
+                { key: 'protection', name: 'Protection Settings Lock' },
+                { key: 'modify', name: 'Modify Appearance Lock' }
             ];
 
             container.innerHTML = schema.map(s => {
                 const currentVal = window.appState.subLocks[s.key] || '';
                 return `
-                    <div style="background:#ffffff; padding:12px; border:1px solid #ddd; border-radius:8px;">
-                        <label style="font-weight:bold; font-size:0.85rem; color:#444;">${s.name}</label>
-                        <div style="display:flex; gap:8px; margin-top:5px;">
-                            <input type="text" id="pass-field-input-${s.key}" class="form-control" value="${currentVal}" placeholder="No Password Imposed Locked" style="margin-bottom:0;">
-                            <button class="btn btn-sm btn-success" onclick="updateSubLockKey('${s.key}')">Update</button>
-                            <button class="btn btn-sm btn-danger" onclick="clearSubLockKey('${s.key}')">Delete</button>
+                    <div style="background:rgba(0,0,0,0.3); padding:10px; border:1px solid var(--border-color); border-radius:8px;">
+                        <label style="font-weight:bold; font-size:0.8rem; color:#cbd5e1;">${s.name}</label>
+                        <div style="display:flex; gap:6px; margin-top:4px;">
+                            <input type="text" id="pass-field-input-${s.key}" class="form-control" value="${currentVal}" style="margin-bottom:0; font-size:0.85rem;">
+                            <button class="btn btn-sm btn-success" onclick="updateSubLockKey('${s.key}')">Save</button>
+                            <button class="btn btn-sm btn-danger" onclick="clearSubLockKey('${s.key}')">Clear</button>
                         </div>
                     </div>
                 `;
@@ -885,12 +1083,12 @@
         window.updateSubLockKey = function(key) {
             const inputVal = document.getElementById(`pass-field-input-${key}`).value.trim();
             window.appState.subLocks[key] = inputVal;
-            saveData(); alert("Access lock updated.");
+            saveData(); alert("Protection lock code updated.");
         }
 
         window.clearSubLockKey = function(key) {
             window.appState.subLocks[key] = "";
-            saveData(); alert("Access lock configuration cleared.");
+            saveData(); alert("Protection lock removed.");
         }
 
         /* MODIFY LAYOUT CONTROLS */
@@ -903,12 +1101,16 @@
             document.getElementById('mod-title-color').value = vis.titleColor;
             document.getElementById('mod-banner-size').value = vis.bannerSize;
             document.getElementById('mod-title-size').value = vis.titleSize;
+            if(vis.fontFamily) document.getElementById('mod-font-family').value = vis.fontFamily;
         }
 
         window.liveUpdateVisuals = function() {
             const bTxt = document.getElementById('txt-welcome-banner');
             const mTitle = document.getElementById('txt-main-title');
+            const font = document.getElementById('mod-font-family').value;
             
+            document.documentElement.style.setProperty('--main-font', font);
+
             bTxt.innerText = document.getElementById('mod-banner-text').value;
             bTxt.style.color = document.getElementById('mod-banner-color').value;
             bTxt.style.fontSize = document.getElementById('mod-banner-size').value + 'rem';
@@ -925,15 +1127,12 @@
                 bannerColor: document.getElementById('mod-banner-color').value,
                 titleColor: document.getElementById('mod-title-color').value,
                 bannerSize: document.getElementById('mod-banner-size').value,
-                titleSize: document.getElementById('mod-title-size').value
+                titleSize: document.getElementById('mod-title-size').value,
+                fontFamily: document.getElementById('mod-font-family').value
             };
             saveData();
             alert("Appearance settings stored.");
             navHome();
-        }
-
-        window.adjustPrintFontSize = function(val) {
-            document.getElementById('report-resizable-table').style.fontSize = val + 'px';
         }
 
         window.saveMaxLimitMaster = function() {
@@ -950,18 +1149,20 @@
             e.preventDefault();
             const selected = document.querySelector('input[name="phase-toggle"]:checked').value;
             window.appState.phase = selected;
-            
+            window.appState.logoPos = document.getElementById('sys-logo-pos').value;
+            window.appState.logoSize = document.getElementById('sys-logo-size').value;
+
             const fileEl = document.getElementById('sys-logo-input').files[0];
             if(fileEl) {
                 const reader = new FileReader();
-                reader.onload = function(evt) { window.appState.logoUrl = evt.target.result; saveData(); alert("System Modified!"); navHome(); }
+                reader.onload = function(evt) { window.appState.logoUrl = evt.target.result; saveData(); alert("Settings Modified!"); navHome(); }
                 reader.readAsDataURL(fileEl);
             } else { saveData(); alert("Phase Configuration Updated!"); navHome(); }
         }
 
         window.clearAllDataSystem = function() {
             if(confirm("Completely reset database state parameters?")) {
-                window.appState = { phase:'register', portalOpen:true, logoUrl:'', teamStatusUrl:'', maxProgLimit:3, mainCreds:{user:'bahja2026', pass:'2026bahjacommitty'}, subLocks:{settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', protection:'Protectionbahja', modify:'modifymodifybahjag'}, visuals:{bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColor:'#517154', titleColor:'#1e293b', bannerSize:'1.4', titleSize:'3.2'}, teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[], points:[] };
+                window.appState = { phase:'register', portalOpen:true, logoUrl:'', logoPos:'logo-top-left', logoSize:'60', teamStatusUrl:'', maxProgLimit:3, mainCreds:{user:'bahja2026', pass:'2026bahjacommitty'}, subLocks:{settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag'}, visuals:{bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColor:'#cbd5e1', titleColor:'#ffffff', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif"}, teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[], points:[] };
                 saveData(); navHome();
             }
         }
@@ -1012,11 +1213,11 @@
             const listContainer = document.getElementById('team-students-list');
             const filtered = window.appState.students.filter(s => s.team === window.activePartTeam);
             listContainer.innerHTML = filtered.map(s => `
-                <div style="display:flex; justify-content:space-between; padding:6px; background:#f0f4f8; margin-bottom:5px; border-radius:4px;">
-                    <span><strong>${s.name}</strong> (${s.cat})</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:rgba(0,0,0,0.3); margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
+                    <span style="font-size:0.85rem;"><strong>${s.name}</strong> (${s.cat})</span>
                     <button class="btn btn-danger btn-sm" onclick="deleteStudent('${s.id}')">Delete</button>
                 </div>
-            `).join('') || '<p>No students recorded.</p>';
+            `).join('') || '<p style="font-size:0.85rem;">No students recorded.</p>';
         }
 
         window.deleteStudent = function(id) {
@@ -1039,7 +1240,7 @@
             if(!cat) { container.innerHTML = ''; return; }
 
             const filtered = window.appState.programs.filter(p => p.cat === cat);
-            if(filtered.length === 0) { container.innerHTML = '<p>No programs matching category descriptor.</p>'; return; }
+            if(filtered.length === 0) { container.innerHTML = '<p style="font-size:0.85rem;">No programs in this category.</p>'; return; }
 
             const allowedStudents = window.appState.students.filter(s => s.team === window.loggedTeamUser && s.cat === cat);
 
@@ -1052,17 +1253,17 @@
                         selectors += `<input type="text" class="form-control prog-input-${p.id}" value="${reg.participants[i] || ''}" placeholder="Enter Name Manually" style="margin-top:5px;">`;
                     } else {
                         selectors += `<select class="form-control prog-input-${p.id}" style="margin-top:5px;">
-                            <option value="">-- Choose Registered Student --</option>
+                            <option value="">-- Select Student --</option>
                             ${allowedStudents.map(st => `<option value="${st.name}" ${reg.participants[i] === st.name ? 'selected':''}>${st.name}</option>`).join('')}
                         </select>`;
                     }
                 }
 
                 return `
-                    <div style="background:#f8fafc; border:1px solid #ddd; padding:15px; border-radius:8px; margin-bottom:10px;">
-                        <strong>${p.name} (${p.stage})</strong>
+                    <div style="background:rgba(0,0,0,0.3); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-bottom:10px;">
+                        <strong style="font-size:0.9rem;">${p.name} (${p.stage})</strong>
                         <div>${selectors}</div>
-                        <button class="btn btn-success btn-sm" style="margin-top:10px;" onclick="saveRegistrationItem('${p.id}', '${cat}')">Submit Entry</button>
+                        <button class="btn btn-success btn-sm btn-block" style="margin-top:8px;" onclick="saveRegistrationItem('${p.id}', '${cat}')">Submit Entry</button>
                     </div>
                 `;
             }).join('');
@@ -1078,7 +1279,7 @@
                 for (let studentName of names) {
                     const matchCount = window.appState.registrations.filter(r => r.team === window.loggedTeamUser && r.cat !== 'GENERAL' && r.progId !== progId && r.participants.includes(studentName)).length;
                     if(matchCount >= window.appState.maxProgLimit) {
-                        alert(`Limit violation! Student "${studentName}" is already registered for ${matchCount} non-general items.`);
+                        alert(`Limit exceeded! Student "${studentName}" is already registered for ${matchCount} items.`);
                         return;
                     }
                 }
@@ -1088,7 +1289,7 @@
             if(names.length > 0) {
                 window.appState.registrations.push({ team: window.loggedTeamUser, cat, progId, participants: names });
             }
-            saveData(); alert("Registration state captured!");
+            saveData(); alert("Registration updated.");
         }
 
         /* POINTROOM EVALUATION MATRIX */
@@ -1096,7 +1297,7 @@
             const cat = document.getElementById('pt-cat-select').value;
             const drop = document.getElementById('pt-prog-select');
             const matched = window.appState.programs.filter(p => p.cat === cat);
-            drop.innerHTML = '<option value="">-- Select --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
             document.getElementById('pt-candidates-inputs').innerHTML = '';
             document.getElementById('pt-stage-badge').innerText = '';
         }
@@ -1107,11 +1308,11 @@
             const container = document.getElementById('pt-candidates-inputs');
             
             if(!targetProg) { container.innerHTML = ''; return; }
-            document.getElementById('pt-stage-badge').innerText = `Stage Allocation Mode: ${targetProg.stage}`;
+            document.getElementById('pt-stage-badge').innerText = `Stage Mode: ${targetProg.stage}`;
 
             const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
             if(matchedRegs.length === 0) {
-                container.innerHTML = '<p style="color:red;">No participant enrollment records found for this program.</p>'; return;
+                container.innerHTML = '<p style="color:#ef4444; font-size:0.85rem;">No registered participants found.</p>'; return;
             }
 
             let html = '';
@@ -1119,9 +1320,9 @@
                 r.participants.forEach(pName => {
                     const savedPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === pName) || { score: 0 };
                     html += `
-                        <div style="display:flex; justify-content:space-between; align-items:center; background:#f0f4f8; padding:10px; margin-bottom:5px; border-radius:6px;">
-                            <span><strong>${pName}</strong> (Team: ${r.team})</span>
-                            <input type="number" min="0" class="form-control pt-score-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.score}" style="width:100px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
+                            <span style="font-size:0.85rem;"><strong>${pName}</strong> (${r.team})</span>
+                            <input type="number" min="0" class="form-control pt-score-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.score}" style="width:80px; padding:6px;">
                         </div>
                     `;
                 });
@@ -1145,7 +1346,7 @@
                 window.appState.points.push({ progId, cat, team, student, score });
             });
 
-            saveData(); alert("Point allocation records locked.");
+            saveData(); alert("Point records saved.");
             loadPtParticipants(); renderPtList();
         }
 
@@ -1153,18 +1354,18 @@
             const container = document.getElementById('box-pt-list');
             if(!container) return;
             const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
-            if(distinctProgs.length === 0) { container.innerHTML = '<p>No marks processed.</p>'; return; }
+            if(distinctProgs.length === 0) { container.innerHTML = '<p style="font-size:0.85rem;">No evaluation logs.</p>'; return; }
 
             container.innerHTML = distinctProgs.map(pid => {
-                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown Item', cat: 'N/A' };
+                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
                 const subPts = window.appState.points.filter(pt => pt.progId === pid);
                 return `
-                    <div style="background:#fff; border:1px solid #ddd; padding:10px; border-radius:6px; margin-bottom:8px;">
+                    <div style="background:rgba(0,0,0,0.3); border:1px solid var(--border-color); padding:8px; border-radius:8px; margin-bottom:6px;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <strong>${prog.name} (${prog.cat})</strong>
+                            <strong style="font-size:0.85rem;">${prog.name} (${prog.cat})</strong>
                             <button class="btn btn-danger btn-sm" onclick="deletePtGroup('${pid}')">Delete</button>
                         </div>
-                        <div style="font-size:0.85rem; color:#555; margin-top:5px;">
+                        <div style="font-size:0.75rem; color:#cbd5e1; margin-top:4px;">
                             ${subPts.map(s => `${s.student} (${s.team}): <strong>${s.score}</strong>`).join(' | ')}
                         </div>
                     </div>
@@ -1179,7 +1380,7 @@
             }
         }
 
-        /* JUDGE AUTOMATED AGGREGATION LEADERBOARD */
+        /* JUDGE LEADERBOARD */
         window.renderJudgeLeaderboard = function() {
             const tbody = document.getElementById('judge-leaderboard-body');
             if(!tbody) return;
@@ -1203,13 +1404,13 @@
             const sorted = Object.values(aggregate).sort((a,b) => b.total - a.total);
 
             tbody.innerHTML = sorted.map(s => `
-                <tr class="interactive-row" onclick="viewCandidateBreakdown('${s.name}', '${s.team}')">
+                <tr onclick="viewCandidateBreakdown('${s.name}', '${s.team}')" style="cursor:pointer;">
                     <td><strong>${s.name}</strong></td>
                     <td>${s.team}</td>
                     <td>${s.cat}</td>
-                    <td><strong style="color:green;">${s.total}</strong></td>
+                    <td><strong style="color:#f6d365;">${s.total}</strong></td>
                 </tr>
-            `).join('') || '<tr><td colspan="4">No scores accumulated matching filtering criteria.</td></tr>';
+            `).join('') || '<tr><td colspan="4">No scores.</td></tr>';
         }
 
         window.viewCandidateBreakdown = function(name, team) {
@@ -1217,8 +1418,8 @@
             const modalTitle = document.getElementById('det-modal-title');
             const modalContent = document.getElementById('det-modal-content');
             
-            modalTitle.innerText = `Score Breakdown: ${name} (${team})`;
-            let html = '<table style="width:100%;"><thead><tr><th>Program</th><th>Points</th></tr></thead><tbody>';
+            modalTitle.innerText = `${name} (${team})`;
+            let html = '<table style="width:100%;"><thead><tr><th>Program</th><th>Pts</th></tr></thead><tbody>';
             records.forEach(r => {
                 const prog = window.appState.programs.find(p => p.id === r.progId) || { name: 'N/A' };
                 html += `<tr><td>${prog.name}</td><td><strong>${r.score}</strong></td></tr>`;
@@ -1229,7 +1430,7 @@
             document.getElementById('detail-modal-overlay').style.display = 'flex';
         }
 
-        /* STATES CONTROL DASHBOARD (INCORPORATES GENERAL PARAMS) */
+        /* STATES CONTROL DASHBOARD */
         window.renderStatesDashboard = function() {
             const tbody = document.getElementById('states-table-body');
             if(!tbody) return;
@@ -1243,11 +1444,11 @@
             const sortedTeams = Object.entries(teamTotals).sort((a,b) => b[1] - a[1]);
 
             tbody.innerHTML = sortedTeams.map(([tName, total]) => `
-                <tr class="interactive-row" onclick="viewTeamBreakdown('${tName}')">
+                <tr onclick="viewTeamBreakdown('${tName}')" style="cursor:pointer;">
                     <td><strong>${tName}</strong></td>
-                    <td><strong style="color:blue; font-size:1.1rem;">${total}</strong></td>
+                    <td><strong style="color:#f6d365; font-size:1rem;">${total}</strong></td>
                 </tr>
-            `).join('') || '<tr><td colspan="2">No data recorded.</td></tr>';
+            `).join('') || '<tr><td colspan="2">No team score data.</td></tr>';
         }
 
         window.viewTeamBreakdown = function(teamName) {
@@ -1255,11 +1456,11 @@
             const modalTitle = document.getElementById('det-modal-title');
             const modalContent = document.getElementById('det-modal-content');
             
-            modalTitle.innerText = `Team Assessment View: ${teamName}`;
-            let html = '<table style="width:100%;"><thead><tr><th>Student</th><th>Program</th><th>Points</th></tr></thead><tbody>';
+            modalTitle.innerText = `Team Breakdown: ${teamName}`;
+            let html = '<table style="width:100%;"><thead><tr><th>Student</th><th>Prog</th><th>Pts</th></tr></thead><tbody>';
             records.forEach(r => {
                 const prog = window.appState.programs.find(p => p.id === r.progId) || { name: 'N/A' };
-                html += `<tr><td>${r.student}</td><td>${prog.name} <span style="font-size:0.75rem; color:gray;">(${r.cat})</span></td><td><strong>${r.score}</strong></td></tr>`;
+                html += `<tr><td>${r.student}</td><td>${prog.name}</td><td><strong>${r.score}</strong></td></tr>`;
             });
             html += '</tbody></table>';
             
@@ -1269,6 +1470,7 @@
 
         /* COMMITTEE MASTER SWITCH MANAGEMENT */
         window.toggleRegLock = function() { window.appState.portalOpen = !window.appState.portalOpen; saveData(); }
+        
         window.addTeamMaster = function(e) {
             e.preventDefault();
             const user = document.getElementById('m-team-user').value.trim();
@@ -1276,6 +1478,7 @@
             window.appState.teams.push({ user, pass }); saveData(); e.target.reset();
         }
         window.deleteTeamMaster = function(idx) { window.appState.teams.splice(idx, 1); saveData(); }
+        
         window.addProgramMaster = function(e) {
             e.preventDefault();
             const name = document.getElementById('m-prog-name').value.trim();
@@ -1301,7 +1504,7 @@
             const cat = document.getElementById('res-upload-cat').value;
             const drop = document.getElementById('res-upload-prog');
             const matched = window.appState.programs.filter(p => p.cat === cat);
-            drop.innerHTML = '<option value="">-- Select Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
         }
 
         window.uploadProgramResult = function(e) {
@@ -1332,12 +1535,12 @@
                 const f = document.getElementById('up-file').files[0];
                 if(f) {
                     const reader = new FileReader();
-                    reader.onload = function(evt) { window.appState.updates.push({ id:'up_'+Date.now(), title, type, url: evt.target.result }); saveData(); alert("Update Added."); }
+                    reader.onload = function(evt) { window.appState.updates.push({ id:'up_'+Date.now(), title, type, url: evt.target.result }); saveData(); alert("Update Published."); }
                     reader.readAsDataURL(f);
                 }
             } else {
                 const url = document.getElementById('up-video').value.trim();
-                window.appState.updates.push({ id:'up_'+Date.now(), title, type, url }); saveData(); alert("Update Added.");
+                window.appState.updates.push({ id:'up_'+Date.now(), title, type, url }); saveData(); alert("Update Published.");
             }
         }
         window.deleteUpdateMaster = function(id) { window.appState.updates = window.appState.updates.filter(u => u.id !== id); saveData(); }
@@ -1364,28 +1567,48 @@
         function syncControlPanelViews() {
             const btn = document.getElementById('lock-reg-btn');
             if(btn) {
-                btn.innerText = window.appState.portalOpen ? "Lock Registration" : "Unlock Registration";
+                btn.innerText = window.appState.portalOpen ? "Lock Reg" : "Unlock Reg";
                 btn.className = window.appState.portalOpen ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
             }
             document.getElementById('m-max-limit-input').value = window.appState.maxProgLimit;
 
             const tBox = document.getElementById('master-teams-list');
-            if(tBox) tBox.innerHTML = window.appState.teams.map((t, idx) => `<div>${t.user} <button class="btn btn-danger btn-sm" onclick="deleteTeamMaster(${idx})">x</button></div>`).join('');
+            if(tBox) tBox.innerHTML = window.appState.teams.map((t, idx) => `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+                    <span>${t.user}</span> 
+                    <button class="btn btn-danger btn-sm" onclick="deleteTeamMaster(${idx})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
 
             const pBox = document.getElementById('master-progs-list');
-            if(pBox) pBox.innerHTML = window.appState.programs.map(p => `<div><strong>${p.name}</strong> (${p.cat}) <button class="btn btn-danger btn-sm" onclick="deleteProgramMaster('${p.id}')">x</button></div>`).join('');
+            if(pBox) pBox.innerHTML = window.appState.programs.map(p => `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+                    <span><strong>${p.name}</strong> (${p.cat})</span> 
+                    <button class="btn btn-danger btn-sm" onclick="deleteProgramMaster('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
 
             const sPreview = document.getElementById('master-status-preview');
-            if(sPreview) sPreview.innerHTML = window.appState.teamStatusUrl ? `<img src="${window.appState.teamStatusUrl}" style="height:60px; margin-bottom:5px;"> <button class="btn btn-danger btn-sm" onclick="deleteStatusMaster()">Remove</button>` : '';
+            if(sPreview) sPreview.innerHTML = window.appState.teamStatusUrl ? `<img src="${window.appState.teamStatusUrl}" style="height:50px; margin-bottom:4px; border-radius:4px;"> <button class="btn btn-danger btn-sm" onclick="deleteStatusMaster()">Delete Poster</button>` : '';
 
             const rBox = document.getElementById('master-results-list');
             if(rBox) rBox.innerHTML = window.appState.results.map(r => {
                 const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Unknown' };
-                return `<div>Result: ${p.name} <button class="btn btn-danger btn-sm" onclick="deleteResultMaster('${r.progId}')">x</button></div>`;
+                return `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+                        <span>Result: ${p.name}</span> 
+                        <button class="btn btn-danger btn-sm" onclick="deleteResultMaster('${r.progId}')"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
             }).join('');
 
             const uBox = document.getElementById('master-updates-list');
-            if(uBox) uBox.innerHTML = window.appState.updates.map(u => `<div>Update: ${u.title} <button class="btn btn-danger btn-sm" onclick="deleteUpdateMaster('${u.id}')">x</button></div>`).join('');
+            if(uBox) uBox.innerHTML = window.appState.updates.map(u => `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+                    <span>Update: ${u.title}</span> 
+                    <button class="btn btn-danger btn-sm" onclick="deleteUpdateMaster('${u.id}')"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
 
             const rTeam = document.getElementById('rep-team');
             if(rTeam && rTeam.children.length === 1) {
@@ -1397,7 +1620,6 @@
         window.renderReportTable = function() {
             const fTeam = document.getElementById('rep-team').value;
             const fCat = document.getElementById('rep-cat').value;
-            const fStage = document.getElementById('rep-stage').value;
             const tbody = document.getElementById('report-table-body');
             if(!tbody) return;
 
@@ -1407,13 +1629,12 @@
                 if(!p) return;
                 if(fTeam && r.team !== fTeam) return;
                 if(fCat && r.cat !== fCat) return;
-                if(fStage && p.stage !== fStage) return;
 
                 r.participants.forEach(name => {
-                    rows += `<tr><td>${name}</td><td><strong>${r.team}</strong></td><td>${r.cat}</td><td>${p.name}</td><td>${p.stage}</td></tr>`;
+                    rows += `<tr><td>${name}</td><td><strong>${r.team}</strong></td><td>${r.cat}</td><td>${p.name}</td></tr>`;
                 });
             });
-            tbody.innerHTML = rows || '<tr><td colspan="5">No registration logs mapped.</td></tr>';
+            tbody.innerHTML = rows || '<tr><td colspan="4">No entries registered.</td></tr>';
         }
 
         /* LIVE SITE DISPLAY RENDERINGS */
@@ -1421,36 +1642,61 @@
             const statusBox = document.getElementById('team-status-poster-box');
             if(window.appState.teamStatusUrl) {
                 statusBox.innerHTML = `
-                    <div class="poster-container">
-                        <img src="${window.appState.teamStatusUrl}" style="max-width:100%; border-radius:10px;">
-                        <div><a href="${window.appState.teamStatusUrl}" download="Team_Status.png" class="download-btn"><i class="fa-solid fa-download"></i> Download Poster</a></div>
+                    <div class="update-card">
+                        <img src="${window.appState.teamStatusUrl}" style="width:100%; border-radius:12px;">
+                        <div class="card-action-bar">
+                            <span style="font-size:0.8rem; font-weight:700; color:#f6d365;">Team Standings Poster</span>
+                            <div class="card-dots-menu">
+                                <button class="card-dots-btn" onclick="toggleCardPopMenu('pop-status')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <div id="pop-status" class="card-menu-pop">
+                                    <button onclick="downloadImage('${window.appState.teamStatusUrl}', 'Team_Status.png')"><i class="fa-solid fa-download"></i> Download Poster</button>
+                                    <button onclick="shareLink('Check out the latest Team Status!')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>`;
-            } else { statusBox.innerHTML = '<p>No Status Uploaded Yet.</p>'; }
+            } else { statusBox.innerHTML = '<p style="font-size:0.85rem; color:#64748b;">No Status Poster Uploaded.</p>'; }
 
             filterResultPrograms();
             renderPinterestUpdates('all');
 
-            document.getElementById('livelink-feed').innerHTML = window.appState.livelinks.map(l => `
-                <div style="margin-bottom:20px; text-align:center; background:#fff; padding:15px; border-radius:12px; border:1px solid #eee;">
-                    <h4 style="margin-bottom:8px;">${l.title}</h4>
+            document.getElementById('livelink-feed').innerHTML = window.appState.livelinks.map((l, i) => `
+                <div class="update-card" style="margin-bottom:12px;">
+                    <h4 style="margin-bottom:6px; font-size:1rem; color:#fff;">${l.title}</h4>
                     <div class="poster-container">
-                        <img src="${l.thumb}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px;">
-                        <a href="${l.thumb}" download="${l.title}_Thumb.png" class="inline-dl-btn"><i class="fa-solid fa-download"></i></a>
+                        <img src="${l.thumb}" class="update-media" style="max-height:180px;">
                     </div>
-                    <div style="margin-top:8px;"><a href="${l.url}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-solid fa-play"></i> External Stream Link</a></div>
+                    <div class="card-action-bar">
+                        <a href="${l.url}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-solid fa-play"></i> Watch Stream</a>
+                        <div class="card-dots-menu">
+                            <button class="card-dots-btn" onclick="toggleCardPopMenu('pop-live-${i}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <div id="pop-live-${i}" class="card-menu-pop">
+                                <button onclick="downloadImage('${l.thumb}', '${l.title}.png')"><i class="fa-solid fa-download"></i> Download Thumb</button>
+                                <button onclick="shareLink('Watch Live: ${l.title}')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            `).join('') || '<p>No Active Live Streams.</p>';
+            `).join('') || '<p style="font-size:0.85rem; color:#64748b;">No Active Live Streams.</p>';
 
-            document.getElementById('highlights-feed').innerHTML = window.appState.highlights.map(h => `
-                <div style="margin-bottom:20px; text-align:center; background:#fff; padding:15px; border-radius:12px; border:1px solid #eee;">
-                    <h4 style="margin-bottom:8px;">${h.title}</h4>
+            document.getElementById('highlights-feed').innerHTML = window.appState.highlights.map((h, i) => `
+                <div class="update-card" style="margin-bottom:12px;">
+                    <h4 style="margin-bottom:6px; font-size:1rem; color:#fff;">${h.title}</h4>
                     <div class="poster-container">
-                        <img src="${h.thumb}" style="width:100%; max-height:220px; object-fit:cover; border-radius:8px;">
-                        <a href="${h.thumb}" download="${h.title}_Highlight.png" class="inline-dl-btn"><i class="fa-solid fa-download"></i></a>
+                        <img src="${h.thumb}" class="update-media" style="max-height:180px;">
                     </div>
-                    <div style="margin-top:8px;"><a href="${h.url}" target="_blank" class="btn btn-sm btn-primary"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Highlights View</a></div>
+                    <div class="card-action-bar">
+                        <a href="${h.url}" target="_blank" class="btn btn-sm"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open View</a>
+                        <div class="card-dots-menu">
+                            <button class="card-dots-btn" onclick="toggleCardPopMenu('pop-hl-${i}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <div id="pop-hl-${i}" class="card-menu-pop">
+                                <button onclick="downloadImage('${h.thumb}', '${h.title}.png')"><i class="fa-solid fa-download"></i> Download Poster</button>
+                                <button onclick="shareLink('${h.title} Highlights')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            `).join('') || '<p>No Highlights Cataloged.</p>';
+            `).join('') || '<p style="font-size:0.85rem; color:#64748b;">No Highlights Video Links.</p>';
         }
 
         window.filterResultPrograms = function() {
@@ -1458,35 +1704,43 @@
             const container = document.getElementById('results-display-list');
             const matched = window.appState.programs.filter(p => !cat || p.cat === cat);
 
-            container.innerHTML = matched.map(p => {
+            container.innerHTML = matched.map((p, idx) => {
                 const res = window.appState.results.find(r => r.progId === p.id);
                 return `
-                    <div style="background:#f8fafc; padding:16px; border:1px solid #e2e8f0; margin-bottom:12px; border-radius:14px;">
-                        <h4 style="color:#1e293b;">${p.name} <span style="font-size:0.8rem; color:#64748b;">(${p.cat})</span></h4>
+                    <div style="background:rgba(0,0,0,0.3); padding:14px; border:1px solid var(--border-color); margin-bottom:10px; border-radius:16px;">
+                        <h4 style="color:#ffffff; font-size:0.95rem;">${p.name} <span style="font-size:0.75rem; color:#cbd5e1;">(${p.cat})</span></h4>
                         ${res ? `
-                            <div style="margin-top:10px;">
+                            <div style="margin-top:8px;">
                                 <button class="btn btn-sm btn-success" id="btn-toggle-res-${p.id}" onclick="toggleInlineResultView('${p.id}', '${res.poster}')">Result View</button>
                                 <div id="inline-res-box-${p.id}" class="inline-res-display" style="display:none;"></div>
-                                ${res.youtube ? `<div style="margin-top:8px;"><a href="${res.youtube}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-brands fa-youtube"></i> Watch Video</a></div>` : ''}
+                                ${res.youtube ? `<div style="margin-top:6px;"><a href="${res.youtube}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-brands fa-youtube"></i> Watch Video</a></div>` : ''}
                             </div>
-                        ` : '<p style="color:#94a3b8; font-size:0.85rem; margin-top:5px;"><i class="fa-solid fa-circle-minus"></i> Processing Pending</p>'}
+                        ` : '<p style="color:#64748b; font-size:0.8rem; margin-top:4px;"><i class="fa-solid fa-clock"></i> Result Awaited</p>'}
                     </div>
                 `;
             }).join('');
         }
 
-        /* MODIFIED INLINE VIEW + AUTO CONFETTI DYNAMICS */
         window.toggleInlineResultView = function(progId, posterData) {
             const box = document.getElementById(`inline-res-box-${progId}`);
             const btn = document.getElementById(`btn-toggle-res-${progId}`);
             if(box.style.display === 'none') {
-                confetti({ particleCount: 130, spread: 75, origin: { y: 0.6 } });
+                confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
                 box.innerHTML = `
-                    <img src="${posterData}" style="max-width:100%; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
-                    <div style="margin-top:8px;"><a href="${posterData}" download="Result_${progId}.png" class="download-btn"><i class="fa-solid fa-download"></i> Download Result Poster</a></div>
+                    <img src="${posterData}" style="width:100%; border-radius:10px;">
+                    <div class="card-action-bar">
+                        <span style="font-size:0.75rem; font-weight:700; color:#f6d365;">Result Poster</span>
+                        <div class="card-dots-menu">
+                            <button class="card-dots-btn" onclick="toggleCardPopMenu('pop-res-${progId}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <div id="pop-res-${progId}" class="card-menu-pop">
+                                <button onclick="downloadImage('${posterData}', 'Result_${progId}.png')"><i class="fa-solid fa-download"></i> Download Poster</button>
+                                <button onclick="shareLink('Check out the result for this program!')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
+                            </div>
+                        </div>
+                    </div>
                 `;
                 box.style.display = 'block';
-                btn.innerText = "Hide Result View";
+                btn.innerText = "Hide Result";
                 btn.className = "btn btn-sm btn-danger";
             } else {
                 box.style.display = 'none';
@@ -1505,24 +1759,61 @@
                 return u.type === filterMode;
             });
 
-            feed.innerHTML = targetUpdates.map(u => `
-                <div class="pinterest-item">
+            feed.innerHTML = targetUpdates.map((u, i) => `
+                <div class="update-card">
                     ${u.type === 'photo' ? `
-                        <div class="poster-container" style="width:100%;">
-                            <img src="${u.url}" class="pinterest-media">
-                            <a href="${u.url}" download="${u.title}.png" class="download-btn"><i class="fa-solid fa-download"></i> Download</a>
+                        <img src="${u.url}" class="update-media">
+                        <div class="card-action-bar">
+                            <h5 style="font-size:0.85rem; font-weight:700; color:#e2e8f0;">${u.title}</h5>
+                            <div class="card-dots-menu">
+                                <button class="card-dots-btn" onclick="toggleCardPopMenu('pop-up-${i}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <div id="pop-up-${i}" class="card-menu-pop">
+                                    <button onclick="downloadImage('${u.url}', '${u.title}.png')"><i class="fa-solid fa-download"></i> Download Image</button>
+                                    <button onclick="shareLink('${u.title}')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
+                                </div>
+                            </div>
                         </div>` : `
-                        <div class="poster-container" style="width:100%;">
-                            <iframe src="${u.url}" style="width:100%; height:160px; border:0; border-radius:8px;" allowfullscreen></iframe>
-                            <a href="${u.url}" target="_blank" class="download-btn"><i class="fa-solid fa-download"></i> Stream Video</a>
+                        <iframe src="${u.url}" style="width:100%; height:180px; border:0; border-radius:10px;" allowfullscreen></iframe>
+                        <div class="card-action-bar">
+                            <h5 style="font-size:0.85rem; font-weight:700; color:#e2e8f0;">${u.title}</h5>
+                            <div class="card-dots-menu">
+                                <button class="card-dots-btn" onclick="toggleCardPopMenu('pop-up-${i}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <div id="pop-up-${i}" class="card-menu-pop">
+                                    <button onclick="shareLink('Watch Video: ${u.title}')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
+                                </div>
+                            </div>
                         </div>
                     `}
-                    <h5 style="margin-top:8px; font-weight:700; color:#334155;">${u.title}</h5>
                 </div>
-            `).join('') || '<p style="grid-column:1/-1;">No updates compiled.</p>';
+            `).join('') || '<p style="font-size:0.85rem; color:#64748b;">No updates published.</p>';
+        }
+
+        /* HELPER DOWNLOAD & SHARE FUNCTIONS */
+        window.downloadImage = function(url, filename) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        window.shareLink = function(customText) {
+            const shareData = {
+                title: 'BAHJA 2026',
+                text: `${customText} - BAHJA FEST 2026\n`,
+                url: window.location.href
+            };
+            if (navigator.share) {
+                navigator.share(shareData).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
+                alert("Link copied to clipboard!");
+            }
         }
 
         render3DotMenu();
     </script>
 </body>
 </html>
+
