@@ -11,13 +11,10 @@
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-bg: rgba(30, 41, 59, 0.75);
             --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-card: rgba(255, 255, 255, 0.05);
             --text-main: #f8fafc;
-            --text-muted: #94a3b8;
             --gold-accent: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
-            --gold-btn: #eab308;
             --font-banner: 'Poppins', sans-serif;
             --font-title: 'Montserrat', sans-serif;
         }
@@ -33,22 +30,19 @@
             position: relative;
         }
 
-        /* Dynamic Positioned System Logo */
         .dynamic-logo {
             position: fixed;
             z-index: 999;
             display: none;
             object-fit: contain;
             filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
-            transition: all 0.3s ease;
         }
         .logo-top-left { top: 20px; left: 20px; }
         .logo-top-right { top: 20px; right: 80px; }
         .logo-bottom-left { bottom: 20px; left: 20px; }
         .logo-bottom-right { bottom: 20px; right: 20px; }
 
-        /* Header UI */
-        .header-title { text-align: center; padding: 45px 20px 25px 20px; }
+        .header-title { text-align: center; padding: 45px 20px 20px 20px; }
         .header-title p {
             font-family: var(--font-banner);
             color: #fbbf24;
@@ -66,7 +60,6 @@
             text-shadow: 0 4px 20px rgba(0,0,0,0.6);
         }
 
-        /* 3-Dots Menu Floating Glass */
         .menu-btn-container { position: fixed; top: 20px; right: 20px; z-index: 1000; }
         .dots-btn {
             background: rgba(255, 255, 255, 0.1);
@@ -117,7 +110,6 @@
 
         .container { max-width: 750px; margin: 0 auto; padding: 0 15px; }
 
-        /* Glassmorphism Cards */
         .card {
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
@@ -168,7 +160,7 @@
         .btn-sm { padding: 8px 14px; font-size: 0.85rem; border-radius: 8px; }
 
         /* Exact Match Image Glass Pill Buttons */
-        .result-menu-box { display: flex; flex-direction: column; gap: 16px; margin-top: 15px; }
+        .result-menu-box { display: flex; flex-direction: column; gap: 16px; margin-top: 10px; }
         .pill-menu-btn {
             display: flex;
             align-items: center;
@@ -204,7 +196,6 @@
         .pill-blue { background-color: #e0f2fe; } .pill-blue .pill-icon-circle { color: #0284c7; }
         .pill-purple { background-color: #f3e8ff; } .pill-purple .pill-icon-circle { color: #7e22ce; }
 
-        /* Media Card & 3-Dot Action Overlays */
         .media-card {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--glass-border);
@@ -254,7 +245,6 @@
         .pinterest-item { break-inside: avoid; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 16px; padding: 12px; margin-bottom: 15px; position: relative; }
         .pinterest-media { width: 100%; border-radius: 10px; display: block; margin-bottom: 8px; }
 
-        /* Accordions */
         .collapsible-header {
             background: rgba(255,255,255,0.06);
             padding: 14px 18px;
@@ -289,7 +279,6 @@
 </head>
 <body>
 
-    <!-- Dynamic System Logo Container -->
     <img id="system-logo-img" class="dynamic-logo" src="" alt="System Logo">
 
     <div class="header-title">
@@ -346,7 +335,7 @@
             </div>
 
             <!-- RESULT PHASE (Glass Pill Cards) -->
-            <div id="home-phase-result" style="display: none;">
+            <div id="home-phase-result" style="display: block;">
                 <div class="result-menu-box">
                     <button class="pill-menu-btn pill-green" onclick="openSection('section-team-states')">
                         <div class="pill-left-content">
@@ -862,9 +851,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Core Protected State Structure
+        // State Store Definition
         window.appState = {
-            phase: 'register',
+            phase: 'result',
             portalOpen: true,
             logoUrl: '',
             logoPos: 'top-left',
@@ -905,7 +894,7 @@
         window.isMainLoggedIn = false;
         window.gatekeeperTargetPanel = null;
 
-        // Immediate Zero-Lag Boot Execution
+        // Immediate Safe Local Boot
         applyLogoView();
         applyVisualCustomizations();
         render3DotMenu();
@@ -916,7 +905,7 @@
             const data = snapshot.val();
             if (data) {
                 window.appState = {
-                    phase: data.phase || 'register',
+                    phase: data.phase || 'result',
                     portalOpen: data.portalOpen ?? true,
                     logoUrl: data.logoUrl || '',
                     logoPos: data.logoPos || 'top-left',
@@ -1011,7 +1000,7 @@
             menuContainer.innerHTML = html;
         }
 
-        /* GATEKEEPER ROUTING MECHANISM */
+        /* GATEKEEPER ROUTING */
         window.interceptRoute = function(panelId, key) {
             document.getElementById("mainDropdown").classList.remove("show");
             if(!key || !window.appState.subLocks[key] || window.appState.subLocks[key] === "") {
@@ -1069,7 +1058,7 @@
 
         window.logoutMain = function() { window.isMainLoggedIn = false; render3DotMenu(); navHome(); }
 
-        /* PROTECTION CONTROLS */
+        /* PROTECTION SYSTEM */
         window.verifyAndOpenMainCredShift = function() {
             const ou = document.getElementById('prot-old-main-u').value.trim();
             const op = document.getElementById('prot-old-main-p').value.trim();
@@ -1094,13 +1083,13 @@
             if(!container) return;
             
             const schema = [
-                { key: 'settings', name: 'Settings Allocation Lock' },
-                { key: 'control_panel', name: 'Committee Control Panel Lock' },
-                { key: 'judge', name: 'Judge Evaluation Lock' },
-                { key: 'pointroom', name: 'Pointroom Input Lock' },
-                { key: 'states_control', name: 'States Control Dashboard Lock' },
+                { key: 'settings', name: 'Settings Lock' },
+                { key: 'control_panel', name: 'Control Panel Lock' },
+                { key: 'judge', name: 'Judge Lock' },
+                { key: 'pointroom', name: 'Pointroom Lock' },
+                { key: 'states_control', name: 'States Control Lock' },
                 { key: 'protection', name: 'Protection Matrix Lock' },
-                { key: 'modify', name: 'Modify Appearance Lock' }
+                { key: 'modify', name: 'Modify Lock' }
             ];
 
             container.innerHTML = schema.map(s => {
@@ -1129,7 +1118,7 @@
             saveData(); alert("Lock cleared.");
         }
 
-        /* MODIFY VISUAL LAYOUT CONTROLS */
+        /* MODIFY LAYOUT CONTROLS */
         function syncModifyConfigInputs() {
             const vis = window.appState.visuals;
             if(!document.getElementById('mod-banner-text')) return;
@@ -1193,15 +1182,18 @@
 
         window.clearAllDataSystem = function() {
             if(confirm("Completely reset database state parameters?")) {
-                window.appState = { phase:'register', portalOpen:true, logoUrl:'', logoPos:'top-left', logoSize:65, teamStatusUrl:'', maxProgLimit:3, mainCreds:{user:'bahja2026', pass:'2026bahjacommitty'}, subLocks:{settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states_control:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag'}, visuals:{bannerText:'WELCOME TO BAHJA FEST', bannerFont:"'Poppins', sans-serif", titleText:'BAHJA 2026', titleFont:"'Montserrat', sans-serif", bannerColor:'#fbbf24', titleColor:'#ffffff'}, teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[], points:[] };
+                window.appState = { phase:'result', portalOpen:true, logoUrl:'', logoPos:'top-left', logoSize:65, teamStatusUrl:'', maxProgLimit:3, mainCreds:{user:'bahja2026', pass:'2026bahjacommitty'}, subLocks:{settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states_control:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag'}, visuals:{bannerText:'WELCOME TO BAHJA FEST', bannerFont:"'Poppins', sans-serif", titleText:'BAHJA 2026', titleFont:"'Montserrat', sans-serif", bannerColor:'#fbbf24', titleColor:'#ffffff'}, teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[], points:[] };
                 saveData(); navHome();
             }
         }
 
         window.renderHomePhase = function() {
+            const regHome = document.getElementById('home-phase-register');
+            const resHome = document.getElementById('home-phase-result');
+
             if(window.appState.phase === 'register') {
-                document.getElementById('home-phase-register').style.display = 'block';
-                document.getElementById('home-phase-result').style.display = 'none';
+                regHome.style.display = 'block';
+                resHome.style.display = 'none';
                 if(window.loggedTeamUser) {
                     document.getElementById('team-login-block').style.display = 'none';
                     document.getElementById('team-portal-block').style.display = 'block';
@@ -1211,8 +1203,8 @@
                     document.getElementById('team-portal-block').style.display = 'none';
                 }
             } else {
-                document.getElementById('home-phase-register').style.display = 'none';
-                document.getElementById('home-phase-result').style.display = 'block';
+                regHome.style.display = 'none';
+                resHome.style.display = 'block';
                 renderResultPhaseFeeds();
             }
         }
@@ -1809,3 +1801,4 @@
     </script>
 </body>
 </html>
+
