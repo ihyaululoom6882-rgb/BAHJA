@@ -18,11 +18,12 @@
             --bg-dark-mesh: radial-gradient(circle at 20% 20%, #2a2d32 0%, #111315 100%);
             --glass-card-bg: rgba(255, 255, 255, 0.05);
             --glass-card-border: rgba(255, 255, 255, 0.12);
-            --glass-modal-bg: rgba(28, 30, 34, 0.85);
+            --glass-modal-bg: rgba(28, 30, 34, 0.9);
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
             --border-color: rgba(255, 255, 255, 0.15);
             --main-font: 'Poppins', sans-serif;
+            --header-align: center;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--main-font); }
@@ -52,7 +53,7 @@
         .logo-top-center { top: 15px; left: 50%; transform: translateX(-50%); }
 
         /* Header Styling */
-        .header-title { text-align: center; padding: 35px 20px 15px 20px; }
+        .header-title { text-align: var(--header-align); padding: 30px 20px 15px 20px; }
         .header-title p { font-size: 1.1rem; margin-bottom: 6px; font-weight: 700; letter-spacing: 3px; color: #cbd5e1; }
         .header-title h1 { font-size: 2.8rem; font-weight: 900; letter-spacing: 2px; color: #ffffff; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
 
@@ -65,7 +66,7 @@
             border-radius: 50%; 
             cursor: pointer; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
-            display: flex; align-items: center; justify-content: justify; justify-content: center; 
+            display: flex; align-items: center; justify-content: center; 
             font-size: 1.2rem; color: #ffffff;
         }
         
@@ -86,15 +87,15 @@
         }
         .dropdown-menu button:hover { background-color: rgba(255,255,255,0.08); color: #f6d365; }
 
-        /* Container & Dark Glass Card Styling */
-        .container { max-width: 450px; margin: 10px auto; padding: 0 14px; }
+        /* Responsive Container: Compact on Mobile, Wide on Laptop */
+        .container { max-width: 820px; margin: 10px auto; padding: 0 14px; }
         
         .card { 
             background: var(--glass-card-bg); 
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-radius: 24px; 
-            padding: 22px 18px; 
+            padding: 24px 20px; 
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); 
             margin-bottom: 20px; 
             border: 1px solid var(--glass-card-border); 
@@ -113,7 +114,6 @@
         }
         .form-control::placeholder { color: #64748b; }
         
-        /* Dark Metallic Gold Buttons Matching Login Reference Image */
         .btn { 
             background: var(--gold-btn); color: #1e1e1e; border: none; 
             padding: 12px 20px; border-radius: 14px; cursor: pointer; 
@@ -128,7 +128,7 @@
         .btn-warning { background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%); color: white; box-shadow: none; }
         .btn-sm { padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; }
 
-        /* Curved Pill Menu Layout Exactly Matching Reference Image */
+        /* Pill Menu Layout */
         .result-menu-box { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
         .pill-menu-btn { 
             display: flex; align-items: center; justify-content: space-between; 
@@ -154,14 +154,18 @@
         .pill-blue { background-color: #e0f2fe; } .pill-blue .pill-icon-circle { color: #0369a1; }
         .pill-purple { background-color: #f3e8ff; } .pill-purple .pill-icon-circle { color: #7e22ce; }
 
-        /* Gallery Cards */
-        .updates-grid { display: flex; flex-direction: column; gap: 16px; margin-top: 15px; }
+        /* 2-Column Grid Layout for Updates (Mobile & Laptop) */
+        .updates-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 16px; margin-top: 15px; 
+        }
         .update-card { 
-            background: rgba(0,0,0,0.4); border-radius: 18px; padding: 14px; 
+            background: rgba(0,0,0,0.4); border-radius: 18px; padding: 12px; 
             box-shadow: 0 4px 20px rgba(0,0,0,0.3); border: 1px solid var(--border-color); 
             position: relative;
         }
-        .update-media { width: 100%; border-radius: 12px; display: block; object-fit: cover; }
+        .update-media { width: 100%; border-radius: 12px; display: block; object-fit: cover; max-height: 220px; }
 
         .collapsible-header { 
             background: rgba(255, 255, 255, 0.08); padding: 12px 16px; border-radius: 12px; 
@@ -183,7 +187,7 @@
             background: var(--glass-modal-bg); 
             backdrop-filter: blur(25px);
             border: 1px solid var(--glass-card-border);
-            width: 100%; max-width: 380px; padding: 26px; 
+            width: 100%; max-width: 400px; padding: 26px; 
             border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); 
         }
 
@@ -219,11 +223,26 @@
         .collapsible-box { display: none; margin-top: 10px; }
         .collapsible-box.show { display: block; }
 
+        /* Tight Margin A4 Print Mode (Fit ~30 People per Page) */
         @media print {
+            body { background: white !important; color: black !important; }
             body * { visibility: hidden; }
-            #print-area, #print-area * { visibility: visible; }
-            #print-area { position: absolute; left: 0; top: 0; width: 100%; color: black; }
+            .print-area-target, .print-area-target * { visibility: visible; }
+            .print-area-target { 
+                position: absolute; left: 0; top: 0; width: 100%; 
+                color: black !important; background: white !important; padding: 0 !important;
+            }
             .no-print { display: none !important; }
+            table { width: 100% !important; border-collapse: collapse !important; margin: 0 !important; }
+            th, td { 
+                padding: 4px 6px !important; 
+                font-size: 11px !important; 
+                border: 1px solid #666 !important; 
+                color: black !important; 
+                line-height: 1.1 !important;
+            }
+            th { background-color: #eee !important; font-weight: bold !important; }
+            @page { size: A4; margin: 8mm; }
         }
     </style>
 </head>
@@ -248,7 +267,7 @@
         <div id="panel-home" class="view-panel active-panel card">
             <!-- REGISTER PHASE -->
             <div id="home-phase-register" style="display: none;">
-                <div id="team-login-block" style="text-align: center;">
+                <div id="team-login-block" style="text-align: center; max-width: 400px; margin: 0 auto;">
                     <h3 style="color: #f6d365; margin-bottom: 15px;">Team Leader Login</h3>
                     <form onsubmit="handleTeamLogin(event)">
                         <div class="form-group" style="text-align: left;">
@@ -285,7 +304,7 @@
                 </div>
             </div>
 
-            <!-- RESULT PHASE (Pill Box Styles Matching Photo 2) -->
+            <!-- RESULT PHASE (Pill Box Styles) -->
             <div id="home-phase-result" style="display: none;">
                 <div class="result-menu-box">
                     <button class="pill-menu-btn pill-green" onclick="openSection('section-team-states')">
@@ -375,9 +394,9 @@
             <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <h3 style="color: #f6d365; margin-bottom: 12px;">Updates & Gallery</h3>
             <div style="display:flex; gap:8px; margin-bottom:12px;" class="no-print">
-                <button class="btn btn-sm btn-warning" onclick="renderPinterestUpdates('all')">All</button>
-                <button class="btn btn-sm btn-primary" onclick="renderPinterestUpdates('photo')">Photos</button>
-                <button class="btn btn-sm btn-success" onclick="renderPinterestUpdates('video')">Videos</button>
+                <button class="btn btn-sm btn-warning" onclick="renderPinterestUpdates('all')">Show All</button>
+                <button class="btn btn-sm btn-primary" onclick="renderPinterestUpdates('photo')">Photos Only</button>
+                <button class="btn btn-sm btn-success" onclick="renderPinterestUpdates('video')">Videos Only</button>
             </div>
             <div id="live-updates-feed" class="updates-grid"></div>
         </div>
@@ -386,14 +405,14 @@
         <div id="section-livelink" class="view-panel card">
             <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <h3 style="color: #f6d365; margin-bottom: 12px;">Live Streams</h3>
-            <div id="livelink-feed"></div>
+            <div id="livelink-feed" class="updates-grid"></div>
         </div>
 
         <!-- HIGHLIGHTS -->
         <div id="section-highlights" class="view-panel card">
             <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <h3 style="color: #f6d365; margin-bottom: 12px;">Highlights</h3>
-            <div id="highlights-feed"></div>
+            <div id="highlights-feed" class="updates-grid"></div>
         </div>
 
         <!-- PARTICIPANTS ENTRY DIRECTORY -->
@@ -401,8 +420,8 @@
             <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <h3 style="color: #f6d365; margin-top: 12px;">Add Team Participants</h3>
             
-            <div id="part-login-block">
-                <form onsubmit="handlePartLogin(event)" style="margin-top: 12px;">
+            <div id="part-login-block" style="max-width:400px; margin: 10px auto;">
+                <form onsubmit="handlePartLogin(event)">
                     <div class="form-group"><label>Team Username</label><input type="text" id="part-user" class="form-control" required></div>
                     <div class="form-group"><label>Password</label><input type="password" id="part-pass" class="form-control" required></div>
                     <button type="submit" class="btn btn-block">Verify & Open</button>
@@ -478,64 +497,79 @@
 
         <!-- POINTROOM PORTAL -->
         <div id="panel-pointroom" class="view-panel card">
-            <h3>Pointroom Management</h3>
-            <form onsubmit="savePointroomEntry(event)" style="margin-top:12px;">
-                <div class="form-group">
-                    <label>Select Category</label>
-                    <select id="pt-cat-select" class="form-control" onchange="populatePtProgs()" required>
-                        <option value="">-- Choose Category --</option>
-                        <option value="GENERAL">GENERAL</option>
-                        <option value="LOWER ZONE">LOWER ZONE</option>
-                        <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                        <option value="HIGHER ZONE">HIGHER ZONE</option>
-                        <option value="SUPER ZONE">SUPER ZONE</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Select Program</label>
-                    <select id="pt-prog-select" class="form-control" onchange="loadPtParticipants()" required></select>
-                </div>
-                <div id="pt-stage-badge" style="margin-bottom:12px; font-weight:bold; color:#f6d365;"></div>
-                
-                <div id="pt-candidates-inputs" style="margin-bottom:12px;"></div>
-                <button type="submit" class="btn btn-success btn-block btn-xl">Submit Point Records</button>
-            </form>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3>Pointroom Management</h3>
+                <button class="btn btn-warning btn-sm no-print" onclick="triggerSectionPrint('panel-pointroom')"><i class="fa-solid fa-print"></i> Print Records</button>
+            </div>
+            <div class="print-area-target">
+                <form onsubmit="savePointroomEntry(event)" class="no-print" style="margin-top:12px;">
+                    <div class="form-group">
+                        <label>Select Category</label>
+                        <select id="pt-cat-select" class="form-control" onchange="populatePtProgs()" required>
+                            <option value="">-- Choose Category --</option>
+                            <option value="GENERAL">GENERAL</option>
+                            <option value="LOWER ZONE">LOWER ZONE</option>
+                            <option value="MIDDLE ZONE">MIDDLE ZONE</option>
+                            <option value="HIGHER ZONE">HIGHER ZONE</option>
+                            <option value="SUPER ZONE">SUPER ZONE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Program</label>
+                        <select id="pt-prog-select" class="form-control" onchange="loadPtParticipants()" required></select>
+                    </div>
+                    <div id="pt-stage-badge" style="margin-bottom:12px; font-weight:bold; color:#f6d365;"></div>
+                    
+                    <div id="pt-candidates-inputs" style="margin-bottom:12px;"></div>
+                    <button type="submit" class="btn btn-success btn-block btn-xl">Submit Point Records</button>
+                </form>
 
-            <div class="collapsible-header" onclick="toggleAccordion('box-pt-list')"><span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
-            <div id="box-pt-list" class="collapsible-box"></div>
+                <div class="collapsible-header no-print" onclick="toggleAccordion('box-pt-list')"><span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="box-pt-list" class="collapsible-box show"></div>
+            </div>
         </div>
 
         <!-- JUDGE PORTAL -->
         <div id="panel-judge" class="view-panel card">
-            <h3>Judge Evaluation Portal</h3>
-            <div class="form-group" style="margin-top:12px;">
-                <label>Filter Stage View</label>
-                <select id="jd-filter-stage" class="form-control" onchange="renderJudgeLeaderboard()">
-                    <option value="all">ALL STAGES</option>
-                    <option value="ON STAGE">ON STAGE</option>
-                    <option value="OFF STAGE">OFF STAGE</option>
-                </select>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3>Judge Leaderboard</h3>
+                <button class="btn btn-warning btn-sm no-print" onclick="triggerSectionPrint('panel-judge')"><i class="fa-solid fa-print"></i> Print Leaderboard</button>
             </div>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr><th>Student Name</th><th>Team</th><th>Cat</th><th>Points</th></tr>
-                    </thead>
-                    <tbody id="judge-leaderboard-body"></tbody>
-                </table>
+            <div class="print-area-target">
+                <div class="form-group no-print" style="margin-top:12px;">
+                    <label>Filter Stage View</label>
+                    <select id="jd-filter-stage" class="form-control" onchange="renderJudgeLeaderboard()">
+                        <option value="all">ALL STAGES</option>
+                        <option value="ON STAGE">ON STAGE</option>
+                        <option value="OFF STAGE">OFF STAGE</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr><th>Student Name</th><th>Team</th><th>Cat</th><th>Points</th></tr>
+                        </thead>
+                        <tbody id="judge-leaderboard-body"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <!-- STATES CONTROL -->
         <div id="panel-states-control" class="view-panel card">
-            <h3>States Control Dashboard</h3>
-            <div class="table-responsive" style="margin-top:12px;">
-                <table>
-                    <thead>
-                        <tr><th>Team Username</th><th>Aggregated Points</th></tr>
-                    </thead>
-                    <tbody id="states-table-body"></tbody>
-                </table>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3>States Control Dashboard</h3>
+                <button class="btn btn-warning btn-sm no-print" onclick="triggerSectionPrint('panel-states-control')"><i class="fa-solid fa-print"></i> Print Standings</button>
+            </div>
+            <div class="print-area-target">
+                <div class="table-responsive" style="margin-top:12px;">
+                    <table>
+                        <thead>
+                            <tr><th>Team Username</th><th>Aggregated Points</th></tr>
+                        </thead>
+                        <tbody id="states-table-body"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -566,7 +600,7 @@
 
         <!-- MODIFY CUSTOMIZATION PANEL -->
         <div id="panel-modify" class="view-panel card">
-            <h3>Modify Visuals & Fonts</h3>
+            <h3>Modify Visuals & Alignment</h3>
             <div style="margin-top:12px; display:flex; flex-direction:column; gap:12px;">
                 <div class="form-group">
                     <label>Welcome Banner Text</label>
@@ -575,6 +609,14 @@
                 <div class="form-group">
                     <label>Main Title Text</label>
                     <input type="text" id="mod-title-text" class="form-control" oninput="liveUpdateVisuals()">
+                </div>
+                <div class="form-group">
+                    <label>Header Text & Content Alignment</label>
+                    <select id="mod-header-align" class="form-control" onchange="liveUpdateVisuals()">
+                        <option value="center">Center Alignment</option>
+                        <option value="left">Left Alignment</option>
+                        <option value="right">Right Alignment</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Font Style Typography</label>
@@ -617,7 +659,7 @@
             <div class="collapsible-header" onclick="toggleAccordion('box-reg-control')">
                 <span>1. REGISTRATION CONTROL</span> <i class="fa-solid fa-chevron-down"></i>
             </div>
-            <div id="box-reg-control" class="collapsible-box" style="padding:12px; background:rgba(0,0,0,0.3); border-radius:12px;">
+            <div id="box-reg-control" class="collapsible-box show" style="padding:12px; background:rgba(0,0,0,0.3); border-radius:12px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:12px;">
                     <span style="font-size:0.85rem;">Registration Lock:</span>
                     <button id="lock-reg-btn" class="btn btn-sm" onclick="toggleRegLock()"></button>
@@ -660,15 +702,15 @@
                     <div id="master-progs-list" style="margin-top:10px;"></div>
                 </div>
 
-                <div id="print-area" style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:12px;">
+                <div id="print-area" class="print-area-target" style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:12px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <h4>Registration Report</h4>
-                        <button class="btn btn-warning btn-sm no-print" onclick="window.print()">Print A4</button>
+                        <button class="btn btn-warning btn-sm no-print" onclick="window.print()">Print A4 Sheet (~30/Page)</button>
                     </div>
 
-                    <div class="no-print" style="display:flex; flex-direction:column; gap:6px; margin-top:8px;">
+                    <div class="no-print" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; margin-top:8px;">
                         <select id="rep-team" class="form-control" onchange="renderReportTable()"><option value="">All Teams</option></select>
-                        <select id="rep-cat" class="form-control" onchange="renderReportTable()">
+                        <select id="rep-cat" class="form-control" onchange="populateReportProgDropdown(); renderReportTable();">
                             <option value="">All Categories</option>
                             <option value="GENERAL">GENERAL</option>
                             <option value="LOWER ZONE">LOWER ZONE</option>
@@ -676,10 +718,11 @@
                             <option value="HIGHER ZONE">HIGHER ZONE</option>
                             <option value="SUPER ZONE">SUPER ZONE</option>
                         </select>
+                        <select id="rep-prog" class="form-control" onchange="renderReportTable()"><option value="">All Programs</option></select>
                     </div>
                     <table class="table-responsive" id="report-resizable-table">
                         <thead>
-                            <tr><th>Participant</th><th>Team</th><th>Cat</th><th>Prog</th></tr>
+                            <tr><th>#</th><th>Participant</th><th>Team</th><th>Cat</th><th>Program</th></tr>
                         </thead>
                         <tbody id="report-table-body"></tbody>
                     </table>
@@ -746,7 +789,7 @@
 
     </div>
 
-    <!-- MAIN LOGIN MODAL (Designed like Image 3) -->
+    <!-- MAIN LOGIN MODAL -->
     <div id="modal-overlay" class="modal-overlay">
         <div id="modal-login" class="modal-box" style="text-align: center;">
             <h2 style="margin-bottom:20px; color:#ffffff; font-weight:700;">Welcome</h2>
@@ -830,7 +873,8 @@
                 titleColor: '#ffffff',
                 bannerSize: '1.1',
                 titleSize: '2.8',
-                fontFamily: "'Poppins', sans-serif"
+                fontFamily: "'Poppins', sans-serif",
+                headerAlign: 'center'
             },
             teams: [],
             programs: [],
@@ -862,7 +906,7 @@
                     maxProgLimit: data.maxProgLimit || 3,
                     mainCreds: data.mainCreds || { user: 'bahja2026', pass: '2026bahjacommitty' },
                     subLocks: data.subLocks || { settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag' },
-                    visuals: data.visuals || { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColor:'#cbd5e1', titleColor:'#ffffff', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif" },
+                    visuals: data.visuals || { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColor:'#cbd5e1', titleColor:'#ffffff', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center' },
                     teams: data.teams || [],
                     programs: data.programs || [],
                     registrations: data.registrations || [],
@@ -884,6 +928,7 @@
             renderStatesDashboard();
             syncProtectionFields();
             syncModifyConfigInputs();
+            populateReportProgDropdown();
         });
 
         window.saveData = function() {
@@ -926,6 +971,9 @@
             
             if(vis.fontFamily) {
                 document.documentElement.style.setProperty('--main-font', vis.fontFamily);
+            }
+            if(vis.headerAlign) {
+                document.documentElement.style.setProperty('--header-align', vis.headerAlign);
             }
 
             if(bTxt && mTitle) {
@@ -1030,6 +1078,13 @@
 
         window.logoutMain = function() { window.isMainLoggedIn = false; render3DotMenu(); navHome(); }
 
+        /* PRINT HELPER */
+        window.triggerSectionPrint = function(panelId) {
+            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('print-area-target'));
+            document.getElementById(panelId).classList.add('print-area-target');
+            window.print();
+        }
+
         /* PROTECTION MANAGEMENT CONTROLS */
         window.verifyAndOpenMainCredShift = function() {
             const ou = document.getElementById('prot-old-main-u').value.trim();
@@ -1102,14 +1157,17 @@
             document.getElementById('mod-banner-size').value = vis.bannerSize;
             document.getElementById('mod-title-size').value = vis.titleSize;
             if(vis.fontFamily) document.getElementById('mod-font-family').value = vis.fontFamily;
+            if(vis.headerAlign) document.getElementById('mod-header-align').value = vis.headerAlign;
         }
 
         window.liveUpdateVisuals = function() {
             const bTxt = document.getElementById('txt-welcome-banner');
             const mTitle = document.getElementById('txt-main-title');
             const font = document.getElementById('mod-font-family').value;
+            const align = document.getElementById('mod-header-align').value;
             
             document.documentElement.style.setProperty('--main-font', font);
+            document.documentElement.style.setProperty('--header-align', align);
 
             bTxt.innerText = document.getElementById('mod-banner-text').value;
             bTxt.style.color = document.getElementById('mod-banner-color').value;
@@ -1128,7 +1186,8 @@
                 titleColor: document.getElementById('mod-title-color').value,
                 bannerSize: document.getElementById('mod-banner-size').value,
                 titleSize: document.getElementById('mod-title-size').value,
-                fontFamily: document.getElementById('mod-font-family').value
+                fontFamily: document.getElementById('mod-font-family').value,
+                headerAlign: document.getElementById('mod-header-align').value
             };
             saveData();
             alert("Appearance settings stored.");
@@ -1162,7 +1221,7 @@
 
         window.clearAllDataSystem = function() {
             if(confirm("Completely reset database state parameters?")) {
-                window.appState = { phase:'register', portalOpen:true, logoUrl:'', logoPos:'logo-top-left', logoSize:'60', teamStatusUrl:'', maxProgLimit:3, mainCreds:{user:'bahja2026', pass:'2026bahjacommitty'}, subLocks:{settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag'}, visuals:{bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColor:'#cbd5e1', titleColor:'#ffffff', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif"}, teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[], points:[] };
+                window.appState = { phase:'register', portalOpen:true, logoUrl:'', logoPos:'logo-top-left', logoSize:'60', teamStatusUrl:'', maxProgLimit:3, mainCreds:{user:'bahja2026', pass:'2026bahjacommitty'}, subLocks:{settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag'}, visuals:{bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColor:'#cbd5e1', titleColor:'#ffffff', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center'}, teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[], points:[] };
                 saveData(); navHome();
             }
         }
@@ -1363,7 +1422,7 @@
                     <div style="background:rgba(0,0,0,0.3); border:1px solid var(--border-color); padding:8px; border-radius:8px; margin-bottom:6px;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <strong style="font-size:0.85rem;">${prog.name} (${prog.cat})</strong>
-                            <button class="btn btn-danger btn-sm" onclick="deletePtGroup('${pid}')">Delete</button>
+                            <button class="btn btn-danger btn-sm no-print" onclick="deletePtGroup('${pid}')">Delete</button>
                         </div>
                         <div style="font-size:0.75rem; color:#cbd5e1; margin-top:4px;">
                             ${subPts.map(s => `${s.student} (${s.team}): <strong>${s.score}</strong>`).join(' | ')}
@@ -1564,6 +1623,14 @@
             }
         }
 
+        function populateReportProgDropdown() {
+            const cat = document.getElementById('rep-cat').value;
+            const drop = document.getElementById('rep-prog');
+            if(!drop) return;
+            const matched = window.appState.programs.filter(p => !cat || p.cat === cat);
+            drop.innerHTML = '<option value="">All Programs</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        }
+
         function syncControlPanelViews() {
             const btn = document.getElementById('lock-reg-btn');
             if(btn) {
@@ -1620,21 +1687,24 @@
         window.renderReportTable = function() {
             const fTeam = document.getElementById('rep-team').value;
             const fCat = document.getElementById('rep-cat').value;
+            const fProg = document.getElementById('rep-prog') ? document.getElementById('rep-prog').value : '';
             const tbody = document.getElementById('report-table-body');
             if(!tbody) return;
 
             let rows = '';
+            let count = 1;
             window.appState.registrations.forEach(r => {
                 const p = window.appState.programs.find(pr => pr.id === r.progId);
                 if(!p) return;
                 if(fTeam && r.team !== fTeam) return;
                 if(fCat && r.cat !== fCat) return;
+                if(fProg && r.progId !== fProg) return;
 
                 r.participants.forEach(name => {
-                    rows += `<tr><td>${name}</td><td><strong>${r.team}</strong></td><td>${r.cat}</td><td>${p.name}</td></tr>`;
+                    rows += `<tr><td>${count++}</td><td>${name}</td><td><strong>${r.team}</strong></td><td>${r.cat}</td><td>${p.name}</td></tr>`;
                 });
             });
-            tbody.innerHTML = rows || '<tr><td colspan="4">No entries registered.</td></tr>';
+            tbody.innerHTML = rows || '<tr><td colspan="5">No entries registered.</td></tr>';
         }
 
         /* LIVE SITE DISPLAY RENDERINGS */
@@ -1642,7 +1712,7 @@
             const statusBox = document.getElementById('team-status-poster-box');
             if(window.appState.teamStatusUrl) {
                 statusBox.innerHTML = `
-                    <div class="update-card">
+                    <div class="update-card" style="max-width:500px; margin: 0 auto;">
                         <img src="${window.appState.teamStatusUrl}" style="width:100%; border-radius:12px;">
                         <div class="card-action-bar">
                             <span style="font-size:0.8rem; font-weight:700; color:#f6d365;">Team Standings Poster</span>
@@ -1661,10 +1731,10 @@
             renderPinterestUpdates('all');
 
             document.getElementById('livelink-feed').innerHTML = window.appState.livelinks.map((l, i) => `
-                <div class="update-card" style="margin-bottom:12px;">
+                <div class="update-card">
                     <h4 style="margin-bottom:6px; font-size:1rem; color:#fff;">${l.title}</h4>
                     <div class="poster-container">
-                        <img src="${l.thumb}" class="update-media" style="max-height:180px;">
+                        <img src="${l.thumb}" class="update-media">
                     </div>
                     <div class="card-action-bar">
                         <a href="${l.url}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-solid fa-play"></i> Watch Stream</a>
@@ -1677,13 +1747,13 @@
                         </div>
                     </div>
                 </div>
-            `).join('') || '<p style="font-size:0.85rem; color:#64748b;">No Active Live Streams.</p>';
+            `).join('') || '<p style="font-size:0.85rem; color:#64748b; grid-column: 1/-1;">No Active Live Streams.</p>';
 
             document.getElementById('highlights-feed').innerHTML = window.appState.highlights.map((h, i) => `
-                <div class="update-card" style="margin-bottom:12px;">
+                <div class="update-card">
                     <h4 style="margin-bottom:6px; font-size:1rem; color:#fff;">${h.title}</h4>
                     <div class="poster-container">
-                        <img src="${h.thumb}" class="update-media" style="max-height:180px;">
+                        <img src="${h.thumb}" class="update-media">
                     </div>
                     <div class="card-action-bar">
                         <a href="${h.url}" target="_blank" class="btn btn-sm"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open View</a>
@@ -1696,7 +1766,7 @@
                         </div>
                     </div>
                 </div>
-            `).join('') || '<p style="font-size:0.85rem; color:#64748b;">No Highlights Video Links.</p>';
+            `).join('') || '<p style="font-size:0.85rem; color:#64748b; grid-column: 1/-1;">No Highlights Video Links.</p>';
         }
 
         window.filterResultPrograms = function() {
@@ -1785,7 +1855,7 @@
                         </div>
                     `}
                 </div>
-            `).join('') || '<p style="font-size:0.85rem; color:#64748b;">No updates published.</p>';
+            `).join('') || '<p style="font-size:0.85rem; color:#64748b; grid-column: 1/-1;">No updates published.</p>';
         }
 
         /* HELPER DOWNLOAD & SHARE FUNCTIONS */
