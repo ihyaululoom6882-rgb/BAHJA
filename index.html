@@ -4,278 +4,295 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BAHJA 2026 - DAWA FEST</title>
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Montserrat:wght@400;700;900&family=Open+Sans:wght@400;700&family=Poppins:wght@400;600;800&family=Roboto:wght@400;700&display=swap">
-    <!-- Canvas Confetti -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Montserrat:wght@400;700;900&family=Orbitron:wght@700&family=Pacifico&family=Poppins:wght@400;600;800&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
     <style>
-        :root[data-theme="dark"] {
-            --bg-mesh: radial-gradient(circle at 20% 20%, #2a2d32 0%, #111315 100%);
-            --glass-card-bg: rgba(255, 255, 255, 0.05);
-            --glass-card-border: rgba(255, 255, 255, 0.12);
-            --glass-modal-bg: rgba(28, 30, 34, 0.95);
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-card: rgba(255, 255, 255, 0.05);
             --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.15);
-            --input-bg: rgba(0, 0, 0, 0.4);
-            --btn-gold: linear-gradient(180deg, #e6c875 0%, #d4af37 50%, #aa820a 100%);
-            --btn-gold-text: #1e1e1e;
+            --text-muted: #94a3b8;
+            --gold-accent: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+            --gold-btn: #eab308;
+            --font-banner: 'Poppins', sans-serif;
+            --font-title: 'Montserrat', sans-serif;
         }
 
-        :root[data-theme="light"] {
-            --bg-mesh: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%);
-            --glass-card-bg: rgba(255, 255, 255, 0.9);
-            --glass-card-border: rgba(0, 0, 0, 0.1);
-            --glass-modal-bg: rgba(255, 255, 255, 0.98);
-            --text-main: #0f172a;
-            --text-sub: #475569;
-            --border-color: rgba(0, 0, 0, 0.15);
-            --input-bg: #ffffff;
-            --btn-gold: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
-            --btn-gold-text: #ffffff;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--main-font, 'Poppins', sans-serif); }
-        
-        body { 
-            background: var(--bg-mesh); 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg-gradient);
             background-attachment: fixed;
-            color: var(--text-main); 
-            padding-bottom: 50px; 
+            color: var(--text-main);
+            font-family: 'Poppins', sans-serif;
+            padding-bottom: 60px;
             min-height: 100vh;
-            position: relative; 
-            transition: background 0.3s ease, color 0.3s ease;
+            position: relative;
         }
 
-        /* Splash Screen Overlay */
-        #splash-screen {
+        /* Dynamic Positioned System Logo */
+        .dynamic-logo {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #0b0d0e;
-            z-index: 99999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            transition: opacity 0.5s ease;
-        }
-
-        .corner-logo { 
-            position: fixed; 
-            z-index: 99; 
-            display: none; 
+            z-index: 999;
+            display: none;
             object-fit: contain;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
             transition: all 0.3s ease;
         }
-        .logo-top-left { top: 15px; left: 15px; }
-        .logo-top-right { top: 15px; right: 75px; }
-        .logo-bottom-left { bottom: 15px; left: 15px; }
-        .logo-bottom-right { bottom: 15px; right: 15px; }
-        .logo-top-center { top: 15px; left: 50%; transform: translateX(-50%); }
+        .logo-top-left { top: 20px; left: 20px; }
+        .logo-top-right { top: 20px; right: 80px; }
+        .logo-bottom-left { bottom: 20px; left: 20px; }
+        .logo-bottom-right { bottom: 20px; right: 20px; }
 
-        .header-title { text-align: var(--header-align, center); padding: 30px 20px 15px 20px; }
-        .header-title p { font-size: 1.1rem; margin-bottom: 6px; font-weight: 700; letter-spacing: 3px; color: var(--text-sub); }
-        .header-title h1 { font-size: 2.8rem; font-weight: 900; letter-spacing: 2px; color: var(--text-main); text-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-
-        .menu-btn-container { position: fixed; top: 15px; right: 15px; z-index: 1000; }
-        .dots-btn { 
-            background: rgba(255, 255, 255, 0.15); 
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-card-border); 
-            width: 44px; height: 44px; 
-            border-radius: 50%; 
-            cursor: pointer; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 1.2rem; color: var(--text-main);
+        /* Header UI */
+        .header-title { text-align: center; padding: 45px 20px 25px 20px; }
+        .header-title p {
+            font-family: var(--font-banner);
+            color: #fbbf24;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+            letter-spacing: 2px;
         }
-        
-        .dropdown-menu { 
-            display: none; position: absolute; right: 0; top: 55px; 
-            background: var(--glass-modal-bg); 
-            backdrop-filter: blur(20px);
-            min-width: 230px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
-            border-radius: 18px; overflow: hidden; z-index: 1001; 
-            border: 1px solid var(--glass-card-border);
+        .header-title h1 {
+            font-family: var(--font-title);
+            font-size: 3rem;
+            color: #ffffff;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+
+        /* 3-Dots Menu Floating Glass */
+        .menu-btn-container { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+        .dots-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 55px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            min-width: 240px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            border-radius: 16px;
+            overflow: hidden;
+            z-index: 1001;
         }
         .dropdown-menu.show { display: block; }
-        .dropdown-menu button { 
-            width: 100%; padding: 13px 18px; border: none; background: none; 
-            text-align: left; cursor: pointer; font-size: 0.9rem; color: var(--text-main); 
-            display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-color); font-weight: 600; 
+        .dropdown-menu button {
+            width: 100%;
+            padding: 14px 20px;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-weight: 500;
         }
-        .dropdown-menu button:hover { background-color: rgba(255,255,255,0.1); }
+        .dropdown-menu button:hover { background: rgba(255,255,255,0.1); color: #fbbf24; }
 
-        /* Slim Mobile, Full-width Desktop Container */
-        .container { max-width: 460px; margin: 10px auto; padding: 0 12px; }
-        @media(min-width: 900px) {
-            .container { max-width: 950px; }
-        }
-        
-        .card { 
-            background: var(--glass-card-bg); 
+        .container { max-width: 750px; margin: 0 auto; padding: 0 15px; }
+
+        /* Glassmorphism Cards */
+        .card {
+            background: var(--glass-bg);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 24px; 
-            padding: 24px 20px; 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); 
-            margin-bottom: 20px; 
-            border: 1px solid var(--glass-card-border); 
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            margin-bottom: 25px;
+            border: 1px solid var(--glass-border);
         }
         
         .view-panel { display: none; }
         .active-panel { display: block; }
 
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; color: var(--text-sub); }
-        .form-control { 
-            width: 100%; padding: 12px 14px; 
-            background: var(--input-bg);
-            border: 1px solid var(--border-color); 
-            border-radius: 12px; outline: none; font-size: 0.95rem; color: var(--text-main);
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #cbd5e1; }
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            outline: none;
+            font-size: 0.95rem;
+            color: white;
         }
-        
-        .btn { 
-            background: var(--btn-gold); color: var(--btn-gold-text); border: none; 
-            padding: 12px 20px; border-radius: 14px; cursor: pointer; 
-            font-weight: 800; font-size: 0.95rem; display: inline-block; text-align: center; transition: 0.2s; 
-        }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-block { width: 100%; }
-        .btn-danger { background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%); color: white; }
-        .btn-success { background: linear-gradient(180deg, #10b981 0%, #047857 100%); color: white; }
-        .btn-warning { background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%); color: white; }
-        .btn-sm { padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; }
+        .form-control:focus { border-color: #fbbf24; background: rgba(255,255,255,0.12); }
+        select.form-control option { background: #0f172a; color: white; }
 
-        /* Pill Menu */
-        .result-menu-box { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
-        .pill-menu-btn { 
-            display: flex; align-items: center; justify-content: space-between; 
-            border: none; padding: 16px 20px; border-radius: 50px; cursor: pointer; 
-            transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        .btn {
+            background: var(--gold-accent);
+            color: #0f172a;
+            border: none;
+            padding: 14px 22px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(234, 179, 8, 0.2);
         }
-        .pill-menu-btn:active { transform: scale(0.98); }
-        .pill-left-content { display: flex; align-items: center; gap: 14px; }
-        .pill-icon-circle { 
-            width: 44px; height: 44px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 1.2rem; background: rgba(255,255,255,0.85); 
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(234, 179, 8, 0.35); }
+        .btn-block { width: 100%; }
+        .btn-danger { background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); color: white; box-shadow: none; }
+        .btn-success { background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); color: white; box-shadow: none; }
+        .btn-warning { background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%); color: white; box-shadow: none; }
+        .btn-sm { padding: 8px 14px; font-size: 0.85rem; border-radius: 8px; }
+
+        /* Exact Match Image Glass Pill Buttons */
+        .result-menu-box { display: flex; flex-direction: column; gap: 16px; margin-top: 15px; }
+        .pill-menu-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid var(--glass-border);
+            padding: 20px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            width: 100%;
+        }
+        .pill-menu-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .pill-left-content { display: flex; align-items: center; gap: 18px; }
+        .pill-icon-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            background: rgba(255,255,255,0.85);
         }
         .pill-text-wrapper { text-align: left; }
-        .pill-title { font-size: 1.1rem; font-weight: 800; color: #0f172a; line-height: 1.2; }
-        .pill-desc { font-size: 0.78rem; color: #475569; font-weight: 500; margin-top: 3px; }
-        .pill-arrow { font-size: 1.1rem; color: #334155; }
+        .pill-title { font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-bottom: 2px; }
+        .pill-desc { font-size: 0.85rem; color: #475569; font-weight: 500; }
+        .pill-arrow { font-size: 1.2rem; color: #334155; }
 
-        .pill-green { background-color: #e2ebd8; } .pill-green .pill-icon-circle { color: #355e3b; }
-        .pill-yellow { background-color: #f7edd4; } .pill-yellow .pill-icon-circle { color: #b45309; }
-        .pill-pink { background-color: #fdf0ed; } .pill-pink .pill-icon-circle { color: #be123c; }
-        .pill-blue { background-color: #e0f2fe; } .pill-blue .pill-icon-circle { color: #0369a1; }
+        .pill-green { background-color: #e3ebd6; } .pill-green .pill-icon-circle { color: #3e6342; }
+        .pill-yellow { background-color: #f7edd4; } .pill-yellow .pill-icon-circle { color: #b87a2a; }
+        .pill-pink { background-color: #f9f0ed; } .pill-pink .pill-icon-circle { color: #a3443a; }
+        .pill-blue { background-color: #e0f2fe; } .pill-blue .pill-icon-circle { color: #0284c7; }
         .pill-purple { background-color: #f3e8ff; } .pill-purple .pill-icon-circle { color: #7e22ce; }
 
-        /* Pinterest Masonry Layout: 2 Columns on Mobile, 4 on Desktop */
-        .pinterest-masonry { 
-            column-count: 2; 
-            column-gap: 12px; 
-            margin-top: 15px; 
+        /* Media Card & 3-Dot Action Overlays */
+        .media-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 20px;
+            position: relative;
         }
-        @media (min-width: 900px) {
-            .pinterest-masonry { column-count: 4; column-gap: 16px; }
+        .media-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .action-dots-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
         }
-        .masonry-item { 
-            break-inside: avoid; 
-            margin-bottom: 12px; 
-            background: rgba(0,0,0,0.25); 
-            border-radius: 14px; 
-            padding: 8px; 
-            border: 1px solid var(--border-color);
+        .action-popover {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 15px;
+            background: #1e293b;
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 10;
+            overflow: hidden;
         }
-        .masonry-item img, .masonry-item video {
+        .action-popover.show { display: block; }
+        .action-popover button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             width: 100%;
-            height: auto;
-            border-radius: 10px;
-            display: block;
-            object-fit: contain;
+            padding: 10px 16px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 0.85rem;
+            cursor: pointer;
         }
+        .action-popover button:hover { background: rgba(255,255,255,0.1); }
 
-        .collapsible-header { 
-            background: rgba(255, 255, 255, 0.08); padding: 12px 16px; border-radius: 12px; 
-            font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; 
-            align-items: center; margin-top: 12px; border: 1px solid var(--border-color); font-size: 0.9rem;
+        .pinterest-grid { columns: 2; column-gap: 15px; margin-top: 15px; }
+        .pinterest-item { break-inside: avoid; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 16px; padding: 12px; margin-bottom: 15px; position: relative; }
+        .pinterest-media { width: 100%; border-radius: 10px; display: block; margin-bottom: 8px; }
+
+        /* Accordions */
+        .collapsible-header {
+            background: rgba(255,255,255,0.06);
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            border: 1px solid var(--glass-border);
         }
 
         .table-responsive { width: 100%; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-main); }
-        th { background-color: rgba(255, 255, 255, 0.05); font-weight: 700; color: var(--text-sub); }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--glass-border); font-size: 0.9rem; }
+        th { background: rgba(255,255,255,0.05); color: #fbbf24; }
 
-        .modal-overlay { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); z-index: 2000; 
-            justify-content: center; align-items: center; padding: 15px;
-        }
-        .modal-box { 
-            background: var(--glass-modal-bg); 
-            backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-card-border);
-            width: 100%; max-width: 420px; padding: 24px; 
-            border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); 
-        }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-box { background: #1e293b; border: 1px solid var(--glass-border); width: 90%; max-width: 440px; padding: 28px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
 
-        .collapsible-box { display: none; margin-top: 10px; }
-        .collapsible-box.show { display: block; }
+        .inline-res-display { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 18px; border-radius: 14px; margin-top: 12px; text-align: center; }
 
-        /* EXACT BAHJA 2K26 FORMAT & A5/A4 CUSTOM PRINTS */
         @media print {
-            body { background: white !important; color: black !important; padding: 0 !important; margin: 0 !important; }
             body * { visibility: hidden; }
-            .print-target, .print-target * { visibility: visible; }
-            .print-target { 
-                position: absolute !important; left: 0 !important; top: 0 !important; 
-                width: 100% !important; margin: 0 !important; padding: 0 !important; color: black !important;
-            }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { position: absolute; left: 0; top: 0; width: 100%; color: black !important; }
             .no-print { display: none !important; }
-            
-            /* Professional Exact BAHJA 2K26 30-35 Line Report Design */
-            .bahja-sheet-header {
-                display: flex; justify-content: space-between; align-items: center;
-                border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 6px;
-            }
-            .bahja-sheet-header h2 { font-size: 16px; font-weight: 900; letter-spacing: 2px; text-align: center; width: 100%; }
-            .bahja-sheet-table { width: 100% !important; border-collapse: collapse !important; border: 1.5px solid #000 !important; }
-            .bahja-sheet-table th, .bahja-sheet-table td {
-                border: 1px solid #000 !important;
-                padding: 3px 6px !important;
-                font-size: 11px !important;
-                line-height: 1.1 !important;
-                color: black !important;
-            }
-            .bahja-sheet-table th { font-weight: 900; text-transform: uppercase; background-color: #f1f1f1 !important; }
-            
-            /* Large A5 Half-Page Standings Print */
-            .a5-team-standings { font-size: 16px !important; }
-            .a5-team-standings td, .a5-team-standings th { padding: 12px 14px !important; font-size: 15px !important; }
-            @page { size: A4 portrait; margin: 6mm; }
+            table, th, td { color: black !important; border-color: #ccc !important; }
         }
     </style>
 </head>
-<body data-theme="dark">
+<body>
 
-    <!-- Splash Animation Screen -->
-    <div id="splash-screen">
-        <div id="splash-media-container" style="max-width: 80%; text-align: center;">
-            <h1 style="color: #fff; font-weight: 900; letter-spacing: 3px;" id="splash-fallback-text">BAHJA 2026</h1>
-        </div>
-    </div>
+    <!-- Dynamic System Logo Container -->
+    <img id="system-logo-img" class="dynamic-logo" src="" alt="System Logo">
 
-    <!-- Dynamic Positioned Logo -->
-    <img id="corner-logo-view" class="corner-logo logo-top-left" src="" alt="Logo">
-
-    <div class="header-title" id="editable-header-area">
+    <div class="header-title">
         <p id="txt-welcome-banner">WELCOME TO BAHJA FEST</p>
         <h1 id="txt-main-title">BAHJA 2026</h1>
     </div>
@@ -291,8 +308,8 @@
         <div id="panel-home" class="view-panel active-panel card">
             <!-- REGISTER PHASE -->
             <div id="home-phase-register" style="display: none;">
-                <div id="team-login-block" style="text-align: center; max-width: 400px; margin: 0 auto;">
-                    <h3 style="color: #d4af37; margin-bottom: 15px;">Team Leader Login</h3>
+                <div id="team-login-block" style="max-width: 420px; margin: 0 auto; text-align: center;">
+                    <h2 style="color: #fbbf24; margin-bottom: 20px;">Team Leader Login</h2>
                     <form onsubmit="handleTeamLogin(event)">
                         <div class="form-group" style="text-align: left;">
                             <label>Team Username</label>
@@ -302,18 +319,18 @@
                             <label>Password</label>
                             <input type="password" id="login-team-pass" class="form-control" required>
                         </div>
-                        <button type="submit" class="btn btn-block">Sign In</button>
+                        <button type="submit" class="btn btn-block">Login to Portal</button>
                     </form>
                 </div>
 
                 <div id="team-portal-block" style="display: none;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.08); padding: 12px 15px; border-radius: 12px; margin-bottom: 15px;">
-                        <span>Team: <strong id="logged-team-name" style="color: #d4af37;"></strong></span>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.08); padding: 12px 18px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--glass-border);">
+                        <span>Team: <strong id="logged-team-name" style="color: #fbbf24;"></strong></span>
                         <button class="btn btn-danger btn-sm" onclick="logoutTeam()">Logout</button>
                     </div>
 
                     <h3>Program Registration</h3>
-                    <div class="form-group" style="margin-top: 12px;">
+                    <div class="form-group" style="margin-top: 15px;">
                         <label>Select Category</label>
                         <select id="reg-cat-select" class="form-control" onchange="loadCategoryPrograms()">
                             <option value="">-- Choose Category --</option>
@@ -324,137 +341,136 @@
                             <option value="SUPER ZONE">SUPER ZONE</option>
                         </select>
                     </div>
-                    <div id="category-programs-container" style="margin-top: 15px;"></div>
+                    <div id="category-programs-container" style="margin-top: 20px;"></div>
                 </div>
             </div>
 
-            <!-- RESULT PHASE (Toggle Enabled View) -->
+            <!-- RESULT PHASE (Glass Pill Cards) -->
             <div id="home-phase-result" style="display: none;">
-                <div class="result-menu-box" id="result-pills-container">
-                    <button class="pill-menu-btn pill-green" id="pill-sec-team-states" onclick="openSection('section-team-states')">
+                <div class="result-menu-box">
+                    <button class="pill-menu-btn pill-green" onclick="openSection('section-team-states')">
                         <div class="pill-left-content">
                             <div class="pill-icon-circle"><i class="fa-solid fa-flag"></i></div>
                             <div class="pill-text-wrapper">
                                 <div class="pill-title">TEAM STATUS</div>
-                                <div class="pill-desc">Current standings and scores</div>
+                                <div class="pill-desc">Announcements and standings first.</div>
                             </div>
                         </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                        <div class="pill-arrow"><i class="fa-solid fa-arrow-right"></i></div>
                     </button>
 
-                    <button class="pill-menu-btn pill-yellow" id="pill-sec-results-view" onclick="openSection('section-results-view')">
+                    <button class="pill-menu-btn pill-yellow" onclick="openSection('section-results-view')">
                         <div class="pill-left-content">
                             <div class="pill-icon-circle"><i class="fa-solid fa-trophy"></i></div>
                             <div class="pill-text-wrapper">
                                 <div class="pill-title">RESULT</div>
-                                <div class="pill-desc">Published rounds & winners</div>
+                                <div class="pill-desc">See rounds finished and placements.</div>
                             </div>
                         </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                        <div class="pill-arrow"><i class="fa-solid fa-arrow-right"></i></div>
                     </button>
 
-                    <button class="pill-menu-btn pill-pink" id="pill-sec-updates" onclick="openSection('section-updates')">
+                    <button class="pill-menu-btn pill-pink" onclick="openSection('section-updates')">
                         <div class="pill-left-content">
                             <div class="pill-icon-circle"><i class="fa-solid fa-bolt"></i></div>
                             <div class="pill-text-wrapper">
                                 <div class="pill-title">UPDATES</div>
-                                <div class="pill-desc">Recent photos & video stream</div>
+                                <div class="pill-desc">Recent activity & media gallery items stream.</div>
                             </div>
                         </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                        <div class="pill-arrow"><i class="fa-solid fa-arrow-right"></i></div>
                     </button>
 
-                    <button class="pill-menu-btn pill-blue" id="pill-sec-livelink" onclick="openSection('section-livelink')">
+                    <button class="pill-menu-btn pill-blue" onclick="openSection('section-livelink')">
                         <div class="pill-left-content">
                             <div class="pill-icon-circle"><i class="fa-solid fa-video"></i></div>
                             <div class="pill-text-wrapper">
                                 <div class="pill-title">LIVE STREAMING</div>
-                                <div class="pill-desc">Watch venue stage live</div>
+                                <div class="pill-desc">Watch broadcast programs live from venue.</div>
                             </div>
                         </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                        <div class="pill-arrow"><i class="fa-solid fa-arrow-right"></i></div>
                     </button>
 
-                    <button class="pill-menu-btn pill-purple" id="pill-sec-highlights" onclick="openSection('section-highlights')">
+                    <button class="pill-menu-btn pill-purple" onclick="openSection('section-highlights')">
                         <div class="pill-left-content">
                             <div class="pill-icon-circle"><i class="fa-solid fa-star"></i></div>
                             <div class="pill-text-wrapper">
                                 <div class="pill-title">HIGHLIGHTS</div>
-                                <div class="pill-desc">Festival moments & clips</div>
+                                <div class="pill-desc">Special event photos and videos.</div>
                             </div>
                         </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                        <div class="pill-arrow"><i class="fa-solid fa-arrow-right"></i></div>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- TEAM STATUS SECTION -->
+        <!-- TEAM STATUS -->
         <div id="section-team-states" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h3 style="color: #d4af37; margin-bottom: 12px;">Team Status</h3>
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 15px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h2 style="color: #fbbf24; margin-bottom: 15px;">Team Status</h2>
             <div id="team-status-poster-box" style="text-align: center;"></div>
         </div>
 
-        <!-- RESULTS VIEW SECTION -->
+        <!-- RESULT VIEW -->
         <div id="section-results-view" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h3 style="color: #d4af37; margin-bottom: 12px;">Program Results</h3>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 15px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h2 style="color: #fbbf24; margin-bottom: 15px;">Program Results</h2>
+            <div class="form-group">
                 <select id="res-search-cat" class="form-control" onchange="filterResultPrograms()">
-                    <option value="">-- All Categories --</option>
+                    <option value="">-- Select Category --</option>
                     <option value="GENERAL">GENERAL</option>
                     <option value="LOWER ZONE">LOWER ZONE</option>
                     <option value="MIDDLE ZONE">MIDDLE ZONE</option>
                     <option value="HIGHER ZONE">HIGHER ZONE</option>
                     <option value="SUPER ZONE">SUPER ZONE</option>
                 </select>
-                <input type="text" id="res-prog-search" class="form-control" placeholder="Search Program..." oninput="filterResultPrograms()">
             </div>
             <div id="results-display-list"></div>
         </div>
 
-        <!-- UPDATES & GALLERY (Pinterest Layout) -->
+        <!-- UPDATES GALLERY -->
         <div id="section-updates" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h3 style="color: #d4af37; margin-bottom: 12px;">Updates & Gallery</h3>
-            <div style="display:flex; gap:8px; margin-bottom:12px;" class="no-print">
-                <button class="btn btn-sm btn-warning" onclick="renderPinterestUpdates('all')">All</button>
-                <button class="btn btn-sm btn-primary" onclick="renderPinterestUpdates('photo')">Photos Only</button>
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 15px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h2 style="color: #fbbf24; margin-bottom: 15px;">Updates & Gallery</h2>
+            <div style="display:flex; gap:10px; margin-bottom:15px;" class="no-print">
+                <button class="btn btn-sm btn-warning" onclick="renderPinterestUpdates('all')">Show All</button>
+                <button class="btn btn-sm" style="background:#0284c7; color:white;" onclick="renderPinterestUpdates('photo')">Photos Only</button>
                 <button class="btn btn-sm btn-success" onclick="renderPinterestUpdates('video')">Videos Only</button>
             </div>
-            <div id="live-updates-feed" class="pinterest-masonry"></div>
+            <div id="live-updates-feed" class="pinterest-grid"></div>
         </div>
 
         <!-- LIVE STREAM -->
         <div id="section-livelink" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h3 style="color: #d4af37; margin-bottom: 12px;">Live Streams</h3>
-            <div id="livelink-feed" class="pinterest-masonry"></div>
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 15px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h2 style="color: #fbbf24; margin-bottom: 15px;">Live Streams</h2>
+            <div id="livelink-feed"></div>
         </div>
 
         <!-- HIGHLIGHTS -->
         <div id="section-highlights" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h3 style="color: #d4af37; margin-bottom: 12px;">Highlights</h3>
-            <div id="highlights-feed" class="pinterest-masonry"></div>
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 15px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h2 style="color: #fbbf24; margin-bottom: 15px;">Highlights</h2>
+            <div id="highlights-feed"></div>
         </div>
 
         <!-- PARTICIPANTS ENTRY DIRECTORY -->
         <div id="panel-participants-entry" class="view-panel card">
             <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h3 style="color: #d4af37; margin-top: 12px;">Add Team Participants</h3>
+            <h2 style="color: #fbbf24; margin-top: 15px;">Add Team Participants</h2>
             
-            <div id="part-login-block" style="max-width:400px; margin: 10px auto;">
-                <form onsubmit="handlePartLogin(event)">
+            <div id="part-login-block">
+                <form onsubmit="handlePartLogin(event)" style="margin-top: 15px;">
                     <div class="form-group"><label>Team Username</label><input type="text" id="part-user" class="form-control" required></div>
                     <div class="form-group"><label>Password</label><input type="password" id="part-pass" class="form-control" required></div>
                     <button type="submit" class="btn btn-block">Verify & Open</button>
                 </form>
             </div>
 
-            <div id="part-manage-block" style="display:none; margin-top:15px;">
-                <h4 style="margin-bottom:10px;">Team: <span id="part-active-team" style="color:#d4af37;"></span></h4>
+            <div id="part-manage-block" style="display:none; margin-top:20px;">
+                <h4 style="margin-bottom:10px;">Team: <span id="part-active-team" style="color:#fbbf24;"></span></h4>
                 <form onsubmit="addTeamParticipant(event)">
                     <div class="form-group">
                         <label>Category</label>
@@ -470,38 +486,23 @@
                         <label>Participant Name</label>
                         <input type="text" id="part-name" class="form-control" required>
                     </div>
-                    <button type="submit" class="btn btn-success btn-block">Add Student</button>
+                    <button type="submit" class="btn btn-success">Add Student</button>
                 </form>
-                <div id="team-students-list" style="margin-top:15px;"></div>
+                <div id="team-students-list" style="margin-top:20px;"></div>
             </div>
         </div>
 
         <!-- SYSTEM SETTINGS -->
         <div id="panel-settings" class="view-panel card">
-            <h3 style="color: #d4af37; margin-bottom: 15px;">System Settings</h3>
+            <h2 style="color: #fbbf24; margin-bottom: 20px;">System Settings</h2>
             <form onsubmit="applyPhaseSettings(event)">
                 <div class="form-group">
-                    <label>Active Festival Phase</label>
-                    <div style="display:flex; gap: 15px; align-items:center;">
+                    <label>Active Phase</label>
+                    <div style="display:flex; gap: 20px; align-items:center;">
                         <label><input type="radio" name="phase-toggle" id="phase-reg-radio" value="register" onchange="togglePhaseControl('register')"> Registration Phase</label>
                         <label><input type="radio" name="phase-toggle" id="phase-res-radio" value="result" onchange="togglePhaseControl('result')"> Result Phase</label>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label>Website Global Theme</label>
-                    <select id="sys-theme-select" class="form-control" onchange="updateGlobalWebsiteTheme(this.value)">
-                        <option value="dark">Dark Theme (Glass Gold)</option>
-                        <option value="light">White / Light Theme</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Splash Startup Animation (Video/GIF/Image)</label>
-                    <input type="file" id="sys-splash-input" class="form-control" accept="video/*,image/*">
-                </div>
-                
-                <hr style="margin:15px 0; border:0; border-top:1px solid var(--border-color);">
                 
                 <div class="form-group">
                     <label>Upload Logo</label>
@@ -509,42 +510,37 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Logo Placement Position</label>
-                    <select id="sys-logo-pos" class="form-control" onchange="updateLogoStylesLocally()">
-                        <option value="logo-top-left">Top Left Corner</option>
-                        <option value="logo-top-right">Top Right Corner</option>
-                        <option value="logo-top-center">Center Top</option>
-                        <option value="logo-bottom-left">Bottom Left</option>
-                        <option value="logo-bottom-right">Bottom Right</option>
+                    <label>Logo Corner Position</label>
+                    <select id="sys-logo-pos" class="form-control">
+                        <option value="top-left">Top Left Corner</option>
+                        <option value="top-right">Top Right Corner</option>
+                        <option value="bottom-left">Bottom Left Corner</option>
+                        <option value="bottom-right">Bottom Right Corner</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Logo Size Height (px): <span id="logo-size-val">60</span>px</label>
-                    <input type="range" min="30" max="120" value="60" id="sys-logo-size" class="form-control" oninput="updateLogoStylesLocally()">
+                    <label>Logo Display Size (px)</label>
+                    <input type="number" id="sys-logo-size" class="form-control" value="65" min="30" max="200">
                 </div>
 
-                <button type="submit" class="btn btn-block">Save System Configurations</button>
+                <button type="submit" class="btn btn-block">Save Phase & Logo Settings</button>
             </form>
-            <div id="logo-manage-box" style="margin-top:12px; display:none;">
-                <button class="btn btn-danger btn-sm btn-block" onclick="deleteSysLogo()">Delete Current Logo</button>
+            <div id="logo-manage-box" style="margin-top:15px; display:none;">
+                <button class="btn btn-danger btn-sm" onclick="deleteSysLogo()">Delete Logo</button>
             </div>
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--glass-border);">
             <button class="btn btn-danger btn-block" onclick="clearAllDataSystem()">Clear All System Data</button>
         </div>
 
-        <!-- POINTROOM PORTAL (Individual & Bulk Print Enabled) -->
+        <!-- POINTROOM PORTAL -->
         <div id="panel-pointroom" class="view-panel card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>Pointroom Management</h3>
-                <button class="btn btn-warning btn-sm no-print" onclick="printAllPointRecords()"><i class="fa-solid fa-print"></i> Print All Logs</button>
-            </div>
-            
-            <form onsubmit="savePointroomEntry(event)" class="no-print" style="margin-top:12px;">
+            <h2 style="color:#fbbf24;">Pointroom Management</h2>
+            <form onsubmit="savePointroomEntry(event)" style="margin-top:15px;">
                 <div class="form-group">
                     <label>Select Category</label>
                     <select id="pt-cat-select" class="form-control" onchange="populatePtProgs()" required>
-                        <option value="">-- Choose Category --</option>
+                        <option value="">-- Choose --</option>
                         <option value="GENERAL">GENERAL</option>
                         <option value="LOWER ZONE">LOWER ZONE</option>
                         <option value="MIDDLE ZONE">MIDDLE ZONE</option>
@@ -556,199 +552,157 @@
                     <label>Select Program</label>
                     <select id="pt-prog-select" class="form-control" onchange="loadPtParticipants()" required></select>
                 </div>
-                <div id="pt-stage-badge" style="margin-bottom:12px; font-weight:bold; color:#d4af37;"></div>
+                <div id="pt-stage-badge" style="margin-bottom:15px; font-weight:bold; color:#fbbf24;"></div>
                 
-                <div id="pt-candidates-inputs" style="margin-bottom:12px;"></div>
-                <button type="submit" class="btn btn-success btn-block btn-xl">Submit Point Records</button>
+                <div id="pt-candidates-inputs" style="margin-bottom:15px;"></div>
+                <button type="submit" class="btn btn-success btn-block">Submit Point Records</button>
             </form>
 
-            <div class="collapsible-header no-print" onclick="toggleAccordion('box-pt-list')"><span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
-            <div id="box-pt-list" class="collapsible-box show"></div>
-
-            <div id="pt-print-area" class="print-target" style="display:none;"></div>
+            <div class="collapsible-header" onclick="toggleAccordion('box-pt-list')"><span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="box-pt-list" style="display:none; margin-top:10px;"></div>
         </div>
 
         <!-- JUDGE PORTAL -->
         <div id="panel-judge" class="view-panel card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>Judge Leaderboard</h3>
-                <button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('judge-print-container')"><i class="fa-solid fa-print"></i> Print Leaderboard</button>
+            <h2 style="color:#fbbf24;">Judge Evaluation Portal</h2>
+            <div class="form-group" style="margin-top:15px;">
+                <label>Filter Stage View</label>
+                <select id="jd-filter-stage" class="form-control" onchange="renderJudgeLeaderboard()">
+                    <option value="all">ALL STAGES</option>
+                    <option value="ON STAGE">ON STAGE</option>
+                    <option value="OFF STAGE">OFF STAGE</option>
+                </select>
             </div>
-            <div id="judge-print-container" class="print-target">
-                <div class="form-group no-print" style="margin-top:12px;">
-                    <label>Filter Stage View</label>
-                    <select id="jd-filter-stage" class="form-control" onchange="renderJudgeLeaderboard()">
-                        <option value="all">ALL STAGES</option>
-                        <option value="ON STAGE">ON STAGE</option>
-                        <option value="OFF STAGE">OFF STAGE</option>
-                    </select>
-                </div>
-                <div class="table-responsive">
-                    <table class="bahja-sheet-table">
-                        <thead>
-                            <tr><th>Student Name</th><th>Team</th><th>Cat</th><th>Points</th></tr>
-                        </thead>
-                        <tbody id="judge-leaderboard-body"></tbody>
-                    </table>
-                </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>Student Name</th><th>Team</th><th>Category</th><th>Total Points</th></tr>
+                    </thead>
+                    <tbody id="judge-leaderboard-body"></tbody>
+                </table>
             </div>
         </div>
 
-        <!-- STATES CONTROL (Rank Filter & Half-A4 Big Print) -->
+        <!-- STATES CONTROL -->
         <div id="panel-states-control" class="view-panel card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>States Control Dashboard</h3>
-                <button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('states-print-container')"><i class="fa-solid fa-print"></i> Print Large Standings</button>
-            </div>
-
-            <!-- Team Points Standings -->
-            <div id="states-print-container" class="print-target">
-                <div class="table-responsive" style="margin-top:12px;">
-                    <table class="bahja-sheet-table a5-team-standings">
-                        <thead>
-                            <tr><th>Team Username</th><th>Aggregated Points</th></tr>
-                        </thead>
-                        <tbody id="states-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Rank-wise Student Filter Section -->
-            <hr style="margin:20px 0; border:0; border-top:1px solid var(--border-color);">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h4>Rank-wise Winners Filter</h4>
-                <button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('rank-print-container')"><i class="fa-solid fa-print"></i> Print Rank List</button>
-            </div>
-
-            <div class="no-print" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
-                <select id="rank-team-filter" class="form-control" onchange="renderRankWinnersList()"><option value="">All Teams</option></select>
-                <select id="rank-pos-filter" class="form-control" onchange="renderRankWinnersList()">
-                    <option value="1">1st Rank Positions Only</option>
-                    <option value="2">2nd Rank Positions Only</option>
-                    <option value="3">3rd Rank Positions Only</option>
-                    <option value="4">4th Rank Positions Only</option>
-                    <option value="all">All Placed Winners</option>
-                </select>
-            </div>
-
-            <div id="rank-print-container" class="print-target">
-                <table class="bahja-sheet-table" style="margin-top:10px;">
+            <h2 style="color:#fbbf24;">States Control Dashboard</h2>
+            <div class="table-responsive" style="margin-top:15px;">
+                <table>
                     <thead>
-                        <tr><th>#</th><th>Student Name</th><th>Team</th><th>Program</th><th>Score</th><th>Position</th></tr>
+                        <tr><th>Team Username</th><th>Aggregated Points</th></tr>
                     </thead>
-                    <tbody id="rank-winners-body"></tbody>
+                    <tbody id="states-table-body"></tbody>
                 </table>
             </div>
         </div>
 
         <!-- PROTECTION SYSTEM PANEL -->
         <div id="panel-protection" class="view-panel card">
-            <h3>Protection Settings Dashboard</h3>
-            <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:12px;">
-                <h4 style="font-size:0.95rem; color:#d4af37;">Change Main Login Credentials</h4>
-                <div class="form-group" style="margin-top:8px;">
-                    <input type="text" id="prot-old-main-u" class="form-control" placeholder="Current Username" style="margin-bottom:6px;">
-                    <input type="password" id="prot-old-main-p" class="form-control" placeholder="Current Password" style="margin-bottom:6px;">
-                    <button class="btn btn-sm btn-primary btn-block" onclick="verifyAndOpenMainCredShift()">Verify Credentials</button>
+            <h2 style="color:#fbbf24;">Protection Settings Dashboard</h2>
+            <div style="background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); padding:18px; border-radius:16px; margin-top:15px;">
+                <h4>Change Main Login Credentials</h4>
+                <div class="form-group" style="margin-top:10px;">
+                    <input type="text" id="prot-old-main-u" class="form-control" placeholder="Current Username">
+                    <input type="password" id="prot-old-main-p" class="form-control" placeholder="Current Password" style="margin-top:6px;">
+                    <button class="btn btn-sm" style="margin-top:8px;" onclick="verifyAndOpenMainCredShift()">Verify Credentials</button>
                 </div>
-                <div id="prot-new-main-block" style="display:none; margin-top:8px; border-top:1px dashed #64748b; padding-top:8px;">
+                <div id="prot-new-main-block" style="display:none; margin-top:10px; border-top:1px dashed var(--glass-border); padding-top:10px;">
                     <div class="form-group">
-                        <input type="text" id="prot-new-main-u" class="form-control" placeholder="New Username" style="margin-bottom:6px;">
-                        <input type="password" id="prot-new-main-p" class="form-control" placeholder="New Password" style="margin-bottom:6px;">
-                        <button class="btn btn-sm btn-success btn-block" onclick="commitMainCredShift()">Save New Credentials</button>
+                        <input type="text" id="prot-new-main-u" class="form-control" placeholder="New Username">
+                        <input type="password" id="prot-new-main-p" class="form-control" placeholder="New Password" style="margin-top:6px;">
+                        <button class="btn btn-sm btn-success" style="margin-top:8px;" onclick="commitMainCredShift()">Save New Main Login</button>
                     </div>
                 </div>
             </div>
 
-            <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:15px;">
-                <h4 style="font-size:0.95rem; color:#d4af37;">Modify Sub-Panel Access Passwords</h4>
-                <div id="sub-panel-pass-managers-container" style="margin-top:8px; display:flex; flex-direction:column; gap:10px;"></div>
+            <div style="background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); padding:18px; border-radius:16px; margin-top:20px;">
+                <h4>Modify Sub-Panel Access Locks</h4>
+                <div id="sub-panel-pass-managers-container" style="margin-top:10px; display:flex; flex-direction:column; gap:12px;"></div>
             </div>
         </div>
 
-        <!-- MODIFY APPEARANCE (Isolated Dark/Light + Sync Toggle) -->
+        <!-- MODIFY CUSTOMIZATION PANEL -->
         <div id="panel-modify" class="view-panel card">
-            <h3>Modify Visuals & Alignment</h3>
-            <div style="margin-top:12px; display:flex; flex-direction:column; gap:12px;">
+            <h2 style="color:#fbbf24;">Modify Layout & Stock Typography</h2>
+            <div style="margin-top:15px; display:flex; flex-direction:column; gap:15px;">
                 <div class="form-group">
                     <label>Welcome Banner Text</label>
                     <input type="text" id="mod-banner-text" class="form-control" oninput="liveUpdateVisuals()">
                 </div>
                 <div class="form-group">
+                    <label>Welcome Banner Font Stock</label>
+                    <select id="mod-banner-font" class="form-control" onchange="liveUpdateVisuals()">
+                        <option value="'Poppins', sans-serif">Poppins (Clean Modern)</option>
+                        <option value="'Roboto', sans-serif">Roboto (Standard)</option>
+                        <option value="'Montserrat', sans-serif">Montserrat (Bold Corporate)</option>
+                        <option value="'Caveat', cursive">Caveat (Handwritten)</option>
+                        <option value="'Pacifico', cursive">Pacifico (Stylish Script)</option>
+                        <option value="'Orbitron', sans-serif">Orbitron (Futuristic Sci-Fi)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label>Main Title Text</label>
                     <input type="text" id="mod-title-text" class="form-control" oninput="liveUpdateVisuals()">
                 </div>
                 <div class="form-group">
-                    <label>Header Text Alignment</label>
-                    <select id="mod-header-align" class="form-control" onchange="liveUpdateVisuals()">
-                        <option value="center">Center Alignment</option>
-                        <option value="left">Left Alignment</option>
-                        <option value="right">Right Alignment</option>
+                    <label>Main Title Font Stock</label>
+                    <select id="mod-title-font" class="form-control" onchange="liveUpdateVisuals()">
+                        <option value="'Montserrat', sans-serif">Montserrat (Bold Impact)</option>
+                        <option value="'Poppins', sans-serif">Poppins (Smooth)</option>
+                        <option value="'Roboto', sans-serif">Roboto (Classic)</option>
+                        <option value="'Orbitron', sans-serif">Orbitron (Digital Tech)</option>
+                        <option value="'Pacifico', cursive">Pacifico (Artistic Cursive)</option>
+                        <option value="'Caveat', cursive">Caveat (Casual)</option>
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label>Font Typography</label>
-                    <select id="mod-font-family" class="form-control" onchange="liveUpdateVisuals()">
-                        <option value="'Poppins', sans-serif">Poppins</option>
-                        <option value="'Inter', sans-serif">Inter</option>
-                        <option value="'Montserrat', sans-serif">Montserrat</option>
-                        <option value="'Roboto', sans-serif">Roboto</option>
-                        <option value="'Open Sans', sans-serif">Open Sans</option>
-                    </select>
+                    <label>Welcome Banner Color</label>
+                    <input type="color" id="mod-banner-color" class="form-control" style="height:45px;" onchange="liveUpdateVisuals()">
                 </div>
                 <div class="form-group">
-                    <label>Banner Color (Current Theme)</label>
-                    <input type="color" id="mod-banner-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;">
+                    <label>Main Title Color</label>
+                    <input type="color" id="mod-title-color" class="form-control" style="height:45px;" onchange="liveUpdateVisuals()">
                 </div>
-                <div class="form-group">
-                    <label>Title Color (Current Theme)</label>
-                    <input type="color" id="mod-title-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;">
-                </div>
-                <div class="form-group">
-                    <label style="display:flex; align-items:center; gap:8px;">
-                        <input type="checkbox" id="mod-sync-light"> Sync changes to White / Light Mode simultaneously
-                    </label>
-                </div>
-                <button class="btn btn-success" onclick="saveVisualLayoutState()">Save Appearance Layout</button>
+                
+                <button class="btn btn-success" onclick="saveVisualLayoutState()">Save Appearance Modifications</button>
             </div>
         </div>
 
         <!-- CONTROL PANEL -->
         <div id="panel-control-panel" class="view-panel card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3>Committee Control Panel</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="color:#fbbf24;">Committee Control Panel</h2>
                 <button class="btn btn-danger btn-sm" onclick="navHome()">Exit</button>
             </div>
 
-            <!-- REGISTRATION CONTROL -->
-            <div class="collapsible-header" onclick="toggleAccordion('box-reg-control')">
-                <span>1. REGISTRATION CONTROL</span> <i class="fa-solid fa-chevron-down"></i>
-            </div>
-            <div id="box-reg-control" class="collapsible-box show" style="padding:12px; background:rgba(0,0,0,0.2); border-radius:12px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:12px;">
-                    <span>Registration Lock:</span>
+            <div class="collapsible-header" onclick="toggleAccordion('box-reg-control')"><span>1. REGISTRATION CONTROL</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="box-reg-control" style="display:none; padding:15px; background:rgba(0,0,0,0.2); border-radius:12px; margin-top:10px; border:1px solid var(--glass-border);">
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; border:1px solid var(--glass-border); margin-bottom:15px;">
+                    <span>Registration Lock Status:</span>
                     <button id="lock-reg-btn" class="btn btn-sm" onclick="toggleRegLock()"></button>
                 </div>
                 
-                <div class="form-group" style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; border:1px solid var(--border-color);">
-                    <label>Max Non-General Items Per Student</label>
+                <div class="form-group" style="background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; border:1px solid var(--glass-border);">
+                    <label>Max Non-General Programs Per Student</label>
                     <input type="number" id="m-max-limit-input" class="form-control" value="3">
-                    <button class="btn btn-sm btn-primary" style="margin-top:5px;" onclick="saveMaxLimitMaster()">Set Limit</button>
+                    <button class="btn btn-sm" style="margin-top:8px;" onclick="saveMaxLimitMaster()">Set Limit</button>
                 </div>
                 
-                <div class="collapsible-header" onclick="toggleAccordion('inner-teams-box')"><span>Teams Manager</span> <i class="fa-solid fa-chevron-down"></i></div>
-                <div id="inner-teams-box" class="collapsible-box">
-                    <form onsubmit="addTeamMaster(event)" style="display:flex; flex-direction:column; gap:6px; margin-bottom:10px;">
-                        <input type="text" id="m-team-user" class="form-control" placeholder="Username" required>
-                        <input type="password" id="m-team-pass" class="form-control" placeholder="Password" required>
-                        <button type="submit" class="btn btn-sm btn-success">Add Team</button>
-                    </form>
-                    <div id="master-teams-list"></div>
-                </div>
+                <h4 style="margin-top:15px;">Add Team Credentials</h4>
+                <form onsubmit="addTeamMaster(event)" style="margin-top:10px; display:flex; gap:10px; margin-bottom:10px;">
+                    <input type="text" id="m-team-user" class="form-control" placeholder="Username" required>
+                    <input type="password" id="m-team-pass" class="form-control" placeholder="Password" required>
+                    <button type="submit" class="btn btn-success">Add Team</button>
+                </form>
 
-                <div class="collapsible-header" onclick="toggleAccordion('inner-progs-box')"><span>Programs Master List</span> <i class="fa-solid fa-chevron-down"></i></div>
-                <div id="inner-progs-box" class="collapsible-box">
-                    <form onsubmit="addProgramMaster(event)" style="display:flex; flex-direction:column; gap:6px;">
+                <div class="collapsible-header" onclick="toggleAccordion('master-teams-list')"><span>Registered Teams List</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="master-teams-list" style="display:none; margin-top:10px;"></div>
+
+                <h4 style="margin-top:20px;">Add Program</h4>
+                <form onsubmit="addProgramMaster(event)" style="margin-top:10px;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
                         <input type="text" id="m-prog-name" class="form-control" placeholder="Program Name" required>
                         <select id="m-prog-cat" class="form-control">
                             <option value="GENERAL">GENERAL</option>
@@ -761,22 +715,23 @@
                             <option value="ON STAGE">ON STAGE</option>
                             <option value="OFF STAGE">OFF STAGE</option>
                         </select>
-                        <input type="number" id="m-prog-limit" class="form-control" placeholder="Max Spots" required>
-                        <button type="submit" class="btn btn-sm btn-block">Add Program</button>
-                    </form>
-                    <div id="master-progs-list" style="margin-top:10px;"></div>
-                </div>
+                        <input type="number" id="m-prog-limit" class="form-control" placeholder="Max Spots/Alugald" required>
+                    </div>
+                    <button type="submit" class="btn btn-block">Add Program</button>
+                </form>
 
-                <!-- Registration Report & Exact Sheet Print -->
-                <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:8px;">
+                <div class="collapsible-header" onclick="toggleAccordion('master-progs-list')"><span>Programs List</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="master-progs-list" style="display:none; margin-top:10px;"></div>
+
+                <div id="print-area" style="margin-top:25px; border-top:1px solid var(--glass-border); padding-top:15px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h4>Registration Report</h4>
-                        <button class="btn btn-warning btn-sm" onclick="triggerCustomPrint('print-exact-report-area')">Print Exact Sheet (35 Lines)</button>
+                        <h3>Registration Report</h3>
+                        <button class="btn btn-warning btn-sm no-print" onclick="window.print()">Print A4 Report</button>
                     </div>
 
-                    <div class="no-print" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; margin-top:8px; margin-bottom:8px;">
+                    <div class="no-print" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:10px;">
                         <select id="rep-team" class="form-control" onchange="renderReportTable()"><option value="">All Teams</option></select>
-                        <select id="rep-cat" class="form-control" onchange="populateReportProgDropdown(); renderReportTable();">
+                        <select id="rep-cat" class="form-control" onchange="renderReportTable()">
                             <option value="">All Categories</option>
                             <option value="GENERAL">GENERAL</option>
                             <option value="LOWER ZONE">LOWER ZONE</option>
@@ -784,100 +739,71 @@
                             <option value="HIGHER ZONE">HIGHER ZONE</option>
                             <option value="SUPER ZONE">SUPER ZONE</option>
                         </select>
-                        <select id="rep-prog" class="form-control" onchange="renderReportTable()"><option value="">All Programs (A-Z)</option></select>
-                    </div>
-                    <div class="no-print" style="margin-bottom:8px;">
-                        <input type="text" id="rep-prog-search" class="form-control" placeholder="Type to search program..." oninput="renderReportTable()">
-                    </div>
-
-                    <div id="print-exact-report-area" class="print-target">
-                        <div class="bahja-sheet-header">
-                            <span style="font-size:11px; font-weight:bold;">TIME:</span>
-                            <h2>BAHJA 2K26</h2>
-                            <span style="font-size:11px; font-weight:bold;">DATE:</span>
-                        </div>
-                        <table class="bahja-sheet-table" id="report-resizable-table">
-                            <thead>
-                                <tr>
-                                    <th style="width:35px;">#</th>
-                                    <th>PARTICIPANT</th>
-                                    <th>TEAM</th>
-                                    <th>CATEGORY</th>
-                                    <th>PROGRAM</th>
-                                </tr>
-                            </thead>
-                            <tbody id="report-table-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RESULT & MEDIA PUBLISHER (Section Toggles Included) -->
-            <div class="collapsible-header" onclick="toggleAccordion('box-res-control')">
-                <span>2. RESULT & MEDIA PUBLISHER</span> <i class="fa-solid fa-chevron-down"></i>
-            </div>
-            <div id="box-res-control" class="collapsible-box" style="padding:12px; background:rgba(0,0,0,0.2); border-radius:12px;">
-                
-                <!-- Section Visibility Switches -->
-                <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin-bottom:12px;">
-                    <h5 style="color:#d4af37; margin-bottom:6px;">Section Visibility Toggles (Result Phase)</h5>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; font-size:0.85rem;">
-                        <label><input type="checkbox" id="toggle-vis-team-states" onchange="updateSectionVisibilities()"> Team Status</label>
-                        <label><input type="checkbox" id="toggle-vis-results-view" onchange="updateSectionVisibilities()"> Result</label>
-                        <label><input type="checkbox" id="toggle-vis-updates" onchange="updateSectionVisibilities()"> Updates Feed</label>
-                        <label><input type="checkbox" id="toggle-vis-livelink" onchange="updateSectionVisibilities()"> Live Stream</label>
-                        <label><input type="checkbox" id="toggle-vis-highlights" onchange="updateSectionVisibilities()"> Highlights</label>
-                    </div>
-                </div>
-
-                <div class="collapsible-header" onclick="toggleAccordion('sub-status-box')"><span>Upload Team Status Poster</span> <i class="fa-solid fa-chevron-down"></i></div>
-                <div id="sub-status-box" class="collapsible-box">
-                    <form onsubmit="uploadTeamStatusPoster(event)">
-                        <input type="file" id="status-file" class="form-control" accept="image/*" required>
-                        <button type="submit" class="btn btn-sm btn-success btn-block" style="margin-top:5px;">Upload Status Poster</button>
-                    </form>
-                    <div id="master-status-preview" style="margin-top:6px;"></div>
-                </div>
-
-                <div class="collapsible-header" onclick="toggleAccordion('sub-res-box')"><span>Publish Program Result (Numbered)</span> <i class="fa-solid fa-chevron-down"></i></div>
-                <div id="sub-res-box" class="collapsible-box">
-                    <form onsubmit="uploadProgramResult(event)" style="display:flex; flex-direction:column; gap:6px;">
-                        <select id="res-upload-cat" class="form-control" onchange="populateResProgDropdown()"><option value="">-- Choose Category --</option><option value="GENERAL">GENERAL</option><option value="LOWER ZONE">LOWER ZONE</option><option value="MIDDLE ZONE">MIDDLE ZONE</option><option value="HIGHER ZONE">HIGHER ZONE</option><option value="SUPER ZONE">SUPER ZONE</option></select>
-                        <select id="res-upload-prog" class="form-control" required></select>
-                        <input type="number" id="res-custom-number" class="form-control" placeholder="Result Sequence Number (e.g. 1, 2, 3...)" required>
-                        <input type="file" id="res-file" class="form-control" accept="image/*" required>
-                        <input type="url" id="res-yt-url" class="form-control" placeholder="YouTube Link (Optional)">
-                        <button type="submit" class="btn btn-sm btn-success btn-block">Publish Result</button>
-                    </form>
-                    <div id="master-results-list" style="margin-top:10px;"></div>
-                </div>
-
-                <div class="collapsible-header" onclick="toggleAccordion('sub-up-box')"><span>Upload Updates (Direct Video & Photo)</span> <i class="fa-solid fa-chevron-down"></i></div>
-                <div id="sub-up-box" class="collapsible-box">
-                    <form onsubmit="uploadUpdateFeed(event)" style="display:flex; flex-direction:column; gap:6px;">
-                        <input type="text" id="up-title" class="form-control" placeholder="Title/Caption" required>
-                        <select id="up-type" class="form-control">
-                            <option value="photo">Photo Poster</option>
-                            <option value="video">Video Post (Upload File)</option>
+                        <select id="rep-stage" class="form-control" onchange="renderReportTable()">
+                            <option value="">All Stages</option>
+                            <option value="ON STAGE">ON STAGE</option>
+                            <option value="OFF STAGE">OFF STAGE</option>
                         </select>
-                        <input type="file" id="up-file" class="form-control" accept="image/*,video/*" required>
-                        <button type="submit" class="btn btn-sm btn-success btn-block">Upload & Publish</button>
-                    </form>
-                    <div id="master-updates-list" style="margin-top:10px;"></div>
+                    </div>
+                    <table class="table-responsive" id="report-resizable-table">
+                        <thead>
+                            <tr><th>Participant</th><th>Team</th><th>Category</th><th>Program</th><th>Stage</th></tr>
+                        </thead>
+                        <tbody id="report-table-body"></tbody>
+                    </table>
                 </div>
+            </div>
 
-                <div class="collapsible-header" onclick="toggleAccordion('sub-st-box')"><span>Live & Highlights Streams</span> <i class="fa-solid fa-chevron-down"></i></div>
-                <div id="sub-st-box" class="collapsible-box">
-                    <form onsubmit="uploadStreamLinks(event)" style="display:flex; flex-direction:column; gap:6px;">
-                        <input type="text" id="st-title" class="form-control" placeholder="Title" required>
-                        <input type="url" id="st-url" class="form-control" placeholder="Stream / Video Link" required>
-                        <input type="file" id="st-thumb" class="form-control" accept="image/*" required>
+            <div class="collapsible-header" onclick="toggleAccordion('box-res-control')"><span>2. RESULT CONTROL</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="box-res-control" style="display:none; padding:15px; background:rgba(0,0,0,0.2); border-radius:12px; margin-top:10px; border:1px solid var(--glass-border);">
+                <h4>Upload Team Status Poster</h4>
+                <form onsubmit="uploadTeamStatusPoster(event)" style="margin-top:10px; margin-bottom:15px;">
+                    <input type="file" id="status-file" class="form-control" accept="image/*" required>
+                    <button type="submit" class="btn btn-success btn-block" style="margin-top:6px;">Upload Team Status</button>
+                </form>
+                <div id="master-status-preview"></div>
+
+                <h4 style="margin-top:20px;">Upload Program Result</h4>
+                <form onsubmit="uploadProgramResult(event)" style="margin-top:10px; margin-bottom:15px;">
+                    <div class="form-group">
+                        <select id="res-upload-cat" class="form-control" onchange="populateResProgDropdown()"><option value="">-- Choose Category --</option><option value="GENERAL">GENERAL</option><option value="LOWER ZONE">LOWER ZONE</option><option value="MIDDLE ZONE">MIDDLE ZONE</option><option value="HIGHER ZONE">HIGHER ZONE</option><option value="SUPER ZONE">SUPER ZONE</option></select>
+                    </div>
+                    <div class="form-group"><select id="res-upload-prog" class="form-control" required></select></div>
+                    <div class="form-group"><label>Poster Image</label><input type="file" id="res-file" class="form-control" accept="image/*" required></div>
+                    <div class="form-group"><label>YouTube Video Link (Optional)</label><input type="url" id="res-yt-url" class="form-control" placeholder="https://..."></div>
+                    <button type="submit" class="btn btn-success btn-block">Publish Result Poster</button>
+                </form>
+
+                <div class="collapsible-header" onclick="toggleAccordion('master-results-list')"><span>Published Results List</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="master-results-list" style="display:none; margin-top:10px;"></div>
+
+                <h4 style="margin-top:20px;">Upload Updates (Photos / Videos)</h4>
+                <form onsubmit="uploadUpdateFeed(event)" style="margin-top:10px; margin-bottom:15px;">
+                    <div class="form-group"><input type="text" id="up-title" class="form-control" placeholder="Caption/Title" required></div>
+                    <div class="form-group">
+                        <select id="up-type" class="form-control" onchange="document.getElementById('up-file-block').style.display = this.value==='photo'?'block':'none'; document.getElementById('up-video-block').style.display = this.value==='video'?'block':'none';">
+                            <option value="photo">Photo Poster</option>
+                            <option value="video">Video Embed Link</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="up-file-block"><input type="file" id="up-file" class="form-control" accept="image/*"></div>
+                    <div class="form-group" id="up-video-block" style="display:none;"><input type="url" id="up-video" class="form-control" placeholder="Embed URL"></div>
+                    <button type="submit" class="btn btn-success btn-block">Publish New Update Block</button>
+                </form>
+
+                <div class="collapsible-header" onclick="toggleAccordion('master-updates-list')"><span>Published Updates List</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="master-updates-list" style="display:none; margin-top:10px;"></div>
+
+                <h4 style="margin-top:20px;">Add Live Streaming / Highlights Links</h4>
+                <form onsubmit="uploadStreamLinks(event)" style="margin-top:10px;">
+                    <div class="form-group"><input type="text" id="st-title" class="form-control" placeholder="Stream Title" required></div>
+                    <div class="form-group"><input type="url" id="st-url" class="form-control" placeholder="Video URL" required></div>
+                    <div class="form-group"><label>Thumbnail</label><input type="file" id="st-thumb" class="form-control" accept="image/*" required></div>
+                    <div class="form-group">
                         <select id="st-mode" class="form-control"><option value="live">LIVE STREAMING</option><option value="highlight">HIGHLIGHTS</option></select>
-                        <button type="submit" class="btn btn-sm btn-success btn-block">Add Stream</button>
-                    </form>
-                    <div id="master-streams-list" style="margin-top:10px;"></div>
-                </div>
-
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block">Add Stream Link</button>
+                </form>
             </div>
         </div>
 
@@ -885,46 +811,41 @@
 
     <!-- MAIN LOGIN MODAL -->
     <div id="modal-overlay" class="modal-overlay">
-        <div id="modal-login" class="modal-box" style="text-align: center;">
-            <h2 style="margin-bottom:20px; color:var(--text-main); font-weight:700;">Welcome</h2>
+        <div id="modal-login" class="modal-box">
+            <h3 style="margin-bottom:15px; color:#fbbf24;">Main Login</h3>
             <form onsubmit="handleMainLogin(event)">
-                <div class="form-group" style="text-align: left;">
-                    <label>Username</label>
-                    <input type="text" id="main-user-input" class="form-control" required style="border-radius:20px;">
-                </div>
-                <div class="form-group" style="text-align: left;">
-                    <label>Password</label>
-                    <input type="password" id="main-pass-input" class="form-control" required style="border-radius:20px;">
-                </div>
-                <button type="submit" class="btn btn-block" style="border-radius:20px; margin-top:10px;">Sign In</button>
-                <button type="button" class="btn btn-danger btn-block" style="margin-top:8px; border-radius:20px; background:transparent; border:1px solid #ef4444;" onclick="closeModal()">Cancel</button>
+                <div class="form-group"><label>Username</label><input type="text" id="main-user-input" class="form-control" required></div>
+                <div class="form-group"><label>Password</label><input type="password" id="main-pass-input" class="form-control" required></div>
+                <button type="submit" class="btn btn-block">Login</button>
+                <button type="button" class="btn btn-danger btn-block" style="margin-top:8px;" onclick="closeModal()">Cancel</button>
             </form>
         </div>
     </div>
 
-    <!-- GATEKEEPER PASS MODAL -->
+    <!-- GATEKEEPER PASS VERIFICATION MODAL -->
     <div id="gatekeeper-modal-overlay" class="modal-overlay">
         <div class="modal-box">
-            <h3 id="gk-title" style="color:#ef4444; margin-bottom:10px; font-size:1.1rem;">Security Lock Required</h3>
+            <h3 id="gk-title" style="color:#ef4444; margin-bottom:12px;">Access Verification</h3>
             <div class="form-group">
-                <label>Access Code</label>
+                <label>Access Password</label>
                 <input type="password" id="gk-pass-field" class="form-control" placeholder="••••••••">
             </div>
-            <button class="btn btn-block btn-danger" onclick="commitGatekeeperVerification()">Unlock Access</button>
-            <button class="btn btn-block" style="margin-top:6px; background:transparent; border:1px solid var(--border-color); color:var(--text-main);" onclick="closeGatekeeper()">Cancel</button>
+            <button class="btn btn-block btn-danger" onclick="commitGatekeeperVerification()">Unlock Panel</button>
+            <button class="btn btn-block" style="margin-top:8px; background:rgba(255,255,255,0.1); color:white;" onclick="closeGatekeeper()">Cancel</button>
         </div>
     </div>
 
-    <!-- DETAILS MODAL -->
+    <!-- DETAILS MODAL FOR EXPANDED LIST VIEWS -->
     <div id="detail-modal-overlay" class="modal-overlay" onclick="this.style.display='none'">
         <div class="modal-box" onclick="event.stopPropagation()">
-            <h3 id="det-modal-title" style="color:#d4af37; margin-bottom:10px; font-size:1.1rem;"></h3>
-            <div id="det-modal-content" style="max-height:300px; overflow-y:auto;"></div>
-            <button class="btn btn-block" style="margin-top:10px;" onclick="document.getElementById('detail-modal-overlay').style.display='none'">Close</button>
+            <h3 id="det-modal-title" style="color:#fbbf24; margin-bottom:10px;"></h3>
+            <div id="det-modal-content" style="max-height:350px; overflow-y:auto;"></div>
+            <button class="btn btn-block" style="margin-top:12px;" onclick="document.getElementById('detail-modal-overlay').style.display='none'">Close</button>
         </div>
     </div>
 
     <script type="module">
+        <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
@@ -942,14 +863,13 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
+        // Core Protected State Structure
         window.appState = {
             phase: 'register',
             portalOpen: true,
-            theme: 'dark',
             logoUrl: '',
-            splashUrl: '',
-            logoPos: 'logo-top-left',
-            logoSize: '60',
+            logoPos: 'top-left',
+            logoSize: 65,
             teamStatusUrl: '',
             maxProgLimit: 3,
             mainCreds: { user: 'bahja2026', pass: '2026bahjacommitty' },
@@ -958,28 +878,17 @@
                 control_panel: 'controlpanelbahja',
                 judge: 'judgebahja',
                 pointroom: 'pointroombahja',
-                states: 'statesbahja',
+                states_control: 'statesbahja',
                 protection: 'Protectionbahja',
                 modify: 'modifymodifybahjag'
             },
-            visibilities: {
-                'team-states': true,
-                'results-view': true,
-                'updates': true,
-                'livelink': true,
-                'highlights': true
-            },
             visuals: {
                 bannerText: 'WELCOME TO BAHJA FEST',
+                bannerFont: "'Poppins', sans-serif",
                 titleText: 'BAHJA 2026',
-                bannerColorDark: '#cbd5e1',
-                titleColorDark: '#ffffff',
-                bannerColorLight: '#475569',
-                titleColorLight: '#0f172a',
-                bannerSize: '1.1',
-                titleSize: '2.8',
-                fontFamily: "'Poppins', sans-serif",
-                headerAlign: 'center'
+                titleFont: "'Montserrat', sans-serif",
+                bannerColor: '#fbbf24',
+                titleColor: '#ffffff'
             },
             teams: [],
             programs: [],
@@ -997,17 +906,11 @@
         window.isMainLoggedIn = false;
         window.gatekeeperTargetPanel = null;
 
-        // Instant Splash Controller
-        let splashDismissed = false;
-        function dismissSplash() {
-            if(splashDismissed) return;
-            splashDismissed = true;
-            const el = document.getElementById('splash-screen');
-            if(el) {
-                el.style.opacity = '0';
-                setTimeout(() => el.style.display = 'none', 500);
-            }
-        }
+        // Immediate Zero-Lag Boot Execution
+        applyLogoView();
+        applyVisualCustomizations();
+        render3DotMenu();
+        renderHomePhase();
 
         const dbRef = ref(db, 'bahja_fest_data');
         onValue(dbRef, (snapshot) => {
@@ -1016,17 +919,14 @@
                 window.appState = {
                     phase: data.phase || 'register',
                     portalOpen: data.portalOpen ?? true,
-                    theme: data.theme || 'dark',
                     logoUrl: data.logoUrl || '',
-                    splashUrl: data.splashUrl || '',
-                    logoPos: data.logoPos || 'logo-top-left',
-                    logoSize: data.logoSize || '60',
+                    logoPos: data.logoPos || 'top-left',
+                    logoSize: data.logoSize || 65,
                     teamStatusUrl: data.teamStatusUrl || '',
                     maxProgLimit: data.maxProgLimit || 3,
                     mainCreds: data.mainCreds || { user: 'bahja2026', pass: '2026bahjacommitty' },
-                    subLocks: data.subLocks || { settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag' },
-                    visibilities: data.visibilities || { 'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true },
-                    visuals: data.visuals || { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center' },
+                    subLocks: data.subLocks || { settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states_control:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag' },
+                    visuals: data.visuals || { bannerText:'WELCOME TO BAHJA FEST', bannerFont:"'Poppins', sans-serif", titleText:'BAHJA 2026', titleFont:"'Montserrat', sans-serif", bannerColor:'#fbbf24', titleColor:'#ffffff' },
                     teams: data.teams || [],
                     programs: data.programs || [],
                     registrations: data.registrations || [],
@@ -1038,9 +938,6 @@
                     points: data.points || []
                 };
             }
-            
-            handleSplashStartup();
-            applyGlobalWebsiteTheme(window.appState.theme || 'dark');
             applyLogoView();
             applyVisualCustomizations();
             render3DotMenu();
@@ -1049,50 +946,21 @@
             renderPtList();
             renderJudgeLeaderboard();
             renderStatesDashboard();
-            renderRankWinnersList();
             syncProtectionFields();
             syncModifyConfigInputs();
-            populateReportProgDropdown();
         });
 
         window.saveData = function() {
             set(ref(db, 'bahja_fest_data'), window.appState);
         }
 
-        function handleSplashStartup() {
-            const container = document.getElementById('splash-media-container');
-            if(window.appState.splashUrl && !splashDismissed) {
-                if(window.appState.splashUrl.includes('video') || window.appState.splashUrl.startsWith('data:video')) {
-                    container.innerHTML = `<video src="${window.appState.splashUrl}" autoplay muted playsinline style="max-width:100%; border-radius:14px;"></video>`;
-                } else {
-                    container.innerHTML = `<img src="${window.appState.splashUrl}" style="max-width:100%; border-radius:14px;">`;
-                }
-                setTimeout(dismissSplash, 2500);
-            } else {
-                setTimeout(dismissSplash, 800);
-            }
-        }
-
-        window.updateGlobalWebsiteTheme = function(themeName) {
-            window.appState.theme = themeName;
-            applyGlobalWebsiteTheme(themeName);
-            applyVisualCustomizations();
-            saveData();
-        }
-
-        function applyGlobalWebsiteTheme(themeName) {
-            document.documentElement.setAttribute('data-theme', themeName);
-            const themeSel = document.getElementById('sys-theme-select');
-            if(themeSel) themeSel.value = themeName;
-        }
-
         function applyLogoView() {
-            const el = document.getElementById('corner-logo-view');
+            const el = document.getElementById('system-logo-img');
             const manageBox = document.getElementById('logo-manage-box');
             if(window.appState.logoUrl) {
-                el.src = window.appState.logoUrl; 
-                el.className = `corner-logo ${window.appState.logoPos || 'logo-top-left'}`;
-                el.style.height = `${window.appState.logoSize || 60}px`;
+                el.src = window.appState.logoUrl;
+                el.className = `dynamic-logo logo-${window.appState.logoPos}`;
+                el.style.width = window.appState.logoSize + 'px';
                 el.style.display = 'block';
                 if(manageBox) manageBox.style.display = 'block';
             } else {
@@ -1101,36 +969,22 @@
             }
         }
 
-        window.updateLogoStylesLocally = function() {
-            const pos = document.getElementById('sys-logo-pos').value;
-            const size = document.getElementById('sys-logo-size').value;
-            document.getElementById('logo-size-val').innerText = size;
-            const el = document.getElementById('corner-logo-view');
-            el.className = `corner-logo ${pos}`;
-            el.style.height = `${size}px`;
-        }
-
         window.deleteSysLogo = function() {
-            window.appState.logoUrl = ''; saveData(); alert("Logo purged.");
+            window.appState.logoUrl = ''; saveData(); alert("Logo deleted.");
         }
 
         function applyVisualCustomizations() {
             const vis = window.appState.visuals;
-            const isDark = (window.appState.theme || 'dark') === 'dark';
             const bTxt = document.getElementById('txt-welcome-banner');
             const mTitle = document.getElementById('txt-main-title');
-            
-            if(vis.fontFamily) document.documentElement.style.setProperty('--main-font', vis.fontFamily);
-            if(vis.headerAlign) document.documentElement.style.setProperty('--header-align', vis.headerAlign);
-
             if(bTxt && mTitle) {
                 bTxt.innerText = vis.bannerText;
-                bTxt.style.color = isDark ? (vis.bannerColorDark || '#cbd5e1') : (vis.bannerColorLight || '#475569');
-                bTxt.style.fontSize = (vis.bannerSize || '1.1') + 'rem';
+                bTxt.style.fontFamily = vis.bannerFont;
+                bTxt.style.color = vis.bannerColor;
 
                 mTitle.innerText = vis.titleText;
-                mTitle.style.color = isDark ? (vis.titleColorDark || '#ffffff') : (vis.titleColorLight || '#0f172a');
-                mTitle.style.fontSize = (vis.titleSize || '2.8') + 'rem';
+                mTitle.style.fontFamily = vis.titleFont;
+                mTitle.style.color = vis.titleColor;
             }
         }
 
@@ -1149,8 +1003,8 @@
                     <button onclick="interceptRoute('panel-control-panel', 'control_panel')"><i class="fa-solid fa-sliders"></i> Control Panel</button>
                     <button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Pointroom</button>
                     <button onclick="interceptRoute('panel-judge', 'judge')"><i class="fa-solid fa-gavel"></i> Judge Leaderboard</button>
-                    <button onclick="interceptRoute('panel-states-control', 'states')"><i class="fa-solid fa-flag"></i> States Control</button>
-                    <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Protection Settings</button>
+                    <button onclick="interceptRoute('panel-states-control', 'states_control')"><i class="fa-solid fa-flag"></i> States Control</button>
+                    <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Protection</button>
                     <button onclick="interceptRoute('panel-modify', 'modify')"><i class="fa-solid fa-pen-to-square"></i> Modify Appearance</button>
                     <button onclick="logoutMain()" style="color:#ef4444;"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
                 `;
@@ -1158,15 +1012,15 @@
             menuContainer.innerHTML = html;
         }
 
+        /* GATEKEEPER ROUTING MECHANISM */
         window.interceptRoute = function(panelId, key) {
             document.getElementById("mainDropdown").classList.remove("show");
-            if(!key || !window.appState.subLocks[key]) {
+            if(!key || !window.appState.subLocks[key] || window.appState.subLocks[key] === "") {
                 showPanel(panelId);
                 return;
             }
             window.gatekeeperTargetPanel = { id: panelId, lockKey: key };
             document.getElementById('gk-pass-field').value = '';
-            document.getElementById('gk-title').innerText = `Access Security Code Required`;
             document.getElementById('gatekeeper-modal-overlay').style.display = 'flex';
         }
 
@@ -1176,15 +1030,17 @@
             if(fieldVal === window.appState.subLocks[targetKey]) {
                 document.getElementById('gatekeeper-modal-overlay').style.display = 'none';
                 showPanel(window.gatekeeperTargetPanel.id);
-            } else {
-                alert("Incorrect Security Code.");
-            }
+            } else { alert("Incorrect Password!"); }
         }
 
         window.closeGatekeeper = function() { document.getElementById('gatekeeper-modal-overlay').style.display = 'none'; }
+
         window.toggleDropdown = function() { document.getElementById("mainDropdown").classList.toggle("show"); }
         window.onclick = (e) => { 
             if (!e.target.closest('.menu-btn-container')) document.getElementById("mainDropdown").classList.remove("show"); 
+            if (!e.target.closest('.action-dots-btn')) {
+                document.querySelectorAll('.action-popover').forEach(p => p.classList.remove('show'));
+            }
         };
 
         window.showPanel = function(panelId) {
@@ -1195,8 +1051,7 @@
         window.navHome = function() { renderHomePhase(); showPanel('panel-home'); }
         window.openSection = function(secId) { showPanel(secId); }
         window.toggleAccordion = function(boxId) {
-            const el = document.getElementById(boxId); 
-            el.classList.toggle('show');
+            const el = document.getElementById(boxId); el.style.display = el.style.display === 'none' ? 'block' : 'none';
         }
 
         window.openLoginModal = function() { document.getElementById('modal-overlay').style.display = 'flex'; }
@@ -1215,23 +1070,13 @@
 
         window.logoutMain = function() { window.isMainLoggedIn = false; render3DotMenu(); navHome(); }
 
-        /* PRINT LOGIC */
-        window.triggerCustomPrint = function(targetId) {
-            document.querySelectorAll('.print-target').forEach(p => p.style.display = 'none');
-            const target = document.getElementById(targetId);
-            if(target) {
-                target.style.display = 'block';
-                window.print();
-            }
-        }
-
-        /* PROTECTION SYSTEM */
+        /* PROTECTION CONTROLS */
         window.verifyAndOpenMainCredShift = function() {
             const ou = document.getElementById('prot-old-main-u').value.trim();
             const op = document.getElementById('prot-old-main-p').value.trim();
             if(ou === window.appState.mainCreds.user && op === window.appState.mainCreds.pass) {
                 document.getElementById('prot-new-main-block').style.display = 'block';
-                alert("Verified!");
+                alert("Verification success! Input new target keys.");
             } else { alert("Verification failed."); }
         }
 
@@ -1248,24 +1093,26 @@
         function syncProtectionFields() {
             const container = document.getElementById('sub-panel-pass-managers-container');
             if(!container) return;
+            
             const schema = [
-                { key: 'settings', name: 'Settings Lock' },
-                { key: 'control_panel', name: 'Control Panel Lock' },
-                { key: 'judge', name: 'Judge Leaderboard Lock' },
+                { key: 'settings', name: 'Settings Allocation Lock' },
+                { key: 'control_panel', name: 'Committee Control Panel Lock' },
+                { key: 'judge', name: 'Judge Evaluation Lock' },
                 { key: 'pointroom', name: 'Pointroom Input Lock' },
-                { key: 'states', name: 'States Control Lock' },
-                { key: 'protection', name: 'Protection Settings Lock' },
+                { key: 'states_control', name: 'States Control Dashboard Lock' },
+                { key: 'protection', name: 'Protection Matrix Lock' },
                 { key: 'modify', name: 'Modify Appearance Lock' }
             ];
 
             container.innerHTML = schema.map(s => {
-                const val = window.appState.subLocks[s.key] || '';
+                const currentVal = window.appState.subLocks[s.key] || '';
                 return `
-                    <div style="background:rgba(0,0,0,0.2); padding:10px; border:1px solid var(--border-color); border-radius:8px;">
-                        <label style="font-weight:bold; font-size:0.8rem;">${s.name}</label>
-                        <div style="display:flex; gap:6px; margin-top:4px;">
-                            <input type="text" id="pass-field-input-${s.key}" class="form-control" value="${val}" style="margin-bottom:0; font-size:0.85rem;">
-                            <button class="btn btn-sm btn-success" onclick="updateSubLockKey('${s.key}')">Save</button>
+                    <div style="background:rgba(255,255,255,0.05); padding:10px; border:1px solid var(--glass-border); border-radius:10px;">
+                        <label style="font-size:0.85rem; color:#cbd5e1;">${s.name}</label>
+                        <div style="display:flex; gap:8px; margin-top:5px;">
+                            <input type="text" id="pass-field-input-${s.key}" class="form-control" value="${currentVal}" placeholder="No Password Set">
+                            <button class="btn btn-sm btn-success" onclick="updateSubLockKey('${s.key}')">Set</button>
+                            <button class="btn btn-sm btn-danger" onclick="clearSubLockKey('${s.key}')">Clear</button>
                         </div>
                     </div>
                 `;
@@ -1273,71 +1120,56 @@
         }
 
         window.updateSubLockKey = function(key) {
-            window.appState.subLocks[key] = document.getElementById(`pass-field-input-${key}`).value.trim();
-            saveData(); alert("Lock Code Saved.");
+            const inputVal = document.getElementById(`pass-field-input-${key}`).value.trim();
+            window.appState.subLocks[key] = inputVal;
+            saveData(); alert("Lock updated.");
         }
 
-        /* APPEARANCE MODIFIER */
+        window.clearSubLockKey = function(key) {
+            window.appState.subLocks[key] = "";
+            saveData(); alert("Lock cleared.");
+        }
+
+        /* MODIFY VISUAL LAYOUT CONTROLS */
         function syncModifyConfigInputs() {
             const vis = window.appState.visuals;
-            const isDark = (window.appState.theme || 'dark') === 'dark';
             if(!document.getElementById('mod-banner-text')) return;
-            document.getElementById('mod-banner-text').value = vis.bannerText || '';
-            document.getElementById('mod-title-text').value = vis.titleText || '';
-            document.getElementById('mod-banner-color').value = isDark ? (vis.bannerColorDark || '#cbd5e1') : (vis.bannerColorLight || '#475569');
-            document.getElementById('mod-title-color').value = isDark ? (vis.titleColorDark || '#ffffff') : (vis.titleColorLight || '#0f172a');
-            document.getElementById('mod-banner-size').value = vis.bannerSize || '1.1';
-            document.getElementById('mod-title-size').value = vis.titleSize || '2.8';
-            document.getElementById('mod-font-family').value = vis.fontFamily || "'Poppins', sans-serif";
-            document.getElementById('mod-header-align').value = vis.headerAlign || 'center';
+            document.getElementById('mod-banner-text').value = vis.bannerText;
+            document.getElementById('mod-banner-font').value = vis.bannerFont;
+            document.getElementById('mod-title-text').value = vis.titleText;
+            document.getElementById('mod-title-font').value = vis.titleFont;
+            document.getElementById('mod-banner-color').value = vis.bannerColor;
+            document.getElementById('mod-title-color').value = vis.titleColor;
         }
 
         window.liveUpdateVisuals = function() {
             const bTxt = document.getElementById('txt-welcome-banner');
             const mTitle = document.getElementById('txt-main-title');
-            document.documentElement.style.setProperty('--main-font', document.getElementById('mod-font-family').value);
-            document.documentElement.style.setProperty('--header-align', document.getElementById('mod-header-align').value);
-
+            
             bTxt.innerText = document.getElementById('mod-banner-text').value;
+            bTxt.style.fontFamily = document.getElementById('mod-banner-font').value;
             bTxt.style.color = document.getElementById('mod-banner-color').value;
-            bTxt.style.fontSize = document.getElementById('mod-banner-size').value + 'rem';
 
             mTitle.innerText = document.getElementById('mod-title-text').value;
+            mTitle.style.fontFamily = document.getElementById('mod-title-font').value;
             mTitle.style.color = document.getElementById('mod-title-color').value;
-            mTitle.style.fontSize = document.getElementById('mod-title-size').value + 'rem';
         }
 
         window.saveVisualLayoutState = function() {
-            const isDark = (window.appState.theme || 'dark') === 'dark';
-            const syncLight = document.getElementById('mod-sync-light').checked;
-            const bColor = document.getElementById('mod-banner-color').value;
-            const tColor = document.getElementById('mod-title-color').value;
-
-            window.appState.visuals.bannerText = document.getElementById('mod-banner-text').value;
-            window.appState.visuals.titleText = document.getElementById('mod-title-text').value;
-            window.appState.visuals.bannerSize = document.getElementById('mod-banner-size').value;
-            window.appState.visuals.titleSize = document.getElementById('mod-title-size').value;
-            window.appState.visuals.fontFamily = document.getElementById('mod-font-family').value;
-            window.appState.visuals.headerAlign = document.getElementById('mod-header-align').value;
-
-            if(isDark) {
-                window.appState.visuals.bannerColorDark = bColor;
-                window.appState.visuals.titleColorDark = tColor;
-                if(syncLight) {
-                    window.appState.visuals.bannerColorLight = bColor;
-                    window.appState.visuals.titleColorLight = tColor;
-                }
-            } else {
-                window.appState.visuals.bannerColorLight = bColor;
-                window.appState.visuals.titleColorLight = tColor;
-            }
-
-            saveData(); alert("Visual Layout Saved."); navHome();
+            window.appState.visuals = {
+                bannerText: document.getElementById('mod-banner-text').value,
+                bannerFont: document.getElementById('mod-banner-font').value,
+                titleText: document.getElementById('mod-title-text').value,
+                titleFont: document.getElementById('mod-title-font').value,
+                bannerColor: document.getElementById('mod-banner-color').value,
+                titleColor: document.getElementById('mod-title-color').value
+            };
+            saveData(); alert("Appearance modified."); navHome();
         }
 
         window.saveMaxLimitMaster = function() {
-            window.appState.maxProgLimit = parseInt(document.getElementById('m-max-limit-input').value) || 3;
-            saveData(); alert("Limit saved.");
+            const v = parseInt(document.getElementById('m-max-limit-input').value);
+            window.appState.maxProgLimit = v || 3; saveData(); alert("Limit saved.");
         }
 
         window.togglePhaseControl = function(selectedPhase) {
@@ -1347,40 +1179,22 @@
 
         window.applyPhaseSettings = function(e) {
             e.preventDefault();
-            window.appState.phase = document.querySelector('input[name="phase-toggle"]:checked').value;
+            const selected = document.querySelector('input[name="phase-toggle"]:checked').value;
+            window.appState.phase = selected;
             window.appState.logoPos = document.getElementById('sys-logo-pos').value;
-            window.appState.logoSize = document.getElementById('sys-logo-size').value;
-
-            const logoF = document.getElementById('sys-logo-input').files[0];
-            const splashF = document.getElementById('sys-splash-input').files[0];
-
-            const handleUploads = () => {
-                saveData(); alert("Settings saved."); navHome();
-            };
-
-            if(logoF) {
-                const r = new FileReader();
-                r.onload = (evt) => {
-                    window.appState.logoUrl = evt.target.result;
-                    if(splashF) {
-                        const r2 = new FileReader();
-                        r2.onload = (evt2) => { window.appState.splashUrl = evt2.target.result; handleUploads(); };
-                        r2.readAsDataURL(splashF);
-                    } else handleUploads();
-                };
-                r.readAsDataURL(logoF);
-            } else if(splashF) {
-                const r2 = new FileReader();
-                r2.onload = (evt2) => { window.appState.splashUrl = evt2.target.result; handleUploads(); };
-                r2.readAsDataURL(splashF);
-            } else {
-                handleUploads();
-            }
+            window.appState.logoSize = parseInt(document.getElementById('sys-logo-size').value) || 65;
+            
+            const fileEl = document.getElementById('sys-logo-input').files[0];
+            if(fileEl) {
+                const reader = new FileReader();
+                reader.onload = function(evt) { window.appState.logoUrl = evt.target.result; saveData(); alert("Saved!"); navHome(); }
+                reader.readAsDataURL(fileEl);
+            } else { saveData(); alert("Settings updated."); navHome(); }
         }
 
         window.clearAllDataSystem = function() {
-            if(confirm("Completely reset database state?")) {
-                window.appState = { phase:'register', portalOpen:true, theme:'dark', logoUrl:'', splashUrl:'', logoPos:'logo-top-left', logoSize:'60', teamStatusUrl:'', maxProgLimit:3, mainCreds:{user:'bahja2026', pass:'2026bahjacommitty'}, subLocks:{settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag'}, visibilities:{'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true}, visuals:{bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center'}, teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[], points:[] };
+            if(confirm("Completely reset database state parameters?")) {
+                window.appState = { phase:'register', portalOpen:true, logoUrl:'', logoPos:'top-left', logoSize:65, teamStatusUrl:'', maxProgLimit:3, mainCreds:{user:'bahja2026', pass:'2026bahjacommitty'}, subLocks:{settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states_control:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag'}, visuals:{bannerText:'WELCOME TO BAHJA FEST', bannerFont:"'Poppins', sans-serif", titleText:'BAHJA 2026', titleFont:"'Montserrat', sans-serif", bannerColor:'#fbbf24', titleColor:'#ffffff'}, teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[], points:[] };
                 saveData(); navHome();
             }
         }
@@ -1400,32 +1214,11 @@
             } else {
                 document.getElementById('home-phase-register').style.display = 'none';
                 document.getElementById('home-phase-result').style.display = 'block';
-                applySectionVisibilityUI();
                 renderResultPhaseFeeds();
             }
         }
 
-        function applySectionVisibilityUI() {
-            const v = window.appState.visibilities || {};
-            for(let key in v) {
-                const btn = document.getElementById(`pill-sec-${key}`);
-                if(btn) btn.style.display = v[key] ? 'flex' : 'none';
-            }
-        }
-
-        window.updateSectionVisibilities = function() {
-            window.appState.visibilities = {
-                'team-states': document.getElementById('toggle-vis-team-states').checked,
-                'results-view': document.getElementById('toggle-vis-results-view').checked,
-                'updates': document.getElementById('toggle-vis-updates').checked,
-                'livelink': document.getElementById('toggle-vis-livelink').checked,
-                'highlights': document.getElementById('toggle-vis-highlights').checked
-            };
-            saveData();
-            applySectionVisibilityUI();
-        }
-
-        /* PARTICIPANT ENTRY */
+        /* PARTICIPANTS REGISTRATION ENGINE */
         window.handlePartLogin = function(e) {
             e.preventDefault();
             const u = document.getElementById('part-user').value.trim();
@@ -1437,21 +1230,22 @@
                 document.getElementById('part-manage-block').style.display = 'block';
                 document.getElementById('part-active-team').innerText = u;
                 renderTeamStudentsList();
-            } else alert("Invalid Credentials!");
+            } else { alert("Invalid Credentials!"); }
         }
 
         window.addTeamParticipant = function(e) {
             e.preventDefault();
             const cat = document.getElementById('part-cat').value;
             const name = document.getElementById('part-name').value.trim();
-            window.appState.students.push({ id:'st_'+Date.now(), name, cat, team: window.activePartTeam });
+            window.appState.students.push({ id: 'st_'+Date.now(), name, cat, team: window.activePartTeam });
             saveData(); document.getElementById('part-name').value = ''; renderTeamStudentsList();
         }
 
         window.renderTeamStudentsList = function() {
+            const listContainer = document.getElementById('team-students-list');
             const filtered = window.appState.students.filter(s => s.team === window.activePartTeam);
-            document.getElementById('team-students-list').innerHTML = filtered.map(s => `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:rgba(0,0,0,0.2); margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
+            listContainer.innerHTML = filtered.map(s => `
+                <div style="display:flex; justify-content:space-between; padding:8px; background:rgba(255,255,255,0.05); margin-bottom:5px; border-radius:6px;">
                     <span><strong>${s.name}</strong> (${s.cat})</span>
                     <button class="btn btn-danger btn-sm" onclick="deleteStudent('${s.id}')">Delete</button>
                 </div>
@@ -1462,13 +1256,13 @@
             window.appState.students = window.appState.students.filter(s => s.id !== id); saveData(); renderTeamStudentsList();
         }
 
-        /* TEAM PORTAL REGISTRATION */
+        /* TEAM PORTAL CORE */
         window.handleTeamLogin = function(e) {
             e.preventDefault();
             const u = document.getElementById('login-team-user').value.trim();
             const p = document.getElementById('login-team-pass').value.trim();
             const found = window.appState.teams.find(t => t.user === u && t.pass === p);
-            if(found) { window.loggedTeamUser = u; renderHomePhase(); } else alert("Invalid Credentials");
+            if(found) { window.loggedTeamUser = u; renderHomePhase(); } else { alert("Invalid Credentials"); }
         }
         window.logoutTeam = function() { window.loggedTeamUser = null; renderHomePhase(); }
 
@@ -1477,29 +1271,31 @@
             const container = document.getElementById('category-programs-container');
             if(!cat) { container.innerHTML = ''; return; }
 
-            const filtered = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
-            if(filtered.length === 0) { container.innerHTML = '<p>No programs in category.</p>'; return; }
+            const filtered = window.appState.programs.filter(p => p.cat === cat);
+            if(filtered.length === 0) { container.innerHTML = '<p>No programs matching.</p>'; return; }
 
             const allowedStudents = window.appState.students.filter(s => s.team === window.loggedTeamUser && s.cat === cat);
 
             container.innerHTML = filtered.map(p => {
                 const reg = window.appState.registrations.find(r => r.team === window.loggedTeamUser && r.progId === p.id) || { participants: [] };
                 let selectors = '';
+                
                 for(let i=0; i < p.limit; i++) {
                     if(cat === 'GENERAL') {
                         selectors += `<input type="text" class="form-control prog-input-${p.id}" value="${reg.participants[i] || ''}" placeholder="Enter Name Manually" style="margin-top:5px;">`;
                     } else {
                         selectors += `<select class="form-control prog-input-${p.id}" style="margin-top:5px;">
-                            <option value="">-- Choose Student --</option>
+                            <option value="">-- Choose Registered Student --</option>
                             ${allowedStudents.map(st => `<option value="${st.name}" ${reg.participants[i] === st.name ? 'selected':''}>${st.name}</option>`).join('')}
                         </select>`;
                     }
                 }
+
                 return `
-                    <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-bottom:10px;">
+                    <div style="background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); padding:15px; border-radius:12px; margin-bottom:10px;">
                         <strong>${p.name} (${p.stage})</strong>
                         <div>${selectors}</div>
-                        <button class="btn btn-success btn-sm btn-block" style="margin-top:8px;" onclick="saveRegistrationItem('${p.id}', '${cat}')">Submit Entry</button>
+                        <button class="btn btn-success btn-sm" style="margin-top:10px;" onclick="saveRegistrationItem('${p.id}', '${cat}')">Submit Entry</button>
                     </div>
                 `;
             }).join('');
@@ -1507,30 +1303,33 @@
 
         window.saveRegistrationItem = function(progId, cat) {
             if(!window.appState.portalOpen) { alert("Registration Locked!"); return; }
+            
             const fields = document.querySelectorAll(`.prog-input-${progId}`);
             const names = Array.from(fields).map(f => f.value.trim()).filter(n => n !== '');
 
             if(cat !== 'GENERAL') {
-                for (let sName of names) {
-                    const matchCount = window.appState.registrations.filter(r => r.team === window.loggedTeamUser && r.cat !== 'GENERAL' && r.progId !== progId && r.participants.includes(sName)).length;
+                for (let studentName of names) {
+                    const matchCount = window.appState.registrations.filter(r => r.team === window.loggedTeamUser && r.cat !== 'GENERAL' && r.progId !== progId && r.participants.includes(studentName)).length;
                     if(matchCount >= window.appState.maxProgLimit) {
-                        alert(`Limit violation! Student "${sName}" already registered for ${matchCount} items.`);
+                        alert(`Limit violation! Student "${studentName}" is already registered for ${matchCount} non-general items.`);
                         return;
                     }
                 }
             }
 
             window.appState.registrations = window.appState.registrations.filter(r => !(r.team === window.loggedTeamUser && r.progId === progId));
-            if(names.length > 0) window.appState.registrations.push({ team: window.loggedTeamUser, cat, progId, participants: names });
-            saveData(); alert("Registration updated.");
+            if(names.length > 0) {
+                window.appState.registrations.push({ team: window.loggedTeamUser, cat, progId, participants: names });
+            }
+            saveData(); alert("Saved!");
         }
 
-        /* POINTROOM */
+        /* POINTROOM EVALUATION MATRIX */
         window.populatePtProgs = function() {
             const cat = document.getElementById('pt-cat-select').value;
             const drop = document.getElementById('pt-prog-select');
-            const matched = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
-            drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            const matched = window.appState.programs.filter(p => p.cat === cat);
+            drop.innerHTML = '<option value="">-- Select --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
             document.getElementById('pt-candidates-inputs').innerHTML = '';
             document.getElementById('pt-stage-badge').innerText = '';
         }
@@ -1539,12 +1338,13 @@
             const progId = document.getElementById('pt-prog-select').value;
             const targetProg = window.appState.programs.find(p => p.id === progId);
             const container = document.getElementById('pt-candidates-inputs');
+            
             if(!targetProg) { container.innerHTML = ''; return; }
-            document.getElementById('pt-stage-badge').innerText = `Stage: ${targetProg.stage}`;
+            document.getElementById('pt-stage-badge').innerText = `Stage Allocation Mode: ${targetProg.stage}`;
 
             const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
             if(matchedRegs.length === 0) {
-                container.innerHTML = '<p style="color:#ef4444;">No registered candidates found.</p>'; return;
+                container.innerHTML = '<p style="color:#ef4444;">No participant records found.</p>'; return;
             }
 
             let html = '';
@@ -1552,9 +1352,9 @@
                 r.participants.forEach(pName => {
                     const savedPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === pName) || { score: 0 };
                     html += `
-                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
-                            <span><strong>${pName}</strong> (${r.team})</span>
-                            <input type="number" min="0" class="form-control pt-score-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.score}" style="width:80px; padding:6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:10px; margin-bottom:5px; border-radius:8px;">
+                            <span><strong>${pName}</strong> (Team: ${r.team})</span>
+                            <input type="number" min="0" class="form-control pt-score-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.score}" style="width:100px;">
                         </div>
                     `;
                 });
@@ -1569,14 +1369,16 @@
             if(!progId || !cat) return;
 
             window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
-            document.querySelectorAll('.pt-score-field').forEach(f => {
+
+            const fields = document.querySelectorAll('.pt-score-field');
+            fields.forEach(f => {
                 const score = parseFloat(f.value) || 0;
                 const team = f.getAttribute('data-team');
                 const student = f.getAttribute('data-student');
                 window.appState.points.push({ progId, cat, team, student, score });
             });
 
-            saveData(); alert("Points recorded.");
+            saveData(); alert("Points recorded!");
             loadPtParticipants(); renderPtList();
         }
 
@@ -1587,18 +1389,15 @@
             if(distinctProgs.length === 0) { container.innerHTML = '<p>No marks processed.</p>'; return; }
 
             container.innerHTML = distinctProgs.map(pid => {
-                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
-                const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
+                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown Item', cat: 'N/A' };
+                const subPts = window.appState.points.filter(pt => pt.progId === pid);
                 return `
-                    <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:10px; border-radius:8px; margin-bottom:6px;">
+                    <div style="background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); padding:12px; border-radius:8px; margin-bottom:8px;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <strong>${prog.name} (${prog.cat})</strong>
-                            <div>
-                                <button class="btn btn-warning btn-sm no-print" onclick="printIndividualPointRecord('${pid}')"><i class="fa-solid fa-print"></i> Print</button>
-                                <button class="btn btn-danger btn-sm no-print" onclick="deletePtGroup('${pid}')">Delete</button>
-                            </div>
+                            <button class="btn btn-danger btn-sm" onclick="deletePtGroup('${pid}')">Delete</button>
                         </div>
-                        <div style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;">
+                        <div style="font-size:0.85rem; color:#cbd5e1; margin-top:5px;">
                             ${subPts.map(s => `${s.student} (${s.team}): <strong>${s.score}</strong>`).join(' | ')}
                         </div>
                     </div>
@@ -1606,60 +1405,14 @@
             }).join('');
         }
 
-        window.printIndividualPointRecord = function(progId) {
-            const prog = window.appState.programs.find(p => p.id === progId) || { name: 'Program', cat: 'N/A' };
-            const subPts = window.appState.points.filter(pt => pt.progId === progId).sort((a,b)=>b.score - a.score);
-            const target = document.getElementById('pt-print-area');
-            
-            target.innerHTML = `
-                <div class="bahja-sheet-header">
-                    <span>TIME:</span>
-                    <h2>BAHJA 2K26 - ${prog.name.toUpperCase()} (${prog.cat})</h2>
-                    <span>DATE:</span>
-                </div>
-                <table class="bahja-sheet-table">
-                    <thead><tr><th>#</th><th>Student Name</th><th>Team</th><th>Score</th><th>Rank</th></tr></thead>
-                    <tbody>
-                        ${subPts.map((s, idx) => `<tr><td>${idx+1}</td><td>${s.student}</td><td>${s.team}</td><td><strong>${s.score}</strong></td><td>Rank ${idx+1}</td></tr>`).join('')}
-                    </tbody>
-                </table>
-            `;
-            triggerCustomPrint('pt-print-area');
-        }
-
-        window.printAllPointRecords = function() {
-            const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
-            const target = document.getElementById('pt-print-area');
-            let html = `
-                <div class="bahja-sheet-header">
-                    <span>TIME:</span>
-                    <h2>BAHJA 2K26 - ALL POINT EVALUATION LOGS</h2>
-                    <span>DATE:</span>
-                </div>
-            `;
-            distinctProgs.forEach(pid => {
-                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
-                const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
-                html += `
-                    <h4 style="margin-top:10px; font-size:12px;">${prog.name} (${prog.cat})</h4>
-                    <table class="bahja-sheet-table" style="margin-bottom:8px;">
-                        <thead><tr><th>#</th><th>Student Name</th><th>Team</th><th>Score</th></tr></thead>
-                        <tbody>${subPts.map((s, idx) => `<tr><td>${idx+1}</td><td>${s.student}</td><td>${s.team}</td><td>${s.score}</td></tr>`).join('')}</tbody>
-                    </table>
-                `;
-            });
-            target.innerHTML = html;
-            triggerCustomPrint('pt-print-area');
-        }
-
         window.deletePtGroup = function(progId) {
-            if(confirm("Delete records?")) {
+            if(confirm("Purge records?")) {
                 window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
                 saveData(); renderPtList();
             }
         }
 
-        /* JUDGE LEADERBOARD */
+        /* JUDGE AUTOMATED AGGREGATION LEADERBOARD */
         window.renderJudgeLeaderboard = function() {
             const tbody = document.getElementById('judge-leaderboard-body');
             if(!tbody) return;
@@ -1668,176 +1421,156 @@
             const aggregate = {};
             window.appState.points.forEach(pt => {
                 if(pt.cat === 'GENERAL') return;
+                
                 const prog = window.appState.programs.find(p => p.id === pt.progId);
                 if(!prog) return;
                 if(filterStage !== 'all' && prog.stage !== filterStage) return;
 
                 const key = `${pt.team}_${pt.student}`;
-                if(!aggregate[key]) aggregate[key] = { name: pt.student, team: pt.team, cat: pt.cat, total: 0 };
+                if(!aggregate[key]) {
+                    aggregate[key] = { name: pt.student, team: pt.team, cat: pt.cat, total: 0 };
+                }
                 aggregate[key].total += pt.score;
             });
 
             const sorted = Object.values(aggregate).sort((a,b) => b.total - a.total);
+
             tbody.innerHTML = sorted.map(s => `
-                <tr onclick="viewCandidateBreakdown('${s.name}', '${s.team}')" style="cursor:pointer;">
+                <tr style="cursor:pointer;" onclick="viewCandidateBreakdown('${s.name}', '${s.team}')">
                     <td><strong>${s.name}</strong></td>
                     <td>${s.team}</td>
                     <td>${s.cat}</td>
-                    <td><strong style="color:#d4af37;">${s.total}</strong></td>
+                    <td><strong style="color:#22c55e;">${s.total}</strong></td>
                 </tr>
             `).join('') || '<tr><td colspan="4">No scores accumulated.</td></tr>';
         }
 
         window.viewCandidateBreakdown = function(name, team) {
             const records = window.appState.points.filter(pt => pt.student === name && pt.team === team && pt.cat !== 'GENERAL');
-            document.getElementById('det-modal-title').innerText = `${name} (${team})`;
-            document.getElementById('det-modal-content').innerHTML = `
-                <table style="width:100%;"><thead><tr><th>Program</th><th>Pts</th></tr></thead><tbody>
-                    ${records.map(r => `<tr><td>${(window.appState.programs.find(p => p.id === r.progId) || {}).name || ''}</td><td><strong>${r.score}</strong></td></tr>`).join('')}
-                </tbody></table>
-            `;
+            const modalTitle = document.getElementById('det-modal-title');
+            const modalContent = document.getElementById('det-modal-content');
+            
+            modalTitle.innerText = `Score Breakdown: ${name} (${team})`;
+            let html = '<table style="width:100%;"><thead><tr><th>Program</th><th>Points</th></tr></thead><tbody>';
+            records.forEach(r => {
+                const prog = window.appState.programs.find(p => p.id === r.progId) || { name: 'N/A' };
+                html += `<tr><td>${prog.name}</td><td><strong>${r.score}</strong></td></tr>`;
+            });
+            html += '</tbody></table>';
+            
+            modalContent.innerHTML = html;
             document.getElementById('detail-modal-overlay').style.display = 'flex';
         }
 
-        /* STATES DASHBOARD & RANK-WISE FILTER */
+        /* STATES CONTROL DASHBOARD */
         window.renderStatesDashboard = function() {
             const tbody = document.getElementById('states-table-body');
             if(!tbody) return;
+
             const teamTotals = {};
-            window.appState.teams.forEach(t => teamTotals[t.user] = 0);
+            window.appState.teams.forEach(t => { teamTotals[t.user] = 0; });
             window.appState.points.forEach(pt => {
                 if(teamTotals[pt.team] !== undefined) teamTotals[pt.team] += pt.score;
             });
 
             const sortedTeams = Object.entries(teamTotals).sort((a,b) => b[1] - a[1]);
+
             tbody.innerHTML = sortedTeams.map(([tName, total]) => `
-                <tr onclick="viewTeamBreakdown('${tName}')" style="cursor:pointer;">
+                <tr style="cursor:pointer;" onclick="viewTeamBreakdown('${tName}')">
                     <td><strong>${tName}</strong></td>
-                    <td><strong style="color:#d4af37;">${total}</strong></td>
+                    <td><strong style="color:#fbbf24; font-size:1.1rem;">${total}</strong></td>
                 </tr>
-            `).join('') || '<tr><td colspan="2">No data.</td></tr>';
-
-            const teamDrop = document.getElementById('rank-team-filter');
-            if(teamDrop && teamDrop.children.length === 1) {
-                teamDrop.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
-            }
-        }
-
-        window.renderRankWinnersList = function() {
-            const tbody = document.getElementById('rank-winners-body');
-            if(!tbody) return;
-            const fTeam = document.getElementById('rank-team-filter').value;
-            const fPos = document.getElementById('rank-pos-filter').value;
-
-            const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
-            let rows = '';
-            let count = 1;
-
-            distinctProgs.forEach(pid => {
-                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'N/A' };
-                const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
-
-                subPts.forEach((pt, idx) => {
-                    const rank = idx + 1;
-                    if(fTeam && pt.team !== fTeam) return;
-                    if(fPos !== 'all' && rank !== parseInt(fPos)) return;
-
-                    rows += `<tr>
-                        <td>${count++}</td>
-                        <td><strong>${pt.student}</strong></td>
-                        <td>${pt.team}</td>
-                        <td>${prog.name}</td>
-                        <td>${pt.score}</td>
-                        <td><span style="font-weight:bold; color:#d4af37;">Rank ${rank}</span></td>
-                    </tr>`;
-                });
-            });
-
-            tbody.innerHTML = rows || '<tr><td colspan="6">No winners matching position criteria.</td></tr>';
+            `).join('') || '<tr><td colspan="2">No data recorded.</td></tr>';
         }
 
         window.viewTeamBreakdown = function(teamName) {
             const records = window.appState.points.filter(pt => pt.team === teamName);
-            document.getElementById('det-modal-title').innerText = `Team Breakdown: ${teamName}`;
-            document.getElementById('det-modal-content').innerHTML = `
-                <table style="width:100%;"><thead><tr><th>Student</th><th>Prog</th><th>Pts</th></tr></thead><tbody>
-                    ${records.map(r => `<tr><td>${r.student}</td><td>${(window.appState.programs.find(p => p.id === r.progId) || {}).name || ''}</td><td><strong>${r.score}</strong></td></tr>`).join('')}
-                </tbody></table>
-            `;
+            const modalTitle = document.getElementById('det-modal-title');
+            const modalContent = document.getElementById('det-modal-content');
+            
+            modalTitle.innerText = `Team View: ${teamName}`;
+            let html = '<table style="width:100%;"><thead><tr><th>Student</th><th>Program</th><th>Points</th></tr></thead><tbody>';
+            records.forEach(r => {
+                const prog = window.appState.programs.find(p => p.id === r.progId) || { name: 'N/A' };
+                html += `<tr><td>${r.student}</td><td>${prog.name} (${r.cat})</td><td><strong>${r.score}</strong></td></tr>`;
+            });
+            html += '</tbody></table>';
+            
+            modalContent.innerHTML = html;
             document.getElementById('detail-modal-overlay').style.display = 'flex';
         }
 
-        /* CONTROL PANEL REPORTERS & BUILDERS */
+        /* MASTER OPERATIONS */
         window.toggleRegLock = function() { window.appState.portalOpen = !window.appState.portalOpen; saveData(); }
         window.addTeamMaster = function(e) {
             e.preventDefault();
-            window.appState.teams.push({ user: document.getElementById('m-team-user').value.trim(), pass: document.getElementById('m-team-pass').value.trim() });
-            saveData(); e.target.reset();
+            const user = document.getElementById('m-team-user').value.trim();
+            const pass = document.getElementById('m-team-pass').value.trim();
+            window.appState.teams.push({ user, pass }); saveData(); e.target.reset();
         }
         window.deleteTeamMaster = function(idx) { window.appState.teams.splice(idx, 1); saveData(); }
         window.addProgramMaster = function(e) {
             e.preventDefault();
-            window.appState.programs.push({
-                id: 'pr_'+Date.now(),
-                name: document.getElementById('m-prog-name').value.trim(),
-                cat: document.getElementById('m-prog-cat').value,
-                stage: document.getElementById('m-prog-stage').value,
-                limit: parseInt(document.getElementById('m-prog-limit').value)
-            });
-            saveData(); e.target.reset();
+            const name = document.getElementById('m-prog-name').value.trim();
+            const cat = document.getElementById('m-prog-cat').value;
+            const stage = document.getElementById('m-prog-stage').value;
+            const limit = parseInt(document.getElementById('m-prog-limit').value);
+            window.appState.programs.push({ id: 'pr_'+Date.now(), name, cat, stage, limit }); saveData(); e.target.reset();
         }
         window.deleteProgramMaster = function(id) { window.appState.programs = window.appState.programs.filter(p => p.id !== id); saveData(); }
-
+        
         window.uploadTeamStatusPoster = function(e) {
             e.preventDefault();
-            const f = document.getElementById('status-file').files[0];
-            if(f) {
-                const r = new FileReader();
-                r.onload = (evt) => { window.appState.teamStatusUrl = evt.target.result; saveData(); alert("Status Poster Uploaded."); };
-                r.readAsDataURL(f);
+            const file = document.getElementById('status-file').files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) { window.appState.teamStatusUrl = evt.target.result; saveData(); alert("Uploaded."); }
+                reader.readAsDataURL(file);
             }
         }
         window.deleteStatusMaster = function() { window.appState.teamStatusUrl = ''; saveData(); }
-
+        
         window.populateResProgDropdown = function() {
             const cat = document.getElementById('res-upload-cat').value;
             const drop = document.getElementById('res-upload-prog');
-            const matched = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
-            drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            const matched = window.appState.programs.filter(p => p.cat === cat);
+            drop.innerHTML = '<option value="">-- Select Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
         }
 
         window.uploadProgramResult = function(e) {
             e.preventDefault();
             const progId = document.getElementById('res-upload-prog').value;
-            const customNum = document.getElementById('res-custom-number').value.trim();
             const yt = document.getElementById('res-yt-url').value.trim();
             const fileEl = document.getElementById('res-file').files[0];
 
             if(fileEl && progId) {
                 const reader = new FileReader();
-                reader.onload = (evt) => {
+                reader.onload = function(evt) {
                     window.appState.results = window.appState.results.filter(r => r.progId !== progId);
-                    window.appState.results.push({ progId, number: customNum, poster: evt.target.result, youtube: yt });
-                    saveData(); alert("Result Published.");
-                };
+                    window.appState.results.push({ progId, poster: evt.target.result, youtube: yt });
+                    saveData(); alert("Published.");
+                }
                 reader.readAsDataURL(fileEl);
             }
         }
+
         window.deleteResultMaster = function(progId) { window.appState.results = window.appState.results.filter(r => r.progId !== progId); saveData(); }
 
         window.uploadUpdateFeed = function(e) {
             e.preventDefault();
             const title = document.getElementById('up-title').value.trim();
             const type = document.getElementById('up-type').value;
-            const f = document.getElementById('up-file').files[0];
 
-            if(f) {
-                const reader = new FileReader();
-                reader.onload = (evt) => {
-                    window.appState.updates.push({ id:'up_'+Date.now(), title, type, url: evt.target.result });
-                    saveData(); alert("Update Published.");
-                };
-                reader.readAsDataURL(f);
+            if(type === 'photo') {
+                const f = document.getElementById('up-file').files[0];
+                if(f) {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) { window.appState.updates.push({ id:'up_'+Date.now(), title, type, url: evt.target.result }); saveData(); alert("Added."); }
+                    reader.readAsDataURL(f);
+                }
+            } else {
+                const url = document.getElementById('up-video').value.trim();
+                window.appState.updates.push({ id:'up_'+Date.now(), title, type, url }); saveData(); alert("Added.");
             }
         }
         window.deleteUpdateMaster = function(id) { window.appState.updates = window.appState.updates.filter(u => u.id !== id); saveData(); }
@@ -1851,82 +1584,41 @@
 
             if(thumbFile) {
                 const reader = new FileReader();
-                reader.onload = (evt) => {
-                    const obj = { id: 'st_'+Date.now(), title, url, thumb: evt.target.result, mode };
+                reader.onload = function(evt) {
+                    const obj = { title, url, thumb: evt.target.result };
                     if(mode === 'live') window.appState.livelinks.push(obj);
                     else window.appState.highlights.push(obj);
-                    saveData(); alert("Stream Added.");
-                };
+                    saveData(); alert("Added.");
+                }
                 reader.readAsDataURL(thumbFile);
             }
-        }
-
-        window.deleteStreamMaster = function(id, mode) {
-            if(mode === 'live') window.appState.livelinks = window.appState.livelinks.filter(l => l.id !== id);
-            else window.appState.highlights = window.appState.highlights.filter(h => h.id !== id);
-            saveData();
-        }
-
-        function populateReportProgDropdown() {
-            const cat = document.getElementById('rep-cat').value;
-            const drop = document.getElementById('rep-prog');
-            if(!drop) return;
-            const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
-            drop.innerHTML = '<option value="">All Programs (A-Z)</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
         }
 
         function syncControlPanelViews() {
             const btn = document.getElementById('lock-reg-btn');
             if(btn) {
-                btn.innerText = window.appState.portalOpen ? "Lock Reg" : "Unlock Reg";
+                btn.innerText = window.appState.portalOpen ? "Lock Registration" : "Unlock Registration";
                 btn.className = window.appState.portalOpen ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
             }
             document.getElementById('m-max-limit-input').value = window.appState.maxProgLimit;
 
-            // Visibility checkboxes
-            const v = window.appState.visibilities || {};
-            for(let key in v) {
-                const el = document.getElementById(`toggle-vis-${key}`);
-                if(el) el.checked = !!v[key];
-            }
+            const tBox = document.getElementById('master-teams-list');
+            if(tBox) tBox.innerHTML = window.appState.teams.map((t, idx) => `<div style="display:flex; justify-content:space-between; padding:6px; border-bottom:1px solid var(--glass-border);">${t.user} <button class="btn btn-danger btn-sm" onclick="deleteTeamMaster(${idx})">x</button></div>`).join('');
 
-            document.getElementById('master-teams-list').innerHTML = window.appState.teams.map((t, idx) => `
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-                    <span>${t.user}</span> <button class="btn btn-danger btn-sm" onclick="deleteTeamMaster(${idx})">x</button>
-                </div>
-            `).join('');
+            const pBox = document.getElementById('master-progs-list');
+            if(pBox) pBox.innerHTML = window.appState.programs.map(p => `<div style="display:flex; justify-content:space-between; padding:6px; border-bottom:1px solid var(--glass-border);"><strong>${p.name}</strong> (${p.cat}) <button class="btn btn-danger btn-sm" onclick="deleteProgramMaster('${p.id}')">x</button></div>`).join('');
 
-            document.getElementById('master-progs-list').innerHTML = window.appState.programs.sort((a,b)=>a.name.localeCompare(b.name)).map(p => `
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-                    <span><strong>${p.name}</strong> (${p.cat})</span> <button class="btn btn-danger btn-sm" onclick="deleteProgramMaster('${p.id}')">x</button>
-                </div>
-            `).join('');
+            const sPreview = document.getElementById('master-status-preview');
+            if(sPreview) sPreview.innerHTML = window.appState.teamStatusUrl ? `<img src="${window.appState.teamStatusUrl}" style="height:60px; margin-bottom:5px;"> <button class="btn btn-danger btn-sm" onclick="deleteStatusMaster()">Remove</button>` : '';
 
-            document.getElementById('master-status-preview').innerHTML = window.appState.teamStatusUrl ? `<img src="${window.appState.teamStatusUrl}" style="height:50px; margin-bottom:4px; border-radius:4px;"> <button class="btn btn-danger btn-sm" onclick="deleteStatusMaster()">Delete</button>` : '';
-
-            document.getElementById('master-results-list').innerHTML = window.appState.results.map(r => {
+            const rBox = document.getElementById('master-results-list');
+            if(rBox) rBox.innerHTML = window.appState.results.map(r => {
                 const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Unknown' };
-                return `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-                        <span>Result ${r.number || ''}: ${p.name}</span> <button class="btn btn-danger btn-sm" onclick="deleteResultMaster('${r.progId}')">x</button>
-                    </div>
-                `;
+                return `<div style="display:flex; justify-content:space-between; padding:6px; border-bottom:1px solid var(--glass-border);">Result: ${p.name} <button class="btn btn-danger btn-sm" onclick="deleteResultMaster('${r.progId}')">x</button></div>`;
             }).join('');
 
-            document.getElementById('master-updates-list').innerHTML = window.appState.updates.map(u => `
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-                    <span>Update (${u.type}): ${u.title}</span> <button class="btn btn-danger btn-sm" onclick="deleteUpdateMaster('${u.id}')">x</button>
-                </div>
-            `).join('');
-
-            document.getElementById('master-streams-list').innerHTML = [
-                ...window.appState.livelinks.map(l => ({ ...l, mode:'live' })),
-                ...window.appState.highlights.map(h => ({ ...h, mode:'highlight' }))
-            ].map(s => `
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-                    <span>${s.mode.toUpperCase()}: ${s.title}</span> <button class="btn btn-danger btn-sm" onclick="deleteStreamMaster('${s.id}', '${s.mode}')">x</button>
-                </div>
-            `).join('');
+            const uBox = document.getElementById('master-updates-list');
+            if(uBox) uBox.innerHTML = window.appState.updates.map(u => `<div style="display:flex; justify-content:space-between; padding:6px; border-bottom:1px solid var(--glass-border);">Update: ${u.title} <button class="btn btn-danger btn-sm" onclick="deleteUpdateMaster('${u.id}')">x</button></div>`).join('');
 
             const rTeam = document.getElementById('rep-team');
             if(rTeam && rTeam.children.length === 1) {
@@ -1938,104 +1630,116 @@
         window.renderReportTable = function() {
             const fTeam = document.getElementById('rep-team').value;
             const fCat = document.getElementById('rep-cat').value;
-            const fProg = document.getElementById('rep-prog') ? document.getElementById('rep-prog').value : '';
-            const searchQ = document.getElementById('rep-prog-search') ? document.getElementById('rep-prog-search').value.toLowerCase().trim() : '';
+            const fStage = document.getElementById('rep-stage').value;
             const tbody = document.getElementById('report-table-body');
             if(!tbody) return;
 
             let rows = '';
-            let count = 1;
             window.appState.registrations.forEach(r => {
                 const p = window.appState.programs.find(pr => pr.id === r.progId);
                 if(!p) return;
                 if(fTeam && r.team !== fTeam) return;
                 if(fCat && r.cat !== fCat) return;
-                if(fProg && r.progId !== fProg) return;
-                if(searchQ && !p.name.toLowerCase().includes(searchQ)) return;
+                if(fStage && p.stage !== fStage) return;
 
                 r.participants.forEach(name => {
-                    rows += `<tr>
-                        <td style="text-align:center;">${count++}</td>
-                        <td><strong>${name}</strong></td>
-                        <td>${r.team}</td>
-                        <td>${r.cat}</td>
-                        <td>${p.name}</td>
-                    </tr>`;
+                    rows += `<tr><td>${name}</td><td><strong>${r.team}</strong></td><td>${r.cat}</td><td>${p.name}</td><td>${p.stage}</td></tr>`;
                 });
             });
-            tbody.innerHTML = rows || '<tr><td colspan="5" style="text-align:center;">No entries found.</td></tr>';
+            tbody.innerHTML = rows || '<tr><td colspan="5">No data.</td></tr>';
         }
 
-        /* RESULT PHASE VIEWER (Clean Published Only) */
+        /* LIVE RENDERING AND ACTION MENUS */
         function renderResultPhaseFeeds() {
             const statusBox = document.getElementById('team-status-poster-box');
             if(window.appState.teamStatusUrl) {
                 statusBox.innerHTML = `
-                    <div style="max-width:500px; margin: 0 auto; text-align:center;">
-                        <img src="${window.appState.teamStatusUrl}" style="width:100%; border-radius:14px;">
-                        <div style="margin-top:10px;"><a href="${window.appState.teamStatusUrl}" download="Team_Status.png" class="btn btn-sm"><i class="fa-solid fa-download"></i> Download Poster</a></div>
+                    <div class="media-card">
+                        <div class="media-header">
+                            <span>Team Status Poster</span>
+                            <button class="action-dots-btn" onclick="toggleActionPopover('pop-status')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <div id="pop-status" class="action-popover">
+                                <button onclick="triggerDownload('${window.appState.teamStatusUrl}', 'Team_Status.png')"><i class="fa-solid fa-download"></i> Download</button>
+                                <button onclick="triggerShare('${window.appState.teamStatusUrl}', 'Team Status Poster')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
+                            </div>
+                        </div>
+                        <img src="${window.appState.teamStatusUrl}" style="max-width:100%; border-radius:10px;">
                     </div>`;
-            } else statusBox.innerHTML = '<p>No Team Status published.</p>';
+            } else { statusBox.innerHTML = '<p>No Status Uploaded Yet.</p>'; }
 
             filterResultPrograms();
             renderPinterestUpdates('all');
 
-            document.getElementById('livelink-feed').innerHTML = window.appState.livelinks.map(l => `
-                <div class="masonry-item">
-                    <img src="${l.thumb}">
-                    <h5 style="margin-top:6px; font-size:0.9rem;">${l.title}</h5>
-                    <a href="${l.url}" target="_blank" class="btn btn-sm btn-danger btn-block" style="margin-top:6px;"><i class="fa-solid fa-play"></i> Watch Stream</a>
+            document.getElementById('livelink-feed').innerHTML = window.appState.livelinks.map((l, idx) => `
+                <div class="media-card" style="text-align:center;">
+                    <div class="media-header">
+                        <h4>${l.title}</h4>
+                        <button class="action-dots-btn" onclick="toggleActionPopover('pop-live-${idx}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                        <div id="pop-live-${idx}" class="action-popover">
+                            <button onclick="triggerDownload('${l.thumb}', '${l.title}.png')"><i class="fa-solid fa-download"></i> Download Thumb</button>
+                            <button onclick="triggerShare('${l.url}', '${l.title}')"><i class="fa-solid fa-share-nodes"></i> Share Stream Link</button>
+                        </div>
+                    </div>
+                    <img src="${l.thumb}" style="width:100%; max-height:220px; object-fit:cover; border-radius:10px;">
+                    <div style="margin-top:10px;"><a href="${l.url}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-solid fa-play"></i> Watch Stream</a></div>
                 </div>
-            `).join('') || '<p style="grid-column: 1/-1;">No Active Live Streams.</p>';
+            `).join('') || '<p>No Active Live Streams.</p>';
 
-            document.getElementById('highlights-feed').innerHTML = window.appState.highlights.map(h => `
-                <div class="masonry-item">
-                    <img src="${h.thumb}">
-                    <h5 style="margin-top:6px; font-size:0.9rem;">${h.title}</h5>
-                    <a href="${h.url}" target="_blank" class="btn btn-sm btn-block" style="margin-top:6px;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open</a>
+            document.getElementById('highlights-feed').innerHTML = window.appState.highlights.map((h, idx) => `
+                <div class="media-card" style="text-align:center;">
+                    <div class="media-header">
+                        <h4>${h.title}</h4>
+                        <button class="action-dots-btn" onclick="toggleActionPopover('pop-hl-${idx}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                        <div id="pop-hl-${idx}" class="action-popover">
+                            <button onclick="triggerDownload('${h.thumb}', '${h.title}.png')"><i class="fa-solid fa-download"></i> Download</button>
+                            <button onclick="triggerShare('${h.url}', '${h.title}')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
+                        </div>
+                    </div>
+                    <img src="${h.thumb}" style="width:100%; max-height:220px; object-fit:cover; border-radius:10px;">
+                    <div style="margin-top:10px;"><a href="${h.url}" target="_blank" class="btn btn-sm"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Highlight</a></div>
                 </div>
-            `).join('') || '<p style="grid-column: 1/-1;">No Highlights Cataloged.</p>';
+            `).join('') || '<p>No Highlights Added.</p>';
         }
 
         window.filterResultPrograms = function() {
             const cat = document.getElementById('res-search-cat').value;
-            const searchQ = document.getElementById('res-prog-search').value.toLowerCase().trim();
             const container = document.getElementById('results-display-list');
+            const matched = window.appState.programs.filter(p => !cat || p.cat === cat);
 
-            const matchedResults = window.appState.results.filter(r => {
-                const p = window.appState.programs.find(pr => pr.id === r.progId);
-                if(!p) return false;
-                if(cat && p.cat !== cat) return false;
-                if(searchQ && !p.name.toLowerCase().includes(searchQ)) return false;
-                return true;
-            });
-
-            container.innerHTML = matchedResults.map(r => {
-                const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Program', cat: 'N/A' };
+            container.innerHTML = matched.map(p => {
+                const res = window.appState.results.find(r => r.progId === p.id);
                 return `
-                    <div style="background:rgba(0,0,0,0.2); padding:14px; border:1px solid var(--border-color); margin-bottom:10px; border-radius:16px;">
-                        <h4>${p.name} <span style="font-size:0.75rem; color:var(--text-sub);">(${p.cat})</span> - <span style="color:#d4af37;">Result ${r.number || ''}</span></h4>
-                        <div style="margin-top:8px;">
-                            <button class="btn btn-sm btn-success" id="btn-toggle-res-${r.progId}" onclick="toggleInlineResultView('${r.progId}', '${r.poster}')">Result View</button>
-                            <div id="inline-res-box-${r.progId}" style="display:none; margin-top:10px; text-align:center;"></div>
-                            ${r.youtube ? `<div style="margin-top:6px;"><a href="${r.youtube}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-brands fa-youtube"></i> Watch Video</a></div>` : ''}
+                    <div class="media-card">
+                        <div class="media-header">
+                            <h4>${p.name} <span style="font-size:0.8rem; color:#94a3b8;">(${p.cat})</span></h4>
+                            ${res ? `
+                                <button class="action-dots-btn" onclick="toggleActionPopover('pop-res-${p.id}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <div id="pop-res-${p.id}" class="action-popover">
+                                    <button onclick="triggerDownload('${res.poster}', 'Result_${p.name}.png')"><i class="fa-solid fa-download"></i> Download Poster</button>
+                                    <button onclick="triggerShare('${res.poster}', 'Result: ${p.name}')"><i class="fa-solid fa-share-nodes"></i> Share Result</button>
+                                </div>
+                            ` : ''}
                         </div>
+                        ${res ? `
+                            <div>
+                                <button class="btn btn-sm btn-success" id="btn-toggle-res-${p.id}" onclick="toggleInlineResultView('${p.id}', '${res.poster}')">Result View</button>
+                                <div id="inline-res-box-${p.id}" class="inline-res-display" style="display:none;"></div>
+                                ${res.youtube ? `<div style="margin-top:8px;"><a href="${res.youtube}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-brands fa-youtube"></i> Watch Video</a></div>` : ''}
+                            </div>
+                        ` : '<p style="color:#94a3b8; font-size:0.85rem;"><i class="fa-solid fa-circle-minus"></i> Result Pending</p>'}
                     </div>
                 `;
-            }).join('') || '<p style="text-align:center; color:var(--text-sub); margin-top:15px;">No published results matching filter.</p>';
+            }).join('');
         }
 
         window.toggleInlineResultView = function(progId, posterData) {
             const box = document.getElementById(`inline-res-box-${progId}`);
             const btn = document.getElementById(`btn-toggle-res-${progId}`);
             if(box.style.display === 'none') {
-                confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
-                box.innerHTML = `
-                    <img src="${posterData}" style="width:100%; border-radius:10px;">
-                    <div style="margin-top:8px;"><a href="${posterData}" download="Result_${progId}.png" class="btn btn-sm"><i class="fa-solid fa-download"></i> Download Poster</a></div>
-                `;
+                confetti({ particleCount: 130, spread: 75, origin: { y: 0.6 } });
+                box.innerHTML = `<img src="${posterData}" style="max-width:100%; border-radius:10px;">`;
                 box.style.display = 'block';
-                btn.innerText = "Hide Result";
+                btn.innerText = "Hide Result View";
                 btn.className = "btn btn-sm btn-danger";
             } else {
                 box.style.display = 'none';
@@ -2048,18 +1752,61 @@
         window.renderPinterestUpdates = function(filterMode) {
             const feed = document.getElementById('live-updates-feed');
             if(!feed) return;
-            const targetUpdates = window.appState.updates.filter(u => filterMode === 'all' || u.type === filterMode);
+            
+            const targetUpdates = window.appState.updates.filter(u => {
+                if(filterMode === 'all') return true;
+                return u.type === filterMode;
+            });
 
             feed.innerHTML = targetUpdates.map(u => `
-                <div class="masonry-item">
-                    ${u.type === 'photo' ? `<img src="${u.url}">` : `<video src="${u.url}" controls playsinline></video>`}
-                    <h5 style="margin-top:6px; font-size:0.85rem; font-weight:700;">${u.title}</h5>
+                <div class="pinterest-item">
+                    <div style="position:absolute; top:8px; right:8px; z-index:2;">
+                        <button class="action-dots-btn" onclick="toggleActionPopover('pop-upd-${u.id}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                        <div id="pop-upd-${u.id}" class="action-popover">
+                            <button onclick="triggerDownload('${u.url}', '${u.title}.png')"><i class="fa-solid fa-download"></i> Download</button>
+                            <button onclick="triggerShare('${u.url}', '${u.title}')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
+                        </div>
+                    </div>
+                    ${u.type === 'photo' ? `
+                        <img src="${u.url}" class="pinterest-media">
+                    ` : `
+                        <iframe src="${u.url}" style="width:100%; height:150px; border:0; border-radius:8px;" allowfullscreen></iframe>
+                    `}
+                    <h5 style="margin-top:6px; font-weight:600; font-size:0.85rem;">${u.title}</h5>
                 </div>
-            `).join('') || '<p style="grid-column: 1/-1;">No updates cataloged.</p>';
+            `).join('') || '<p style="grid-column:1/-1;">No updates cataloged.</p>';
         }
 
-        render3DotMenu();
+        /* WEB SHARE API & DOWNLOAD UTILS */
+        window.toggleActionPopover = function(id) {
+            const target = document.getElementById(id);
+            const isShown = target.classList.contains('show');
+            document.querySelectorAll('.action-popover').forEach(p => p.classList.remove('show'));
+            if(!isShown) target.classList.add('show');
+        }
+
+        window.triggerDownload = function(url, filename) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        window.triggerShare = function(mediaUrl, title) {
+            const shareData = {
+                title: title || 'BAHJA 2026',
+                text: `Check out ${title} on BAHJA Fest Portal:`,
+                url: window.location.href
+            };
+            if (navigator.share) {
+                navigator.share(shareData).catch(err => console.log('Share error:', err));
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Site URL copied to clipboard!");
+            }
+        }
     </script>
 </body>
 </html>
-
