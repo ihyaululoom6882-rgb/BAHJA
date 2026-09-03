@@ -1,1889 +1,1645 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BAHJA 2026 - DAWA FEST</title>
-    <!-- Font Awesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts import -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Montserrat:wght@400;700;900&family=Open+Sans:wght@400;700&family=Poppins:wght@400;600;800&family=Roboto:wght@400;700&display=swap">
-    <!-- Canvas Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-
     <style>
-        :root {
-            --primary-gold: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            --gold-btn: linear-gradient(180deg, #e6c875 0%, #d4af37 50%, #aa820a 100%);
-            --bg-dark-mesh: radial-gradient(circle at 20% 20%, #2a2d32 0%, #111315 100%);
-            --glass-card-bg: rgba(255, 255, 255, 0.05);
-            --glass-card-border: rgba(255, 255, 255, 0.12);
-            --glass-modal-bg: rgba(28, 30, 34, 0.9);
-            --text-light: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.15);
-            --main-font: 'Poppins', sans-serif;
-            --header-align: center;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--main-font); }
-        
-        body { 
-            background: var(--bg-dark-mesh); 
-            background-attachment: fixed;
-            color: var(--text-light); 
-            padding-bottom: 50px; 
-            min-height: 100vh;
-            position: relative; 
-        }
-
-        /* Dynamic Logo Positioning System */
-        .corner-logo { 
-            position: fixed; 
-            z-index: 99; 
-            display: none; 
-            object-fit: contain;
-            transition: all 0.3s ease;
-        }
-
-        .logo-top-left { top: 15px; left: 15px; }
-        .logo-top-right { top: 15px; right: 75px; }
-        .logo-bottom-left { bottom: 15px; left: 15px; }
-        .logo-bottom-right { bottom: 15px; right: 15px; }
-        .logo-top-center { top: 15px; left: 50%; transform: translateX(-50%); }
-
-        /* Header Styling */
-        .header-title { text-align: var(--header-align); padding: 30px 20px 15px 20px; }
-        .header-title p { font-size: 1.1rem; margin-bottom: 6px; font-weight: 700; letter-spacing: 3px; color: #cbd5e1; }
-        .header-title h1 { font-size: 2.8rem; font-weight: 900; letter-spacing: 2px; color: #ffffff; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-
-        .menu-btn-container { position: fixed; top: 15px; right: 15px; z-index: 1000; }
-        .dots-btn { 
-            background: rgba(255, 255, 255, 0.1); 
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-card-border); 
-            width: 44px; height: 44px; 
-            border-radius: 50%; 
-            cursor: pointer; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 1.2rem; color: #ffffff;
-        }
-        
-        .dropdown-menu { 
-            display: none; position: absolute; right: 0; top: 55px; 
-            background: rgba(22, 24, 28, 0.95); 
-            backdrop-filter: blur(20px);
-            min-width: 230px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-            border-radius: 18px; overflow: hidden; z-index: 1001; 
-            border: 1px solid var(--glass-card-border);
-        }
-        .dropdown-menu.show { display: block; }
-        .dropdown-menu button { 
-            width: 100%; padding: 13px 18px; border: none; background: none; 
-            text-align: left; cursor: pointer; font-size: 0.9rem; color: #e2e8f0; 
-            display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-weight: 600; 
-        }
-        .dropdown-menu button:hover { background-color: rgba(255,255,255,0.08); color: #f6d365; }
-
-        /* Responsive Container: Compact on Mobile, Wide on Laptop */
-        .container { max-width: 820px; margin: 10px auto; padding: 0 14px; }
-        
-        .card { 
-            background: var(--glass-card-bg); 
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 24px; 
-            padding: 24px 20px; 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); 
-            margin-bottom: 20px; 
-            border: 1px solid var(--glass-card-border); 
-        }
-        
-        .view-panel { display: none; }
-        .active-panel { display: block; }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; color: #cbd5e1; }
-        .form-control { 
-            width: 100%; padding: 12px 14px; 
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-color); 
-            border-radius: 12px; outline: none; font-size: 0.95rem; color: #fff;
-        }
-        .form-control::placeholder { color: #64748b; }
-        
-        .btn { 
-            background: var(--gold-btn); color: #1e1e1e; border: none; 
-            padding: 12px 20px; border-radius: 14px; cursor: pointer; 
-            font-weight: 800; font-size: 0.95rem; display: inline-block; text-align: center; transition: 0.2s; 
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
-        }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-block { width: 100%; }
-        .btn-xl { padding: 16px 20px; font-size: 1.1rem; }
-        .btn-danger { background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%); color: white; box-shadow: none; }
-        .btn-success { background: linear-gradient(180deg, #10b981 0%, #047857 100%); color: white; box-shadow: none; }
-        .btn-warning { background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%); color: white; box-shadow: none; }
-        .btn-sm { padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; }
-
-        /* Pill Menu Layout */
-        .result-menu-box { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
-        .pill-menu-btn { 
-            display: flex; align-items: center; justify-content: space-between; 
-            border: none; padding: 18px 22px; border-radius: 50px; cursor: pointer; 
-            transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-        .pill-menu-btn:active { transform: scale(0.98); }
-        .pill-left-content { display: flex; align-items: center; gap: 16px; }
-        .pill-icon-circle { 
-            width: 46px; height: 46px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 1.25rem; background: rgba(255,255,255,0.85); 
-        }
-        .pill-text-wrapper { text-align: left; }
-        .pill-title { font-size: 1.15rem; font-weight: 800; color: #0f172a; line-height: 1.2; }
-        .pill-desc { font-size: 0.78rem; color: #475569; font-weight: 500; margin-top: 3px; }
-        .pill-arrow { font-size: 1.1rem; color: #334155; }
-
-        .pill-green { background-color: #e2ebd8; } .pill-green .pill-icon-circle { color: #355e3b; }
-        .pill-yellow { background-color: #f7edd4; } .pill-yellow .pill-icon-circle { color: #b45309; }
-        .pill-pink { background-color: #fdf0ed; } .pill-pink .pill-icon-circle { color: #be123c; }
-        .pill-blue { background-color: #e0f2fe; } .pill-blue .pill-icon-circle { color: #0369a1; }
-        .pill-purple { background-color: #f3e8ff; } .pill-purple .pill-icon-circle { color: #7e22ce; }
-
-        /* 2-Column Grid Layout for Updates (Mobile & Laptop) */
-        .updates-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 16px; margin-top: 15px; 
-        }
-        .update-card { 
-            background: rgba(0,0,0,0.4); border-radius: 18px; padding: 12px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3); border: 1px solid var(--border-color); 
-            position: relative;
-        }
-        .update-media { width: 100%; border-radius: 12px; display: block; object-fit: cover; max-height: 220px; }
-
-        .collapsible-header { 
-            background: rgba(255, 255, 255, 0.08); padding: 12px 16px; border-radius: 12px; 
-            font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; 
-            align-items: center; margin-top: 12px; border: 1px solid var(--border-color); font-size: 0.9rem;
-        }
-
-        .table-responsive { width: 100%; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; color: #e2e8f0; }
-        th { background-color: rgba(255, 255, 255, 0.05); font-weight: 700; color: #cbd5e1; }
-
-        .modal-overlay { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); z-index: 2000; 
-            justify-content: center; align-items: center; padding: 15px;
-        }
-        .modal-box { 
-            background: var(--glass-modal-bg); 
-            backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-card-border);
-            width: 100%; max-width: 400px; padding: 26px; 
-            border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); 
-        }
-
-        .poster-container { position: relative; width: 100%; margin-top: 8px; text-align: center; }
-        
-        .card-action-bar { 
-            display: flex; justify-content: space-between; align-items: center; 
-            margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08); 
-        }
-        .card-dots-menu { position: relative; }
-        .card-dots-btn { 
-            background: rgba(255,255,255,0.1); border: none; width: 32px; height: 32px; 
-            border-radius: 50%; cursor: pointer; color: #cbd5e1; 
-        }
-        .card-menu-pop { 
-            display: none; position: absolute; right: 0; bottom: 38px; 
-            background: #1e293b; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
-            width: 150px; z-index: 10; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;
-        }
-        .card-menu-pop.show { display: block; }
-        .card-menu-pop button { 
-            width: 100%; padding: 10px 12px; border: none; background: none; 
-            text-align: left; font-size: 0.8rem; cursor: pointer; color: #e2e8f0; 
-            display: flex; align-items: center; gap: 8px; font-weight: 600;
-        }
-        .card-menu-pop button:hover { background: rgba(255,255,255,0.1); color: #f6d365; }
-
-        .inline-res-display { 
-            background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); padding: 12px; 
-            border-radius: 14px; margin-top: 10px; text-align: center; 
-        }
-
-        .collapsible-box { display: none; margin-top: 10px; }
-        .collapsible-box.show { display: block; }
-
-        /* Tight Margin A4 Print Mode (Fit ~30 People per Page) */
+        /* Print Rules */
         @media print {
-            body { background: white !important; color: black !important; }
             body * { visibility: hidden; }
-            .print-area-target, .print-area-target * { visibility: visible; }
-            .print-area-target { 
-                position: absolute; left: 0; top: 0; width: 100%; 
-                color: black !important; background: white !important; padding: 0 !important;
-            }
+            #printableArea, #printableArea * { visibility: visible; }
+            #printableArea { position: absolute; left: 0; top: 0; width: 100%; }
             .no-print { display: none !important; }
-            table { width: 100% !important; border-collapse: collapse !important; margin: 0 !important; }
-            th, td { 
-                padding: 4px 6px !important; 
-                font-size: 11px !important; 
-                border: 1px solid #666 !important; 
-                color: black !important; 
-                line-height: 1.1 !important;
-            }
-            th { background-color: #eee !important; font-weight: bold !important; }
-            @page { size: A4; margin: 8mm; }
         }
+        .pinterest-grid { column-count: 2; column-gap: 1rem; }
+        @media (min-width: 768px) { .pinterest-grid { column-count: 3; } }
+        .pinterest-item { break-inside: avoid; margin-bottom: 1rem; }
     </style>
 </head>
-<body>
+<body class="bg-slate-100 font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- Dynamic Positioned Logo -->
-    <img id="corner-logo-view" class="corner-logo logo-top-left" src="" alt="Logo">
-
-    <div class="header-title" id="editable-header-area">
-        <p id="txt-welcome-banner">WELCOME TO BAHJA FEST</p>
-        <h1 id="txt-main-title">BAHJA 2026</h1>
-    </div>
-
-    <div class="menu-btn-container">
-        <button class="dots-btn" onclick="toggleDropdown()"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-        <div id="mainDropdown" class="dropdown-menu"></div>
-    </div>
-
-    <div class="container">
-
-        <!-- HOME PANEL -->
-        <div id="panel-home" class="view-panel active-panel card">
-            <!-- REGISTER PHASE -->
-            <div id="home-phase-register" style="display: none;">
-                <div id="team-login-block" style="text-align: center; max-width: 400px; margin: 0 auto;">
-                    <h3 style="color: #f6d365; margin-bottom: 15px;">Team Leader Login</h3>
-                    <form onsubmit="handleTeamLogin(event)">
-                        <div class="form-group" style="text-align: left;">
-                            <label>Team Username</label>
-                            <input type="text" id="login-team-user" class="form-control" required>
-                        </div>
-                        <div class="form-group" style="text-align: left;">
-                            <label>Password</label>
-                            <input type="password" id="login-team-pass" class="form-control" required>
-                        </div>
-                        <button type="submit" class="btn btn-block">Sign In</button>
-                    </form>
+    <!-- HEADER / NAVIGATION -->
+    <header class="bg-white shadow-sm p-4 sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto flex justify-between items-center relative">
+            <!-- Left Corner Logo Display -->
+            <div class="flex items-center gap-3">
+                <div id="headerLogoContainer" class="hidden">
+                    <img id="headerLogoImg" src="" class="h-12 w-auto object-contain">
                 </div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-blue-700 tracking-wider">BAHJA 2026</h1>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Dawa Fest</p>
+                </div>
+            </div>
 
-                <div id="team-portal-block" style="display: none;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.08); padding: 12px 15px; border-radius: 12px; margin-bottom: 15px;">
-                        <span style="font-size:0.9rem;">Team: <strong id="logged-team-name" style="color: #f6d365;"></strong></span>
-                        <button class="btn btn-danger btn-sm" onclick="logoutTeam()">Logout</button>
+            <!-- Professional 3-Dots Dropdown Menu -->
+            <div class="relative">
+                <button onclick="toggleMenu()" class="p-2.5 text-slate-600 hover:text-blue-600 text-xl font-bold focus:outline-none transition">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </button>
+                
+                <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-64 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 overflow-hidden divide-y divide-slate-100">
+                    <div class="py-1">
+                        <button onclick="navTo('home')" class="w-full text-left px-4 py-3 hover:bg-slate-50 text-xs font-semibold text-slate-700 flex items-center gap-3">
+                            <i class="fa-solid fa-house text-blue-500 w-4"></i> Home
+                        </button>
+                        <button onclick="navTo('main-login')" class="w-full text-left px-4 py-3 hover:bg-slate-50 text-xs font-semibold text-slate-700 flex items-center gap-3">
+                            <i class="fa-solid fa-key text-amber-500 w-4"></i> Main Login
+                        </button>
+                        <button onclick="navTo('participants-login')" class="w-full text-left px-4 py-3 hover:bg-slate-50 text-xs font-semibold text-slate-700 flex items-center gap-3">
+                            <i class="fa-solid fa-users text-emerald-500 w-4"></i> Team Login
+                        </button>
                     </div>
 
-                    <h3>Program Registration</h3>
-                    <div class="form-group" style="margin-top: 12px;">
-                        <label>Select Category</label>
-                        <select id="reg-cat-select" class="form-control" onchange="loadCategoryPrograms()">
-                            <option value="">-- Choose Category --</option>
-                            <option value="GENERAL">GENERAL</option>
-                            <option value="LOWER ZONE">LOWER ZONE</option>
-                            <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                            <option value="HIGHER ZONE">HIGHER ZONE</option>
-                            <option value="SUPER ZONE">SUPER ZONE</option>
+                    <!-- Dynamic Options shown ONLY after Main Login -->
+                    <div id="adminMenuOptions" class="hidden py-1 bg-slate-50">
+                        <button onclick="navTo('settings')" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 text-xs font-semibold text-slate-800 flex items-center gap-3">
+                            <i class="fa-solid fa-gear text-slate-600 w-4"></i> Settings
+                        </button>
+                        <button onclick="navTo('admin-panel')" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 text-xs font-semibold text-slate-800 flex items-center gap-3">
+                            <i class="fa-solid fa-sliders text-indigo-600 w-4"></i> Control Panel
+                        </button>
+                        <button onclick="navTo('pointroom')" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 text-xs font-semibold text-slate-800 flex items-center gap-3">
+                            <i class="fa-solid fa-calculator text-blue-600 w-4"></i> Point Room
+                        </button>
+                        <button onclick="navTo('judge')" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 text-xs font-semibold text-slate-800 flex items-center gap-3">
+                            <i class="fa-solid fa-gavel text-amber-600 w-4"></i> Judge (Individual Points)
+                        </button>
+                        <button onclick="navTo('states-control')" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 text-xs font-semibold text-slate-800 flex items-center gap-3">
+                            <i class="fa-solid fa-chart-pie text-emerald-600 w-4"></i> States Control (Team Tally)
+                        </button>
+                    </div>
+
+                    <div id="logoutOpt" class="hidden py-1">
+                        <button onclick="logout()" class="w-full text-left px-4 py-3 hover:bg-red-50 text-xs font-semibold text-red-600 flex items-center gap-3">
+                            <i class="fa-solid fa-right-from-bracket w-4"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CENTER HERO HEADER -->
+    <div class="text-center py-6 bg-white border-b mb-4">
+        <h1 class="text-3xl md:text-5xl font-black text-blue-700 tracking-wider uppercase">BAHJA 2026</h1>
+        <p class="text-xs md:text-sm font-bold text-slate-500 uppercase tracking-widest mt-1">Welcome to Bahja Fest</p>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-4xl mx-auto w-full p-3 md:p-6 flex-grow">
+
+        <!-- ================= REGISTER PHASE (MOBILE OPTIMIZED) ================= -->
+        <section id="registerPhaseSection" class="space-y-6">
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200 text-center max-w-lg mx-auto">
+                <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-user-shield text-blue-600"></i> Team Leader Login
+                </h2>
+                <form onsubmit="handleTeamLogin(event)" class="space-y-4">
+                    <div>
+                        <input type="text" id="teamUser" required placeholder="Team Username" class="w-full border border-slate-300 rounded-xl p-3 text-sm outline-none focus:border-blue-600">
+                    </div>
+                    <div>
+                        <input type="password" id="teamPass" required placeholder="Password" class="w-full border border-slate-300 rounded-xl p-3 text-sm outline-none focus:border-blue-600">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-sm">
+                        Login to Portal
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================= RESULT PHASE (FULL MOBILE PAGE FIT) ================= -->
+        <section id="resultPhaseSection" class="hidden space-y-3 max-w-lg mx-auto w-full px-2">
+            <button onclick="openModal('teamStatusModal')" class="w-full py-5 bg-blue-800 hover:bg-blue-900 text-white font-extrabold rounded-2xl shadow-md text-base tracking-wide flex items-center justify-center gap-3">
+                <i class="fa-solid fa-flag"></i> TEAM STATES
+            </button>
+            <button onclick="openModal('resultModal')" class="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-2xl shadow-md text-base tracking-wide flex items-center justify-center gap-3">
+                <i class="fa-solid fa-trophy"></i> RESULT
+            </button>
+            <button onclick="openModal('updatesModal')" class="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-2xl shadow-md text-base tracking-wide flex items-center justify-center gap-3">
+                <i class="fa-solid fa-newspaper"></i> UPDATES
+            </button>
+            <button onclick="openModal('liveModal')" class="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-2xl shadow-md text-base tracking-wide flex items-center justify-center gap-3">
+                <i class="fa-solid fa-video"></i> LIVE STREAMING
+            </button>
+            <button onclick="openModal('highlightsModal')" class="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-2xl shadow-md text-base tracking-wide flex items-center justify-center gap-3">
+                <i class="fa-solid fa-star"></i> HIGHLIGHTS
+            </button>
+        </section>
+
+        <!-- ================= MAIN LOGIN PAGE ================= -->
+        <section id="mainLoginSection" class="hidden max-w-lg mx-auto">
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-200 text-center">
+                <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock text-amber-500"></i> Committee Main Login
+                </h2>
+                <form onsubmit="handleMainLogin(event)" class="space-y-4">
+                    <div>
+                        <input type="text" id="mainUser" placeholder="Username" required class="w-full border border-slate-300 rounded-xl p-3 text-sm outline-none focus:border-blue-600">
+                    </div>
+                    <div>
+                        <!-- Masked dots password -->
+                        <input type="password" id="mainPass" placeholder="Password" required class="w-full border border-slate-300 rounded-xl p-3 text-sm outline-none focus:border-blue-600">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg text-sm">
+                        Login Main
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================= TEAM LEADER PORTAL ================= -->
+        <section id="teamPortalSection" class="hidden space-y-6">
+            <div class="bg-white p-5 md:p-6 rounded-2xl border shadow-sm">
+                <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus text-emerald-600"></i> 1. Add Participants Pool
+                </h3>
+                <form onsubmit="handleAddParticipant(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <input type="text" id="partName" placeholder="Participant Name" required class="border rounded-xl p-3 text-xs outline-none">
+                    <select id="partCategory" class="border rounded-xl p-3 text-xs outline-none">
+                        <option value="LOWER ZONE">LOWER ZONE</option>
+                        <option value="MIDDLE ZONE">MIDDLE ZONE</option>
+                        <option value="HIGHER ZONE">HIGHER ZONE</option>
+                        <option value="SUPER ZONE">SUPER ZONE</option>
+                        <option value="GENERAL">GENERAL</option>
+                    </select>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-xl text-xs">
+                        + Add Participant
+                    </button>
+                </form>
+
+                <div class="mt-4">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase mb-2">Added Participants Pool</h4>
+                    <ul id="myParticipantsList" class="divide-y border rounded-xl max-h-48 overflow-y-auto"></ul>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 md:p-6 rounded-2xl border shadow-sm">
+                <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-list text-blue-600"></i> 2. Register Participants to Programs
+                </h3>
+                <div id="registrationClosedAlert" class="hidden p-3 bg-red-100 text-red-700 rounded-xl font-bold mb-4 text-center text-xs">
+                    ⚠️ Registration Portal is CLOSED by Committee.
+                </div>
+                <form onsubmit="handleRegisterProgram(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">Select Category</label>
+                            <select id="regCategorySelect" onchange="updateProgramDropdown()" class="w-full border rounded-xl p-3 text-xs outline-none">
+                                <option value="">-- Choose Category --</option>
+                                <option value="LOWER ZONE">LOWER ZONE</option>
+                                <option value="MIDDLE ZONE">MIDDLE ZONE</option>
+                                <option value="HIGHER ZONE">HIGHER ZONE</option>
+                                <option value="SUPER ZONE">SUPER ZONE</option>
+                                <option value="GENERAL">GENERAL</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">Select Program</label>
+                            <select id="regProgramSelect" onchange="updateParticipantDropdown()" class="w-full border rounded-xl p-3 text-xs outline-none">
+                                <option value="">-- Choose Program --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 mb-1">Select Participant</label>
+                        <select id="regParticipantSelect" class="w-full border rounded-xl p-3 text-xs outline-none">
+                            <option value="">-- Choose Participant --</option>
                         </select>
                     </div>
-                    <div id="category-programs-container" style="margin-top: 15px;"></div>
-                </div>
+
+                    <button type="submit" id="btnSubmitReg" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-md text-xs">
+                        Submit Registration
+                    </button>
+                </form>
             </div>
+        </section>
 
-            <!-- RESULT PHASE (Pill Box Styles) -->
-            <div id="home-phase-result" style="display: none;">
-                <div class="result-menu-box">
-                    <button class="pill-menu-btn pill-green" onclick="openSection('section-team-states')">
-                        <div class="pill-left-content">
-                            <div class="pill-icon-circle"><i class="fa-solid fa-flag"></i></div>
-                            <div class="pill-text-wrapper">
-                                <div class="pill-title">TEAM STATUS</div>
-                                <div class="pill-desc">Current standings and scores</div>
-                            </div>
-                        </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
-                    </button>
-
-                    <button class="pill-menu-btn pill-yellow" onclick="openSection('section-results-view')">
-                        <div class="pill-left-content">
-                            <div class="pill-icon-circle"><i class="fa-solid fa-trophy"></i></div>
-                            <div class="pill-text-wrapper">
-                                <div class="pill-title">RESULT</div>
-                                <div class="pill-desc">Finished rounds & winners</div>
-                            </div>
-                        </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
-                    </button>
-
-                    <button class="pill-menu-btn pill-pink" onclick="openSection('section-updates')">
-                        <div class="pill-left-content">
-                            <div class="pill-icon-circle"><i class="fa-solid fa-bolt"></i></div>
-                            <div class="pill-text-wrapper">
-                                <div class="pill-title">UPDATES</div>
-                                <div class="pill-desc">Recent photos & video feed</div>
-                            </div>
-                        </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
-                    </button>
-
-                    <button class="pill-menu-btn pill-blue" onclick="openSection('section-livelink')">
-                        <div class="pill-left-content">
-                            <div class="pill-icon-circle"><i class="fa-solid fa-video"></i></div>
-                            <div class="pill-text-wrapper">
-                                <div class="pill-title">LIVE STREAMING</div>
-                                <div class="pill-desc">Watch stage programs live</div>
-                            </div>
-                        </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
-                    </button>
-
-                    <button class="pill-menu-btn pill-purple" onclick="openSection('section-highlights')">
-                        <div class="pill-left-content">
-                            <div class="pill-icon-circle"><i class="fa-solid fa-star"></i></div>
-                            <div class="pill-text-wrapper">
-                                <div class="pill-title">HIGHLIGHTS</div>
-                                <div class="pill-desc">Special moments & reels</div>
-                            </div>
-                        </div>
-                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- TEAM STATUS -->
-        <div id="section-team-states" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h3 style="color: #f6d365; margin-bottom: 12px;">Team Status</h3>
-            <div id="team-status-poster-box" style="text-align: center;"></div>
-        </div>
-
-        <!-- RESULT VIEW -->
-        <div id="section-results-view" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h3 style="color: #f6d365; margin-bottom: 12px;">Program Results</h3>
-            <div class="form-group">
-                <select id="res-search-cat" class="form-control" onchange="filterResultPrograms()">
-                    <option value="">-- Select Category --</option>
-                    <option value="GENERAL">GENERAL</option>
-                    <option value="LOWER ZONE">LOWER ZONE</option>
-                    <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                    <option value="HIGHER ZONE">HIGHER ZONE</option>
-                    <option value="SUPER ZONE">SUPER ZONE</option>
-                </select>
-            </div>
-            <div id="results-display-list"></div>
-        </div>
-
-        <!-- UPDATES GALLERY -->
-        <div id="section-updates" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h3 style="color: #f6d365; margin-bottom: 12px;">Updates & Gallery</h3>
-            <div style="display:flex; gap:8px; margin-bottom:12px;" class="no-print">
-                <button class="btn btn-sm btn-warning" onclick="renderPinterestUpdates('all')">Show All</button>
-                <button class="btn btn-sm btn-primary" onclick="renderPinterestUpdates('photo')">Photos Only</button>
-                <button class="btn btn-sm btn-success" onclick="renderPinterestUpdates('video')">Videos Only</button>
-            </div>
-            <div id="live-updates-feed" class="updates-grid"></div>
-        </div>
-
-        <!-- LIVE STREAM -->
-        <div id="section-livelink" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h3 style="color: #f6d365; margin-bottom: 12px;">Live Streams</h3>
-            <div id="livelink-feed" class="updates-grid"></div>
-        </div>
-
-        <!-- HIGHLIGHTS -->
-        <div id="section-highlights" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h3 style="color: #f6d365; margin-bottom: 12px;">Highlights</h3>
-            <div id="highlights-feed" class="updates-grid"></div>
-        </div>
-
-        <!-- PARTICIPANTS ENTRY DIRECTORY -->
-        <div id="panel-participants-entry" class="view-panel card">
-            <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
-            <h3 style="color: #f6d365; margin-top: 12px;">Add Team Participants</h3>
+        <!-- ================= SETTINGS (EXTRACTED SEPARATELY) ================= -->
+        <section id="settingsSection" class="hidden bg-white p-6 rounded-2xl border space-y-6">
+            <h2 class="text-xl font-bold text-slate-800 border-b pb-2"><i class="fa-solid fa-gear"></i> System Settings</h2>
             
-            <div id="part-login-block" style="max-width:400px; margin: 10px auto;">
-                <form onsubmit="handlePartLogin(event)">
-                    <div class="form-group"><label>Team Username</label><input type="text" id="part-user" class="form-control" required></div>
-                    <div class="form-group"><label>Password</label><input type="password" id="part-pass" class="form-control" required></div>
-                    <button type="submit" class="btn btn-block">Verify & Open</button>
-                </form>
+            <!-- Logo Upload -->
+            <div class="bg-slate-50 p-4 rounded-xl space-y-3">
+                <h3 class="font-bold text-sm text-slate-700">Upload Header Logo</h3>
+                <input type="file" id="logoFileInput" accept="image/*" class="text-xs block">
+                <div class="flex gap-2">
+                    <button onclick="uploadLogo()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Save Logo</button>
+                    <button onclick="deleteLogo()" class="bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Delete Logo</button>
+                </div>
             </div>
 
-            <div id="part-manage-block" style="display:none; margin-top:15px;">
-                <h4 style="margin-bottom:10px;">Team: <span id="part-active-team" style="color:#f6d365;"></span></h4>
-                <form onsubmit="addTeamParticipant(event)">
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select id="part-cat" class="form-control" required>
-                            <option value="LOWER ZONE">LOWER ZONE</option>
-                            <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                            <option value="HIGHER ZONE">HIGHER ZONE</option>
-                            <option value="SUPER ZONE">SUPER ZONE</option>
-                            <option value="GENERAL">GENERAL</option>
-                        </select>
+            <!-- Phase Control -->
+            <div class="bg-slate-50 p-4 rounded-xl space-y-2">
+                <h3 class="font-bold text-sm text-slate-700">Phase Toggle</h3>
+                <div class="flex items-center gap-6">
+                    <label class="flex items-center gap-2 cursor-pointer text-xs font-bold">
+                        <input type="radio" name="phaseToggle" value="register" onchange="togglePhase('register')" id="phaseRegRadio">
+                        Register Phase ON
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer text-xs font-bold">
+                        <input type="radio" name="phaseToggle" value="result" onchange="togglePhase('result')" id="phaseResRadio">
+                        Result Phase ON
+                    </label>
+                </div>
+            </div>
+
+            <div class="border-t pt-4">
+                <button onclick="clearAllData()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs">
+                    Clear All System Data
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= CONTROL PANEL ================= -->
+        <section id="adminPanelSection" class="hidden space-y-6">
+            <div class="flex border-b border-slate-300">
+                <button onclick="switchAdminTab('regControl')" id="tabBtnRegControl" class="px-4 py-2.5 font-bold border-b-2 border-blue-600 text-blue-600 text-xs">Register Control</button>
+                <button onclick="switchAdminTab('resControl')" id="tabBtnResControl" class="px-4 py-2.5 font-bold text-slate-500 text-xs">Result Control</button>
+            </div>
+
+            <!-- 1. REGISTER CONTROL -->
+            <div id="adminRegControlTab" class="space-y-6">
+                <div class="bg-white p-4 rounded-2xl border flex justify-between items-center">
+                    <div>
+                        <span class="text-xs font-bold text-slate-500">Registration Portal Status: </span>
+                        <span id="adminRegStatusText" class="font-black text-green-600 text-xs">OPEN</span>
                     </div>
-                    <div class="form-group">
-                        <label>Participant Name</label>
-                        <input type="text" id="part-name" class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-success btn-block">Add Student</button>
-                </form>
-                <div id="team-students-list" style="margin-top:15px;"></div>
-            </div>
-        </div>
-
-        <!-- SYSTEM SETTINGS -->
-        <div id="panel-settings" class="view-panel card">
-            <h3 style="color: #f6d365; margin-bottom: 15px;">System Settings</h3>
-            <form onsubmit="applyPhaseSettings(event)">
-                <div class="form-group">
-                    <label>Active Festival Phase</label>
-                    <div style="display:flex; gap: 15px; align-items:center;">
-                        <label><input type="radio" name="phase-toggle" id="phase-reg-radio" value="register" onchange="togglePhaseControl('register')"> Registration Phase</label>
-                        <label><input type="radio" name="phase-toggle" id="phase-res-radio" value="result" onchange="togglePhaseControl('result')"> Result Phase</label>
-                    </div>
-                </div>
-                
-                <hr style="margin:15px 0; border:0; border-top:1px solid var(--border-color);">
-                
-                <div class="form-group">
-                    <label>Upload Logo</label>
-                    <input type="file" id="sys-logo-input" class="form-control" accept="image/*">
+                    <button onclick="toggleRegistrationOpenClose()" id="adminRegStatusBtn" class="bg-red-600 text-white text-xs font-bold px-4 py-2 rounded-xl">
+                        Close Registration
+                    </button>
                 </div>
 
-                <div class="form-group">
-                    <label>Logo Placement Position</label>
-                    <select id="sys-logo-pos" class="form-control" onchange="updateLogoStylesLocally()">
-                        <option value="logo-top-left">Top Left Corner</option>
-                        <option value="logo-top-right">Top Right Corner</option>
-                        <option value="logo-top-center">Center Top</option>
-                        <option value="logo-bottom-left">Bottom Left</option>
-                        <option value="logo-bottom-right">Bottom Right</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Logo Size Height (px): <span id="logo-size-val">60</span>px</label>
-                    <input type="range" min="30" max="120" value="60" id="sys-logo-size" class="form-control" oninput="updateLogoStylesLocally()">
-                </div>
-
-                <button type="submit" class="btn btn-block">Save Phase & Logo Settings</button>
-            </form>
-            <div id="logo-manage-box" style="margin-top:12px; display:none;">
-                <button class="btn btn-danger btn-sm btn-block" onclick="deleteSysLogo()">Delete Current Logo</button>
-            </div>
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
-            <button class="btn btn-danger btn-block" onclick="clearAllDataSystem()">Clear All System Data</button>
-        </div>
-
-        <!-- POINTROOM PORTAL -->
-        <div id="panel-pointroom" class="view-panel card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>Pointroom Management</h3>
-                <button class="btn btn-warning btn-sm no-print" onclick="triggerSectionPrint('panel-pointroom')"><i class="fa-solid fa-print"></i> Print Records</button>
-            </div>
-            <div class="print-area-target">
-                <form onsubmit="savePointroomEntry(event)" class="no-print" style="margin-top:12px;">
-                    <div class="form-group">
-                        <label>Select Category</label>
-                        <select id="pt-cat-select" class="form-control" onchange="populatePtProgs()" required>
-                            <option value="">-- Choose Category --</option>
-                            <option value="GENERAL">GENERAL</option>
-                            <option value="LOWER ZONE">LOWER ZONE</option>
-                            <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                            <option value="HIGHER ZONE">HIGHER ZONE</option>
-                            <option value="SUPER ZONE">SUPER ZONE</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Select Program</label>
-                        <select id="pt-prog-select" class="form-control" onchange="loadPtParticipants()" required></select>
-                    </div>
-                    <div id="pt-stage-badge" style="margin-bottom:12px; font-weight:bold; color:#f6d365;"></div>
-                    
-                    <div id="pt-candidates-inputs" style="margin-bottom:12px;"></div>
-                    <button type="submit" class="btn btn-success btn-block btn-xl">Submit Point Records</button>
-                </form>
-
-                <div class="collapsible-header no-print" onclick="toggleAccordion('box-pt-list')"><span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
-                <div id="box-pt-list" class="collapsible-box show"></div>
-            </div>
-        </div>
-
-        <!-- JUDGE PORTAL -->
-        <div id="panel-judge" class="view-panel card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>Judge Leaderboard</h3>
-                <button class="btn btn-warning btn-sm no-print" onclick="triggerSectionPrint('panel-judge')"><i class="fa-solid fa-print"></i> Print Leaderboard</button>
-            </div>
-            <div class="print-area-target">
-                <div class="form-group no-print" style="margin-top:12px;">
-                    <label>Filter Stage View</label>
-                    <select id="jd-filter-stage" class="form-control" onchange="renderJudgeLeaderboard()">
-                        <option value="all">ALL STAGES</option>
-                        <option value="ON STAGE">ON STAGE</option>
-                        <option value="OFF STAGE">OFF STAGE</option>
-                    </select>
-                </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr><th>Student Name</th><th>Team</th><th>Cat</th><th>Points</th></tr>
-                        </thead>
-                        <tbody id="judge-leaderboard-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- STATES CONTROL -->
-        <div id="panel-states-control" class="view-panel card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>States Control Dashboard</h3>
-                <button class="btn btn-warning btn-sm no-print" onclick="triggerSectionPrint('panel-states-control')"><i class="fa-solid fa-print"></i> Print Standings</button>
-            </div>
-            <div class="print-area-target">
-                <div class="table-responsive" style="margin-top:12px;">
-                    <table>
-                        <thead>
-                            <tr><th>Team Username</th><th>Aggregated Points</th></tr>
-                        </thead>
-                        <tbody id="states-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- PROTECTION SYSTEM PANEL -->
-        <div id="panel-protection" class="view-panel card">
-            <h3>Protection Settings Dashboard</h3>
-            <div style="background:rgba(0,0,0,0.3); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:12px;">
-                <h4 style="font-size:0.95rem; color:#f6d365;">Change Main Login Credentials</h4>
-                <div class="form-group" style="margin-top:8px;">
-                    <input type="text" id="prot-old-main-u" class="form-control" placeholder="Current Username" style="margin-bottom:6px;">
-                    <input type="password" id="prot-old-main-p" class="form-control" placeholder="Current Password" style="margin-bottom:6px;">
-                    <button class="btn btn-sm btn-primary btn-block" onclick="verifyAndOpenMainCredShift()">Verify Credentials</button>
-                </div>
-                <div id="prot-new-main-block" style="display:none; margin-top:8px; border-top:1px dashed #64748b; padding-top:8px;">
-                    <div class="form-group">
-                        <input type="text" id="prot-new-main-u" class="form-control" placeholder="New Username" style="margin-bottom:6px;">
-                        <input type="password" id="prot-new-main-p" class="form-control" placeholder="New Password" style="margin-bottom:6px;">
-                        <button class="btn btn-sm btn-success btn-block" onclick="commitMainCredShift()">Save New Credentials</button>
+                <!-- Global Non-General Program Limit -->
+                <div class="bg-white p-5 rounded-2xl border">
+                    <h3 class="font-bold text-xs text-slate-800 mb-2">Non-General Program Limit Per Participant</h3>
+                    <div class="flex gap-2">
+                        <input type="number" id="globalMaxProgLimit" placeholder="Max Programs (e.g. 3)" class="border rounded-xl p-2.5 text-xs outline-none w-full">
+                        <button onclick="saveGlobalLimit()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Save Limit</button>
                     </div>
                 </div>
-            </div>
 
-            <div style="background:rgba(0,0,0,0.3); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:15px;">
-                <h4 style="font-size:0.95rem; color:#f6d365;">Modify Sub-Panel Access Passwords</h4>
-                <div id="sub-panel-pass-managers-container" style="margin-top:8px; display:flex; flex-direction:column; gap:10px;"></div>
-            </div>
-        </div>
-
-        <!-- MODIFY CUSTOMIZATION PANEL -->
-        <div id="panel-modify" class="view-panel card">
-            <h3>Modify Visuals & Alignment</h3>
-            <div style="margin-top:12px; display:flex; flex-direction:column; gap:12px;">
-                <div class="form-group">
-                    <label>Welcome Banner Text</label>
-                    <input type="text" id="mod-banner-text" class="form-control" oninput="liveUpdateVisuals()">
-                </div>
-                <div class="form-group">
-                    <label>Main Title Text</label>
-                    <input type="text" id="mod-title-text" class="form-control" oninput="liveUpdateVisuals()">
-                </div>
-                <div class="form-group">
-                    <label>Header Text & Content Alignment</label>
-                    <select id="mod-header-align" class="form-control" onchange="liveUpdateVisuals()">
-                        <option value="center">Center Alignment</option>
-                        <option value="left">Left Alignment</option>
-                        <option value="right">Right Alignment</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Font Style Typography</label>
-                    <select id="mod-font-family" class="form-control" onchange="liveUpdateVisuals()">
-                        <option value="'Poppins', sans-serif">Poppins (Modern)</option>
-                        <option value="'Inter', sans-serif">Inter (Clean)</option>
-                        <option value="'Montserrat', sans-serif">Montserrat (Bold)</option>
-                        <option value="'Roboto', sans-serif">Roboto</option>
-                        <option value="'Open Sans', sans-serif">Open Sans</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Welcome Banner Color</label>
-                    <input type="color" id="mod-banner-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;">
-                </div>
-                <div class="form-group">
-                    <label>Main Title Color</label>
-                    <input type="color" id="mod-title-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;">
-                </div>
-                <div class="form-group">
-                    <label>Welcome Banner Font Size (rem)</label>
-                    <input type="range" min="0.8" max="2.5" step="0.1" id="mod-banner-size" class="form-control" oninput="liveUpdateVisuals()">
-                </div>
-                <div class="form-group">
-                    <label>Main Title Font Size (rem)</label>
-                    <input type="range" min="1.5" max="4.5" step="0.1" id="mod-title-size" class="form-control" oninput="liveUpdateVisuals()">
-                </div>
-                <button class="btn btn-success" onclick="saveVisualLayoutState()">Save Appearance Layout</button>
-            </div>
-        </div>
-
-        <!-- CONTROL PANEL -->
-        <div id="panel-control-panel" class="view-panel card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3>Committee Control Panel</h3>
-                <button class="btn btn-danger btn-sm" onclick="navHome()">Exit</button>
-            </div>
-
-            <!-- REGISTRATION CONTROL -->
-            <div class="collapsible-header" onclick="toggleAccordion('box-reg-control')">
-                <span>1. REGISTRATION CONTROL</span> <i class="fa-solid fa-chevron-down"></i>
-            </div>
-            <div id="box-reg-control" class="collapsible-box show" style="padding:12px; background:rgba(0,0,0,0.3); border-radius:12px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:12px;">
-                    <span style="font-size:0.85rem;">Registration Lock:</span>
-                    <button id="lock-reg-btn" class="btn btn-sm" onclick="toggleRegLock()"></button>
-                </div>
-                
-                <div class="form-group" style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; border:1px solid var(--border-color);">
-                    <label>Max Items Per Student (Non-General)</label>
-                    <input type="number" id="m-max-limit-input" class="form-control" value="3">
-                    <button class="btn btn-sm btn-primary" style="margin-top:5px;" onclick="saveMaxLimitMaster()">Set Limit</button>
-                </div>
-                
-                <div class="collapsible-header" onclick="toggleAccordion('inner-teams-box')"><span>Teams Credentials Manager</span> <i class="fa-solid fa-chevron-down"></i></div>
-                <div id="inner-teams-box" class="collapsible-box">
-                    <form onsubmit="addTeamMaster(event)" style="display:flex; flex-direction:column; gap:6px; margin-bottom:10px;">
-                        <input type="text" id="m-team-user" class="form-control" placeholder="Username" required>
-                        <input type="password" id="m-team-pass" class="form-control" placeholder="Password" required>
-                        <button type="submit" class="btn btn-sm btn-success">Add Team</button>
+                <!-- Add / Edit / Delete Teams -->
+                <div class="bg-white p-5 rounded-2xl border">
+                    <h3 class="font-bold text-xs text-slate-800 mb-3">Add / Manage Teams</h3>
+                    <form onsubmit="handleAddTeam(event)" class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <input type="text" id="newTeamUser" placeholder="Team Username" required class="border rounded-xl p-2.5 text-xs outline-none">
+                        <input type="text" id="newTeamPass" placeholder="Password" required class="border rounded-xl p-2.5 text-xs outline-none">
+                        <button type="submit" class="bg-blue-600 text-white font-bold rounded-xl p-2.5 text-xs">+ Add Team</button>
                     </form>
-                    <div id="master-teams-list"></div>
+                    <div id="teamsList" class="mt-4 divide-y border rounded-xl p-2 max-h-36 overflow-y-auto"></div>
                 </div>
 
-                <div class="collapsible-header" onclick="toggleAccordion('inner-progs-box')"><span>Programs Master List</span> <i class="fa-solid fa-chevron-down"></i></div>
-                <div id="inner-progs-box" class="collapsible-box">
-                    <form onsubmit="addProgramMaster(event)" style="display:flex; flex-direction:column; gap:6px;">
-                        <input type="text" id="m-prog-name" class="form-control" placeholder="Program Name" required>
-                        <select id="m-prog-cat" class="form-control">
-                            <option value="GENERAL">GENERAL</option>
+                <!-- Add Programs -->
+                <div class="bg-white p-5 rounded-2xl border">
+                    <h3 class="font-bold text-xs text-slate-800 mb-3">Add / Manage Programs</h3>
+                    <form onsubmit="handleAddProgram(event)" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <input type="text" id="progName" placeholder="Program Name" required class="border rounded-xl p-2.5 text-xs outline-none">
+                        <select id="progCategory" class="border rounded-xl p-2.5 text-xs outline-none">
                             <option value="LOWER ZONE">LOWER ZONE</option>
                             <option value="MIDDLE ZONE">MIDDLE ZONE</option>
                             <option value="HIGHER ZONE">HIGHER ZONE</option>
                             <option value="SUPER ZONE">SUPER ZONE</option>
+                            <option value="GENERAL">GENERAL</option>
                         </select>
-                        <select id="m-prog-stage" class="form-control">
+                        <select id="progStage" class="border rounded-xl p-2.5 text-xs outline-none">
                             <option value="ON STAGE">ON STAGE</option>
                             <option value="OFF STAGE">OFF STAGE</option>
                         </select>
-                        <input type="number" id="m-prog-limit" class="form-control" placeholder="Max Spots" required>
-                        <button type="submit" class="btn btn-sm btn-block">Add Program</button>
+                        <input type="number" id="progMax" placeholder="Max participants allowed per team" min="1" required class="border rounded-xl p-2.5 text-xs outline-none">
+                        <button type="submit" class="md:col-span-2 bg-emerald-600 text-white font-bold rounded-xl p-2.5 text-xs">+ Add Program</button>
                     </form>
-                    <div id="master-progs-list" style="margin-top:10px;"></div>
+
+                    <div class="mt-4 border rounded-xl overflow-hidden">
+                        <button onclick="toggleSection('adminProgList')" class="w-full bg-slate-50 p-3 text-left font-bold text-slate-700 text-xs flex justify-between">
+                            <span>Programs List</span> <span>👇</span>
+                        </button>
+                        <div id="adminProgList" class="p-3 divide-y text-xs max-h-48 overflow-y-auto"></div>
+                    </div>
                 </div>
 
-                <div id="print-area" class="print-area-target" style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:12px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h4>Registration Report</h4>
-                        <button class="btn btn-warning btn-sm no-print" onclick="window.print()">Print A4 Sheet (~30/Page)</button>
+                <!-- Printable All Registrations Report -->
+                <div class="bg-white p-5 rounded-2xl border space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-xs text-slate-800">All Registrations Report</h3>
+                        <button onclick="openPrintModal()" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold">
+                            🖨️ Print Report Page
+                        </button>
                     </div>
 
-                    <div class="no-print" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; margin-top:8px;">
-                        <select id="rep-team" class="form-control" onchange="renderReportTable()"><option value="">All Teams</option></select>
-                        <select id="rep-cat" class="form-control" onchange="populateReportProgDropdown(); renderReportTable();">
-                            <option value="">All Categories</option>
-                            <option value="GENERAL">GENERAL</option>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                        <select id="filterTeam" onchange="renderAdminReport()" class="border p-2 rounded-xl"></select>
+                        <select id="filterCat" onchange="renderAdminReport()" class="border p-2 rounded-xl"></select>
+                        <select id="filterStage" onchange="renderAdminReport()" class="border p-2 rounded-xl"></select>
+                        <select id="filterProg" onchange="renderAdminReport()" class="border p-2 rounded-xl"></select>
+                    </div>
+
+                    <div id="reportTableContainer" class="border rounded-xl overflow-x-auto p-2">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-50 border-b">
+                                    <th class="p-2 border">Participant</th>
+                                    <th class="p-2 border">Team</th>
+                                    <th class="p-2 border">Category</th>
+                                    <th class="p-2 border">Program</th>
+                                    <th class="p-2 border">Stage</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. RESULT CONTROL -->
+            <div id="adminResControlTab" class="hidden space-y-6">
+                <!-- Team Status Upload -->
+                <div class="bg-white p-5 rounded-2xl border space-y-3">
+                    <h3 class="font-bold text-xs text-slate-800">Team Status Poster Upload</h3>
+                    <input type="file" id="teamStatusFile" accept="image/*" class="text-xs block">
+                    <!-- ENLARGED BUTTON -->
+                    <button onclick="uploadTeamStatus()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-xs tracking-wider uppercase shadow-md">
+                        Upload Team Status Poster
+                    </button>
+                    <div id="teamStatusPreview" class="mt-2 flex gap-2 flex-wrap"></div>
+                </div>
+
+                <!-- Result Upload -->
+                <div class="bg-white p-5 rounded-2xl border space-y-3">
+                    <h3 class="font-bold text-xs text-slate-800">Result Poster & Video Upload</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                        <select id="resCatSelect" onchange="updateResProgSelect()" class="border p-2.5 rounded-xl outline-none">
+                            <option value="">-- Choose Category --</option>
                             <option value="LOWER ZONE">LOWER ZONE</option>
                             <option value="MIDDLE ZONE">MIDDLE ZONE</option>
                             <option value="HIGHER ZONE">HIGHER ZONE</option>
                             <option value="SUPER ZONE">SUPER ZONE</option>
+                            <option value="GENERAL">GENERAL</option>
                         </select>
-                        <select id="rep-prog" class="form-control" onchange="renderReportTable()"><option value="">All Programs</option></select>
+                        <select id="resProgSelect" class="border p-2.5 rounded-xl outline-none">
+                            <option value="">-- Choose Program --</option>
+                        </select>
                     </div>
-                    <table class="table-responsive" id="report-resizable-table">
-                        <thead>
-                            <tr><th>#</th><th>Participant</th><th>Team</th><th>Cat</th><th>Program</th></tr>
-                        </thead>
-                        <tbody id="report-table-body"></tbody>
-                    </table>
+                    <input type="file" id="resPosterFile" accept="image/*" class="text-xs block">
+                    <input type="text" id="resYtLink" placeholder="YouTube Link (Optional)" class="w-full border p-2.5 text-xs rounded-xl outline-none">
+                    <input type="file" id="resYtThumb" accept="image/*" class="text-xs block">
+                    <!-- ENLARGED BUTTON -->
+                    <button onclick="uploadResult()" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-xl text-xs tracking-wider uppercase shadow-md">
+                        Upload Result
+                    </button>
+                    
+                    <div class="mt-4 border rounded-xl overflow-hidden">
+                        <button onclick="toggleSection('adminResList')" class="w-full bg-slate-50 p-2.5 text-left font-bold text-slate-700 text-xs flex justify-between">
+                            <span>Uploaded Results List</span> <span>👇</span>
+                        </button>
+                        <div id="adminResList" class="p-2.5 divide-y text-xs max-h-40 overflow-y-auto"></div>
+                    </div>
+                </div>
+
+                <!-- Updates Upload (Photo / Video Separated) -->
+                <div class="bg-white p-5 rounded-2xl border space-y-3">
+                    <h3 class="font-bold text-xs text-slate-800">Updates Upload (Photo / Video)</h3>
+                    <select id="updateTypeSelect" class="w-full border p-2.5 rounded-xl text-xs outline-none">
+                        <option value="photo">Photo Update</option>
+                        <option value="video">Video Update</option>
+                    </select>
+                    <input type="file" id="updateFile" accept="image/*,video/*" class="text-xs block">
+                    <input type="text" id="updateTitle" placeholder="Title" class="w-full border p-2.5 text-xs rounded-xl outline-none">
+                    <!-- ENLARGED BUTTON -->
+                    <button onclick="uploadUpdate()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-xs tracking-wider uppercase shadow-md">
+                        Upload Update
+                    </button>
+
+                    <div class="mt-2 border rounded-xl overflow-hidden">
+                        <button onclick="toggleSection('adminUpdatesList')" class="w-full bg-slate-50 p-2 text-left font-bold text-slate-700 text-xs flex justify-between">
+                            <span>Uploaded Updates List</span> <span>👇</span>
+                        </button>
+                        <div id="adminUpdatesList" class="p-2 divide-y text-xs max-h-40 overflow-y-auto"></div>
+                    </div>
+                </div>
+
+                <!-- Live Stream & Highlights -->
+                <div class="bg-white p-5 rounded-2xl border space-y-3">
+                    <h3 class="font-bold text-xs text-slate-800">Live Streaming & Highlights</h3>
+                    <input type="text" id="liveLink" placeholder="Live Link" class="w-full border p-2.5 text-xs rounded-xl outline-none">
+                    <input type="file" id="liveThumb" accept="image/*" class="text-xs block">
+                    <button onclick="saveLiveStream()" class="w-full py-3 bg-red-600 text-white font-bold rounded-xl text-xs uppercase">Save Live Stream</button>
+
+                    <hr class="my-2">
+
+                    <input type="text" id="highlightTitle" placeholder="Highlight Title / Video Link" class="w-full border p-2.5 text-xs rounded-xl outline-none">
+                    <button onclick="saveHighlight()" class="w-full py-3 bg-purple-600 text-white font-bold rounded-xl text-xs uppercase">Add Highlight</button>
                 </div>
             </div>
+        </section>
 
-            <!-- RESULT CONTROL -->
-            <div class="collapsible-header" onclick="toggleAccordion('box-res-control')">
-                <span>2. RESULT & MEDIA PUBLISHER</span> <i class="fa-solid fa-chevron-down"></i>
-            </div>
-            <div id="box-res-control" class="collapsible-box" style="padding:12px; background:rgba(0,0,0,0.3); border-radius:12px;">
+        <!-- ================= POINT ROOM ================= -->
+        <section id="pointroomSection" class="hidden space-y-6">
+            <div class="bg-white p-5 md:p-6 rounded-2xl border shadow-sm">
+                <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-calculator text-blue-600"></i> Point Room - Add Participant Points
+                </h2>
                 
-                <div class="collapsible-header" onclick="toggleAccordion('sub-status-box')"><span>Upload Team Status Poster</span> <i class="fa-solid fa-chevron-down"></i></div>
-                <div id="sub-status-box" class="collapsible-box">
-                    <form onsubmit="uploadTeamStatusPoster(event)">
-                        <input type="file" id="status-file" class="form-control" accept="image/*" required>
-                        <button type="submit" class="btn btn-sm btn-success btn-block" style="margin-top:5px;">Upload Status Poster</button>
-                    </form>
-                    <div id="master-status-preview" style="margin-top:6px;"></div>
-                </div>
-
-                <div class="collapsible-header" onclick="toggleAccordion('sub-res-box')"><span>Publish Program Result</span> <i class="fa-solid fa-chevron-down"></i></div>
-                <div id="sub-res-box" class="collapsible-box">
-                    <form onsubmit="uploadProgramResult(event)" style="display:flex; flex-direction:column; gap:6px;">
-                        <select id="res-upload-cat" class="form-control" onchange="populateResProgDropdown()"><option value="">-- Choose Category --</option><option value="GENERAL">GENERAL</option><option value="LOWER ZONE">LOWER ZONE</option><option value="MIDDLE ZONE">MIDDLE ZONE</option><option value="HIGHER ZONE">HIGHER ZONE</option><option value="SUPER ZONE">SUPER ZONE</option></select>
-                        <select id="res-upload-prog" class="form-control" required></select>
-                        <label style="font-size:0.8rem; margin-top:2px;">Poster Image</label>
-                        <input type="file" id="res-file" class="form-control" accept="image/*" required>
-                        <input type="url" id="res-yt-url" class="form-control" placeholder="YouTube Video Link (Optional)">
-                        <button type="submit" class="btn btn-sm btn-success btn-block">Publish Result</button>
-                    </form>
-                    <div id="master-results-list" style="margin-top:10px;"></div>
-                </div>
-
-                <div class="collapsible-header" onclick="toggleAccordion('sub-up-box')"><span>Upload Updates Feed</span> <i class="fa-solid fa-chevron-down"></i></div>
-                <div id="sub-up-box" class="collapsible-box">
-                    <form onsubmit="uploadUpdateFeed(event)" style="display:flex; flex-direction:column; gap:6px;">
-                        <input type="text" id="up-title" class="form-control" placeholder="Caption/Title" required>
-                        <select id="up-type" class="form-control" onchange="document.getElementById('up-file-block').style.display = this.value==='photo'?'block':'none'; document.getElementById('up-video-block').style.display = this.value==='video'?'block':'none';">
-                            <option value="photo">Photo Poster</option>
-                            <option value="video">Video Embed Link</option>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 mb-1">Select Category</label>
+                        <select id="prCategorySelect" onchange="updatePRPrograms()" class="w-full border rounded-xl p-2.5 text-xs outline-none">
+                            <option value="">-- Choose Category --</option>
+                            <option value="LOWER ZONE">LOWER ZONE</option>
+                            <option value="MIDDLE ZONE">MIDDLE ZONE</option>
+                            <option value="HIGHER ZONE">HIGHER ZONE</option>
+                            <option value="SUPER ZONE">SUPER ZONE</option>
+                            <option value="GENERAL">GENERAL</option>
                         </select>
-                        <div id="up-file-block"><input type="file" id="up-file" class="form-control" accept="image/*"></div>
-                        <div id="up-video-block" style="display:none;"><input type="url" id="up-video" class="form-control" placeholder="Embed/Video URL"></div>
-                        <button type="submit" class="btn btn-sm btn-success btn-block">Publish Update</button>
-                    </form>
-                    <div id="master-updates-list" style="margin-top:10px;"></div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 mb-1">Select Program</label>
+                        <select id="prProgramSelect" onchange="renderPRParticipants()" class="w-full border rounded-xl p-2.5 text-xs outline-none">
+                            <option value="">-- Choose Program --</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="collapsible-header" onclick="toggleAccordion('sub-st-box')"><span>Live & Highlights Links</span> <i class="fa-solid fa-chevron-down"></i></div>
-                <div id="sub-st-box" class="collapsible-box">
-                    <form onsubmit="uploadStreamLinks(event)" style="display:flex; flex-direction:column; gap:6px;">
-                        <input type="text" id="st-title" class="form-control" placeholder="Stream Title" required>
-                        <input type="url" id="st-url" class="form-control" placeholder="Video Link" required>
-                        <label style="font-size:0.8rem;">Thumbnail</label>
-                        <input type="file" id="st-thumb" class="form-control" accept="image/*" required>
-                        <select id="st-mode" class="form-control"><option value="live">LIVE STREAMING</option><option value="highlight">HIGHLIGHTS</option></select>
-                        <button type="submit" class="btn btn-sm btn-success btn-block">Add Reference</button>
-                    </form>
+                <div id="prStageBadge" class="hidden mb-4">
+                    <span id="prStageTxt" class="px-3 py-1 bg-blue-100 text-blue-700 font-extrabold rounded-full text-xs"></span>
                 </div>
 
+                <!-- Form to Add Points -->
+                <form onsubmit="handleSavePoints(event)" id="prPointForm" class="hidden space-y-3 border-t pt-4">
+                    <div id="prParticipantInputs" class="space-y-2 max-h-60 overflow-y-auto"></div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-xs shadow-md">
+                        Submit Points for Program
+                    </button>
+                </form>
+            </div>
+
+            <!-- List of Programs with Points Added -->
+            <div class="bg-white p-5 rounded-2xl border shadow-sm">
+                <h3 class="font-bold text-xs text-slate-800 mb-3">Programs with Points Submitted</h3>
+                <div id="prSubmittedList" class="divide-y border rounded-xl max-h-60 overflow-y-auto text-xs"></div>
+            </div>
+        </section>
+
+        <!-- ================= JUDGE (INDIVIDUAL PARTICIPANT MARKS) ================= -->
+        <section id="judgeSection" class="hidden space-y-6">
+            <div class="bg-white p-5 md:p-6 rounded-2xl border shadow-sm">
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-gavel text-amber-600"></i> Judge Leaderboard
+                    </h2>
+                    
+                    <!-- Filter Stage Toggle -->
+                    <select id="judgeStageFilter" onchange="renderJudgeLeaderboard()" class="border rounded-xl p-2 text-xs font-bold outline-none bg-slate-50">
+                        <option value="ALL">ALL STAGES</option>
+                        <option value="ON STAGE">ON STAGE ONLY</option>
+                        <option value="OFF STAGE">OFF STAGE ONLY</option>
+                    </select>
+                </div>
+
+                <div id="judgeLeaderboard" class="space-y-2"></div>
+            </div>
+        </section>
+
+        <!-- ================= STATES CONTROL (TEAM TOTAL TALLY) ================= -->
+        <section id="statesControlSection" class="hidden space-y-6">
+            <div class="bg-white p-5 md:p-6 rounded-2xl border shadow-sm">
+                <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-emerald-600"></i> States Control - Overall Team Tally
+                </h2>
+                
+                <div id="teamTallyList" class="space-y-3"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t p-4 text-center text-[11px] text-slate-400 font-semibold">
+        &copy; BAHJA 2026 - DAWA FEST. All rights reserved.
+    </footer>
+
+    <!-- ================= MODALS & POPUPS ================= -->
+    <div id="modalOverlay" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-3">
+        
+        <!-- TEAM STATUS MODAL -->
+        <div id="teamStatusModal" class="hidden bg-white rounded-2xl p-5 max-w-xl w-full max-h-[85vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="font-bold text-base">Team Status</h3>
+                <button onclick="closeModal()" class="text-xl font-bold">&times;</button>
+            </div>
+            <div id="teamStatusContent" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+        </div>
+
+        <!-- RESULT MODAL -->
+        <div id="resultModal" class="hidden bg-white rounded-2xl p-5 max-w-xl w-full max-h-[85vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="font-bold text-base">Results</h3>
+                <button onclick="closeModal()" class="text-xl font-bold">&times;</button>
+            </div>
+            <div id="resultContent" class="space-y-4"></div>
+        </div>
+
+        <!-- UPDATES MODAL (Separated Photo/Video) -->
+        <div id="updatesModal" class="hidden bg-white rounded-2xl p-5 max-w-2xl w-full max-h-[85vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="font-bold text-base">Updates</h3>
+                <button onclick="closeModal()" class="text-xl font-bold">&times;</button>
+            </div>
+            <div id="updatesContent" class="pinterest-grid"></div>
+        </div>
+
+        <!-- LIVE STREAM MODAL -->
+        <div id="liveModal" class="hidden bg-white rounded-2xl p-5 max-w-md w-full space-y-4">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="font-bold text-base">Live Streaming</h3>
+                <button onclick="closeModal()" class="text-xl font-bold">&times;</button>
+            </div>
+            <div id="liveContent" class="text-center space-y-3"></div>
+        </div>
+
+        <!-- HIGHLIGHTS MODAL -->
+        <div id="highlightsModal" class="hidden bg-white rounded-2xl p-5 max-w-md w-full space-y-4">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 class="font-bold text-base">Highlights</h3>
+                <button onclick="closeModal()" class="text-xl font-bold">&times;</button>
+            </div>
+            <div id="highlightsContent" class="space-y-2"></div>
+        </div>
+
+        <!-- DETAILED MARKS MODAL (Judge / States Breakdown) -->
+        <div id="detailsModal" class="hidden bg-white rounded-2xl p-5 max-w-lg w-full max-h-[80vh] overflow-y-auto space-y-3">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 id="detailsTitle" class="font-bold text-sm text-blue-700"></h3>
+                <button onclick="closeDetailsModal()" class="text-xl font-bold">&times;</button>
+            </div>
+            <div id="detailsContent" class="space-y-2 text-xs divide-y"></div>
+        </div>
+
+        <!-- PRINT CONTROL MODAL -->
+        <div id="printModal" class="hidden bg-white rounded-2xl p-5 max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-2 no-print">
+                <h3 class="font-bold text-base">Print Preview & Font Size Control</h3>
+                <button onclick="closePrintModal()" class="text-xl font-bold">&times;</button>
+            </div>
+            
+            <div class="flex items-center gap-3 no-print bg-slate-100 p-3 rounded-xl text-xs">
+                <label class="font-bold">Paper Text Font Size:</label>
+                <input type="range" id="printFontSlider" min="8" max="22" value="12" oninput="adjustPrintFont(this.value)" class="cursor-pointer">
+                <span id="printFontVal" class="font-bold">12px</span>
+                <button onclick="window.print()" class="ml-auto bg-blue-600 text-white px-4 py-2 rounded-xl font-bold">Print Sheet</button>
+            </div>
+
+            <div id="printableArea" class="p-2 border rounded-xl">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-slate-100 border-b">
+                            <th class="p-2 border">Participant</th>
+                            <th class="p-2 border">Team</th>
+                            <th class="p-2 border">Category</th>
+                            <th class="p-2 border">Program</th>
+                            <th class="p-2 border">Stage</th>
+                        </tr>
+                    </thead>
+                    <tbody id="printTableBody"></tbody>
+                </table>
             </div>
         </div>
-
     </div>
 
-    <!-- MAIN LOGIN MODAL -->
-    <div id="modal-overlay" class="modal-overlay">
-        <div id="modal-login" class="modal-box" style="text-align: center;">
-            <h2 style="margin-bottom:20px; color:#ffffff; font-weight:700;">Welcome</h2>
-            <form onsubmit="handleMainLogin(event)">
-                <div class="form-group" style="text-align: left;">
-                    <label>Username</label>
-                    <input type="text" id="main-user-input" class="form-control" required style="border-radius:20px; background:rgba(0,0,0,0.5);">
-                </div>
-                <div class="form-group" style="text-align: left;">
-                    <label>Password</label>
-                    <input type="password" id="main-pass-input" class="form-control" required style="border-radius:20px; background:rgba(0,0,0,0.5);">
-                </div>
-                <button type="submit" class="btn btn-block" style="border-radius:20px; margin-top:10px; font-size:1.05rem;">Sign In</button>
-                <button type="button" class="btn btn-danger btn-block" style="margin-top:8px; border-radius:20px; background:transparent; border:1px solid #ef4444;" onclick="closeModal()">Cancel</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- GATEKEEPER PASS MODAL -->
-    <div id="gatekeeper-modal-overlay" class="modal-overlay">
-        <div class="modal-box">
-            <h3 id="gk-title" style="color:#ef4444; margin-bottom:10px; font-size:1.1rem;">Security Lock Required</h3>
-            <div class="form-group">
-                <label>Access Code</label>
-                <input type="password" id="gk-pass-field" class="form-control" placeholder="••••••••">
-            </div>
-            <button class="btn btn-block btn-danger" onclick="commitGatekeeperVerification()">Unlock Access</button>
-            <button class="btn btn-block" style="margin-top:6px; background:transparent; border:1px solid rgba(255,255,255,0.2); color:#fff;" onclick="closeGatekeeper()">Cancel</button>
-        </div>
-    </div>
-
-    <!-- DETAILS MODAL -->
-    <div id="detail-modal-overlay" class="modal-overlay" onclick="this.style.display='none'">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <h3 id="det-modal-title" style="color:#f6d365; margin-bottom:10px; font-size:1.1rem;"></h3>
-            <div id="det-modal-content" style="max-height:300px; overflow-y:auto;"></div>
-            <button class="btn btn-block" style="margin-top:10px;" onclick="document.getElementById('detail-modal-overlay').style.display='none'">Close</button>
-        </div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBVPGtuHPFRH05snj58ws6xr42O8HluaLY",
-            authDomain: "bahja-29712.firebaseapp.com",
-            databaseURL: "https://bahja-29712-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "bahja-29712",
-            storageBucket: "bahja-29712.firebasestorage.app",
-            messagingSenderId: "185705883083",
-            appId: "1:185705883083:web:7e7f5a9425e242b831024e",
-            measurementId: "G-SX6NX5K314"
+    <!-- APP LOGIC -->
+    <script>
+        const DB = {
+            get: (key) => JSON.parse(localStorage.getItem('BAHJA_' + key)) || null,
+            set: (key, val) => localStorage.setItem('BAHJA_' + key, JSON.stringify(val))
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        window.appState = {
-            phase: 'register',
-            portalOpen: true,
-            logoUrl: '',
-            logoPos: 'logo-top-left',
-            logoSize: '60',
-            teamStatusUrl: '',
-            maxProgLimit: 3,
-            mainCreds: { user: 'bahja2026', pass: '2026bahjacommitty' },
-            subLocks: {
-                settings: 'settingsbahja',
-                control_panel: 'controlpanelbahja',
-                judge: 'judgebahja',
-                pointroom: 'pointroombahja',
-                states: 'statesbahja',
-                protection: 'Protectionbahja',
-                modify: 'modifymodifybahjag'
-            },
-            visuals: {
-                bannerText: 'WELCOME TO BAHJA FEST',
-                titleText: 'BAHJA 2026',
-                bannerColor: '#cbd5e1',
-                titleColor: '#ffffff',
-                bannerSize: '1.1',
-                titleSize: '2.8',
-                fontFamily: "'Poppins', sans-serif",
-                headerAlign: 'center'
-            },
-            teams: [],
-            programs: [],
-            registrations: [],
-            results: [],
-            updates: [],
-            livelinks: [],
-            highlights: [],
-            students: [],
-            points: []
+        let state = {
+            phase: DB.get('phase') || 'register',
+            isRegOpen: DB.get('isRegOpen') !== null ? DB.get('isRegOpen') : true,
+            globalMaxLimit: DB.get('globalMaxLimit') || 3,
+            currentUser: DB.get('currentUser') || null,
+            logo: DB.get('logo') || '',
+            teams: DB.get('teams') || [],
+            programs: DB.get('programs') || [],
+            participants: DB.get('participants') || [],
+            registrations: DB.get('registrations') || [],
+            points: DB.get('points') || [], // [{progName, cat, stage, scores: [{partName, team, point}]}]
+            teamStatuses: DB.get('teamStatuses') || [],
+            results: DB.get('results') || [],
+            updates: DB.get('updates') || [],
+            live: DB.get('live') || { link: '', thumb: '' },
+            highlights: DB.get('highlights') || []
         };
 
-        window.loggedTeamUser = null;
-        window.activePartTeam = null;
-        window.isMainLoggedIn = false;
-        window.gatekeeperTargetPanel = null;
-
-        const dbRef = ref(db, 'bahja_fest_data');
-        onValue(dbRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                window.appState = {
-                    phase: data.phase || 'register',
-                    portalOpen: data.portalOpen ?? true,
-                    logoUrl: data.logoUrl || '',
-                    logoPos: data.logoPos || 'logo-top-left',
-                    logoSize: data.logoSize || '60',
-                    teamStatusUrl: data.teamStatusUrl || '',
-                    maxProgLimit: data.maxProgLimit || 3,
-                    mainCreds: data.mainCreds || { user: 'bahja2026', pass: '2026bahjacommitty' },
-                    subLocks: data.subLocks || { settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag' },
-                    visuals: data.visuals || { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColor:'#cbd5e1', titleColor:'#ffffff', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center' },
-                    teams: data.teams || [],
-                    programs: data.programs || [],
-                    registrations: data.registrations || [],
-                    results: data.results || [],
-                    updates: data.updates || [],
-                    livelinks: data.livelinks || [],
-                    highlights: data.highlights || [],
-                    students: data.students || [],
-                    points: data.points || []
-                };
-            }
-            applyLogoView();
-            applyVisualCustomizations();
-            render3DotMenu();
-            renderHomePhase();
-            syncControlPanelViews();
-            renderPtList();
-            renderJudgeLeaderboard();
-            renderStatesDashboard();
-            syncProtectionFields();
-            syncModifyConfigInputs();
-            populateReportProgDropdown();
-        });
-
-        window.saveData = function() {
-            set(ref(db, 'bahja_fest_data'), window.appState);
+        function saveState() {
+            Object.keys(state).forEach(k => DB.set(k, state[k]));
         }
 
-        function applyLogoView() {
-            const el = document.getElementById('corner-logo-view');
-            const manageBox = document.getElementById('logo-manage-box');
-            if(window.appState.logoUrl) {
-                el.src = window.appState.logoUrl; 
-                el.className = `corner-logo ${window.appState.logoPos || 'logo-top-left'}`;
-                el.style.height = `${window.appState.logoSize || 60}px`;
-                el.style.display = 'block';
-                if(manageBox) manageBox.style.display = 'block';
-            } else {
-                el.style.display = 'none';
-                if(manageBox) manageBox.style.display = 'none';
-            }
+        window.onload = function() {
+            renderLogo();
+            applyPhaseUI();
+            checkSession();
+            renderAll();
+        };
+
+        // --- NAVIGATION & UI ---
+        function toggleMenu() {
+            document.getElementById('dropdownMenu').classList.toggle('hidden');
         }
 
-        window.updateLogoStylesLocally = function() {
-            const pos = document.getElementById('sys-logo-pos').value;
-            const size = document.getElementById('sys-logo-size').value;
-            document.getElementById('logo-size-val').innerText = size;
+        function navTo(page) {
+            document.getElementById('dropdownMenu').classList.add('hidden');
             
-            const el = document.getElementById('corner-logo-view');
-            el.className = `corner-logo ${pos}`;
-            el.style.height = `${size}px`;
-        }
+            // Hide all sections
+            const sections = ['registerPhaseSection', 'resultPhaseSection', 'mainLoginSection', 
+                               'teamPortalSection', 'settingsSection', 'adminPanelSection', 
+                               'pointroomSection', 'judgeSection', 'statesControlSection'];
+            sections.forEach(s => document.getElementById(s).classList.add('hidden'));
 
-        window.deleteSysLogo = function() {
-            window.appState.logoUrl = ''; saveData(); alert("Logo deleted.");
-        }
-
-        function applyVisualCustomizations() {
-            const vis = window.appState.visuals;
-            const bTxt = document.getElementById('txt-welcome-banner');
-            const mTitle = document.getElementById('txt-main-title');
-            
-            if(vis.fontFamily) {
-                document.documentElement.style.setProperty('--main-font', vis.fontFamily);
-            }
-            if(vis.headerAlign) {
-                document.documentElement.style.setProperty('--header-align', vis.headerAlign);
-            }
-
-            if(bTxt && mTitle) {
-                bTxt.innerText = vis.bannerText;
-                bTxt.style.color = vis.bannerColor;
-                bTxt.style.fontSize = vis.bannerSize + 'rem';
-
-                mTitle.innerText = vis.titleText;
-                mTitle.style.color = vis.titleColor;
-                mTitle.style.fontSize = vis.titleSize + 'rem';
-            }
-        }
-
-        window.render3DotMenu = function() {
-            const menuContainer = document.getElementById('mainDropdown');
-            let html = `<button onclick="navHome()"><i class="fa-solid fa-house"></i> Home</button>`;
-
-            if(!window.isMainLoggedIn) {
-                html += `<button onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> Main Login</button>`;
-                if(window.appState.phase === 'register') {
-                    html += `<button onclick="showPanel('panel-participants-entry')"><i class="fa-solid fa-user-plus"></i> Participants Entry</button>`;
+            if (page === 'home') {
+                applyPhaseUI();
+            } else if (page === 'main-login') {
+                document.getElementById('mainLoginSection').classList.remove('hidden');
+            } else if (page === 'participants-login') {
+                if (state.currentUser && state.currentUser.role === 'team') {
+                    document.getElementById('teamPortalSection').classList.remove('hidden');
+                } else {
+                    document.getElementById('registerPhaseSection').classList.remove('hidden');
                 }
-            } else {
-                html += `
-                    <button onclick="interceptRoute('panel-settings', 'settings')"><i class="fa-solid fa-gear"></i> Settings</button>
-                    <button onclick="interceptRoute('panel-control-panel', 'control_panel')"><i class="fa-solid fa-sliders"></i> Control Panel</button>
-                    <button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Pointroom</button>
-                    <button onclick="interceptRoute('panel-judge', 'judge')"><i class="fa-solid fa-gavel"></i> Judge Leaderboard</button>
-                    <button onclick="interceptRoute('panel-states-control', 'states')"><i class="fa-solid fa-flag"></i> States Control</button>
-                    <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Protection Settings</button>
-                    <button onclick="interceptRoute('panel-modify', 'modify')"><i class="fa-solid fa-pen-to-square"></i> Modify Appearance</button>
-                    <button onclick="logoutMain()" style="color:#ef4444;"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
-                `;
+            } else if (page === 'settings') {
+                document.getElementById('settingsSection').classList.remove('hidden');
+            } else if (page === 'admin-panel') {
+                document.getElementById('adminPanelSection').classList.remove('hidden');
+            } else if (page === 'pointroom') {
+                document.getElementById('pointroomSection').classList.remove('hidden');
+            } else if (page === 'judge') {
+                document.getElementById('judgeSection').classList.remove('hidden');
+                renderJudgeLeaderboard();
+            } else if (page === 'states-control') {
+                document.getElementById('statesControlSection').classList.remove('hidden');
+                renderStatesControl();
             }
-            menuContainer.innerHTML = html;
         }
 
-        /* SECURITY GATEKEEPER ROUTING SYSTEM */
-        window.interceptRoute = function(panelId, key) {
-            document.getElementById("mainDropdown").classList.remove("show");
-            if(!key || !window.appState.subLocks[key] || window.appState.subLocks[key] === "") {
-                showPanel(panelId);
+        function applyPhaseUI() {
+            if (state.phase === 'register') {
+                document.getElementById('registerPhaseSection').classList.remove('hidden');
+                document.getElementById('resultPhaseSection').classList.add('hidden');
+                document.getElementById('phaseRegRadio').checked = true;
+            } else {
+                document.getElementById('registerPhaseSection').classList.add('hidden');
+                document.getElementById('resultPhaseSection').classList.remove('hidden');
+                document.getElementById('phaseResRadio').checked = true;
+            }
+        }
+
+        function checkSession() {
+            const adminMenuOptions = document.getElementById('adminMenuOptions');
+            const logoutOpt = document.getElementById('logoutOpt');
+            
+            if (state.currentUser && state.currentUser.role === 'admin') {
+                adminMenuOptions.classList.remove('hidden');
+                logoutOpt.classList.remove('hidden');
+            } else if (state.currentUser) {
+                adminMenuOptions.classList.add('hidden');
+                logoutOpt.classList.remove('hidden');
+            } else {
+                adminMenuOptions.classList.add('hidden');
+                logoutOpt.classList.add('hidden');
+            }
+        }
+
+        // --- LOGO UPLOAD MANAGEMENT ---
+        function uploadLogo() {
+            const file = document.getElementById('logoFileInput').files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                state.logo = e.target.result;
+                saveState();
+                renderLogo();
+                alert('Logo Saved Successfully!');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function deleteLogo() {
+            state.logo = '';
+            saveState();
+            renderLogo();
+            alert('Logo Removed!');
+        }
+
+        function renderLogo() {
+            const container = document.getElementById('headerLogoContainer');
+            const img = document.getElementById('headerLogoImg');
+            if (state.logo) {
+                img.src = state.logo;
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        // --- AUTHENTICATION ---
+        function handleMainLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('mainUser').value;
+            const p = document.getElementById('mainPass').value;
+
+            if (u === 'bahja2026' && p === '2026bahjacommitty') {
+                state.currentUser = { role: 'admin', name: 'Committee Main' };
+                saveState();
+                checkSession();
+                navTo('admin-panel');
+            } else {
+                alert('Invalid Main Credentials!');
+            }
+        }
+
+        function handleTeamLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('teamUser').value;
+            const p = document.getElementById('teamPass').value;
+
+            const foundTeam = state.teams.find(t => t.user === u && t.pass === p);
+            if (foundTeam) {
+                state.currentUser = { role: 'team', name: foundTeam.user };
+                saveState();
+                checkSession();
+                navTo('participants-login');
+                renderTeamPortal();
+            } else {
+                alert('Invalid Team Credentials!');
+            }
+        }
+
+        function logout() {
+            state.currentUser = null;
+            saveState();
+            checkSession();
+            navTo('home');
+        }
+
+        // --- TEAM LEADER PORTAL ACTIONS ---
+        function handleAddParticipant(e) {
+            e.preventDefault();
+            if (!state.currentUser || state.currentUser.role !== 'team') return;
+
+            const name = document.getElementById('partName').value;
+            const cat = document.getElementById('partCategory').value;
+
+            state.participants.push({
+                id: Date.now(),
+                name: name,
+                cat: cat,
+                team: state.currentUser.name
+            });
+
+            document.getElementById('partName').value = '';
+            saveState();
+            renderTeamPortal();
+        }
+
+        function deleteParticipant(id) {
+            state.participants = state.participants.filter(p => p.id !== id);
+            saveState();
+            renderTeamPortal();
+        }
+
+        function updateProgramDropdown() {
+            const cat = document.getElementById('regCategorySelect').value;
+            const progSelect = document.getElementById('regProgramSelect');
+            progSelect.innerHTML = '<option value="">-- Choose Program --</option>';
+
+            state.programs.filter(p => p.cat === cat).forEach(p => {
+                progSelect.innerHTML += `<option value="${p.name}">${p.name} (${p.stage})</option>`;
+            });
+        }
+
+        function updateParticipantDropdown() {
+            const cat = document.getElementById('regCategorySelect').value;
+            const partSelect = document.getElementById('regParticipantSelect');
+            partSelect.innerHTML = '<option value="">-- Choose Participant --</option>';
+
+            if (!state.currentUser) return;
+
+            if (cat === 'GENERAL') {
+                state.participants.filter(p => p.team === state.currentUser.name).forEach(p => {
+                    partSelect.innerHTML += `<option value="${p.name}">${p.name} (${p.cat})</option>`;
+                });
+            } else {
+                state.participants.filter(p => p.team === state.currentUser.name && p.cat === cat).forEach(p => {
+                    partSelect.innerHTML += `<option value="${p.name}">${p.name}</option>`;
+                });
+            }
+        }
+
+        function handleRegisterProgram(e) {
+            e.preventDefault();
+            if (!state.isRegOpen) {
+                alert('Registration portal is closed!');
                 return;
             }
-            window.gatekeeperTargetPanel = { id: panelId, lockKey: key };
-            document.getElementById('gk-pass-field').value = '';
-            document.getElementById('gk-title').innerText = `Security Code Required`;
-            document.getElementById('gatekeeper-modal-overlay').style.display = 'flex';
+
+            const cat = document.getElementById('regCategorySelect').value;
+            const progName = document.getElementById('regProgramSelect').value;
+            const partName = document.getElementById('regParticipantSelect').value;
+
+            if (!cat || !progName || !partName) return;
+
+            const progObj = state.programs.find(p => p.name === progName && p.cat === cat);
+
+            // 1. Check Non-General Limit per participant
+            if (cat !== 'GENERAL') {
+                const userNonGenRegs = state.registrations.filter(r => r.partName === partName && r.cat !== 'GENERAL').length;
+                if (userNonGenRegs >= parseInt(state.globalMaxLimit)) {
+                    alert(`Participant ${partName} has reached max limit of ${state.globalMaxLimit} non-general programs!`);
+                    return;
+                }
+            }
+
+            // 2. Check Team limit per program
+            const existingCount = state.registrations.filter(r => r.team === state.currentUser.name && r.progName === progName).length;
+            if (progObj && existingCount >= parseInt(progObj.max)) {
+                alert(`Limit reached! Max allowed participants for ${progName} is ${progObj.max}`);
+                return;
+            }
+
+            state.registrations.push({
+                id: Date.now(),
+                partName: partName,
+                team: state.currentUser.name,
+                cat: cat,
+                progName: progName,
+                stage: progObj ? progObj.stage : 'ON STAGE'
+            });
+
+            saveState();
+            alert('Registered Successfully!');
+            renderAdminReport();
         }
 
-        window.commitGatekeeperVerification = function() {
-            const fieldVal = document.getElementById('gk-pass-field').value;
-            const targetKey = window.gatekeeperTargetPanel.lockKey;
-            if(fieldVal === window.appState.subLocks[targetKey]) {
-                document.getElementById('gatekeeper-modal-overlay').style.display = 'none';
-                showPanel(window.gatekeeperTargetPanel.id);
+        function renderTeamPortal() {
+            if (!state.currentUser || state.currentUser.role !== 'team') return;
+            if (!state.currentUser || state.currentUser.role !== 'team') return;
+
+            const closedAlert = document.getElementById('registrationClosedAlert');
+            const btnSubmitReg = document.getElementById('btnSubmitReg');
+            if (!state.isRegOpen) {
+                closedAlert.classList.remove('hidden');
+                btnSubmitReg.disabled = true;
+                btnSubmitReg.classList.add('opacity-50', 'cursor-not-allowed');
             } else {
-                alert("Incorrect Security Code.");
+                closedAlert.classList.add('hidden');
+                btnSubmitReg.disabled = false;
+                btnSubmitReg.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+
+            const list = document.getElementById('myParticipantsList');
+            list.innerHTML = '';
+            const myParts = state.participants.filter(p => p.team === state.currentUser.name);
+
+            if (myParts.length === 0) {
+                list.innerHTML = `<li class="p-3 text-xs text-slate-400">No participants added.</li>`;
+            } else {
+                myParts.forEach(p => {
+                    list.innerHTML += `
+                        <li class="p-2.5 flex justify-between items-center text-xs">
+                            <div>
+                                <span class="font-bold text-slate-700">${p.name}</span> 
+                                <span class="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded ml-2">${p.cat}</span>
+                            </div>
+                            <button onclick="deleteParticipant(${p.id})" class="text-red-600 font-bold hover:underline">Delete</button>
+                        </li>
+                    `;
+                });
             }
         }
 
-        window.closeGatekeeper = function() { document.getElementById('gatekeeper-modal-overlay').style.display = 'none'; }
-        window.toggleDropdown = function() { document.getElementById("mainDropdown").classList.toggle("show"); }
-        window.onclick = (e) => { 
-            if (!e.target.closest('.menu-btn-container')) document.getElementById("mainDropdown").classList.remove("show"); 
-            if (!e.target.closest('.card-dots-menu')) document.querySelectorAll('.card-menu-pop').forEach(m => m.classList.remove('show'));
-        };
+        // --- CONTROL PANEL ACTIONS ---
+        function switchAdminTab(tab) {
+            document.getElementById('adminRegControlTab').classList.add('hidden');
+            document.getElementById('adminResControlTab').classList.add('hidden');
 
-        window.showPanel = function(panelId) {
-            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
-            document.getElementById(panelId).classList.add('active-panel');
+            document.getElementById('tabBtnRegControl').className = "px-4 py-2.5 font-bold text-slate-500 text-xs";
+            document.getElementById('tabBtnResControl').className = "px-4 py-2.5 font-bold text-slate-500 text-xs";
+
+            if (tab === 'regControl') {
+                document.getElementById('adminRegControlTab').classList.remove('hidden');
+                document.getElementById('tabBtnRegControl').className = "px-4 py-2.5 font-bold border-b-2 border-blue-600 text-blue-600 text-xs";
+            } else if (tab === 'resControl') {
+                document.getElementById('adminResControlTab').classList.remove('hidden');
+                document.getElementById('tabBtnResControl').className = "px-4 py-2.5 font-bold border-b-2 border-blue-600 text-blue-600 text-xs";
+            }
         }
 
-        window.navHome = function() { renderHomePhase(); showPanel('panel-home'); }
-        window.openSection = function(secId) { showPanel(secId); }
-        window.toggleAccordion = function(boxId) {
-            const el = document.getElementById(boxId); 
-            el.classList.toggle('show');
+        function togglePhase(selectedPhase) {
+            state.phase = selectedPhase;
+            saveState();
+            applyPhaseUI();
         }
 
-        window.toggleCardPopMenu = function(popId) {
-            document.querySelectorAll('.card-menu-pop').forEach(m => {
-                if(m.id !== popId) m.classList.remove('show');
-            });
-            const pop = document.getElementById(popId);
-            if(pop) pop.classList.toggle('show');
+        function toggleRegistrationOpenClose() {
+            state.isRegOpen = !state.isRegOpen;
+            saveState();
+            renderAdminRegControl();
+            renderTeamPortal();
         }
 
-        window.openLoginModal = function() { document.getElementById('modal-overlay').style.display = 'flex'; }
-        window.closeModal = function() { document.getElementById('modal-overlay').style.display = 'none'; }
+        function saveGlobalLimit() {
+            const lim = document.getElementById('globalMaxProgLimit').value;
+            if (!lim) return;
+            state.globalMaxLimit = parseInt(lim);
+            saveState();
+            alert('Limit saved!');
+        }
 
-        window.handleMainLogin = function(e) {
+        function handleAddTeam(e) {
             e.preventDefault();
-            const u = document.getElementById('main-user-input').value.trim();
-            const p = document.getElementById('main-pass-input').value.trim();
-            if(u === window.appState.mainCreds.user && p === window.appState.mainCreds.pass) {
-                window.isMainLoggedIn = true;
-                closeModal(); render3DotMenu();
-                showPanel('panel-control-panel');
-            } else { alert("Invalid Credentials!"); }
+            const u = document.getElementById('newTeamUser').value;
+            const p = document.getElementById('newTeamPass').value;
+
+            state.teams.push({ id: Date.now(), user: u, pass: p });
+            document.getElementById('newTeamUser').value = '';
+            document.getElementById('newTeamPass').value = '';
+            saveState();
+            renderAdminRegControl();
         }
 
-        window.logoutMain = function() { window.isMainLoggedIn = false; render3DotMenu(); navHome(); }
-
-        /* PRINT HELPER */
-        window.triggerSectionPrint = function(panelId) {
-            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('print-area-target'));
-            document.getElementById(panelId).classList.add('print-area-target');
-            window.print();
+        function deleteTeam(id) {
+            state.teams = state.teams.filter(t => t.id !== id);
+            saveState();
+            renderAdminRegControl();
         }
 
-        /* PROTECTION MANAGEMENT CONTROLS */
-        window.verifyAndOpenMainCredShift = function() {
-            const ou = document.getElementById('prot-old-main-u').value.trim();
-            const op = document.getElementById('prot-old-main-p').value.trim();
-            if(ou === window.appState.mainCreds.user && op === window.appState.mainCreds.pass) {
-                document.getElementById('prot-new-main-block').style.display = 'block';
-                alert("Verified! Enter new credentials.");
-            } else { alert("Verification failed."); }
+        function editTeam(id) {
+            const t = state.teams.find(tm => tm.id === id);
+            if (!t) return;
+            const newU = prompt("Edit Team Username:", t.user);
+            const newP = prompt("Edit Team Password:", t.pass);
+            if (newU && newP) {
+                t.user = newU;
+                t.pass = newP;
+                saveState();
+                renderAdminRegControl();
+            }
         }
 
-        window.commitMainCredShift = function() {
-            const nu = document.getElementById('prot-new-main-u').value.trim();
-            const np = document.getElementById('prot-new-main-p').value.trim();
-            if(!nu || !np) { alert("Fields cannot be empty."); return; }
-            window.appState.mainCreds.user = nu;
-            window.appState.mainCreds.pass = np;
-            saveData();
-            alert("Main authorization credentials updated.");
-            document.getElementById('prot-new-main-block').style.display = 'none';
+        function handleAddProgram(e) {
+            e.preventDefault();
+            const name = document.getElementById('progName').value;
+            const cat = document.getElementById('progCategory').value;
+            const stage = document.getElementById('progStage').value;
+            const max = document.getElementById('progMax').value;
+
+            state.programs.push({ id: Date.now(), name, cat, stage, max });
+            document.getElementById('progName').value = '';
+            document.getElementById('progMax').value = '';
+            saveState();
+            renderAdminRegControl();
         }
 
-        function syncProtectionFields() {
-            const container = document.getElementById('sub-panel-pass-managers-container');
-            if(!container) return;
-            
-            const schema = [
-                { key: 'settings', name: 'Settings Lock Password' },
-                { key: 'control_panel', name: 'Control Panel Lock Password' },
-                { key: 'judge', name: 'Judge Leaderboard Lock' },
-                { key: 'pointroom', name: 'Pointroom Input Lock' },
-                { key: 'states', name: 'States Control Lock' },
-                { key: 'protection', name: 'Protection Settings Lock' },
-                { key: 'modify', name: 'Modify Appearance Lock' }
-            ];
+        function deleteProgram(id) {
+            state.programs = state.programs.filter(p => p.id !== id);
+            saveState();
+            renderAdminRegControl();
+        }
 
-            container.innerHTML = schema.map(s => {
-                const currentVal = window.appState.subLocks[s.key] || '';
-                return `
-                    <div style="background:rgba(0,0,0,0.3); padding:10px; border:1px solid var(--border-color); border-radius:8px;">
-                        <label style="font-weight:bold; font-size:0.8rem; color:#cbd5e1;">${s.name}</label>
-                        <div style="display:flex; gap:6px; margin-top:4px;">
-                            <input type="text" id="pass-field-input-${s.key}" class="form-control" value="${currentVal}" style="margin-bottom:0; font-size:0.85rem;">
-                            <button class="btn btn-sm btn-success" onclick="updateSubLockKey('${s.key}')">Save</button>
-                            <button class="btn btn-sm btn-danger" onclick="clearSubLockKey('${s.key}')">Clear</button>
+        function editProgram(id) {
+            const p = state.programs.find(pr => pr.id === id);
+            if (!p) return;
+            const newN = prompt("Edit Program Name:", p.name);
+            const newMax = prompt("Edit Max Limit:", p.max);
+            if (newN && newMax) {
+                p.name = newN;
+                p.max = newMax;
+                saveState();
+                renderAdminRegControl();
+            }
+        }
+
+        function toggleSection(id) {
+            document.getElementById(id).classList.toggle('hidden');
+        }
+
+        function renderAdminRegControl() {
+            document.getElementById('globalMaxProgLimit').value = state.globalMaxLimit;
+
+            const statusTxt = document.getElementById('adminRegStatusText');
+            const statusBtn = document.getElementById('adminRegStatusBtn');
+            if (state.isRegOpen) {
+                statusTxt.innerText = "OPEN";
+                statusTxt.className = "font-black text-green-600 text-xs";
+                statusBtn.innerText = "Close Registration";
+                statusBtn.className = "bg-red-600 text-white text-xs font-bold px-4 py-2 rounded-xl";
+            } else {
+                statusTxt.innerText = "CLOSED";
+                statusTxt.className = "font-black text-red-600 text-xs";
+                statusBtn.innerText = "Open Registration";
+                statusBtn.className = "bg-green-600 text-white text-xs font-bold px-4 py-2 rounded-xl";
+            }
+
+            const teamsList = document.getElementById('teamsList');
+            teamsList.innerHTML = '';
+            state.teams.forEach(t => {
+                teamsList.innerHTML += `
+                    <div class="py-2 flex justify-between items-center text-xs">
+                        <div><strong>${t.user}</strong> <span class="text-slate-400">(${t.pass})</span></div>
+                        <div class="flex gap-2">
+                            <button onclick="editTeam(${t.id})" class="text-blue-600 font-bold">Edit</button>
+                            <button onclick="deleteTeam(${t.id})" class="text-red-600 font-bold">Delete</button>
                         </div>
                     </div>
                 `;
-            }).join('');
-        }
+            });
 
-        window.updateSubLockKey = function(key) {
-            const inputVal = document.getElementById(`pass-field-input-${key}`).value.trim();
-            window.appState.subLocks[key] = inputVal;
-            saveData(); alert("Protection lock code updated.");
-        }
-
-        window.clearSubLockKey = function(key) {
-            window.appState.subLocks[key] = "";
-            saveData(); alert("Protection lock removed.");
-        }
-
-        /* MODIFY LAYOUT CONTROLS */
-        function syncModifyConfigInputs() {
-            const vis = window.appState.visuals;
-            if(!document.getElementById('mod-banner-text')) return;
-            document.getElementById('mod-banner-text').value = vis.bannerText;
-            document.getElementById('mod-title-text').value = vis.titleText;
-            document.getElementById('mod-banner-color').value = vis.bannerColor;
-            document.getElementById('mod-title-color').value = vis.titleColor;
-            document.getElementById('mod-banner-size').value = vis.bannerSize;
-            document.getElementById('mod-title-size').value = vis.titleSize;
-            if(vis.fontFamily) document.getElementById('mod-font-family').value = vis.fontFamily;
-            if(vis.headerAlign) document.getElementById('mod-header-align').value = vis.headerAlign;
-        }
-
-        window.liveUpdateVisuals = function() {
-            const bTxt = document.getElementById('txt-welcome-banner');
-            const mTitle = document.getElementById('txt-main-title');
-            const font = document.getElementById('mod-font-family').value;
-            const align = document.getElementById('mod-header-align').value;
-            
-            document.documentElement.style.setProperty('--main-font', font);
-            document.documentElement.style.setProperty('--header-align', align);
-
-            bTxt.innerText = document.getElementById('mod-banner-text').value;
-            bTxt.style.color = document.getElementById('mod-banner-color').value;
-            bTxt.style.fontSize = document.getElementById('mod-banner-size').value + 'rem';
-
-            mTitle.innerText = document.getElementById('mod-title-text').value;
-            mTitle.style.color = document.getElementById('mod-title-color').value;
-            mTitle.style.fontSize = document.getElementById('mod-title-size').value + 'rem';
-        }
-
-        window.saveVisualLayoutState = function() {
-            window.appState.visuals = {
-                bannerText: document.getElementById('mod-banner-text').value,
-                titleText: document.getElementById('mod-title-text').value,
-                bannerColor: document.getElementById('mod-banner-color').value,
-                titleColor: document.getElementById('mod-title-color').value,
-                bannerSize: document.getElementById('mod-banner-size').value,
-                titleSize: document.getElementById('mod-title-size').value,
-                fontFamily: document.getElementById('mod-font-family').value,
-                headerAlign: document.getElementById('mod-header-align').value
-            };
-            saveData();
-            alert("Appearance settings stored.");
-            navHome();
-        }
-
-        window.saveMaxLimitMaster = function() {
-            const v = parseInt(document.getElementById('m-max-limit-input').value);
-            window.appState.maxProgLimit = v || 3; saveData(); alert("Limit saved.");
-        }
-
-        window.togglePhaseControl = function(selectedPhase) {
-            document.getElementById('phase-reg-radio').checked = selectedPhase === 'register';
-            document.getElementById('phase-res-radio').checked = selectedPhase === 'result';
-        }
-
-        window.applyPhaseSettings = function(e) {
-            e.preventDefault();
-            const selected = document.querySelector('input[name="phase-toggle"]:checked').value;
-            window.appState.phase = selected;
-            window.appState.logoPos = document.getElementById('sys-logo-pos').value;
-            window.appState.logoSize = document.getElementById('sys-logo-size').value;
-
-            const fileEl = document.getElementById('sys-logo-input').files[0];
-            if(fileEl) {
-                const reader = new FileReader();
-                reader.onload = function(evt) { window.appState.logoUrl = evt.target.result; saveData(); alert("Settings Modified!"); navHome(); }
-                reader.readAsDataURL(fileEl);
-            } else { saveData(); alert("Phase Configuration Updated!"); navHome(); }
-        }
-
-        window.clearAllDataSystem = function() {
-            if(confirm("Completely reset database state parameters?")) {
-                window.appState = { phase:'register', portalOpen:true, logoUrl:'', logoPos:'logo-top-left', logoSize:'60', teamStatusUrl:'', maxProgLimit:3, mainCreds:{user:'bahja2026', pass:'2026bahjacommitty'}, subLocks:{settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag'}, visuals:{bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColor:'#cbd5e1', titleColor:'#ffffff', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center'}, teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[], points:[] };
-                saveData(); navHome();
-            }
-        }
-
-        window.renderHomePhase = function() {
-            if(window.appState.phase === 'register') {
-                document.getElementById('home-phase-register').style.display = 'block';
-                document.getElementById('home-phase-result').style.display = 'none';
-                if(window.loggedTeamUser) {
-                    document.getElementById('team-login-block').style.display = 'none';
-                    document.getElementById('team-portal-block').style.display = 'block';
-                    document.getElementById('logged-team-name').innerText = window.loggedTeamUser;
-                } else {
-                    document.getElementById('team-login-block').style.display = 'block';
-                    document.getElementById('team-portal-block').style.display = 'none';
-                }
-            } else {
-                document.getElementById('home-phase-register').style.display = 'none';
-                document.getElementById('home-phase-result').style.display = 'block';
-                renderResultPhaseFeeds();
-            }
-        }
-
-        /* PARTICIPANTS REGISTER ENGINE */
-        window.handlePartLogin = function(e) {
-            e.preventDefault();
-            const u = document.getElementById('part-user').value.trim();
-            const p = document.getElementById('part-pass').value.trim();
-            const found = window.appState.teams.find(t => t.user === u && t.pass === p);
-            if(found) {
-                window.activePartTeam = u;
-                document.getElementById('part-login-block').style.display = 'none';
-                document.getElementById('part-manage-block').style.display = 'block';
-                document.getElementById('part-active-team').innerText = u;
-                renderTeamStudentsList();
-            } else { alert("Invalid Credentials!"); }
-        }
-
-        window.addTeamParticipant = function(e) {
-            e.preventDefault();
-            const cat = document.getElementById('part-cat').value;
-            const name = document.getElementById('part-name').value.trim();
-            window.appState.students.push({ id: 'st_'+Date.now(), name, cat, team: window.activePartTeam });
-            saveData(); document.getElementById('part-name').value = ''; renderTeamStudentsList();
-        }
-
-        window.renderTeamStudentsList = function() {
-            const listContainer = document.getElementById('team-students-list');
-            const filtered = window.appState.students.filter(s => s.team === window.activePartTeam);
-            listContainer.innerHTML = filtered.map(s => `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:rgba(0,0,0,0.3); margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
-                    <span style="font-size:0.85rem;"><strong>${s.name}</strong> (${s.cat})</span>
-                    <button class="btn btn-danger btn-sm" onclick="deleteStudent('${s.id}')">Delete</button>
-                </div>
-            `).join('') || '<p style="font-size:0.85rem;">No students recorded.</p>';
-        }
-
-        window.deleteStudent = function(id) {
-            window.appState.students = window.appState.students.filter(s => s.id !== id); saveData(); renderTeamStudentsList();
-        }
-
-        /* TEAM PORTAL REGISTRATION CORE */
-        window.handleTeamLogin = function(e) {
-            e.preventDefault();
-            const u = document.getElementById('login-team-user').value.trim();
-            const p = document.getElementById('login-team-pass').value.trim();
-            const found = window.appState.teams.find(t => t.user === u && t.pass === p);
-            if(found) { window.loggedTeamUser = u; renderHomePhase(); } else { alert("Invalid Credentials"); }
-        }
-        window.logoutTeam = function() { window.loggedTeamUser = null; renderHomePhase(); }
-
-        window.loadCategoryPrograms = function() {
-            const cat = document.getElementById('reg-cat-select').value;
-            const container = document.getElementById('category-programs-container');
-            if(!cat) { container.innerHTML = ''; return; }
-
-            const filtered = window.appState.programs.filter(p => p.cat === cat);
-            if(filtered.length === 0) { container.innerHTML = '<p style="font-size:0.85rem;">No programs in this category.</p>'; return; }
-
-            const allowedStudents = window.appState.students.filter(s => s.team === window.loggedTeamUser && s.cat === cat);
-
-            container.innerHTML = filtered.map(p => {
-                const reg = window.appState.registrations.find(r => r.team === window.loggedTeamUser && r.progId === p.id) || { participants: [] };
-                let selectors = '';
-                
-                for(let i=0; i < p.limit; i++) {
-                    if(cat === 'GENERAL') {
-                        selectors += `<input type="text" class="form-control prog-input-${p.id}" value="${reg.participants[i] || ''}" placeholder="Enter Name Manually" style="margin-top:5px;">`;
-                    } else {
-                        selectors += `<select class="form-control prog-input-${p.id}" style="margin-top:5px;">
-                            <option value="">-- Select Student --</option>
-                            ${allowedStudents.map(st => `<option value="${st.name}" ${reg.participants[i] === st.name ? 'selected':''}>${st.name}</option>`).join('')}
-                        </select>`;
-                    }
-                }
-
-                return `
-                    <div style="background:rgba(0,0,0,0.3); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-bottom:10px;">
-                        <strong style="font-size:0.9rem;">${p.name} (${p.stage})</strong>
-                        <div>${selectors}</div>
-                        <button class="btn btn-success btn-sm btn-block" style="margin-top:8px;" onclick="saveRegistrationItem('${p.id}', '${cat}')">Submit Entry</button>
+            const progList = document.getElementById('adminProgList');
+            progList.innerHTML = '';
+            state.programs.forEach(p => {
+                progList.innerHTML += `
+                    <div class="py-2 flex justify-between items-center text-xs">
+                        <div><strong>${p.name}</strong> (${p.cat}) - ${p.stage}, Max: ${p.max}</div>
+                        <div class="flex gap-2">
+                            <button onclick="editProgram(${p.id})" class="text-blue-600 font-bold">Edit</button>
+                            <button onclick="deleteProgram(${p.id})" class="text-red-600 font-bold">Delete</button>
+                        </div>
                     </div>
                 `;
-            }).join('');
+            });
+
+            populateFilterOptions();
+            renderAdminReport();
         }
 
-        window.saveRegistrationItem = function(progId, cat) {
-            if(!window.appState.portalOpen) { alert("Registration Locked!"); return; }
+        function populateFilterOptions() {
+            const filterTeam = document.getElementById('filterTeam');
+            const filterCat = document.getElementById('filterCat');
+            const filterStage = document.getElementById('filterStage');
+            const filterProg = document.getElementById('filterProg');
+
+            filterTeam.innerHTML = '<option value="">All Teams</option>';
+            state.teams.forEach(t => filterTeam.innerHTML += `<option value="${t.user}">${t.user}</option>`);
+
+            filterCat.innerHTML = '<option value="">All Categories</option>';
+            ['LOWER ZONE', 'MIDDLE ZONE', 'HIGHER ZONE', 'SUPER ZONE', 'GENERAL'].forEach(c => filterCat.innerHTML += `<option value="${c}">${c}</option>`);
+
+            filterStage.innerHTML = '<option value="">All Stages</option><option value="ON STAGE">ON STAGE</option><option value="OFF STAGE">OFF STAGE</option>';
+
+            filterProg.innerHTML = '<option value="">All Programs</option>';
+            state.programs.forEach(p => filterProg.innerHTML += `<option value="${p.name}">${p.name}</option>`);
+        }
+
+        function renderAdminReport() {
+            const team = document.getElementById('filterTeam').value;
+            const cat = document.getElementById('filterCat').value;
+            const stage = document.getElementById('filterStage').value;
+            const prog = document.getElementById('filterProg').value;
+
+            const tbody = document.getElementById('reportTableBody');
+            tbody.innerHTML = '';
+
+            let filtered = state.registrations.filter(r => {
+                return (!team || r.team === team) &&
+                       (!cat || r.cat === cat) &&
+                       (!stage || r.stage === stage) &&
+                       (!prog || r.progName === prog);
+            });
+
+            filtered.forEach(r => {
+                tbody.innerHTML += `
+                    <tr class="border-b">
+                        <td class="p-2 border font-medium">${r.partName}</td>
+                        <td class="p-2 border">${r.team}</td>
+                        <td class="p-2 border">${r.cat}</td>
+                        <td class="p-2 border">${r.progName}</td>
+                        <td class="p-2 border">${r.stage}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openPrintModal() {
+            document.getElementById('modalOverlay').classList.remove('hidden');
+            document.getElementById('printModal').classList.remove('hidden');
             
-            const fields = document.querySelectorAll(`.prog-input-${progId}`);
-            const names = Array.from(fields).map(f => f.value.trim()).filter(n => n !== '');
-
-            if(cat !== 'GENERAL') {
-                for (let studentName of names) {
-                    const matchCount = window.appState.registrations.filter(r => r.team === window.loggedTeamUser && r.cat !== 'GENERAL' && r.progId !== progId && r.participants.includes(studentName)).length;
-                    if(matchCount >= window.appState.maxProgLimit) {
-                        alert(`Limit exceeded! Student "${studentName}" is already registered for ${matchCount} items.`);
-                        return;
-                    }
-                }
-            }
-
-            window.appState.registrations = window.appState.registrations.filter(r => !(r.team === window.loggedTeamUser && r.progId === progId));
-            if(names.length > 0) {
-                window.appState.registrations.push({ team: window.loggedTeamUser, cat, progId, participants: names });
-            }
-            saveData(); alert("Registration updated.");
+            const tbody = document.getElementById('printTableBody');
+            tbody.innerHTML = document.getElementById('reportTableBody').innerHTML;
         }
 
-        /* POINTROOM EVALUATION MATRIX */
-        window.populatePtProgs = function() {
-            const cat = document.getElementById('pt-cat-select').value;
-            const drop = document.getElementById('pt-prog-select');
-            const matched = window.appState.programs.filter(p => p.cat === cat);
-            drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-            document.getElementById('pt-candidates-inputs').innerHTML = '';
-            document.getElementById('pt-stage-badge').innerText = '';
+        function closePrintModal() {
+            document.getElementById('printModal').classList.add('hidden');
+            document.getElementById('modalOverlay').classList.add('hidden');
         }
 
-        window.loadPtParticipants = function() {
-            const progId = document.getElementById('pt-prog-select').value;
-            const targetProg = window.appState.programs.find(p => p.id === progId);
-            const container = document.getElementById('pt-candidates-inputs');
-            
-            if(!targetProg) { container.innerHTML = ''; return; }
-            document.getElementById('pt-stage-badge').innerText = `Stage Mode: ${targetProg.stage}`;
+        function adjustPrintFont(val) {
+            document.getElementById('printFontVal').innerText = val + 'px';
+            document.getElementById('printableArea').style.fontSize = val + 'px';
+        }
 
-            const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
-            if(matchedRegs.length === 0) {
-                container.innerHTML = '<p style="color:#ef4444; font-size:0.85rem;">No registered participants found.</p>'; return;
-            }
+        // --- POINT ROOM ACTIONS ---
+        function updatePRPrograms() {
+            const cat = document.getElementById('prCategorySelect').value;
+            const select = document.getElementById('prProgramSelect');
+            select.innerHTML = '<option value="">-- Choose Program --</option>';
 
-            let html = '';
-            matchedRegs.forEach(r => {
-                r.participants.forEach(pName => {
-                    const savedPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === pName) || { score: 0 };
-                    html += `
-                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
-                            <span style="font-size:0.85rem;"><strong>${pName}</strong> (${r.team})</span>
-                            <input type="number" min="0" class="form-control pt-score-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.score}" style="width:80px; padding:6px;">
+            state.programs.filter(p => p.cat === cat).forEach(p => {
+                select.innerHTML += `<option value="${p.name}">${p.name}</option>`;
+            });
+        }
+
+        function renderPRParticipants() {
+            const cat = document.getElementById('prCategorySelect').value;
+            const progName = document.getElementById('prProgramSelect').value;
+            const form = document.getElementById('prPointForm');
+            const inputsContainer = document.getElementById('prParticipantInputs');
+            const stageBadge = document.getElementById('prStageBadge');
+            const stageTxt = document.getElementById('prStageTxt');
+
+            if (!cat || !progName) return;
+
+            const progObj = state.programs.find(p => p.name === progName && p.cat === cat);
+            stageBadge.classList.remove('hidden');
+            stageTxt.innerText = progObj ? progObj.stage : 'ON STAGE';
+
+            // Find all registered participants for this program
+            const regs = state.registrations.filter(r => r.progName === progName && r.cat === cat);
+            inputsContainer.innerHTML = '';
+
+            if (regs.length === 0) {
+                inputsContainer.innerHTML = `<p class="text-xs text-slate-400">No participants registered for this program.</p>`;
+            } else {
+                regs.forEach((r, idx) => {
+                    inputsContainer.innerHTML += `
+                        <div class="flex items-center justify-between gap-2 bg-slate-50 p-2 rounded-xl text-xs">
+                            <span class="font-bold text-slate-700">${r.partName} (${r.team})</span>
+                            <input type="number" data-part="${r.partName}" data-team="${r.team}" placeholder="Point" min="0" required class="border p-2 rounded-lg w-20 outline-none text-center">
                         </div>
                     `;
                 });
-            });
-            container.innerHTML = html;
-        }
-
-        window.savePointroomEntry = function(e) {
-            e.preventDefault();
-            const progId = document.getElementById('pt-prog-select').value;
-            const cat = document.getElementById('pt-cat-select').value;
-            if(!progId || !cat) return;
-
-            window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
-
-            const fields = document.querySelectorAll('.pt-score-field');
-            fields.forEach(f => {
-                const score = parseFloat(f.value) || 0;
-                const team = f.getAttribute('data-team');
-                const student = f.getAttribute('data-student');
-                window.appState.points.push({ progId, cat, team, student, score });
-            });
-
-            saveData(); alert("Point records saved.");
-            loadPtParticipants(); renderPtList();
-        }
-
-        function renderPtList() {
-            const container = document.getElementById('box-pt-list');
-            if(!container) return;
-            const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
-            if(distinctProgs.length === 0) { container.innerHTML = '<p style="font-size:0.85rem;">No evaluation logs.</p>'; return; }
-
-            container.innerHTML = distinctProgs.map(pid => {
-                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
-                const subPts = window.appState.points.filter(pt => pt.progId === pid);
-                return `
-                    <div style="background:rgba(0,0,0,0.3); border:1px solid var(--border-color); padding:8px; border-radius:8px; margin-bottom:6px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <strong style="font-size:0.85rem;">${prog.name} (${prog.cat})</strong>
-                            <button class="btn btn-danger btn-sm no-print" onclick="deletePtGroup('${pid}')">Delete</button>
-                        </div>
-                        <div style="font-size:0.75rem; color:#cbd5e1; margin-top:4px;">
-                            ${subPts.map(s => `${s.student} (${s.team}): <strong>${s.score}</strong>`).join(' | ')}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        window.deletePtGroup = function(progId) {
-            if(confirm("Purge point records?")) {
-                window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
-                saveData(); renderPtList();
             }
+
+            form.classList.remove('hidden');
         }
 
-        /* JUDGE LEADERBOARD */
-        window.renderJudgeLeaderboard = function() {
-            const tbody = document.getElementById('judge-leaderboard-body');
-            if(!tbody) return;
-            const filterStage = document.getElementById('jd-filter-stage').value;
-
-            const aggregate = {};
-            window.appState.points.forEach(pt => {
-                if(pt.cat === 'GENERAL') return;
-                
-                const prog = window.appState.programs.find(p => p.id === pt.progId);
-                if(!prog) return;
-                if(filterStage !== 'all' && prog.stage !== filterStage) return;
-
-                const key = `${pt.team}_${pt.student}`;
-                if(!aggregate[key]) {
-                    aggregate[key] = { name: pt.student, team: pt.team, cat: pt.cat, total: 0 };
-                }
-                aggregate[key].total += pt.score;
-            });
-
-            const sorted = Object.values(aggregate).sort((a,b) => b.total - a.total);
-
-            tbody.innerHTML = sorted.map(s => `
-                <tr onclick="viewCandidateBreakdown('${s.name}', '${s.team}')" style="cursor:pointer;">
-                    <td><strong>${s.name}</strong></td>
-                    <td>${s.team}</td>
-                    <td>${s.cat}</td>
-                    <td><strong style="color:#f6d365;">${s.total}</strong></td>
-                </tr>
-            `).join('') || '<tr><td colspan="4">No scores.</td></tr>';
-        }
-
-        window.viewCandidateBreakdown = function(name, team) {
-            const records = window.appState.points.filter(pt => pt.student === name && pt.team === team && pt.cat !== 'GENERAL');
-            const modalTitle = document.getElementById('det-modal-title');
-            const modalContent = document.getElementById('det-modal-content');
-            
-            modalTitle.innerText = `${name} (${team})`;
-            let html = '<table style="width:100%;"><thead><tr><th>Program</th><th>Pts</th></tr></thead><tbody>';
-            records.forEach(r => {
-                const prog = window.appState.programs.find(p => p.id === r.progId) || { name: 'N/A' };
-                html += `<tr><td>${prog.name}</td><td><strong>${r.score}</strong></td></tr>`;
-            });
-            html += '</tbody></table>';
-            
-            modalContent.innerHTML = html;
-            document.getElementById('detail-modal-overlay').style.display = 'flex';
-        }
-
-        /* STATES CONTROL DASHBOARD */
-        window.renderStatesDashboard = function() {
-            const tbody = document.getElementById('states-table-body');
-            if(!tbody) return;
-
-            const teamTotals = {};
-            window.appState.teams.forEach(t => { teamTotals[t.user] = 0; });
-            window.appState.points.forEach(pt => {
-                if(teamTotals[pt.team] !== undefined) teamTotals[pt.team] += pt.score;
-            });
-
-            const sortedTeams = Object.entries(teamTotals).sort((a,b) => b[1] - a[1]);
-
-            tbody.innerHTML = sortedTeams.map(([tName, total]) => `
-                <tr onclick="viewTeamBreakdown('${tName}')" style="cursor:pointer;">
-                    <td><strong>${tName}</strong></td>
-                    <td><strong style="color:#f6d365; font-size:1rem;">${total}</strong></td>
-                </tr>
-            `).join('') || '<tr><td colspan="2">No team score data.</td></tr>';
-        }
-
-        window.viewTeamBreakdown = function(teamName) {
-            const records = window.appState.points.filter(pt => pt.team === teamName);
-            const modalTitle = document.getElementById('det-modal-title');
-            const modalContent = document.getElementById('det-modal-content');
-            
-            modalTitle.innerText = `Team Breakdown: ${teamName}`;
-            let html = '<table style="width:100%;"><thead><tr><th>Student</th><th>Prog</th><th>Pts</th></tr></thead><tbody>';
-            records.forEach(r => {
-                const prog = window.appState.programs.find(p => p.id === r.progId) || { name: 'N/A' };
-                html += `<tr><td>${r.student}</td><td>${prog.name}</td><td><strong>${r.score}</strong></td></tr>`;
-            });
-            html += '</tbody></table>';
-            
-            modalContent.innerHTML = html;
-            document.getElementById('detail-modal-overlay').style.display = 'flex';
-        }
-
-        /* COMMITTEE MASTER SWITCH MANAGEMENT */
-        window.toggleRegLock = function() { window.appState.portalOpen = !window.appState.portalOpen; saveData(); }
-        
-        window.addTeamMaster = function(e) {
+        function handleSavePoints(e) {
             e.preventDefault();
-            const user = document.getElementById('m-team-user').value.trim();
-            const pass = document.getElementById('m-team-pass').value.trim();
-            window.appState.teams.push({ user, pass }); saveData(); e.target.reset();
-        }
-        window.deleteTeamMaster = function(idx) { window.appState.teams.splice(idx, 1); saveData(); }
-        
-        window.addProgramMaster = function(e) {
-            e.preventDefault();
-            const name = document.getElementById('m-prog-name').value.trim();
-            const cat = document.getElementById('m-prog-cat').value;
-            const stage = document.getElementById('m-prog-stage').value;
-            const limit = parseInt(document.getElementById('m-prog-limit').value);
-            window.appState.programs.push({ id: 'pr_'+Date.now(), name, cat, stage, limit }); saveData(); e.target.reset();
-        }
-        window.deleteProgramMaster = function(id) { window.appState.programs = window.appState.programs.filter(p => p.id !== id); saveData(); }
-        
-        window.uploadTeamStatusPoster = function(e) {
-            e.preventDefault();
-            const file = document.getElementById('status-file').files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) { window.appState.teamStatusUrl = evt.target.result; saveData(); alert("Poster Uploaded."); }
-                reader.readAsDataURL(file);
-            }
-        }
-        window.deleteStatusMaster = function() { window.appState.teamStatusUrl = ''; saveData(); }
-        
-        window.populateResProgDropdown = function() {
-            const cat = document.getElementById('res-upload-cat').value;
-            const drop = document.getElementById('res-upload-prog');
-            const matched = window.appState.programs.filter(p => p.cat === cat);
-            drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-        }
+            const cat = document.getElementById('prCategorySelect').value;
+            const progName = document.getElementById('prProgramSelect').value;
+            const progObj = state.programs.find(p => p.name === progName && p.cat === cat);
+            const stage = progObj ? progObj.stage : 'ON STAGE';
 
-        window.uploadProgramResult = function(e) {
-            e.preventDefault();
-            const progId = document.getElementById('res-upload-prog').value;
-            const yt = document.getElementById('res-yt-url').value.trim();
-            const fileEl = document.getElementById('res-file').files[0];
+            const inputs = document.querySelectorAll('#prParticipantInputs input');
+            let scores = [];
 
-            if(fileEl && progId) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    window.appState.results = window.appState.results.filter(r => r.progId !== progId);
-                    window.appState.results.push({ progId, poster: evt.target.result, youtube: yt });
-                    saveData(); alert("Result Published.");
-                }
-                reader.readAsDataURL(fileEl);
-            }
-        }
-
-        window.deleteResultMaster = function(progId) { window.appState.results = window.appState.results.filter(r => r.progId !== progId); saveData(); }
-
-        window.uploadUpdateFeed = function(e) {
-            e.preventDefault();
-            const title = document.getElementById('up-title').value.trim();
-            const type = document.getElementById('up-type').value;
-
-            if(type === 'photo') {
-                const f = document.getElementById('up-file').files[0];
-                if(f) {
-                    const reader = new FileReader();
-                    reader.onload = function(evt) { window.appState.updates.push({ id:'up_'+Date.now(), title, type, url: evt.target.result }); saveData(); alert("Update Published."); }
-                    reader.readAsDataURL(f);
-                }
-            } else {
-                const url = document.getElementById('up-video').value.trim();
-                window.appState.updates.push({ id:'up_'+Date.now(), title, type, url }); saveData(); alert("Update Published.");
-            }
-        }
-        window.deleteUpdateMaster = function(id) { window.appState.updates = window.appState.updates.filter(u => u.id !== id); saveData(); }
-
-        window.uploadStreamLinks = function(e) {
-            e.preventDefault();
-            const title = document.getElementById('st-title').value.trim();
-            const url = document.getElementById('st-url').value.trim();
-            const mode = document.getElementById('st-mode').value;
-            const thumbFile = document.getElementById('st-thumb').files[0];
-
-            if(thumbFile) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    const obj = { title, url, thumb: evt.target.result };
-                    if(mode === 'live') window.appState.livelinks.push(obj);
-                    else window.appState.highlights.push(obj);
-                    saveData(); alert("Link Reference Added.");
-                }
-                reader.readAsDataURL(thumbFile);
-            }
-        }
-
-        function populateReportProgDropdown() {
-            const cat = document.getElementById('rep-cat').value;
-            const drop = document.getElementById('rep-prog');
-            if(!drop) return;
-            const matched = window.appState.programs.filter(p => !cat || p.cat === cat);
-            drop.innerHTML = '<option value="">All Programs</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-        }
-
-        function syncControlPanelViews() {
-            const btn = document.getElementById('lock-reg-btn');
-            if(btn) {
-                btn.innerText = window.appState.portalOpen ? "Lock Reg" : "Unlock Reg";
-                btn.className = window.appState.portalOpen ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
-            }
-            document.getElementById('m-max-limit-input').value = window.appState.maxProgLimit;
-
-            const tBox = document.getElementById('master-teams-list');
-            if(tBox) tBox.innerHTML = window.appState.teams.map((t, idx) => `
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-                    <span>${t.user}</span> 
-                    <button class="btn btn-danger btn-sm" onclick="deleteTeamMaster(${idx})"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            `).join('');
-
-            const pBox = document.getElementById('master-progs-list');
-            if(pBox) pBox.innerHTML = window.appState.programs.map(p => `
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-                    <span><strong>${p.name}</strong> (${p.cat})</span> 
-                    <button class="btn btn-danger btn-sm" onclick="deleteProgramMaster('${p.id}')"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            `).join('');
-
-            const sPreview = document.getElementById('master-status-preview');
-            if(sPreview) sPreview.innerHTML = window.appState.teamStatusUrl ? `<img src="${window.appState.teamStatusUrl}" style="height:50px; margin-bottom:4px; border-radius:4px;"> <button class="btn btn-danger btn-sm" onclick="deleteStatusMaster()">Delete Poster</button>` : '';
-
-            const rBox = document.getElementById('master-results-list');
-            if(rBox) rBox.innerHTML = window.appState.results.map(r => {
-                const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Unknown' };
-                return `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-                        <span>Result: ${p.name}</span> 
-                        <button class="btn btn-danger btn-sm" onclick="deleteResultMaster('${r.progId}')"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
-            }).join('');
-
-            const uBox = document.getElementById('master-updates-list');
-            if(uBox) uBox.innerHTML = window.appState.updates.map(u => `
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-                    <span>Update: ${u.title}</span> 
-                    <button class="btn btn-danger btn-sm" onclick="deleteUpdateMaster('${u.id}')"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            `).join('');
-
-            const rTeam = document.getElementById('rep-team');
-            if(rTeam && rTeam.children.length === 1) {
-                rTeam.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
-            }
-            renderReportTable();
-        }
-
-        window.renderReportTable = function() {
-            const fTeam = document.getElementById('rep-team').value;
-            const fCat = document.getElementById('rep-cat').value;
-            const fProg = document.getElementById('rep-prog') ? document.getElementById('rep-prog').value : '';
-            const tbody = document.getElementById('report-table-body');
-            if(!tbody) return;
-
-            let rows = '';
-            let count = 1;
-            window.appState.registrations.forEach(r => {
-                const p = window.appState.programs.find(pr => pr.id === r.progId);
-                if(!p) return;
-                if(fTeam && r.team !== fTeam) return;
-                if(fCat && r.cat !== fCat) return;
-                if(fProg && r.progId !== fProg) return;
-
-                r.participants.forEach(name => {
-                    rows += `<tr><td>${count++}</td><td>${name}</td><td><strong>${r.team}</strong></td><td>${r.cat}</td><td>${p.name}</td></tr>`;
+            inputs.forEach(inp => {
+                scores.push({
+                    partName: inp.getAttribute('data-part'),
+                    team: inp.getAttribute('data-team'),
+                    point: parseFloat(inp.value) || 0
                 });
             });
-            tbody.innerHTML = rows || '<tr><td colspan="5">No entries registered.</td></tr>';
-        }
 
-        /* LIVE SITE DISPLAY RENDERINGS */
-        function renderResultPhaseFeeds() {
-            const statusBox = document.getElementById('team-status-poster-box');
-            if(window.appState.teamStatusUrl) {
-                statusBox.innerHTML = `
-                    <div class="update-card" style="max-width:500px; margin: 0 auto;">
-                        <img src="${window.appState.teamStatusUrl}" style="width:100%; border-radius:12px;">
-                        <div class="card-action-bar">
-                            <span style="font-size:0.8rem; font-weight:700; color:#f6d365;">Team Standings Poster</span>
-                            <div class="card-dots-menu">
-                                <button class="card-dots-btn" onclick="toggleCardPopMenu('pop-status')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                <div id="pop-status" class="card-menu-pop">
-                                    <button onclick="downloadImage('${window.appState.teamStatusUrl}', 'Team_Status.png')"><i class="fa-solid fa-download"></i> Download Poster</button>
-                                    <button onclick="shareLink('Check out the latest Team Status!')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
-            } else { statusBox.innerHTML = '<p style="font-size:0.85rem; color:#64748b;">No Status Poster Uploaded.</p>'; }
-
-            filterResultPrograms();
-            renderPinterestUpdates('all');
-
-            document.getElementById('livelink-feed').innerHTML = window.appState.livelinks.map((l, i) => `
-                <div class="update-card">
-                    <h4 style="margin-bottom:6px; font-size:1rem; color:#fff;">${l.title}</h4>
-                    <div class="poster-container">
-                        <img src="${l.thumb}" class="update-media">
-                    </div>
-                    <div class="card-action-bar">
-                        <a href="${l.url}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-solid fa-play"></i> Watch Stream</a>
-                        <div class="card-dots-menu">
-                            <button class="card-dots-btn" onclick="toggleCardPopMenu('pop-live-${i}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                            <div id="pop-live-${i}" class="card-menu-pop">
-                                <button onclick="downloadImage('${l.thumb}', '${l.title}.png')"><i class="fa-solid fa-download"></i> Download Thumb</button>
-                                <button onclick="shareLink('Watch Live: ${l.title}')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('') || '<p style="font-size:0.85rem; color:#64748b; grid-column: 1/-1;">No Active Live Streams.</p>';
-
-            document.getElementById('highlights-feed').innerHTML = window.appState.highlights.map((h, i) => `
-                <div class="update-card">
-                    <h4 style="margin-bottom:6px; font-size:1rem; color:#fff;">${h.title}</h4>
-                    <div class="poster-container">
-                        <img src="${h.thumb}" class="update-media">
-                    </div>
-                    <div class="card-action-bar">
-                        <a href="${h.url}" target="_blank" class="btn btn-sm"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open View</a>
-                        <div class="card-dots-menu">
-                            <button class="card-dots-btn" onclick="toggleCardPopMenu('pop-hl-${i}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                            <div id="pop-hl-${i}" class="card-menu-pop">
-                                <button onclick="downloadImage('${h.thumb}', '${h.title}.png')"><i class="fa-solid fa-download"></i> Download Poster</button>
-                                <button onclick="shareLink('${h.title} Highlights')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('') || '<p style="font-size:0.85rem; color:#64748b; grid-column: 1/-1;">No Highlights Video Links.</p>';
-        }
-
-        window.filterResultPrograms = function() {
-            const cat = document.getElementById('res-search-cat').value;
-            const container = document.getElementById('results-display-list');
-            const matched = window.appState.programs.filter(p => !cat || p.cat === cat);
-
-            container.innerHTML = matched.map((p, idx) => {
-                const res = window.appState.results.find(r => r.progId === p.id);
-                return `
-                    <div style="background:rgba(0,0,0,0.3); padding:14px; border:1px solid var(--border-color); margin-bottom:10px; border-radius:16px;">
-                        <h4 style="color:#ffffff; font-size:0.95rem;">${p.name} <span style="font-size:0.75rem; color:#cbd5e1;">(${p.cat})</span></h4>
-                        ${res ? `
-                            <div style="margin-top:8px;">
-                                <button class="btn btn-sm btn-success" id="btn-toggle-res-${p.id}" onclick="toggleInlineResultView('${p.id}', '${res.poster}')">Result View</button>
-                                <div id="inline-res-box-${p.id}" class="inline-res-display" style="display:none;"></div>
-                                ${res.youtube ? `<div style="margin-top:6px;"><a href="${res.youtube}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-brands fa-youtube"></i> Watch Video</a></div>` : ''}
-                            </div>
-                        ` : '<p style="color:#64748b; font-size:0.8rem; margin-top:4px;"><i class="fa-solid fa-clock"></i> Result Awaited</p>'}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        window.toggleInlineResultView = function(progId, posterData) {
-            const box = document.getElementById(`inline-res-box-${progId}`);
-            const btn = document.getElementById(`btn-toggle-res-${progId}`);
-            if(box.style.display === 'none') {
-                confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
-                box.innerHTML = `
-                    <img src="${posterData}" style="width:100%; border-radius:10px;">
-                    <div class="card-action-bar">
-                        <span style="font-size:0.75rem; font-weight:700; color:#f6d365;">Result Poster</span>
-                        <div class="card-dots-menu">
-                            <button class="card-dots-btn" onclick="toggleCardPopMenu('pop-res-${progId}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                            <div id="pop-res-${progId}" class="card-menu-pop">
-                                <button onclick="downloadImage('${posterData}', 'Result_${progId}.png')"><i class="fa-solid fa-download"></i> Download Poster</button>
-                                <button onclick="shareLink('Check out the result for this program!')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                box.style.display = 'block';
-                btn.innerText = "Hide Result";
-                btn.className = "btn btn-sm btn-danger";
-            } else {
-                box.style.display = 'none';
-                box.innerHTML = '';
-                btn.innerText = "Result View";
-                btn.className = "btn btn-sm btn-success";
-            }
-        }
-
-        window.renderPinterestUpdates = function(filterMode) {
-            const feed = document.getElementById('live-updates-feed');
-            if(!feed) return;
-            
-            const targetUpdates = window.appState.updates.filter(u => {
-                if(filterMode === 'all') return true;
-                return u.type === filterMode;
+            state.points.push({
+                id: Date.now(),
+                progName,
+                cat,
+                stage,
+                scores
             });
 
-            feed.innerHTML = targetUpdates.map((u, i) => `
-                <div class="update-card">
-                    ${u.type === 'photo' ? `
-                        <img src="${u.url}" class="update-media">
-                        <div class="card-action-bar">
-                            <h5 style="font-size:0.85rem; font-weight:700; color:#e2e8f0;">${u.title}</h5>
-                            <div class="card-dots-menu">
-                                <button class="card-dots-btn" onclick="toggleCardPopMenu('pop-up-${i}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                <div id="pop-up-${i}" class="card-menu-pop">
-                                    <button onclick="downloadImage('${u.url}', '${u.title}.png')"><i class="fa-solid fa-download"></i> Download Image</button>
-                                    <button onclick="shareLink('${u.title}')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
-                                </div>
-                            </div>
-                        </div>` : `
-                        <iframe src="${u.url}" style="width:100%; height:180px; border:0; border-radius:10px;" allowfullscreen></iframe>
-                        <div class="card-action-bar">
-                            <h5 style="font-size:0.85rem; font-weight:700; color:#e2e8f0;">${u.title}</h5>
-                            <div class="card-dots-menu">
-                                <button class="card-dots-btn" onclick="toggleCardPopMenu('pop-up-${i}')"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                <div id="pop-up-${i}" class="card-menu-pop">
-                                    <button onclick="shareLink('Watch Video: ${u.title}')"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
-                                </div>
-                            </div>
+            saveState();
+            alert('Points Submitted Successfully!');
+            renderPointRoomList();
+        }
+
+        function renderPointRoomList() {
+            const list = document.getElementById('prSubmittedList');
+            list.innerHTML = '';
+
+            state.points.forEach((pt, idx) => {
+                list.innerHTML += `
+                    <div class="p-3 flex justify-between items-center">
+                        <div>
+                            <strong>${pt.progName}</strong> (${pt.cat}) - <span class="text-blue-600 font-bold">${pt.stage}</span>
                         </div>
-                    `}
-                </div>
-            `).join('') || '<p style="font-size:0.85rem; color:#64748b; grid-column: 1/-1;">No updates published.</p>';
+                        <div class="flex gap-2">
+                            <button onclick="deletePointRecord(${pt.id})" class="text-red-600 font-bold">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
-        /* HELPER DOWNLOAD & SHARE FUNCTIONS */
-        window.downloadImage = function(url, filename) {
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+        function deletePointRecord(id) {
+            state.points = state.points.filter(pt => pt.id !== id);
+            saveState();
+            renderPointRoomList();
         }
 
-        window.shareLink = function(customText) {
-            const shareData = {
-                title: 'BAHJA 2026',
-                text: `${customText} - BAHJA FEST 2026\n`,
-                url: window.location.href
-            };
-            if (navigator.share) {
-                navigator.share(shareData).catch(() => {});
+        // --- JUDGE LEADERBOARD LOGIC ---
+        function renderJudgeLeaderboard() {
+            const filterStage = document.getElementById('judgeStageFilter').value;
+            const lb = document.getElementById('judgeLeaderboard');
+            lb.innerHTML = '';
+
+            // Aggregate participant total scores based on rules:
+            // 1. General programs marks EXCLUDED.
+            // 2. Stage filtering applied if chosen.
+            let partTotals = {}; // { partName: { team, cat, total: 0, breakdown: [] } }
+
+            state.points.forEach(pt => {
+                if (pt.cat === 'GENERAL') return; // EXCLUDE GENERAL
+                if (filterStage !== 'ALL' && pt.stage !== filterStage) return; // Stage match
+
+                pt.scores.forEach(s => {
+                    if (!partTotals[s.partName]) {
+                        partTotals[s.partName] = {
+                            team: s.team,
+                            cat: pt.cat,
+                            total: 0,
+                            breakdown: []
+                        };
+                    }
+                    partTotals[s.partName].total += s.point;
+                    partTotals[s.partName].breakdown.push({
+                        progName: pt.progName,
+                        cat: pt.cat,
+                        stage: pt.stage,
+                        point: s.point
+                    });
+                });
+            });
+
+            // Convert to array and sort DESCENDING
+            let arr = Object.keys(partTotals).map(k => ({
+                name: k,
+                ...partTotals[k]
+            })).sort((a, b) => b.total - a.total);
+
+            if (arr.length === 0) {
+                lb.innerHTML = `<p class="text-xs text-slate-400">No participant points registered yet.</p>`;
             } else {
-                navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
-                alert("Link copied to clipboard!");
+                arr.forEach((item, idx) => {
+                    lb.innerHTML += `
+                        <div onclick="showPartDetails('${item.name}', '${item.team}')" class="p-3 bg-slate-50 hover:bg-slate-100 rounded-xl border flex justify-between items-center cursor-pointer transition">
+                            <div class="flex items-center gap-3">
+                                <span class="font-extrabold text-blue-700 text-sm">#${idx + 1}</span>
+                                <div>
+                                    <h4 class="font-bold text-xs text-slate-800">${item.name}</h4>
+                                    <p class="text-[10px] text-slate-500">${item.team} (${item.cat})</p>
+                                </div>
+                            </div>
+                            <span class="font-black text-sm text-emerald-600">${item.total} pts</span>
+                        </div>
+                    `;
+                });
             }
         }
 
-        render3DotMenu();
+        function showPartDetails(partName, team) {
+            const modal = document.getElementById('detailsModal');
+            const title = document.getElementById('detailsTitle');
+            const content = document.getElementById('detailsContent');
+
+            title.innerText = `Points Breakdown: ${partName} (${team})`;
+            content.innerHTML = '';
+
+            state.points.forEach(pt => {
+                pt.scores.forEach(s => {
+                    if (s.partName === partName) {
+                        content.innerHTML += `
+                            <div class="py-2 flex justify-between items-center">
+                                <div>
+                                    <strong>${pt.progName}</strong> (${pt.cat})
+                                    <p class="text-[10px] text-slate-400">${pt.stage}</p>
+                                </div>
+                                <span class="font-bold text-emerald-600">+${s.point} pts</span>
+                            </div>
+                        `;
+                    }
+                });
+            });
+
+            document.getElementById('modalOverlay').classList.remove('hidden');
+            modal.classList.remove('hidden');
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('detailsModal').classList.add('hidden');
+            document.getElementById('modalOverlay').classList.add('hidden');
+        }
+
+        // --- STATES CONTROL (TEAM TOTAL TALLY LOGIC) ---
+        function renderStatesControl() {
+            const container = document.getElementById('teamTallyList');
+            container.innerHTML = '';
+
+            // Aggregate team totals INCLUDING General program points
+            let teamTotals = {}; // { teamName: { total: 0 } }
+
+            state.teams.forEach(t => {
+                teamTotals[t.user] = { total: 0 };
+            });
+
+            state.points.forEach(pt => {
+                pt.scores.forEach(s => {
+                    if (teamTotals[s.team]) {
+                        teamTotals[s.team].total += s.point;
+                    }
+                });
+            });
+
+            let arr = Object.keys(teamTotals).map(k => ({
+                team: k,
+                total: teamTotals[k].total
+            })).sort((a, b) => b.total - a.total);
+
+            arr.forEach((item, idx) => {
+                container.innerHTML += `
+                    <div onclick="showTeamDetails('${item.team}')" class="p-4 bg-slate-50 hover:bg-slate-100 border rounded-2xl flex justify-between items-center cursor-pointer transition">
+                        <div class="flex items-center gap-3">
+                            <span class="font-black text-amber-600 text-base">#${idx + 1}</span>
+                            <h3 class="font-bold text-sm text-slate-800">${item.team}</h3>
+                        </div>
+                        <span class="font-black text-lg text-blue-700">${item.total} pts</span>
+                    </div>
+                `;
+            });
+        }
+
+        function showTeamDetails(team) {
+            const modal = document.getElementById('detailsModal');
+            const title = document.getElementById('detailsTitle');
+            const content = document.getElementById('detailsContent');
+
+            title.innerText = `Team Breakdown: ${team}`;
+            content.innerHTML = '';
+
+            state.points.forEach(pt => {
+                pt.scores.forEach(s => {
+                    if (s.team === team && s.point > 0) {
+                        content.innerHTML += `
+                            <div class="py-2 flex justify-between items-center">
+                                <div>
+                                    <strong>${s.partName}</strong> - ${pt.progName} (${pt.cat})
+                                    <p class="text-[10px] text-slate-400">${pt.stage}</p>
+                                </div>
+                                <span class="font-bold text-blue-600">+${s.point} pts</span>
+                            </div>
+                        `;
+                    }
+                });
+            });
+
+            document.getElementById('modalOverlay').classList.remove('hidden');
+            modal.classList.remove('hidden');
+        }
+
+        // --- RESULT CONTROL ACTIONS ---
+        function uploadTeamStatus() {
+            const file = document.getElementById('teamStatusFile').files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                state.teamStatuses.push(e.target.result);
+                saveState();
+                renderResControl();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function deleteTeamStatus(idx) {
+            state.teamStatuses.splice(idx, 1);
+            saveState();
+            renderResControl();
+        }
+
+        function updateResProgSelect() {
+            const cat = document.getElementById('resCatSelect').value;
+            const select = document.getElementById('resProgSelect');
+            select.innerHTML = '<option value="">-- Choose Program --</option>';
+
+            state.programs.filter(p => p.cat === cat).forEach(p => {
+                select.innerHTML += `<option value="${p.name}">${p.name}</option>`;
+            });
+        }
+
+        function uploadResult() {
+            const cat = document.getElementById('resCatSelect').value;
+            const prog = document.getElementById('resProgSelect').value;
+            const posterFile = document.getElementById('resPosterFile').files[0];
+            const yt = document.getElementById('resYtLink').value;
+            const thumbFile = document.getElementById('resYtThumb').files[0];
+
+            if (!cat || !prog || !posterFile) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const posterBase64 = e.target.result;
+                if (thumbFile) {
+                    const tReader = new FileReader();
+                    tReader.onload = function(te) {
+                        saveResultItem(cat, prog, posterBase64, yt, te.target.result);
+                    };
+                    tReader.readAsDataURL(thumbFile);
+                } else {
+                    saveResultItem(cat, prog, posterBase64, yt, '');
+                }
+            };
+            reader.readAsDataURL(posterFile);
+        }
+
+        function saveResultItem(cat, prog, poster, yt, thumb) {
+            state.results.push({ id: Date.now(), cat, prog, poster, yt, thumb });
+            saveState();
+            renderResControl();
+            alert('Result Uploaded!');
+        }
+
+        function deleteResult(id) {
+            state.results = state.results.filter(r => r.id !== id);
+            saveState();
+            renderResControl();
+        }
+
+        function uploadUpdate() {
+            const file = document.getElementById('updateFile').files[0];
+            const type = document.getElementById('updateTypeSelect').value;
+            const title = document.getElementById('updateTitle').value;
+
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                state.updates.push({ id: Date.now(), file: e.target.result, type, title });
+                saveState();
+                renderResControl();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function deleteUpdate(id) {
+            state.updates = state.updates.filter(u => u.id !== id);
+            saveState();
+            renderResControl();
+        }
+
+        function saveLiveStream() {
+            const link = document.getElementById('liveLink').value;
+            const thumbFile = document.getElementById('liveThumb').files[0];
+
+            if (thumbFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    state.live = { link, thumb: e.target.result };
+                    saveState();
+                    alert('Live Saved!');
+                };
+                reader.readAsDataURL(thumbFile);
+            } else {
+                state.live = { link, thumb: state.live.thumb || '' };
+                saveState();
+                alert('Live Saved!');
+            }
+        }
+
+        function saveHighlight() {
+            const title = document.getElementById('highlightTitle').value;
+            if (!title) return;
+            state.highlights.push({ id: Date.now(), title });
+            saveState();
+            alert('Highlight Added!');
+        }
+
+        function renderResControl() {
+            const prev = document.getElementById('teamStatusPreview');
+            prev.innerHTML = '';
+            state.teamStatuses.forEach((img, idx) => {
+                prev.innerHTML += `
+                    <div class="relative w-16 h-16 border rounded-lg overflow-hidden">
+                        <img src="${img}" class="w-full h-full object-cover">
+                        <button onclick="deleteTeamStatus(${idx})" class="absolute top-0 right-0 bg-red-600 text-white text-[10px] px-1 font-bold">&times;</button>
+                    </div>
+                `;
+            });
+
+            const resList = document.getElementById('adminResList');
+            resList.innerHTML = '';
+            state.results.forEach(r => {
+                resList.innerHTML += `
+                    <div class="py-2 flex justify-between items-center text-xs">
+                        <div><strong>${r.prog}</strong> (${r.cat})</div>
+                        <button onclick="deleteResult(${r.id})" class="text-red-600 font-bold">Delete</button>
+                    </div>
+                `;
+            });
+
+            const upList = document.getElementById('adminUpdatesList');
+            upList.innerHTML = '';
+            state.updates.forEach(u => {
+                upList.innerHTML += `
+                    <div class="py-2 flex justify-between items-center text-xs">
+                        <div><strong>${u.title || 'Untitled'}</strong> (${u.type})</div>
+                        <button onclick="deleteUpdate(${u.id})" class="text-red-600 font-bold">Delete</button>
+                    </div>
+                `;
+            });
+        }
+
+        function clearAllData() {
+            if (confirm("Are you sure you want to CLEAR ALL SYSTEM DATA?")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        // --- RESULT PHASE MODALS ---
+        function openModal(modalId) {
+            document.getElementById('modalOverlay').classList.remove('hidden');
+            ['teamStatusModal', 'resultModal', 'updatesModal', 'liveModal', 'highlightsModal'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+
+            document.getElementById(modalId).classList.remove('hidden');
+
+            if (modalId === 'teamStatusModal') {
+                const c = document.getElementById('teamStatusContent');
+                c.innerHTML = state.teamStatuses.map(img => `
+                    <div class="border rounded-xl overflow-hidden shadow-sm p-1">
+                        <img src="${img}" class="w-full h-auto rounded-lg">
+                        <a href="${img}" download="TeamStatus.png" class="block text-center py-2 text-xs font-bold text-blue-600">Download Status</a>
+                    </div>
+                `).join('') || '<p class="text-slate-400 text-xs">No Status uploaded.</p>';
+            } 
+            else if (modalId === 'resultModal') {
+                const c = document.getElementById('resultContent');
+                c.innerHTML = state.results.map(r => `
+                    <div class="border rounded-2xl p-4 space-y-2">
+                        <h4 class="font-bold text-sm text-blue-700">${r.prog} <span class="text-xs text-slate-500">(${r.cat})</span></h4>
+                        <img src="${r.poster}" class="w-full rounded-xl shadow-sm">
+                        <a href="${r.poster}" download="Result.png" class="inline-block text-xs text-blue-600 font-bold">Download Poster</a>
+                        ${r.yt ? `
+                            <div class="pt-2 border-t">
+                                <a href="${r.yt}" target="_blank" class="text-xs text-red-600 font-bold block">Watch Video ➔</a>
+                                ${r.thumb ? `<img src="${r.thumb}" class="w-20 h-14 object-cover rounded mt-1">` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('') || '<p class="text-slate-400 text-xs">No Results published.</p>';
+            }
+            else if (modalId === 'updatesModal') {
+                const c = document.getElementById('updatesContent');
+                c.innerHTML = state.updates.map(u => `
+                    <div class="pinterest-item bg-slate-50 border rounded-2xl overflow-hidden p-2 shadow-sm">
+                        ${u.type === 'video' ? `
+                            <video src="${u.file}" controls class="w-full rounded-xl"></video>
+                        ` : `
+                            <img src="${u.file}" class="w-full h-auto rounded-xl">
+                        `}
+                        <p class="font-bold text-xs mt-2 text-slate-700">${u.title || ''}</p>
+                        <a href="${u.file}" download="Update" class="text-[10px] text-blue-600 font-bold block mt-1">Download</a>
+                    </div>
+                `).join('') || '<p class="text-slate-400 text-xs">No Updates posted.</p>';
+            }
+            else if (modalId === 'liveModal') {
+                const c = document.getElementById('liveContent');
+                if (state.live.link) {
+                    c.innerHTML = `
+                        ${state.live.thumb ? `<img src="${state.live.thumb}" class="w-full h-40 object-cover rounded-2xl mb-2">` : ''}
+                        <a href="${state.live.link}" target="_blank" class="inline-block bg-red-600 text-white font-bold px-6 py-3 rounded-full text-xs shadow-lg">
+                            🔴 Watch Live Streaming
+                        </a>
+                    `;
+                } else {
+                    c.innerHTML = `<p class="text-slate-400 text-xs">Live Streaming Offline.</p>`;
+                }
+            }
+            else if (modalId === 'highlightsModal') {
+                const c = document.getElementById('highlightsContent');
+                c.innerHTML = state.highlights.map(h => `
+                    <div class="p-3 bg-slate-50 border rounded-xl text-xs font-bold text-slate-700">
+                        🌟 ${h.title}
+                    </div>
+                `).join('') || '<p class="text-slate-400 text-xs">No Highlights available.</p>';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.add('hidden');
+        }
+
+        function renderAll() {
+            renderAdminRegControl();
+            renderResControl();
+            renderTeamPortal();
+            renderPointRoomList();
+        }
     </script>
 </body>
 </html>
-
