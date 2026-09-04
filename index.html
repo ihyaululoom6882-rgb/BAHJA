@@ -1,4 +1,696 @@
-btn-block">Publish</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAHJA 2026 - DAWA FEST</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Optimized -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Montserrat:wght@700;900&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js" defer></script>
+    <style>
+        :root[data-theme="dark"] {
+            --bg-mesh: radial-gradient(circle at 20% 20%, #2a2d32 0%, #111315 100%);
+            --glass-card-bg: rgba(255, 255, 255, 0.05);
+            --glass-card-border: rgba(255, 255, 255, 0.12);
+            --glass-modal-bg: rgba(28, 30, 34, 0.98);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.15);
+            --input-bg: rgba(0, 0, 0, 0.4);
+            --btn-gold: linear-gradient(180deg, #e6c875 0%, #d4af37 50%, #aa820a 100%);
+            --btn-gold-text: #1e1e1e;
+        }
+        :root[data-theme="light"] {
+            --bg-mesh: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%);
+            --glass-card-bg: rgba(255, 255, 255, 0.92);
+            --glass-card-border: rgba(0, 0, 0, 0.1);
+            --glass-modal-bg: rgba(255, 255, 255, 0.98);
+            --text-main: #0f172a;
+            --text-sub: #475569;
+            --border-color: rgba(0, 0, 0, 0.15);
+            --input-bg: #ffffff;
+            --btn-gold: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+            --btn-gold-text: #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--main-font, 'Poppins', sans-serif); }
+        
+        body { 
+            background: var(--bg-mesh); 
+            background-attachment: fixed;
+            color: var(--text-main); 
+            padding-bottom: 50px; 
+            min-height: 100vh;
+            position: relative; 
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        
+        /* Fast disappearing splash overlay */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #0b0d0e;
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+        .corner-logo { 
+            position: fixed; 
+            z-index: 99; 
+            display: none; 
+            object-fit: contain;
+            transition: all 0.2s ease;
+        }
+        .logo-top-left { top: 15px; left: 15px; }
+        .logo-top-right { top: 15px; right: 75px; }
+        .logo-bottom-left { bottom: 15px; left: 15px; }
+        .logo-bottom-right { bottom: 15px; right: 15px; }
+        .logo-top-center { top: 15px; left: 50%; transform: translateX(-50%); }
+        .header-title { text-align: var(--header-align, center); padding: 30px 20px 15px 20px; }
+        .header-title p { font-size: 1.1rem; margin-bottom: 6px; font-weight: 700; letter-spacing: 3px; color: var(--text-sub); }
+        .header-title h1 { font-size: 2.8rem; font-weight: 900; letter-spacing: 2px; color: var(--text-main); text-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .menu-btn-container { position: fixed; top: 15px; right: 15px; z-index: 1000; }
+        .dots-btn { 
+            background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-card-border); 
+            width: 44px; height: 44px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 1.2rem; color: var(--text-main);
+        }
+        
+        .dropdown-menu { 
+            display: none; position: absolute; right: 0; top: 55px; 
+            background: var(--glass-modal-bg); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            min-width: 230px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+            border-radius: 18px; overflow: hidden; z-index: 1001; 
+            border: 1px solid var(--glass-card-border);
+        }
+        .dropdown-menu.show { display: block; }
+        .dropdown-menu button { 
+            width: 100%; padding: 13px 18px; border: none; background: none; 
+            text-align: left; cursor: pointer; font-size: 0.9rem; color: var(--text-main); 
+            display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-color); font-weight: 600; 
+        }
+        .dropdown-menu button:hover { background-color: rgba(255,255,255,0.1); }
+        .container { max-width: 460px; margin: 10px auto; padding: 0 12px; }
+        @media(min-width: 900px) { .container { max-width: 950px; } }
+        
+        .card { 
+            background: var(--glass-card-bg); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px; 
+            padding: 24px 20px; 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); 
+            margin-bottom: 20px; 
+            border: 1px solid var(--glass-card-border); 
+        }
+        
+        .view-panel { display: none; }
+        .active-panel { display: block; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; color: var(--text-sub); }
+        .form-control { 
+            width: 100%; padding: 12px 14px; 
+            background: var(--input-bg);
+            border: 1px solid var(--border-color); 
+            border-radius: 12px; outline: none; font-size: 0.95rem; color: var(--text-main);
+        }
+        
+        .btn { 
+            background: var(--btn-gold); color: var(--btn-gold-text); border: none; 
+            padding: 12px 20px; border-radius: 14px; cursor: pointer; 
+            font-weight: 800; font-size: 0.95rem; display: inline-block; text-align: center; transition: 0.2s; 
+        }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-block { width: 100%; }
+        .btn-danger { background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%); color: white; }
+        .btn-success { background: linear-gradient(180deg, #10b981 0%, #047857 100%); color: white; }
+        .btn-warning { background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%); color: white; }
+        .btn-sm { padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; }
+        
+        .result-menu-box { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
+        .pill-menu-btn { 
+            display: flex; align-items: center; justify-content: space-between; 
+            border: none; padding: 16px 20px; border-radius: 50px; cursor: pointer; 
+            transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .pill-menu-btn:active { transform: scale(0.98); }
+        .pill-left-content { display: flex; align-items: center; gap: 14px; }
+        .pill-icon-circle { 
+            width: 44px; height: 44px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 1.2rem; background: rgba(255,255,255,0.85); 
+        }
+        .pill-text-wrapper { text-align: left; }
+        .pill-title { font-size: 1.1rem; font-weight: 800; color: #0f172a; line-height: 1.2; }
+        .pill-desc { font-size: 0.78rem; color: #475569; font-weight: 500; margin-top: 3px; }
+        .pill-arrow { font-size: 1.1rem; color: #334155; }
+        .pill-green { background-color: #e2ebd8; } .pill-green .pill-icon-circle { color: #355e3b; }
+        .pill-yellow { background-color: #f7edd4; } .pill-yellow .pill-icon-circle { color: #b45309; }
+        .pill-pink { background-color: #fdf0ed; } .pill-pink .pill-icon-circle { color: #be123c; }
+        .pill-blue { background-color: #e0f2fe; } .pill-blue .pill-icon-circle { color: #0369a1; }
+        .pill-purple { background-color: #f3e8ff; } .pill-purple .pill-icon-circle { color: #7e22ce; }
+        
+        .pinterest-masonry { column-count: 2; column-gap: 12px; margin-top: 15px; }
+        @media (min-width: 900px) { .pinterest-masonry { column-count: 4; column-gap: 16px; } }
+        .masonry-item { 
+            break-inside: avoid; 
+            margin-bottom: 12px; 
+            background: rgba(0,0,0,0.25); 
+            border-radius: 14px; 
+            padding: 8px; 
+            border: 1px solid var(--border-color);
+        }
+        .masonry-item img, .masonry-item video {
+            width: 100%; height: auto; border-radius: 10px; display: block; object-fit: contain;
+        }
+        .collapsible-header { 
+            background: rgba(255, 255, 255, 0.08); padding: 12px 16px; border-radius: 12px; 
+            font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; 
+            align-items: center; margin-top: 12px; border: 1px solid var(--border-color); font-size: 0.9rem;
+        }
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-main); }
+        th { background-color: rgba(255, 255, 255, 0.05); font-weight: 700; color: var(--text-sub); }
+        .modal-overlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(6px); z-index: 2000; 
+            justify-content: center; align-items: center; padding: 15px;
+        }
+        .modal-box { 
+            background: var(--glass-modal-bg); 
+            border: 1px solid var(--glass-card-border);
+            width: 100%; max-width: 420px; padding: 24px; 
+            border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); 
+        }
+        .collapsible-box { display: none; margin-top: 10px; }
+        .collapsible-box.show { display: block; }
+        
+        @media print {
+            body { background: white !important; color: black !important; padding: 0 !important; margin: 0 !important; }
+            body * { visibility: hidden; }
+            .print-target, .print-target * { visibility: visible; }
+            .print-target { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; color: black !important; }
+            .no-print { display: none !important; }
+            .bahja-sheet-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 6px; }
+            .bahja-sheet-header h2 { font-size: 16px; font-weight: 900; letter-spacing: 2px; text-align: center; width: 100%; }
+            .bahja-sheet-table { width: 100% !important; border-collapse: collapse !important; border: 1.5px solid #000 !important; }
+            .bahja-sheet-table th, .bahja-sheet-table td { border: 1px solid #000 !important; padding: 3px 6px !important; font-size: 11px !important; line-height: 1.1 !important; color: black !important; }
+            .bahja-sheet-table th { font-weight: 900; text-transform: uppercase; background-color: #f1f1f1 !important; }
+            .a5-team-standings { font-size: 16px !important; }
+            .a5-team-standings td, .a5-team-standings th { padding: 12px 14px !important; font-size: 15px !important; }
+            @page { size: A4 portrait; margin: 6mm; }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <!-- Fast splash overlay that vanishes instantly -->
+    <div id="splash-screen" style="display:none;">
+        <div id="splash-media-container" style="max-width: 80%; text-align: center;">
+            <h1 style="color: #fff; font-weight: 900; letter-spacing: 3px;" id="splash-fallback-text">BAHJA 2026</h1>
+        </div>
+    </div>
+    
+    <img id="corner-logo-view" class="corner-logo logo-top-left" src="" alt="Logo" loading="lazy">
+    <div class="header-title" id="editable-header-area">
+        <p id="txt-welcome-banner">WELCOME TO BAHJA FEST</p>
+        <h1 id="txt-main-title">BAHJA 2026</h1>
+    </div>
+    <div class="menu-btn-container">
+        <button class="dots-btn" onclick="toggleDropdown()"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+        <div id="mainDropdown" class="dropdown-menu"></div>
+    </div>
+    <div class="container">
+        <!-- HOME PANEL -->
+        <div id="panel-home" class="view-panel active-panel card">
+            <div id="home-phase-register" style="display: none;">
+                <div id="team-login-block" style="text-align: center; max-width: 400px; margin: 0 auto;">
+                    <h3 style="color: #d4af37; margin-bottom: 15px;">Team Leader Login</h3>
+                    <form onsubmit="handleTeamLogin(event)">
+                        <div class="form-group" style="text-align: left;">
+                            <label>Team Username</label>
+                            <input type="text" id="login-team-user" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label>Password</label>
+                            <input type="password" id="login-team-pass" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-block">Sign In</button>
+                    </form>
+                </div>
+                <div id="team-portal-block" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.08); padding: 12px 15px; border-radius: 12px; margin-bottom: 15px;">
+                        <span>Team: <strong id="logged-team-name" style="color: #d4af37;"></strong></span>
+                        <button class="btn btn-danger btn-sm" onclick="logoutTeam()">Logout</button>
+                    </div>
+                    <h3>Program Registration</h3>
+                    <div class="form-group" style="margin-top: 12px;">
+                        <label>Select Category</label>
+                        <select id="reg-cat-select" class="form-control" onchange="loadCategoryPrograms()">
+                            <option value="">-- Choose Category --</option>
+                            <option value="GENERAL">GENERAL</option>
+                            <option value="LOWER ZONE">LOWER ZONE</option>
+                            <option value="MIDDLE ZONE">MIDDLE ZONE</option>
+                            <option value="HIGHER ZONE">HIGHER ZONE</option>
+                            <option value="SUPER ZONE">SUPER ZONE</option>
+                        </select>
+                    </div>
+                    <div id="category-programs-container" style="margin-top: 15px;"></div>
+                </div>
+            </div>
+            <div id="home-phase-result" style="display: none;">
+                <div class="result-menu-box" id="result-pills-container">
+                    <button class="pill-menu-btn pill-green" id="pill-sec-team-states" onclick="openSection('section-team-states')">
+                        <div class="pill-left-content">
+                            <div class="pill-icon-circle"><i class="fa-solid fa-flag"></i></div>
+                            <div class="pill-text-wrapper">
+                                <div class="pill-title">TEAM STATUS</div>
+                                <div class="pill-desc">Current standings and scores</div>
+                            </div>
+                        </div>
+                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                    </button>
+                    <button class="pill-menu-btn pill-yellow" id="pill-sec-results-view" onclick="openSection('section-results-view')">
+                        <div class="pill-left-content">
+                            <div class="pill-icon-circle"><i class="fa-solid fa-trophy"></i></div>
+                            <div class="pill-text-wrapper">
+                                <div class="pill-title">RESULT</div>
+                                <div class="pill-desc">Published rounds & winners</div>
+                            </div>
+                        </div>
+                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                    </button>
+                    <button class="pill-menu-btn pill-pink" id="pill-sec-updates" onclick="openSection('section-updates')">
+                        <div class="pill-left-content">
+                            <div class="pill-icon-circle"><i class="fa-solid fa-bolt"></i></div>
+                            <div class="pill-text-wrapper">
+                                <div class="pill-title">UPDATES</div>
+                                <div class="pill-desc">Recent photos & video stream</div>
+                            </div>
+                        </div>
+                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                    </button>
+                    <button class="pill-menu-btn pill-blue" id="pill-sec-livelink" onclick="openSection('section-livelink')">
+                        <div class="pill-left-content">
+                            <div class="pill-icon-circle"><i class="fa-solid fa-video"></i></div>
+                            <div class="pill-text-wrapper">
+                                <div class="pill-title">LIVE STREAMING</div>
+                                <div class="pill-desc">Watch venue stage live</div>
+                            </div>
+                        </div>
+                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                    </button>
+                    <button class="pill-menu-btn pill-purple" id="pill-sec-highlights" onclick="openSection('section-highlights')">
+                        <div class="pill-left-content">
+                            <div class="pill-icon-circle"><i class="fa-solid fa-star"></i></div>
+                            <div class="pill-text-wrapper">
+                                <div class="pill-title">HIGHLIGHTS</div>
+                                <div class="pill-desc">Festival moments & clips</div>
+                            </div>
+                        </div>
+                        <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="section-team-states" class="view-panel card">
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h3 style="color: #d4af37; margin-bottom: 12px;">Team Status</h3>
+            <div id="team-status-poster-box" style="text-align: center;"></div>
+        </div>
+        <div id="section-results-view" class="view-panel card">
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h3 style="color: #d4af37; margin-bottom: 12px;">Program Results</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+                <select id="res-search-cat" class="form-control" onchange="filterResultPrograms()">
+                    <option value="">-- All Categories --</option>
+                    <option value="GENERAL">GENERAL</option>
+                    <option value="LOWER ZONE">LOWER ZONE</option>
+                    <option value="MIDDLE ZONE">MIDDLE ZONE</option>
+                    <option value="HIGHER ZONE">HIGHER ZONE</option>
+                    <option value="SUPER ZONE">SUPER ZONE</option>
+                </select>
+                <input type="text" id="res-prog-search" class="form-control" placeholder="Search Program..." oninput="filterResultPrograms()">
+            </div>
+            <div id="results-display-list"></div>
+        </div>
+        <div id="section-updates" class="view-panel card">
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h3 style="color: #d4af37; margin-bottom: 12px;">Updates & Gallery</h3>
+            <div style="display:flex; gap:8px; margin-bottom:12px;" class="no-print">
+                <button class="btn btn-sm btn-warning" onclick="renderPinterestUpdates('all')">All</button>
+                <button class="btn btn-sm btn-primary" onclick="renderPinterestUpdates('photo')">Photos Only</button>
+                <button class="btn btn-sm btn-success" onclick="renderPinterestUpdates('video')">Videos Only</button>
+            </div>
+            <div id="live-updates-feed" class="pinterest-masonry"></div>
+        </div>
+        <div id="section-livelink" class="view-panel card">
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h3 style="color: #d4af37; margin-bottom: 12px;">Live Streams</h3>
+            <div id="livelink-feed" class="pinterest-masonry"></div>
+        </div>
+        <div id="section-highlights" class="view-panel card">
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h3 style="color: #d4af37; margin-bottom: 12px;">Highlights</h3>
+            <div id="highlights-feed" class="pinterest-masonry"></div>
+        </div>
+        <div id="panel-participants-entry" class="view-panel card">
+            <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <h3 style="color: #d4af37; margin-top: 12px;">Add Team Participants</h3>
+            <div id="part-login-block" style="max-width:400px; margin: 10px auto;">
+                <form onsubmit="handlePartLogin(event)">
+                    <div class="form-group"><label>Team Username</label><input type="text" id="part-user" class="form-control" required></div>
+                    <div class="form-group"><label>Password</label><input type="password" id="part-pass" class="form-control" required></div>
+                    <button type="submit" class="btn btn-block">Verify & Open</button>
+                </form>
+            </div>
+            <div id="part-manage-block" style="display:none; margin-top:15px;">
+                <h4 style="margin-bottom:10px;">Team: <span id="part-active-team" style="color:#d4af37;"></span></h4>
+                <form onsubmit="addTeamParticipant(event)">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="part-cat" class="form-control" required>
+                            <option value="LOWER ZONE">LOWER ZONE</option>
+                            <option value="MIDDLE ZONE">MIDDLE ZONE</option>
+                            <option value="HIGHER ZONE">HIGHER ZONE</option>
+                            <option value="SUPER ZONE">SUPER ZONE</option>
+                            <option value="GENERAL">GENERAL</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Participant Name</label><input type="text" id="part-name" class="form-control" required></div>
+                    <button type="submit" class="btn btn-success btn-block">Add Student</button>
+                </form>
+                <div id="team-students-list" style="margin-top:15px;"></div>
+            </div>
+        </div>
+        <div id="panel-settings" class="view-panel card">
+            <h3 style="color: #d4af37; margin-bottom: 15px;">System Settings</h3>
+            <form onsubmit="applyPhaseSettings(event)">
+                <div class="form-group">
+                    <label>Active Festival Phase</label>
+                    <div style="display:flex; gap: 15px; align-items:center;">
+                        <label><input type="radio" name="phase-toggle" id="phase-reg-radio" value="register" onchange="togglePhaseControl('register')"> Registration Phase</label>
+                        <label><input type="radio" name="phase-toggle" id="phase-res-radio" value="result" onchange="togglePhaseControl('result')"> Result Phase</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Website Global Theme</label>
+                    <select id="sys-theme-select" class="form-control" onchange="updateGlobalWebsiteTheme(this.value)">
+                        <option value="dark">Dark Theme (Glass Gold)</option>
+                        <option value="light">White / Light Theme</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Splash Startup Animation (Image/GIF)</label>
+                    <input type="file" id="sys-splash-input" class="form-control" accept="image/*">
+                </div>
+                <hr style="margin:15px 0; border:0; border-top:1px solid var(--border-color);">
+                <div class="form-group">
+                    <label>Upload Logo</label>
+                    <input type="file" id="sys-logo-input" class="form-control" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label>Logo Placement Position</label>
+                    <select id="sys-logo-pos" class="form-control" onchange="updateLogoStylesLocally()">
+                        <option value="logo-top-left">Top Left Corner</option>
+                        <option value="logo-top-right">Top Right Corner</option>
+                        <option value="logo-top-center">Center Top</option>
+                        <option value="logo-bottom-left">Bottom Left</option>
+                        <option value="logo-bottom-right">Bottom Right</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Logo Size Height (px): <span id="logo-size-val">60</span>px</label>
+                    <input type="range" min="30" max="120" value="60" id="sys-logo-size" class="form-control" oninput="updateLogoStylesLocally()">
+                </div>
+                <button type="submit" class="btn btn-block">Save System Configurations</button>
+            </form>
+            <div id="logo-manage-box" style="margin-top:12px; display:none;">
+                <button class="btn btn-danger btn-sm btn-block" onclick="deleteSysLogo()">Delete Current Logo</button>
+            </div>
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
+            <button class="btn btn-danger btn-block" onclick="clearAllDataSystem()">Clear All System Data</button>
+        </div>
+        <div id="panel-pointroom" class="view-panel card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3>Pointroom Management</h3>
+                <button class="btn btn-warning btn-sm no-print" onclick="printAllPointRecords()"><i class="fa-solid fa-print"></i> Print All Logs</button>
+            </div>
+            <form onsubmit="savePointroomEntry(event)" class="no-print" style="margin-top:12px;">
+                <div class="form-group">
+                    <label>Select Category</label>
+                    <select id="pt-cat-select" class="form-control" onchange="populatePtProgs()" required>
+                        <option value="">-- Choose Category --</option>
+                        <option value="GENERAL">GENERAL</option>
+                        <option value="LOWER ZONE">LOWER ZONE</option>
+                        <option value="MIDDLE ZONE">MIDDLE ZONE</option>
+                        <option value="HIGHER ZONE">HIGHER ZONE</option>
+                        <option value="SUPER ZONE">SUPER ZONE</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Select Program</label>
+                    <select id="pt-prog-select" class="form-control" onchange="loadPtParticipants()" required></select>
+                </div>
+                <div id="pt-stage-badge" style="margin-bottom:12px; font-weight:bold; color:#d4af37;"></div>
+                <div id="pt-candidates-inputs" style="margin-bottom:12px;"></div>
+                <button type="submit" class="btn btn-success btn-block btn-xl">Submit Point Records</button>
+            </form>
+            <div class="collapsible-header no-print" onclick="toggleAccordion('box-pt-list')"><span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="box-pt-list" class="collapsible-box show"></div>
+            <div id="pt-print-area" class="print-target" style="display:none;"></div>
+        </div>
+        <div id="panel-judge" class="view-panel card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3>Judge Leaderboard</h3>
+                <button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('judge-print-container')"><i class="fa-solid fa-print"></i> Print Leaderboard</button>
+            </div>
+            <div id="judge-print-container" class="print-target">
+                <div class="form-group no-print" style="margin-top:12px;">
+                    <label>Filter Stage View</label>
+                    <select id="jd-filter-stage" class="form-control" onchange="renderJudgeLeaderboard()">
+                        <option value="all">ALL STAGES</option>
+                        <option value="ON STAGE">ON STAGE</option>
+                        <option value="OFF STAGE">OFF STAGE</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table class="bahja-sheet-table">
+                        <thead><tr><th>Student Name</th><th>Team</th><th>Cat</th><th>Points</th></tr></thead>
+                        <tbody id="judge-leaderboard-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="panel-states-control" class="view-panel card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3>States Control Dashboard</h3>
+                <button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('states-print-container')"><i class="fa-solid fa-print"></i> Print Large Standings</button>
+            </div>
+            <div id="states-print-container" class="print-target">
+                <div class="table-responsive" style="margin-top:12px;">
+                    <table class="bahja-sheet-table a5-team-standings">
+                        <thead><tr><th>Team Username</th><th>Aggregated Points</th></tr></thead>
+                        <tbody id="states-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+            <hr style="margin:20px 0; border:0; border-top:1px solid var(--border-color);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h4>Rank-wise Winners Filter</h4>
+                <button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('rank-print-container')"><i class="fa-solid fa-print"></i> Print Rank List</button>
+            </div>
+            <div class="no-print" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
+                <select id="rank-team-filter" class="form-control" onchange="renderRankWinnersList()"><option value="">All Teams</option></select>
+                <select id="rank-pos-filter" class="form-control" onchange="renderRankWinnersList()">
+                    <option value="1">1st Rank Positions Only</option>
+                    <option value="2">2nd Rank Positions Only</option>
+                    <option value="3">3rd Rank Positions Only</option>
+                    <option value="4">4th Rank Positions Only</option>
+                    <option value="all">All Placed Winners</option>
+                </select>
+            </div>
+            <div id="rank-print-container" class="print-target">
+                <table class="bahja-sheet-table" style="margin-top:10px;">
+                    <thead><tr><th>#</th><th>Student Name</th><th>Team</th><th>Program</th><th>Score</th><th>Position</th></tr></thead>
+                    <tbody id="rank-winners-body"></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="panel-protection" class="view-panel card">
+            <h3>Protection Settings Dashboard</h3>
+            <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:12px;">
+                <h4 style="font-size:0.95rem; color:#d4af37;">Change Main Login Credentials</h4>
+                <div class="form-group" style="margin-top:8px;">
+                    <input type="text" id="prot-old-main-u" class="form-control" placeholder="Current Username" style="margin-bottom:6px;">
+                    <input type="password" id="prot-old-main-p" class="form-control" placeholder="Current Password" style="margin-bottom:6px;">
+                    <button class="btn btn-sm btn-block" onclick="verifyAndOpenMainCredShift()">Verify Credentials</button>
+                </div>
+                <div id="prot-new-main-block" style="display:none; margin-top:8px; border-top:1px dashed #64748b; padding-top:8px;">
+                    <div class="form-group">
+                        <input type="text" id="prot-new-main-u" class="form-control" placeholder="New Username" style="margin-bottom:6px;">
+                        <input type="password" id="prot-new-main-p" class="form-control" placeholder="New Password" style="margin-bottom:6px;">
+                        <button class="btn btn-sm btn-success btn-block" onclick="commitMainCredShift()">Save New Credentials</button>
+                    </div>
+                </div>
+            </div>
+            <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:15px;">
+                <h4 style="font-size:0.95rem; color:#d4af37;">Modify Sub-Panel Access Passwords</h4>
+                <div id="sub-panel-pass-managers-container" style="margin-top:8px; display:flex; flex-direction:column; gap:10px;"></div>
+            </div>
+        </div>
+        <div id="panel-modify" class="view-panel card">
+            <h3>Modify Visuals & Alignment</h3>
+            <div style="margin-top:12px; display:flex; flex-direction:column; gap:12px;">
+                <div class="form-group"><label>Welcome Banner Text</label><input type="text" id="mod-banner-text" class="form-control" oninput="liveUpdateVisuals()"></div>
+                <div class="form-group"><label>Main Title Text</label><input type="text" id="mod-title-text" class="form-control" oninput="liveUpdateVisuals()"></div>
+                <div class="form-group">
+                    <label>Header Text Alignment</label>
+                    <select id="mod-header-align" class="form-control" onchange="liveUpdateVisuals()">
+                        <option value="center">Center Alignment</option>
+                        <option value="left">Left Alignment</option>
+                        <option value="right">Right Alignment</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Font Typography</label>
+                    <select id="mod-font-family" class="form-control" onchange="liveUpdateVisuals()">
+                        <option value="'Poppins', sans-serif">Poppins</option>
+                        <option value="'Montserrat', sans-serif">Montserrat</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Banner Color</label><input type="color" id="mod-banner-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;"></div>
+                <div class="form-group"><label>Title Color</label><input type="color" id="mod-title-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;"></div>
+                <div class="form-group">
+                    <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" id="mod-sync-light"> Sync changes to White / Light Mode</label>
+                </div>
+                <button class="btn btn-success" onclick="saveVisualLayoutState()">Save Appearance Layout</button>
+            </div>
+        </div>
+        <div id="panel-control-panel" class="view-panel card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3>Committee Control Panel</h3>
+                <button class="btn btn-danger btn-sm" onclick="navHome()">Exit</button>
+            </div>
+            <div class="collapsible-header" onclick="toggleAccordion('box-reg-control')"><span>1. REGISTRATION CONTROL</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="box-reg-control" class="collapsible-box show" style="padding:12px; background:rgba(0,0,0,0.2); border-radius:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:12px;">
+                    <span>Registration Lock:</span>
+                    <button id="lock-reg-btn" class="btn btn-sm" onclick="toggleRegLock()"></button>
+                </div>
+                <div class="form-group" style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; border:1px solid var(--border-color);">
+                    <label>Max Items Per Student</label>
+                    <input type="number" id="m-max-limit-input" class="form-control" value="3">
+                    <button class="btn btn-sm btn-block" style="margin-top:5px;" onclick="saveMaxLimitMaster()">Set Limit</button>
+                </div>
+                <div class="collapsible-header" onclick="toggleAccordion('inner-teams-box')"><span>Teams Manager</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="inner-teams-box" class="collapsible-box">
+                    <form onsubmit="addTeamMaster(event)" style="display:flex; flex-direction:column; gap:6px; margin-bottom:10px;">
+                        <input type="text" id="m-team-user" class="form-control" placeholder="Username" required>
+                        <input type="password" id="m-team-pass" class="form-control" placeholder="Password" required>
+                        <button type="submit" class="btn btn-sm btn-success">Add Team</button>
+                    </form>
+                    <div id="master-teams-list"></div>
+                </div>
+                <div class="collapsible-header" onclick="toggleAccordion('inner-progs-box')"><span>Programs Master List</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="inner-progs-box" class="collapsible-box">
+                    <form onsubmit="addProgramMaster(event)" style="display:flex; flex-direction:column; gap:6px;">
+                        <input type="text" id="m-prog-name" class="form-control" placeholder="Program Name" required>
+                        <select id="m-prog-cat" class="form-control">
+                            <option value="GENERAL">GENERAL</option>
+                            <option value="LOWER ZONE">LOWER ZONE</option>
+                            <option value="MIDDLE ZONE">MIDDLE ZONE</option>
+                            <option value="HIGHER ZONE">HIGHER ZONE</option>
+                            <option value="SUPER ZONE">SUPER ZONE</option>
+                        </select>
+                        <select id="m-prog-stage" class="form-control">
+                            <option value="ON STAGE">ON STAGE</option>
+                            <option value="OFF STAGE">OFF STAGE</option>
+                        </select>
+                        <input type="number" id="m-prog-limit" class="form-control" placeholder="Max Spots" required>
+                        <button type="submit" class="btn btn-sm btn-block">Add Program</button>
+                    </form>
+                    <div id="master-progs-list" style="margin-top:10px;"></div>
+                </div>
+                <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h4>Registration Report</h4>
+                        <button class="btn btn-warning btn-sm" onclick="triggerCustomPrint('print-exact-report-area')">Print Exact Sheet</button>
+                    </div>
+                    <div class="no-print" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; margin-top:8px; margin-bottom:8px;">
+                        <select id="rep-team" class="form-control" onchange="renderReportTable()"><option value="">All Teams</option></select>
+                        <select id="rep-cat" class="form-control" onchange="populateReportProgDropdown(); renderReportTable();">
+                            <option value="">All Categories</option>
+                            <option value="GENERAL">GENERAL</option>
+                            <option value="LOWER ZONE">LOWER ZONE</option>
+                            <option value="MIDDLE ZONE">MIDDLE ZONE</option>
+                            <option value="HIGHER ZONE">HIGHER ZONE</option>
+                            <option value="SUPER ZONE">SUPER ZONE</option>
+                        </select>
+                        <select id="rep-prog" class="form-control" onchange="renderReportTable()"><option value="">All Programs (A-Z)</option></select>
+                    </div>
+                    <div id="print-exact-report-area" class="print-target">
+                        <div class="bahja-sheet-header">
+                            <span style="font-size:11px; font-weight:bold;">TIME:</span>
+                            <h2>BAHJA 2K26</h2>
+                            <span style="font-size:11px; font-weight:bold;">DATE:</span>
+                        </div>
+                        <table class="bahja-sheet-table">
+                            <thead><tr><th style="width:35px;">#</th><th>PARTICIPANT</th><th>TEAM</th><th>CATEGORY</th><th>PROGRAM</th></tr></thead>
+                            <tbody id="report-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- RESULT PUBLISHER -->
+            <div class="collapsible-header" onclick="toggleAccordion('box-res-control')"><span>2. RESULT & MEDIA PUBLISHER</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="box-res-control" class="collapsible-box" style="padding:12px; background:rgba(0,0,0,0.2); border-radius:12px;">
+                <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin-bottom:12px;">
+                    <h5 style="color:#d4af37; margin-bottom:6px;">Section Visibility Toggles</h5>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; font-size:0.85rem;">
+                        <label><input type="checkbox" id="toggle-vis-team-states" onchange="updateSectionVisibilities()"> Team Status</label>
+                        <label><input type="checkbox" id="toggle-vis-results-view" onchange="updateSectionVisibilities()"> Result</label>
+                        <label><input type="checkbox" id="toggle-vis-updates" onchange="updateSectionVisibilities()"> Updates Feed</label>
+                        <label><input type="checkbox" id="toggle-vis-livelink" onchange="updateSectionVisibilities()"> Live Stream</label>
+                        <label><input type="checkbox" id="toggle-vis-highlights" onchange="updateSectionVisibilities()"> Highlights</label>
+                    </div>
+                </div>
+                <div class="collapsible-header" onclick="toggleAccordion('sub-status-box')"><span>Upload Team Status Poster</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="sub-status-box" class="collapsible-box">
+                    <form onsubmit="uploadTeamStatusPoster(event)">
+                        <input type="file" id="status-file" class="form-control" accept="image/*" required>
+                        <button type="submit" class="btn btn-sm btn-success btn-block" style="margin-top:5px;">Upload Poster</button>
+                    </form>
+                    <div id="master-status-preview" style="margin-top:6px;"></div>
+                </div>
+                <div class="collapsible-header" onclick="toggleAccordion('sub-res-box')"><span>Publish Result</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div id="sub-res-box" class="collapsible-box">
+                    <form onsubmit="uploadProgramResult(event)" style="display:flex; flex-direction:column; gap:6px;">
+                        <select id="res-upload-cat" class="form-control" onchange="populateResProgDropdown()"><option value="">-- Choose Category --</option><option value="GENERAL">GENERAL</option><option value="LOWER ZONE">LOWER ZONE</option><option value="MIDDLE ZONE">MIDDLE ZONE</option><option value="HIGHER ZONE">HIGHER ZONE</option><option value="SUPER ZONE">SUPER ZONE</option></select>
+                        <select id="res-upload-prog" class="form-control" required></select>
+                        <input type="number" id="res-custom-number" class="form-control" placeholder="Sequence Number" required>
+                        <input type="file" id="res-file" class="form-control" accept="image/*" required>
+                        <input type="url" id="res-yt-url" class="form-control" placeholder="YouTube Link (Optional)">
+                        <button type="submit" class="btn btn-sm btn-success btn-block">Publish</button>
                     </form>
                     <div id="master-results-list" style="margin-top:10px;"></div>
                 </div>
@@ -54,7 +746,7 @@ btn-block">Publish</button>
         </div>
     </div>
 
-    <!-- CORE LOGIC & OPTIMIZATION MODULE -->
+    <!-- CORE INSTANT LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -72,8 +764,7 @@ btn-block">Publish</button>
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Client-side image compressor utility (Drastically reduces database payload)
-        function compressImage(file, maxWidth = 1000, quality = 0.7) {
+        function compressImage(file, maxWidth = 800, quality = 0.6) {
             return new Promise((resolve) => {
                 if (!file.type.startsWith('image/')) {
                     const reader = new FileReader();
@@ -104,7 +795,7 @@ btn-block">Publish</button>
             });
         }
 
-        window.appState = {
+        const defaultState = {
             phase: 'register', portalOpen: true, theme: 'dark', logoUrl: '', splashUrl: '', logoPos: 'logo-top-left', logoSize: '60',
             teamStatusUrl: '', maxProgLimit: 3, mainCreds: { user: 'bahja2026', pass: '2026bahjacommitty' },
             subLocks: { settings: 'settingsbahja', control_panel: 'controlpanelbahja', judge: 'judgebahja', pointroom: 'pointroombahja', states: 'statesbahja', protection: 'Protectionbahja', modify: 'modifymodifybahjag' },
@@ -113,29 +804,21 @@ btn-block">Publish</button>
             teams: [], programs: [], registrations: [], results: [], updates: [], livelinks: [], highlights: [], students: [], points: []
         };
 
+        // Instant local cache recovery
+        let cached = null;
+        try {
+            cached = JSON.parse(localStorage.getItem('bahja_cache'));
+        } catch(e) {}
+
+        window.appState = cached ? { ...defaultState, ...cached } : defaultState;
+
         window.loggedTeamUser = null;
         window.activePartTeam = null;
         window.isMainLoggedIn = false;
         window.gatekeeperTargetPanel = null;
 
-        let splashDismissed = false;
-        function dismissSplash() {
-            if(splashDismissed) return;
-            splashDismissed = true;
-            const el = document.getElementById('splash-screen');
-            if(el) {
-                el.style.opacity = '0';
-                setTimeout(() => el.style.display = 'none', 300);
-            }
-        }
-
-        const dbRef = ref(db, 'bahja_fest_data');
-        onValue(dbRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                window.appState = { ...window.appState, ...data };
-            }
-            handleSplashStartup();
+        // Render Immediately without waiting for network
+        function renderAllUI() {
             applyGlobalWebsiteTheme(window.appState.theme || 'dark');
             applyLogoView();
             applyVisualCustomizations();
@@ -149,20 +832,28 @@ btn-block">Publish</button>
             syncProtectionFields();
             syncModifyConfigInputs();
             populateReportProgDropdown();
+        }
+
+        renderAllUI();
+
+        // Background Firebase Listener
+        const dbRef = ref(db, 'bahja_fest_data');
+        onValue(dbRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                window.appState = { ...window.appState, ...data };
+                try {
+                    localStorage.setItem('bahja_cache', JSON.stringify(window.appState));
+                } catch(e) {}
+                renderAllUI();
+            }
         });
 
         window.saveData = function() {
+            try {
+                localStorage.setItem('bahja_cache', JSON.stringify(window.appState));
+            } catch(e) {}
             set(ref(db, 'bahja_fest_data'), window.appState);
-        }
-
-        function handleSplashStartup() {
-            const container = document.getElementById('splash-media-container');
-            if(window.appState.splashUrl && !splashDismissed) {
-                container.innerHTML = `<img src="${window.appState.splashUrl}" style="max-width:100%; border-radius:14px;" loading="lazy">`;
-                setTimeout(dismissSplash, 1500);
-            } else {
-                setTimeout(dismissSplash, 500);
-            }
         }
 
         window.updateGlobalWebsiteTheme = function(themeName) {
@@ -414,14 +1105,15 @@ btn-block">Publish</button>
             const logoF = document.getElementById('sys-logo-input').files[0];
             const splashF = document.getElementById('sys-splash-input').files[0];
             
-            if(logoF) window.appState.logoUrl = await compressImage(logoF, 400, 0.8);
-            if(splashF) window.appState.splashUrl = await compressImage(splashF, 600, 0.7);
+            if(logoF) window.appState.logoUrl = await compressImage(logoF, 400, 0.7);
+            if(splashF) window.appState.splashUrl = await compressImage(splashF, 600, 0.6);
             saveData(); alert("Settings saved."); navHome();
         }
 
         window.clearAllDataSystem = function() {
             if(confirm("Completely reset database state?")) {
-                window.appState = { phase:'register', portalOpen:true, theme:'dark', logoUrl:'', splashUrl:'', logoPos:'logo-top-left', logoSize:'60', teamStatusUrl:'', maxProgLimit:3, mainCreds:{user:'bahja2026', pass:'2026bahjacommitty'}, subLocks:{settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag'}, visibilities:{'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true}, visuals:{bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center'}, teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[], points:[] };
+                localStorage.removeItem('bahja_cache');
+                window.appState = { ...defaultState };
                 saveData(); navHome();
             }
         }
@@ -795,7 +1487,7 @@ btn-block">Publish</button>
             e.preventDefault();
             const f = document.getElementById('status-file').files[0];
             if(f) {
-                window.appState.teamStatusUrl = await compressImage(f, 900, 0.7);
+                window.appState.teamStatusUrl = await compressImage(f, 800, 0.6);
                 saveData(); alert("Status Poster Uploaded.");
             }
         }
@@ -815,7 +1507,7 @@ btn-block">Publish</button>
             const yt = document.getElementById('res-yt-url').value.trim();
             const fileEl = document.getElementById('res-file').files[0];
             if(fileEl && progId) {
-                const poster = await compressImage(fileEl, 900, 0.7);
+                const poster = await compressImage(fileEl, 800, 0.6);
                 window.appState.results = window.appState.results.filter(r => r.progId !== progId);
                 window.appState.results.push({ progId, number: customNum, poster, youtube: yt });
                 saveData(); alert("Result Published.");
@@ -830,7 +1522,7 @@ btn-block">Publish</button>
             const type = document.getElementById('up-type').value;
             const f = document.getElementById('up-file').files[0];
             if(f) {
-                const url = await compressImage(f, 800, 0.7);
+                const url = await compressImage(f, 700, 0.6);
                 window.appState.updates.push({ id:'up_'+Date.now(), title, type, url });
                 saveData(); alert("Update Published.");
             }
@@ -845,7 +1537,7 @@ btn-block">Publish</button>
             const mode = document.getElementById('st-mode').value;
             const thumbFile = document.getElementById('st-thumb').files[0];
             if(thumbFile) {
-                const thumb = await compressImage(thumbFile, 600, 0.7);
+                const thumb = await compressImage(thumbFile, 500, 0.6);
                 const obj = { id: 'st_'+Date.now(), title, url, thumb, mode };
                 if(mode === 'live') window.appState.livelinks.push(obj);
                 else window.appState.highlights.push(obj);
@@ -1029,8 +1721,6 @@ btn-block">Publish</button>
                 </div>
             `).join('') || '<p style="grid-column: 1/-1;">No updates cataloged.</p>';
         }
-
-        render3DotMenu();
     </script>
 </body>
 </html>
