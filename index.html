@@ -130,7 +130,6 @@
         .btn-success { background: linear-gradient(180deg, #10b981 0%, #047857 100%); color: white; }
         .btn-warning { background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%); color: white; }
         .btn-sm { padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; }
-
         .result-menu-box { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
         .pill-menu-btn { 
             display: flex; align-items: center; justify-content: space-between; 
@@ -154,7 +153,6 @@
         .pill-pink { background-color: #fdf0ed; } .pill-pink .pill-icon-circle { color: #be123c; }
         .pill-blue { background-color: #e0f2fe; } .pill-blue .pill-icon-circle { color: #0369a1; }
         .pill-purple { background-color: #f3e8ff; } .pill-purple .pill-icon-circle { color: #7e22ce; }
-
         .pinterest-masonry { 
             column-count: 2; 
             column-gap: 12px; 
@@ -281,8 +279,8 @@
                     <div id="category-programs-container" style="margin-top: 15px;"></div>
                 </div>
             </div>
-            <!-- RESULT PHASE (Default Open) -->
-            <div id="home-phase-result" style="display: block;">
+            <!-- RESULT PHASE -->
+            <div id="home-phase-result" style="display: none;">
                 <div class="result-menu-box" id="result-pills-container">
                     <button class="pill-menu-btn pill-green" id="pill-sec-team-states" onclick="openSection('section-team-states')">
                         <div class="pill-left-content">
@@ -817,6 +815,23 @@
             <button class="btn btn-block" style="margin-top:10px;" onclick="document.getElementById('detail-modal-overlay').style.display='none'">Close</button>
         </div>
     </div>
+
+    <!-- Instant Pre-render Script for Refresh -->
+    <script>
+        (function() {
+            const savedPhase = localStorage.getItem('bahja_current_phase') || 'result';
+            const regEl = document.getElementById('home-phase-register');
+            const resEl = document.getElementById('home-phase-result');
+            if (savedPhase === 'register') {
+                if(regEl) regEl.style.display = 'block';
+                if(resEl) resEl.style.display = 'none';
+            } else {
+                if(regEl) regEl.style.display = 'none';
+                if(resEl) resEl.style.display = 'block';
+            }
+        })();
+    </script>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -832,8 +847,12 @@
         };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+
+        // Fetch stored phase immediately
+        const initialPhase = localStorage.getItem('bahja_current_phase') || 'result';
+
         window.appState = {
-            phase: 'result',
+            phase: initialPhase,
             portalOpen: true,
             theme: 'dark',
             logoUrl: '',
@@ -885,13 +904,16 @@
         window.activePartTeam = null;
         window.isMainLoggedIn = false;
         window.gatekeeperTargetPanel = null;
-
         const dbRef = ref(db, 'bahja_fest_data');
+        
         onValue(dbRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
+                const updatedPhase = data.phase || localStorage.getItem('bahja_current_phase') || 'result';
+                localStorage.setItem('bahja_current_phase', updatedPhase);
+
                 window.appState = {
-                    phase: data.phase || 'result',
+                    phase: updatedPhase,
                     portalOpen: data.portalOpen ?? true,
                     theme: data.theme || 'dark',
                     logoUrl: data.logoUrl || '',
@@ -934,17 +956,20 @@
         window.saveData = function() {
             set(ref(db, 'bahja_fest_data'), window.appState);
         }
+
         window.updateGlobalWebsiteTheme = function(themeName) {
             window.appState.theme = themeName;
             applyGlobalWebsiteTheme(themeName);
             applyVisualCustomizations();
             saveData();
         }
+
         function applyGlobalWebsiteTheme(themeName) {
             document.documentElement.setAttribute('data-theme', themeName);
             const themeSel = document.getElementById('sys-theme-select');
             if(themeSel) themeSel.value = themeName;
         }
+
         function applyLogoView() {
             const el = document.getElementById('corner-logo-view');
             const manageBox = document.getElementById('logo-manage-box');
@@ -959,6 +984,7 @@
                 if(manageBox) manageBox.style.display = 'none';
             }
         }
+
         window.updateLogoStylesLocally = function() {
             const pos = document.getElementById('sys-logo-pos').value;
             const size = document.getElementById('sys-logo-size').value;
@@ -967,9 +993,11 @@
             el.className = `corner-logo ${pos}`;
             el.style.height = `${size}px`;
         }
+
         window.deleteSysLogo = function() {
             window.appState.logoUrl = ''; saveData(); alert("Logo purged.");
         }
+
         function applyVisualCustomizations() {
             const vis = window.appState.visuals || {};
             const isDark = (window.appState.theme || 'dark') === 'dark';
@@ -987,6 +1015,7 @@
                 mTitle.style.fontSize = (vis.titleSize || '2.8') + 'rem';
             }
         }
+
         window.render3DotMenu = function() {
             const menuContainer = document.getElementById('mainDropdown');
             if(!menuContainer) return;
@@ -1010,6 +1039,7 @@
             }
             menuContainer.innerHTML = html;
         }
+
         window.interceptRoute = function(panelId, key) {
             document.getElementById("mainDropdown").classList.remove("show");
             if(!key || !window.appState.subLocks[key]) {
@@ -1021,6 +1051,7 @@
             document.getElementById('gk-title').innerText = `Access Security Code Required`;
             document.getElementById('gatekeeper-modal-overlay').style.display = 'flex';
         }
+
         window.commitGatekeeperVerification = function() {
             const fieldVal = document.getElementById('gk-pass-field').value;
             const targetKey = window.gatekeeperTargetPanel.lockKey;
@@ -1031,6 +1062,7 @@
                 alert("Incorrect Security Code.");
             }
         }
+
         window.closeGatekeeper = function() { document.getElementById('gatekeeper-modal-overlay').style.display = 'none'; }
         window.toggleDropdown = function() { document.getElementById("mainDropdown").classList.toggle("show"); }
         window.onclick = (e) => { 
@@ -1039,11 +1071,13 @@
                 if(md) md.classList.remove("show"); 
             }
         };
+
         window.showPanel = function(panelId) {
             document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
             const p = document.getElementById(panelId);
             if(p) p.classList.add('active-panel');
         }
+
         window.navHome = function() { renderHomePhase(); showPanel('panel-home'); }
         window.openSection = function(secId) { showPanel(secId); }
         window.toggleAccordion = function(boxId) {
@@ -1052,6 +1086,7 @@
         }
         window.openLoginModal = function() { document.getElementById('modal-overlay').style.display = 'flex'; }
         window.closeModal = function() { document.getElementById('modal-overlay').style.display = 'none'; }
+        
         window.handleMainLogin = function(e) {
             e.preventDefault();
             const u = document.getElementById('main-user-input').value.trim();
@@ -1062,7 +1097,9 @@
                 showPanel('panel-control-panel');
             } else { alert("Invalid Credentials!"); }
         }
+
         window.logoutMain = function() { window.isMainLoggedIn = false; render3DotMenu(); navHome(); }
+
         /* PRINT LOGIC */
         window.triggerCustomPrint = function(targetId) {
             document.querySelectorAll('.print-target').forEach(p => p.style.display = 'none');
@@ -1072,6 +1109,7 @@
                 window.print();
             }
         }
+
         /* PROTECTION SYSTEM */
         window.verifyAndOpenMainCredShift = function() {
             const ou = document.getElementById('prot-old-main-u').value.trim();
@@ -1081,6 +1119,7 @@
                 alert("Verified!");
             } else { alert("Verification failed."); }
         }
+
         window.commitMainCredShift = function() {
             const nu = document.getElementById('prot-new-main-u').value.trim();
             const np = document.getElementById('prot-new-main-p').value.trim();
@@ -1090,6 +1129,7 @@
             saveData(); alert("Main credentials updated.");
             document.getElementById('prot-new-main-block').style.display = 'none';
         }
+
         function syncProtectionFields() {
             const container = document.getElementById('sub-panel-pass-managers-container');
             if(!container) return;
@@ -1115,10 +1155,12 @@
                 `;
             }).join('');
         }
+
         window.updateSubLockKey = function(key) {
             window.appState.subLocks[key] = document.getElementById(`pass-field-input-${key}`).value.trim();
             saveData(); alert("Lock Code Saved.");
         }
+
         /* APPEARANCE MODIFIER */
         function syncModifyConfigInputs() {
             const vis = window.appState.visuals;
@@ -1131,6 +1173,7 @@
             if(document.getElementById('mod-font-family')) document.getElementById('mod-font-family').value = vis.fontFamily || "'Poppins', sans-serif";
             if(document.getElementById('mod-header-align')) document.getElementById('mod-header-align').value = vis.headerAlign || 'center';
         }
+
         window.liveUpdateVisuals = function() {
             const bTxt = document.getElementById('txt-welcome-banner');
             const mTitle = document.getElementById('txt-main-title');
@@ -1140,7 +1183,6 @@
             const tc = document.getElementById('mod-title-color');
             const bt = document.getElementById('mod-banner-text');
             const mt = document.getElementById('mod-title-text');
-
             if(ff) document.documentElement.style.setProperty('--main-font', ff.value);
             if(ha) document.documentElement.style.setProperty('--header-align', ha.value);
             if(bTxt && bt && bc) {
@@ -1152,6 +1194,7 @@
                 mTitle.style.color = tc.value;
             }
         }
+
         window.saveVisualLayoutState = function() {
             const isDark = (window.appState.theme || 'dark') === 'dark';
             const syncLight = document.getElementById('mod-sync-light').checked;
@@ -1174,17 +1217,23 @@
             }
             saveData(); alert("Visual Layout Saved."); navHome();
         }
+
         window.saveMaxLimitMaster = function() {
             window.appState.maxProgLimit = parseInt(document.getElementById('m-max-limit-input').value) || 3;
             saveData(); alert("Limit saved.");
         }
+
         window.togglePhaseControl = function(selectedPhase) {
             document.getElementById('phase-reg-radio').checked = selectedPhase === 'register';
             document.getElementById('phase-res-radio').checked = selectedPhase === 'result';
         }
+
         window.applyPhaseSettings = function(e) {
             e.preventDefault();
-            window.appState.phase = document.querySelector('input[name="phase-toggle"]:checked').value;
+            const selectedPhase = document.querySelector('input[name="phase-toggle"]:checked').value;
+            window.appState.phase = selectedPhase;
+            localStorage.setItem('bahja_current_phase', selectedPhase); // Saved locally
+
             window.appState.logoPos = document.getElementById('sys-logo-pos').value;
             window.appState.logoSize = document.getElementById('sys-logo-size').value;
             const logoF = document.getElementById('sys-logo-input').files[0];
@@ -1202,12 +1251,15 @@
                 handleUploads();
             }
         }
+
         window.clearAllDataSystem = function() {
             if(confirm("Completely reset database state?")) {
+                localStorage.removeItem('bahja_current_phase');
                 window.appState = { phase:'result', portalOpen:true, theme:'dark', logoUrl:'', splashUrl:'', logoPos:'logo-top-left', logoSize:'60', teamStatusUrl:'', maxProgLimit:3, mainCreds:{user:'bahja2026', pass:'2026bahjacommitty'}, subLocks:{settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag'}, visibilities:{'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true}, visuals:{bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center'}, teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[], points:[] };
                 saveData(); navHome();
             }
         }
+
         window.renderHomePhase = function() {
             const regEl = document.getElementById('home-phase-register');
             const resEl = document.getElementById('home-phase-result');
@@ -1229,6 +1281,7 @@
                 renderResultPhaseFeeds();
             }
         }
+
         function applySectionVisibilityUI() {
             const v = window.appState.visibilities || {};
             for(let key in v) {
@@ -1236,6 +1289,7 @@
                 if(btn) btn.style.display = v[key] ? 'flex' : 'none';
             }
         }
+
         window.updateSectionVisibilities = function() {
             window.appState.visibilities = {
                 'team-states': document.getElementById('toggle-vis-team-states').checked,
@@ -1247,6 +1301,7 @@
             saveData();
             applySectionVisibilityUI();
         }
+
         /* PARTICIPANT ENTRY */
         window.handlePartLogin = function(e) {
             e.preventDefault();
@@ -1261,6 +1316,7 @@
                 renderTeamStudentsList();
             } else alert("Invalid Credentials!");
         }
+
         window.addTeamParticipant = function(e) {
             e.preventDefault();
             const cat = document.getElementById('part-cat').value;
@@ -1268,6 +1324,7 @@
             window.appState.students.push({ id:'st_'+Date.now(), name, cat, team: window.activePartTeam });
             saveData(); document.getElementById('part-name').value = ''; renderTeamStudentsList();
         }
+
         window.renderTeamStudentsList = function() {
             const filtered = window.appState.students.filter(s => s.team === window.activePartTeam);
             document.getElementById('team-students-list').innerHTML = filtered.map(s => `
@@ -1277,9 +1334,11 @@
                 </div>
             `).join('') || '<p>No students recorded.</p>';
         }
+
         window.deleteStudent = function(id) {
             window.appState.students = window.appState.students.filter(s => s.id !== id); saveData(); renderTeamStudentsList();
         }
+
         /* TEAM PORTAL REGISTRATION */
         window.handleTeamLogin = function(e) {
             e.preventDefault();
@@ -1288,7 +1347,9 @@
             const found = window.appState.teams.find(t => t.user === u && t.pass === p);
             if(found) { window.loggedTeamUser = u; renderHomePhase(); } else alert("Invalid Credentials");
         }
+
         window.logoutTeam = function() { window.loggedTeamUser = null; renderHomePhase(); }
+
         window.loadCategoryPrograms = function() {
             const cat = document.getElementById('reg-cat-select').value;
             const container = document.getElementById('category-programs-container');
@@ -1318,6 +1379,7 @@
                 `;
             }).join('');
         }
+
         window.saveRegistrationItem = function(progId, cat) {
             if(!window.appState.portalOpen) { alert("Registration Locked!"); return; }
             const fields = document.querySelectorAll(`.prog-input-${progId}`);
@@ -1335,6 +1397,7 @@
             if(names.length > 0) window.appState.registrations.push({ team: window.loggedTeamUser, cat, progId, participants: names });
             saveData(); alert("Registration updated.");
         }
+
         /* POINTROOM */
         window.populatePtProgs = function() {
             const cat = document.getElementById('pt-cat-select').value;
@@ -1344,6 +1407,7 @@
             document.getElementById('pt-candidates-inputs').innerHTML = '';
             document.getElementById('pt-stage-badge').innerText = '';
         }
+
         window.loadPtParticipants = function() {
             const progId = document.getElementById('pt-prog-select').value;
             const targetProg = window.appState.programs.find(p => p.id === progId);
@@ -1368,6 +1432,7 @@
             });
             container.innerHTML = html;
         }
+
         window.savePointroomEntry = function(e) {
             e.preventDefault();
             const progId = document.getElementById('pt-prog-select').value;
@@ -1383,6 +1448,7 @@
             saveData(); alert("Points recorded.");
             loadPtParticipants(); renderPtList();
         }
+
         function renderPtList() {
             const container = document.getElementById('box-pt-list');
             if(!container) return;
@@ -1407,6 +1473,7 @@
                 `;
             }).join('');
         }
+
         window.printIndividualPointRecord = function(progId) {
             const prog = window.appState.programs.find(p => p.id === progId) || { name: 'Program', cat: 'N/A' };
             const subPts = window.appState.points.filter(pt => pt.progId === progId).sort((a,b)=>b.score - a.score);
@@ -1427,6 +1494,7 @@
             `;
             triggerCustomPrint('pt-print-area');
         }
+
         window.printAllPointRecords = function() {
             const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
             const target = document.getElementById('pt-print-area');
@@ -1451,12 +1519,14 @@
             target.innerHTML = html;
             triggerCustomPrint('pt-print-area');
         }
+
         window.deletePtGroup = function(progId) {
             if(confirm("Delete records?")) {
                 window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
                 saveData(); renderPtList();
             }
         }
+
         /* JUDGE LEADERBOARD */
         window.renderJudgeLeaderboard = function() {
             const tbody = document.getElementById('judge-leaderboard-body');
@@ -1482,6 +1552,7 @@
                 </tr>
             `).join('') || '<tr><td colspan="4">No scores accumulated.</td></tr>';
         }
+
         window.viewCandidateBreakdown = function(name, team) {
             const records = window.appState.points.filter(pt => pt.student === name && pt.team === team && pt.cat !== 'GENERAL');
             document.getElementById('det-modal-title').innerText = `${name} (${team})`;
@@ -1492,6 +1563,7 @@
             `;
             document.getElementById('detail-modal-overlay').style.display = 'flex';
         }
+
         /* STATES DASHBOARD & RANK-WISE FILTER */
         window.renderStatesDashboard = function() {
             const tbody = document.getElementById('states-table-body');
@@ -1513,6 +1585,7 @@
                 teamDrop.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
             }
         }
+
         window.renderRankWinnersList = function() {
             const tbody = document.getElementById('rank-winners-body');
             if(!tbody) return;
@@ -1540,6 +1613,7 @@
             });
             tbody.innerHTML = rows || '<tr><td colspan="6">No winners matching position criteria.</td></tr>';
         }
+
         window.viewTeamBreakdown = function(teamName) {
             const records = window.appState.points.filter(pt => pt.team === teamName);
             document.getElementById('det-modal-title').innerText = `Team Breakdown: ${teamName}`;
@@ -1550,14 +1624,18 @@
             `;
             document.getElementById('detail-modal-overlay').style.display = 'flex';
         }
+
         /* CONTROL PANEL REPORTERS & BUILDERS */
         window.toggleRegLock = function() { window.appState.portalOpen = !window.appState.portalOpen; saveData(); }
+        
         window.addTeamMaster = function(e) {
             e.preventDefault();
             window.appState.teams.push({ user: document.getElementById('m-team-user').value.trim(), pass: document.getElementById('m-team-pass').value.trim() });
             saveData(); e.target.reset();
         }
+
         window.deleteTeamMaster = function(idx) { window.appState.teams.splice(idx, 1); saveData(); }
+        
         window.addProgramMaster = function(e) {
             e.preventDefault();
             window.appState.programs.push({
@@ -1569,7 +1647,9 @@
             });
             saveData(); e.target.reset();
         }
+
         window.deleteProgramMaster = function(id) { window.appState.programs = window.appState.programs.filter(p => p.id !== id); saveData(); }
+        
         window.uploadTeamStatusPoster = function(e) {
             e.preventDefault();
             const f = document.getElementById('status-file').files[0];
@@ -1579,13 +1659,16 @@
                 r.readAsDataURL(f);
             }
         }
+
         window.deleteStatusMaster = function() { window.appState.teamStatusUrl = ''; saveData(); }
+        
         window.populateResProgDropdown = function() {
             const cat = document.getElementById('res-upload-cat').value;
             const drop = document.getElementById('res-upload-prog');
             const matched = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
             drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
         }
+
         window.uploadProgramResult = function(e) {
             e.preventDefault();
             const progId = document.getElementById('res-upload-prog').value;
@@ -1602,7 +1685,9 @@
                 reader.readAsDataURL(fileEl);
             }
         }
+
         window.deleteResultMaster = function(progId) { window.appState.results = window.appState.results.filter(r => r.progId !== progId); saveData(); }
+        
         window.uploadUpdateFeed = function(e) {
             e.preventDefault();
             const title = document.getElementById('up-title').value.trim();
@@ -1617,7 +1702,9 @@
                 reader.readAsDataURL(f);
             }
         }
+
         window.deleteUpdateMaster = function(id) { window.appState.updates = window.appState.updates.filter(u => u.id !== id); saveData(); }
+        
         window.uploadStreamLinks = function(e) {
             e.preventDefault();
             const title = document.getElementById('st-title').value.trim();
@@ -1635,11 +1722,13 @@
                 reader.readAsDataURL(thumbFile);
             }
         }
+
         window.deleteStreamMaster = function(id, mode) {
             if(mode === 'live') window.appState.livelinks = window.appState.livelinks.filter(l => l.id !== id);
             else window.appState.highlights = window.appState.highlights.filter(h => h.id !== id);
             saveData();
         }
+
         function populateReportProgDropdown() {
             const cat = document.getElementById('rep-cat').value;
             const drop = document.getElementById('rep-prog');
@@ -1647,6 +1736,7 @@
             const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
             drop.innerHTML = '<option value="">All Programs (A-Z)</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
         }
+
         function syncControlPanelViews() {
             const btn = document.getElementById('lock-reg-btn');
             if(btn) {
@@ -1717,6 +1807,7 @@
             }
             renderReportTable();
         }
+
         window.renderReportTable = function() {
             const fTeam = document.getElementById('rep-team') ? document.getElementById('rep-team').value : '';
             const fCat = document.getElementById('rep-cat') ? document.getElementById('rep-cat').value : '';
@@ -1745,6 +1836,7 @@
             });
             tbody.innerHTML = rows || '<tr><td colspan="5" style="text-align:center;">No entries found.</td></tr>';
         }
+
         /* RESULT PHASE VIEWER */
         function renderResultPhaseFeeds() {
             const statusBox = document.getElementById('team-status-poster-box');
@@ -1780,6 +1872,7 @@
                 `).join('') || '<p style="grid-column: 1/-1;">No Highlights Cataloged.</p>';
             }
         }
+
         window.filterResultPrograms = function() {
             const catEl = document.getElementById('res-search-cat');
             const searchEl = document.getElementById('res-prog-search');
@@ -1808,6 +1901,7 @@
                 `;
             }).join('') || '<p style="text-align:center; color:var(--text-sub); margin-top:15px;">No published results matching filter.</p>';
         }
+
         window.toggleInlineResultView = function(progId, posterData) {
             const box = document.getElementById(`inline-res-box-${progId}`);
             const btn = document.getElementById(`btn-toggle-res-${progId}`);
@@ -1828,6 +1922,7 @@
                 btn.className = "btn btn-sm btn-success";
             }
         }
+
         window.renderPinterestUpdates = function(filterMode) {
             const feed = document.getElementById('live-updates-feed');
             if(!feed) return;
@@ -1840,7 +1935,7 @@
             `).join('') || '<p style="grid-column: 1/-1;">No updates cataloged.</p>';
         }
 
-        // Initialize UI with Result Phase Default
+        // Initialize UI with stored local phase
         applyGlobalWebsiteTheme(window.appState.theme || 'dark');
         applyVisualCustomizations();
         render3DotMenu();
