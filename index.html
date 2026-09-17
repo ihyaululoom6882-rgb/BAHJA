@@ -48,14 +48,12 @@
             transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* Responsive Logo Handling to prevent overlapping on mobile */
         .corner-logo { 
             display: none; 
             object-fit: contain;
             transition: all 0.3s ease;
         }
 
-        /* Mobile First: Keep logo above texts nicely centered */
         @media(max-width: 899px) {
             .corner-logo {
                 position: relative !important;
@@ -71,7 +69,6 @@
             }
         }
 
-        /* Desktop: Standard corner placements */
         @media(min-width: 900px) {
             .corner-logo {
                 position: fixed;
@@ -760,7 +757,7 @@
                 <div id="sub-status-box" class="collapsible-box">
                     <form onsubmit="uploadTeamStatusPoster(event)">
                         <input type="file" id="status-file" class="form-control" accept="image/*" required>
-                        <button type="submit" class="btn btn-sm btn-success btn-block" style="margin-top:5px;">Upload Status Poster</button>
+                        <button type="submit" id="btn-up-status" class="btn btn-sm btn-success btn-block" style="margin-top:5px;">Upload Status Poster</button>
                     </form>
                     <div id="master-status-preview" style="margin-top:6px;"></div>
                 </div>
@@ -772,7 +769,7 @@
                         <input type="number" id="res-custom-number" class="form-control" placeholder="Result Sequence Number (e.g. 1, 2, 3...)" required>
                         <input type="file" id="res-file" class="form-control" accept="image/*" required>
                         <input type="url" id="res-yt-url" class="form-control" placeholder="YouTube Link (Optional)">
-                        <button type="submit" class="btn btn-sm btn-success btn-block">Publish Result</button>
+                        <button type="submit" id="btn-up-res" class="btn btn-sm btn-success btn-block">Publish Result</button>
                     </form>
                     <div id="master-results-list" style="margin-top:10px;"></div>
                 </div>
@@ -785,7 +782,7 @@
                             <option value="video">Video Post (Upload File)</option>
                         </select>
                         <input type="file" id="up-file" class="form-control" accept="image/*,video/*" required>
-                        <button type="submit" class="btn btn-sm btn-success btn-block">Upload & Publish</button>
+                        <button type="submit" id="btn-up-feed" class="btn btn-sm btn-success btn-block">Upload & Publish</button>
                     </form>
                     <div id="master-updates-list" style="margin-top:10px;"></div>
                 </div>
@@ -796,7 +793,7 @@
                         <input type="url" id="st-url" class="form-control" placeholder="Stream / Video Link" required>
                         <input type="file" id="st-thumb" class="form-control" accept="image/*" required>
                         <select id="st-mode" class="form-control"><option value="live">LIVE STREAMING</option><option value="highlight">HIGHLIGHTS</option></select>
-                        <button type="submit" class="btn btn-sm btn-success btn-block">Add Stream</button>
+                        <button type="submit" id="btn-up-stream" class="btn btn-sm btn-success btn-block">Add Stream</button>
                     </form>
                     <div id="master-streams-list" style="margin-top:10px;"></div>
                 </div>
@@ -842,15 +839,13 @@
         </div>
     </div>
 
-    <!-- ZERO-LATENCY PRE-RENDER SCRIPT (Theme, Logo, Texts, Phase) -->
+    <!-- ZERO-LATENCY PRE-RENDER SCRIPT -->
     <script>
         (function() {
             try {
-                // 1. Restore Theme
                 const savedTheme = localStorage.getItem('bahja_theme') || 'dark';
                 document.documentElement.setAttribute('data-theme', savedTheme);
 
-                // 2. Restore Phase
                 const savedPhase = localStorage.getItem('bahja_current_phase') || 'result';
                 const regEl = document.getElementById('home-phase-register');
                 const resEl = document.getElementById('home-phase-result');
@@ -862,7 +857,6 @@
                     if(resEl) resEl.style.display = 'block';
                 }
 
-                // 3. Restore Visuals (Banner, Title, Fonts)
                 const savedVisuals = JSON.parse(localStorage.getItem('bahja_visuals') || '{}');
                 const isDark = savedTheme === 'dark';
                 const bTxt = document.getElementById('txt-welcome-banner');
@@ -881,7 +875,6 @@
                     mTitle.style.fontSize = (savedVisuals.titleSize || '2.8') + 'rem';
                 }
 
-                // 4. Restore Logo
                 const savedLogoUrl = localStorage.getItem('bahja_logo_url');
                 const savedLogoPos = localStorage.getItem('bahja_logo_pos') || 'logo-top-left';
                 const savedLogoSize = localStorage.getItem('bahja_logo_size') || '60';
@@ -900,7 +893,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+        import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
         const firebaseConfig = {
             apiKey: "AIzaSyBVPGtuHPFRH05snj58ws6xr42O8HluaLY",
             authDomain: "bahja-29712.firebaseapp.com",
@@ -914,7 +907,38 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Fetch stored phase & visual settings
+        // Instant Image Compressor to reduce upload latency from MB to KB
+        function compressImage(file, maxWidth = 1200, quality = 0.7) {
+            return new Promise((resolve) => {
+                if (!file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
         const initialPhase = localStorage.getItem('bahja_current_phase') || 'result';
         const initialTheme = localStorage.getItem('bahja_theme') || 'dark';
         const initialLogo = localStorage.getItem('bahja_logo_url') || '';
@@ -992,7 +1016,6 @@
                 const updatedLogoSize = data.logoSize || '60';
                 const updatedVisuals = data.visuals || window.appState.visuals;
 
-                // Sync locally for subsequent refreshes
                 localStorage.setItem('bahja_current_phase', updatedPhase);
                 localStorage.setItem('bahja_theme', updatedTheme);
                 localStorage.setItem('bahja_logo_url', updatedLogoUrl);
@@ -1041,8 +1064,14 @@
             populateReportProgDropdown();
         });
 
+        // Fast Single-Path Synchronizer
+        window.saveKey = function(key, value) {
+            const updateObj = {};
+            updateObj[key] = value;
+            update(dbRef, updateObj);
+        }
+
         window.saveData = function() {
-            // Local sync
             localStorage.setItem('bahja_current_phase', window.appState.phase);
             localStorage.setItem('bahja_theme', window.appState.theme);
             localStorage.setItem('bahja_logo_url', window.appState.logoUrl);
@@ -1050,7 +1079,7 @@
             localStorage.setItem('bahja_logo_size', window.appState.logoSize);
             localStorage.setItem('bahja_visuals', JSON.stringify(window.appState.visuals));
 
-            set(ref(db, 'bahja_fest_data'), window.appState);
+            set(dbRef, window.appState);
         }
 
         window.updateGlobalWebsiteTheme = function(themeName) {
@@ -1058,7 +1087,7 @@
             localStorage.setItem('bahja_theme', themeName);
             applyGlobalWebsiteTheme(themeName);
             applyVisualCustomizations();
-            saveData();
+            saveKey('theme', themeName);
         }
 
         function applyGlobalWebsiteTheme(themeName) {
@@ -1094,7 +1123,7 @@
         window.deleteSysLogo = function() {
             window.appState.logoUrl = ''; 
             localStorage.removeItem('bahja_logo_url');
-            saveData(); 
+            saveKey('logoUrl', '');
             applyLogoView();
             alert("Logo purged.");
         }
@@ -1227,7 +1256,8 @@
             if(!nu || !np) return;
             window.appState.mainCreds.user = nu;
             window.appState.mainCreds.pass = np;
-            saveData(); alert("Main credentials updated.");
+            saveKey('mainCreds', window.appState.mainCreds);
+            alert("Main credentials updated.");
             document.getElementById('prot-new-main-block').style.display = 'none';
         }
 
@@ -1259,7 +1289,8 @@
 
         window.updateSubLockKey = function(key) {
             window.appState.subLocks[key] = document.getElementById(`pass-field-input-${key}`).value.trim();
-            saveData(); alert("Lock Code Saved.");
+            saveKey('subLocks', window.appState.subLocks);
+            alert("Lock Code Saved.");
         }
 
         /* APPEARANCE MODIFIER */
@@ -1316,7 +1347,8 @@
                 window.appState.visuals.bannerColorLight = bColor;
                 window.appState.visuals.titleColorLight = tColor;
             }
-            saveData(); 
+            saveKey('visuals', window.appState.visuals);
+            localStorage.setItem('bahja_visuals', JSON.stringify(window.appState.visuals));
             applyVisualCustomizations();
             alert("Visual Layout Saved."); 
             navHome();
@@ -1324,7 +1356,8 @@
 
         window.saveMaxLimitMaster = function() {
             window.appState.maxProgLimit = parseInt(document.getElementById('m-max-limit-input').value) || 3;
-            saveData(); alert("Limit saved.");
+            saveKey('maxProgLimit', window.appState.maxProgLimit);
+            alert("Limit saved.");
         }
 
         window.togglePhaseControl = function(selectedPhase) {
@@ -1332,7 +1365,7 @@
             document.getElementById('phase-res-radio').checked = selectedPhase === 'result';
         }
 
-        window.applyPhaseSettings = function(e) {
+        window.applyPhaseSettings = async function(e) {
             e.preventDefault();
             const selectedPhase = document.querySelector('input[name="phase-toggle"]:checked').value;
             window.appState.phase = selectedPhase;
@@ -1344,23 +1377,15 @@
             localStorage.setItem('bahja_logo_size', window.appState.logoSize);
 
             const logoF = document.getElementById('sys-logo-input').files[0];
-            const handleUploads = () => {
-                saveData(); 
-                applyLogoView();
-                alert("Settings saved."); 
-                navHome();
-            };
             if(logoF) {
-                const r = new FileReader();
-                r.onload = (evt) => {
-                    window.appState.logoUrl = evt.target.result;
-                    localStorage.setItem('bahja_logo_url', evt.target.result);
-                    handleUploads();
-                };
-                r.readAsDataURL(logoF);
-            } else {
-                handleUploads();
+                window.appState.logoUrl = await compressImage(logoF, 500, 0.8);
+                localStorage.setItem('bahja_logo_url', window.appState.logoUrl);
             }
+            
+            saveData(); 
+            applyLogoView();
+            alert("Settings saved."); 
+            navHome();
         }
 
         window.clearAllDataSystem = function() {
@@ -1409,7 +1434,7 @@
                 'livelink': document.getElementById('toggle-vis-livelink').checked,
                 'highlights': document.getElementById('toggle-vis-highlights').checked
             };
-            saveData();
+            saveKey('visibilities', window.appState.visibilities);
             applySectionVisibilityUI();
         }
 
@@ -1433,7 +1458,9 @@
             const cat = document.getElementById('part-cat').value;
             const name = document.getElementById('part-name').value.trim();
             window.appState.students.push({ id:'st_'+Date.now(), name, cat, team: window.activePartTeam });
-            saveData(); document.getElementById('part-name').value = ''; renderTeamStudentsList();
+            saveKey('students', window.appState.students);
+            document.getElementById('part-name').value = ''; 
+            renderTeamStudentsList();
         }
 
         window.renderTeamStudentsList = function() {
@@ -1447,7 +1474,9 @@
         }
 
         window.deleteStudent = function(id) {
-            window.appState.students = window.appState.students.filter(s => s.id !== id); saveData(); renderTeamStudentsList();
+            window.appState.students = window.appState.students.filter(s => s.id !== id); 
+            saveKey('students', window.appState.students);
+            renderTeamStudentsList();
         }
 
         /* TEAM PORTAL REGISTRATION */
@@ -1506,7 +1535,8 @@
             }
             window.appState.registrations = window.appState.registrations.filter(r => !(r.team === window.loggedTeamUser && r.progId === progId));
             if(names.length > 0) window.appState.registrations.push({ team: window.loggedTeamUser, cat, progId, participants: names });
-            saveData(); alert("Registration updated.");
+            saveKey('registrations', window.appState.registrations);
+            alert("Registration updated.");
         }
 
         /* POINTROOM */
@@ -1556,8 +1586,10 @@
                 const student = f.getAttribute('data-student');
                 window.appState.points.push({ progId, cat, team, student, score });
             });
-            saveData(); alert("Points recorded.");
-            loadPtParticipants(); renderPtList();
+            saveKey('points', window.appState.points);
+            alert("Points recorded.");
+            loadPtParticipants(); 
+            renderPtList();
         }
 
         function renderPtList() {
@@ -1634,7 +1666,8 @@
         window.deletePtGroup = function(progId) {
             if(confirm("Delete records?")) {
                 window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
-                saveData(); renderPtList();
+                saveKey('points', window.appState.points);
+                renderPtList();
             }
         }
 
@@ -1737,15 +1770,25 @@
         }
 
         /* CONTROL PANEL REPORTERS & BUILDERS */
-        window.toggleRegLock = function() { window.appState.portalOpen = !window.appState.portalOpen; saveData(); }
+        window.toggleRegLock = function() { 
+            window.appState.portalOpen = !window.appState.portalOpen; 
+            saveKey('portalOpen', window.appState.portalOpen); 
+            syncControlPanelViews();
+        }
         
         window.addTeamMaster = function(e) {
             e.preventDefault();
             window.appState.teams.push({ user: document.getElementById('m-team-user').value.trim(), pass: document.getElementById('m-team-pass').value.trim() });
-            saveData(); e.target.reset();
+            saveKey('teams', window.appState.teams);
+            syncControlPanelViews();
+            e.target.reset();
         }
 
-        window.deleteTeamMaster = function(idx) { window.appState.teams.splice(idx, 1); saveData(); }
+        window.deleteTeamMaster = function(idx) { 
+            window.appState.teams.splice(idx, 1); 
+            saveKey('teams', window.appState.teams);
+            syncControlPanelViews();
+        }
         
         window.addProgramMaster = function(e) {
             e.preventDefault();
@@ -1756,22 +1799,44 @@
                 stage: document.getElementById('m-prog-stage').value,
                 limit: parseInt(document.getElementById('m-prog-limit').value)
             });
-            saveData(); e.target.reset();
+            saveKey('programs', window.appState.programs);
+            syncControlPanelViews();
+            e.target.reset();
         }
 
-        window.deleteProgramMaster = function(id) { window.appState.programs = window.appState.programs.filter(p => p.id !== id); saveData(); }
+        window.deleteProgramMaster = function(id) { 
+            window.appState.programs = window.appState.programs.filter(p => p.id !== id); 
+            saveKey('programs', window.appState.programs);
+            syncControlPanelViews();
+        }
         
-        window.uploadTeamStatusPoster = function(e) {
+        // Optimized Fast Upload Functions
+        window.uploadTeamStatusPoster = async function(e) {
             e.preventDefault();
+            const btn = document.getElementById('btn-up-status');
             const f = document.getElementById('status-file').files[0];
             if(f) {
-                const r = new FileReader();
-                r.onload = (evt) => { window.appState.teamStatusUrl = evt.target.result; saveData(); alert("Status Poster Uploaded."); };
-                r.readAsDataURL(f);
+                btn.innerText = "Processing...";
+                btn.disabled = true;
+                const compressed = await compressImage(f, 1080, 0.75);
+                window.appState.teamStatusUrl = compressed;
+                
+                // Fast background sync
+                saveKey('teamStatusUrl', compressed);
+                syncControlPanelViews();
+                renderResultPhaseFeeds();
+                btn.innerText = "Upload Status Poster";
+                btn.disabled = false;
+                alert("Status Poster Published Instantly.");
             }
         }
 
-        window.deleteStatusMaster = function() { window.appState.teamStatusUrl = ''; saveData(); }
+        window.deleteStatusMaster = function() { 
+            window.appState.teamStatusUrl = ''; 
+            saveKey('teamStatusUrl', '');
+            syncControlPanelViews();
+            renderResultPhaseFeeds();
+        }
         
         window.populateResProgDropdown = function() {
             const cat = document.getElementById('res-upload-cat').value;
@@ -1780,64 +1845,119 @@
             drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
         }
 
-        window.uploadProgramResult = function(e) {
+        window.uploadProgramResult = async function(e) {
             e.preventDefault();
+            const btn = document.getElementById('btn-up-res');
             const progId = document.getElementById('res-upload-prog').value;
             const customNum = document.getElementById('res-custom-number').value.trim();
             const yt = document.getElementById('res-yt-url').value.trim();
             const fileEl = document.getElementById('res-file').files[0];
+
             if(fileEl && progId) {
-                const reader = new FileReader();
-                reader.onload = (evt) => {
-                    window.appState.results = window.appState.results.filter(r => r.progId !== progId);
-                    window.appState.results.push({ progId, number: customNum, poster: evt.target.result, youtube: yt });
-                    saveData(); alert("Result Published.");
-                };
-                reader.readAsDataURL(fileEl);
+                btn.innerText = "Publishing...";
+                btn.disabled = true;
+                const compressed = await compressImage(fileEl, 1080, 0.75);
+                
+                window.appState.results = window.appState.results.filter(r => r.progId !== progId);
+                window.appState.results.push({ progId, number: customNum, poster: compressed, youtube: yt });
+                
+                // Fast Background Sync
+                saveKey('results', window.appState.results);
+                syncControlPanelViews();
+                filterResultPrograms();
+                
+                btn.innerText = "Publish Result";
+                btn.disabled = false;
+                alert("Result Published Instantly.");
             }
         }
 
-        window.deleteResultMaster = function(progId) { window.appState.results = window.appState.results.filter(r => r.progId !== progId); saveData(); }
+        window.deleteResultMaster = function(progId) { 
+            window.appState.results = window.appState.results.filter(r => r.progId !== progId); 
+            saveKey('results', window.appState.results);
+            syncControlPanelViews();
+            filterResultPrograms();
+        }
         
-        window.uploadUpdateFeed = function(e) {
+        window.uploadUpdateFeed = async function(e) {
             e.preventDefault();
+            const btn = document.getElementById('btn-up-feed');
             const title = document.getElementById('up-title').value.trim();
             const type = document.getElementById('up-type').value;
             const f = document.getElementById('up-file').files[0];
+
             if(f) {
-                const reader = new FileReader();
-                reader.onload = (evt) => {
-                    window.appState.updates.push({ id:'up_'+Date.now(), title, type, url: evt.target.result });
-                    saveData(); alert("Update Published.");
-                };
-                reader.readAsDataURL(f);
+                btn.innerText = "Uploading...";
+                btn.disabled = true;
+                let finalUrl = '';
+                if (type === 'photo') {
+                    finalUrl = await compressImage(f, 1080, 0.75);
+                } else {
+                    finalUrl = await new Promise((res) => {
+                        const r = new FileReader();
+                        r.onload = (evt) => res(evt.target.result);
+                        r.readAsDataURL(f);
+                    });
+                }
+
+                window.appState.updates.push({ id:'up_'+Date.now(), title, type, url: finalUrl });
+                saveKey('updates', window.appState.updates);
+                syncControlPanelViews();
+                renderPinterestUpdates('all');
+                
+                btn.innerText = "Upload & Publish";
+                btn.disabled = false;
+                alert("Update Published Instantly.");
             }
         }
 
-        window.deleteUpdateMaster = function(id) { window.appState.updates = window.appState.updates.filter(u => u.id !== id); saveData(); }
+        window.deleteUpdateMaster = function(id) { 
+            window.appState.updates = window.appState.updates.filter(u => u.id !== id); 
+            saveKey('updates', window.appState.updates);
+            syncControlPanelViews();
+            renderPinterestUpdates('all');
+        }
         
-        window.uploadStreamLinks = function(e) {
+        window.uploadStreamLinks = async function(e) {
             e.preventDefault();
+            const btn = document.getElementById('btn-up-stream');
             const title = document.getElementById('st-title').value.trim();
             const url = document.getElementById('st-url').value.trim();
             const mode = document.getElementById('st-mode').value;
             const thumbFile = document.getElementById('st-thumb').files[0];
+
             if(thumbFile) {
-                const reader = new FileReader();
-                reader.onload = (evt) => {
-                    const obj = { id: 'st_'+Date.now(), title, url, thumb: evt.target.result, mode };
-                    if(mode === 'live') window.appState.livelinks.push(obj);
-                    else window.appState.highlights.push(obj);
-                    saveData(); alert("Stream Added.");
-                };
-                reader.readAsDataURL(thumbFile);
+                btn.innerText = "Adding...";
+                btn.disabled = true;
+                const thumbData = await compressImage(thumbFile, 600, 0.7);
+                const obj = { id: 'st_'+Date.now(), title, url, thumb: thumbData, mode };
+                
+                if(mode === 'live') {
+                    window.appState.livelinks.push(obj);
+                    saveKey('livelinks', window.appState.livelinks);
+                } else {
+                    window.appState.highlights.push(obj);
+                    saveKey('highlights', window.appState.highlights);
+                }
+
+                syncControlPanelViews();
+                renderResultPhaseFeeds();
+                btn.innerText = "Add Stream";
+                btn.disabled = false;
+                alert("Stream Added Instantly.");
             }
         }
 
         window.deleteStreamMaster = function(id, mode) {
-            if(mode === 'live') window.appState.livelinks = window.appState.livelinks.filter(l => l.id !== id);
-            else window.appState.highlights = window.appState.highlights.filter(h => h.id !== id);
-            saveData();
+            if(mode === 'live') {
+                window.appState.livelinks = window.appState.livelinks.filter(l => l.id !== id);
+                saveKey('livelinks', window.appState.livelinks);
+            } else {
+                window.appState.highlights = window.appState.highlights.filter(h => h.id !== id);
+                saveKey('highlights', window.appState.highlights);
+            }
+            syncControlPanelViews();
+            renderResultPhaseFeeds();
         }
 
         function populateReportProgDropdown() {
@@ -2046,7 +2166,6 @@
             `).join('') || '<p style="grid-column: 1/-1;">No updates cataloged.</p>';
         }
 
-        // Initialize immediately
         applyGlobalWebsiteTheme(window.appState.theme || 'dark');
         applyLogoView();
         applyVisualCustomizations();
