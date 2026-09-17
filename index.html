@@ -47,18 +47,43 @@
             position: relative; 
             transition: background 0.3s ease, color 0.3s ease;
         }
+
+        /* Responsive Logo Handling to prevent overlapping on mobile */
         .corner-logo { 
-            position: fixed; 
-            z-index: 99; 
             display: none; 
             object-fit: contain;
             transition: all 0.3s ease;
         }
-        .logo-top-left { top: 15px; left: 15px; }
-        .logo-top-right { top: 15px; right: 75px; }
-        .logo-bottom-left { bottom: 15px; left: 15px; }
-        .logo-bottom-right { bottom: 15px; right: 15px; }
-        .logo-top-center { top: 15px; left: 50%; transform: translateX(-50%); }
+
+        /* Mobile First: Keep logo above texts nicely centered */
+        @media(max-width: 899px) {
+            .corner-logo {
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                transform: none !important;
+                margin: 25px auto 10px auto !important;
+            }
+            .header-title {
+                padding: 10px 20px 15px 20px !important;
+            }
+        }
+
+        /* Desktop: Standard corner placements */
+        @media(min-width: 900px) {
+            .corner-logo {
+                position: fixed;
+                z-index: 99;
+            }
+            .logo-top-left { top: 15px; left: 15px; }
+            .logo-top-right { top: 15px; right: 75px; }
+            .logo-bottom-left { bottom: 15px; left: 15px; }
+            .logo-bottom-right { bottom: 15px; right: 15px; }
+            .logo-top-center { top: 15px; left: 50%; transform: translateX(-50%); }
+        }
+
         .header-title { text-align: var(--header-align, center); padding: 30px 20px 15px 20px; }
         .header-title p { font-size: 1.1rem; margin-bottom: 6px; font-weight: 700; letter-spacing: 3px; color: var(--text-sub); }
         .header-title h1 { font-size: 2.8rem; font-weight: 900; letter-spacing: 2px; color: var(--text-main); text-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -232,6 +257,7 @@
 <body data-theme="dark">
     <!-- Dynamic Positioned Logo -->
     <img id="corner-logo-view" class="corner-logo logo-top-left" src="" alt="Logo">
+    
     <div class="header-title" id="editable-header-area">
         <p id="txt-welcome-banner">WELCOME TO BAHJA FEST</p>
         <h1 id="txt-main-title">BAHJA 2026</h1>
@@ -438,7 +464,7 @@
                     <input type="file" id="sys-logo-input" class="form-control" accept="image/*">
                 </div>
                 <div class="form-group">
-                    <label>Logo Placement Position</label>
+                    <label>Logo Placement Position (Desktop)</label>
                     <select id="sys-logo-pos" class="form-control" onchange="updateLogoStylesLocally()">
                         <option value="logo-top-left">Top Left Corner</option>
                         <option value="logo-top-right">Top Right Corner</option>
@@ -816,18 +842,58 @@
         </div>
     </div>
 
-    <!-- Instant Pre-render Script for Refresh -->
+    <!-- ZERO-LATENCY PRE-RENDER SCRIPT (Theme, Logo, Texts, Phase) -->
     <script>
         (function() {
-            const savedPhase = localStorage.getItem('bahja_current_phase') || 'result';
-            const regEl = document.getElementById('home-phase-register');
-            const resEl = document.getElementById('home-phase-result');
-            if (savedPhase === 'register') {
-                if(regEl) regEl.style.display = 'block';
-                if(resEl) resEl.style.display = 'none';
-            } else {
-                if(regEl) regEl.style.display = 'none';
-                if(resEl) resEl.style.display = 'block';
+            try {
+                // 1. Restore Theme
+                const savedTheme = localStorage.getItem('bahja_theme') || 'dark';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+
+                // 2. Restore Phase
+                const savedPhase = localStorage.getItem('bahja_current_phase') || 'result';
+                const regEl = document.getElementById('home-phase-register');
+                const resEl = document.getElementById('home-phase-result');
+                if (savedPhase === 'register') {
+                    if(regEl) regEl.style.display = 'block';
+                    if(resEl) resEl.style.display = 'none';
+                } else {
+                    if(regEl) regEl.style.display = 'none';
+                    if(resEl) resEl.style.display = 'block';
+                }
+
+                // 3. Restore Visuals (Banner, Title, Fonts)
+                const savedVisuals = JSON.parse(localStorage.getItem('bahja_visuals') || '{}');
+                const isDark = savedTheme === 'dark';
+                const bTxt = document.getElementById('txt-welcome-banner');
+                const mTitle = document.getElementById('txt-main-title');
+
+                if (savedVisuals.fontFamily) document.documentElement.style.setProperty('--main-font', savedVisuals.fontFamily);
+                if (savedVisuals.headerAlign) document.documentElement.style.setProperty('--header-align', savedVisuals.headerAlign);
+                if (bTxt) {
+                    bTxt.innerText = savedVisuals.bannerText || 'WELCOME TO BAHJA FEST';
+                    bTxt.style.color = isDark ? (savedVisuals.bannerColorDark || '#cbd5e1') : (savedVisuals.bannerColorLight || '#475569');
+                    bTxt.style.fontSize = (savedVisuals.bannerSize || '1.1') + 'rem';
+                }
+                if (mTitle) {
+                    mTitle.innerText = savedVisuals.titleText || 'BAHJA 2026';
+                    mTitle.style.color = isDark ? (savedVisuals.titleColorDark || '#ffffff') : (savedVisuals.titleColorLight || '#0f172a');
+                    mTitle.style.fontSize = (savedVisuals.titleSize || '2.8') + 'rem';
+                }
+
+                // 4. Restore Logo
+                const savedLogoUrl = localStorage.getItem('bahja_logo_url');
+                const savedLogoPos = localStorage.getItem('bahja_logo_pos') || 'logo-top-left';
+                const savedLogoSize = localStorage.getItem('bahja_logo_size') || '60';
+                const logoEl = document.getElementById('corner-logo-view');
+                if (savedLogoUrl && logoEl) {
+                    logoEl.src = savedLogoUrl;
+                    logoEl.className = `corner-logo ${savedLogoPos}`;
+                    logoEl.style.height = `${savedLogoSize}px`;
+                    logoEl.style.display = 'block';
+                }
+            } catch(e) {
+                console.error("Local pre-render error: ", e);
             }
         })();
     </script>
@@ -848,17 +914,37 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Fetch stored phase immediately
+        // Fetch stored phase & visual settings
         const initialPhase = localStorage.getItem('bahja_current_phase') || 'result';
+        const initialTheme = localStorage.getItem('bahja_theme') || 'dark';
+        const initialLogo = localStorage.getItem('bahja_logo_url') || '';
+        const initialLogoPos = localStorage.getItem('bahja_logo_pos') || 'logo-top-left';
+        const initialLogoSize = localStorage.getItem('bahja_logo_size') || '60';
+        let initialVisuals = {
+            bannerText: 'WELCOME TO BAHJA FEST',
+            titleText: 'BAHJA 2026',
+            bannerColorDark: '#cbd5e1',
+            titleColorDark: '#ffffff',
+            bannerColorLight: '#475569',
+            titleColorLight: '#0f172a',
+            bannerSize: '1.1',
+            titleSize: '2.8',
+            fontFamily: "'Poppins', sans-serif",
+            headerAlign: 'center'
+        };
+        try {
+            const parsed = JSON.parse(localStorage.getItem('bahja_visuals') || '{}');
+            initialVisuals = { ...initialVisuals, ...parsed };
+        } catch(e){}
 
         window.appState = {
             phase: initialPhase,
             portalOpen: true,
-            theme: 'dark',
-            logoUrl: '',
+            theme: initialTheme,
+            logoUrl: initialLogo,
             splashUrl: '',
-            logoPos: 'logo-top-left',
-            logoSize: '60',
+            logoPos: initialLogoPos,
+            logoSize: initialLogoSize,
             teamStatusUrl: '',
             maxProgLimit: 3,
             mainCreds: { user: 'bahja2026', pass: '2026bahjacommitty' },
@@ -878,18 +964,7 @@
                 'livelink': true,
                 'highlights': true
             },
-            visuals: {
-                bannerText: 'WELCOME TO BAHJA FEST',
-                titleText: 'BAHJA 2026',
-                bannerColorDark: '#cbd5e1',
-                titleColorDark: '#ffffff',
-                bannerColorLight: '#475569',
-                titleColorLight: '#0f172a',
-                bannerSize: '1.1',
-                titleSize: '2.8',
-                fontFamily: "'Poppins', sans-serif",
-                headerAlign: 'center'
-            },
+            visuals: initialVisuals,
             teams: [],
             programs: [],
             registrations: [],
@@ -900,6 +975,7 @@
             students: [],
             points: []
         };
+
         window.loggedTeamUser = null;
         window.activePartTeam = null;
         window.isMainLoggedIn = false;
@@ -910,22 +986,34 @@
             const data = snapshot.val();
             if (data) {
                 const updatedPhase = data.phase || localStorage.getItem('bahja_current_phase') || 'result';
+                const updatedTheme = data.theme || localStorage.getItem('bahja_theme') || 'dark';
+                const updatedLogoUrl = data.logoUrl || '';
+                const updatedLogoPos = data.logoPos || 'logo-top-left';
+                const updatedLogoSize = data.logoSize || '60';
+                const updatedVisuals = data.visuals || window.appState.visuals;
+
+                // Sync locally for subsequent refreshes
                 localStorage.setItem('bahja_current_phase', updatedPhase);
+                localStorage.setItem('bahja_theme', updatedTheme);
+                localStorage.setItem('bahja_logo_url', updatedLogoUrl);
+                localStorage.setItem('bahja_logo_pos', updatedLogoPos);
+                localStorage.setItem('bahja_logo_size', updatedLogoSize);
+                localStorage.setItem('bahja_visuals', JSON.stringify(updatedVisuals));
 
                 window.appState = {
                     phase: updatedPhase,
                     portalOpen: data.portalOpen ?? true,
-                    theme: data.theme || 'dark',
-                    logoUrl: data.logoUrl || '',
+                    theme: updatedTheme,
+                    logoUrl: updatedLogoUrl,
                     splashUrl: data.splashUrl || '',
-                    logoPos: data.logoPos || 'logo-top-left',
-                    logoSize: data.logoSize || '60',
+                    logoPos: updatedLogoPos,
+                    logoSize: updatedLogoSize,
                     teamStatusUrl: data.teamStatusUrl || '',
                     maxProgLimit: data.maxProgLimit || 3,
                     mainCreds: data.mainCreds || { user: 'bahja2026', pass: '2026bahjacommitty' },
                     subLocks: data.subLocks || { settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag' },
                     visibilities: data.visibilities || { 'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true },
-                    visuals: data.visuals || { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center' },
+                    visuals: updatedVisuals,
                     teams: data.teams || [],
                     programs: data.programs || [],
                     registrations: data.registrations || [],
@@ -954,11 +1042,20 @@
         });
 
         window.saveData = function() {
+            // Local sync
+            localStorage.setItem('bahja_current_phase', window.appState.phase);
+            localStorage.setItem('bahja_theme', window.appState.theme);
+            localStorage.setItem('bahja_logo_url', window.appState.logoUrl);
+            localStorage.setItem('bahja_logo_pos', window.appState.logoPos);
+            localStorage.setItem('bahja_logo_size', window.appState.logoSize);
+            localStorage.setItem('bahja_visuals', JSON.stringify(window.appState.visuals));
+
             set(ref(db, 'bahja_fest_data'), window.appState);
         }
 
         window.updateGlobalWebsiteTheme = function(themeName) {
             window.appState.theme = themeName;
+            localStorage.setItem('bahja_theme', themeName);
             applyGlobalWebsiteTheme(themeName);
             applyVisualCustomizations();
             saveData();
@@ -995,7 +1092,11 @@
         }
 
         window.deleteSysLogo = function() {
-            window.appState.logoUrl = ''; saveData(); alert("Logo purged.");
+            window.appState.logoUrl = ''; 
+            localStorage.removeItem('bahja_logo_url');
+            saveData(); 
+            applyLogoView();
+            alert("Logo purged.");
         }
 
         function applyVisualCustomizations() {
@@ -1215,7 +1316,10 @@
                 window.appState.visuals.bannerColorLight = bColor;
                 window.appState.visuals.titleColorLight = tColor;
             }
-            saveData(); alert("Visual Layout Saved."); navHome();
+            saveData(); 
+            applyVisualCustomizations();
+            alert("Visual Layout Saved."); 
+            navHome();
         }
 
         window.saveMaxLimitMaster = function() {
@@ -1232,18 +1336,25 @@
             e.preventDefault();
             const selectedPhase = document.querySelector('input[name="phase-toggle"]:checked').value;
             window.appState.phase = selectedPhase;
-            localStorage.setItem('bahja_current_phase', selectedPhase); // Saved locally
+            localStorage.setItem('bahja_current_phase', selectedPhase);
 
             window.appState.logoPos = document.getElementById('sys-logo-pos').value;
             window.appState.logoSize = document.getElementById('sys-logo-size').value;
+            localStorage.setItem('bahja_logo_pos', window.appState.logoPos);
+            localStorage.setItem('bahja_logo_size', window.appState.logoSize);
+
             const logoF = document.getElementById('sys-logo-input').files[0];
             const handleUploads = () => {
-                saveData(); alert("Settings saved."); navHome();
+                saveData(); 
+                applyLogoView();
+                alert("Settings saved."); 
+                navHome();
             };
             if(logoF) {
                 const r = new FileReader();
                 r.onload = (evt) => {
                     window.appState.logoUrl = evt.target.result;
+                    localStorage.setItem('bahja_logo_url', evt.target.result);
                     handleUploads();
                 };
                 r.readAsDataURL(logoF);
@@ -1254,7 +1365,7 @@
 
         window.clearAllDataSystem = function() {
             if(confirm("Completely reset database state?")) {
-                localStorage.removeItem('bahja_current_phase');
+                localStorage.clear();
                 window.appState = { phase:'result', portalOpen:true, theme:'dark', logoUrl:'', splashUrl:'', logoPos:'logo-top-left', logoSize:'60', teamStatusUrl:'', maxProgLimit:3, mainCreds:{user:'bahja2026', pass:'2026bahjacommitty'}, subLocks:{settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag'}, visibilities:{'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true}, visuals:{bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center'}, teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[], points:[] };
                 saveData(); navHome();
             }
@@ -1935,8 +2046,9 @@
             `).join('') || '<p style="grid-column: 1/-1;">No updates cataloged.</p>';
         }
 
-        // Initialize UI with stored local phase
+        // Initialize immediately
         applyGlobalWebsiteTheme(window.appState.theme || 'dark');
+        applyLogoView();
         applyVisualCustomizations();
         render3DotMenu();
         renderHomePhase();
