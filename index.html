@@ -798,7 +798,7 @@
                             <label>Media Format</label>
                             <select id="up-type" class="form-control">
                                 <option value="photo">Photo Post</option>
-                                <option value="video">Video Post (Max 15MB)</option>
+                                <option value="video">Video Post (Max 6MB)</option>
                             </select>
                         </div>
                         <div class="form-group" style="margin-bottom:6px;">
@@ -1941,9 +1941,9 @@
             if(!f) return;
 
             // Size Guard to prevent memory crashes and DB rejections
-            const maxVideoSize = 15 * 1024 * 1024; // 15MB max for reliable instant transfer
+            const maxVideoSize = 6 * 1024 * 1024; // 6MB limit for reliable base64 upload
             if(type === 'video' && f.size > maxVideoSize) {
-                alert("Video size is too large! Please upload a video under 15MB for fast loading.");
+                alert("Video size is too large! Please upload a short video under 6MB to prevent lag.");
                 return;
             }
 
@@ -2092,7 +2092,7 @@
             }
             const mUpdates = document.getElementById('master-updates-list');
             if(mUpdates) {
-                mUpdates.innerHTML = window.appState.updates.map(u => `
+                mUpdates.innerHTML = (window.appState.updates || []).map(u => `
                     <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
                         <span>Update (${u.type})</span> <button class="btn btn-danger btn-sm" onclick="deleteUpdateMaster('${u.id}')">x</button>
                     </div>
