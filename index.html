@@ -11,7 +11,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Montserrat:wght@400;700;900&family=Open+Sans:wght@400;700&family=Poppins:wght@400;600;800&family=Roboto:wght@400;700&display=swap">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js" defer></script>
-    
     <style>
         :root[data-theme="dark"] {
             --bg-mesh: radial-gradient(circle at 20% 20%, #2a2d32 0%, #111315 100%);
@@ -269,60 +268,6 @@
             @page { size: A4 portrait; margin: 6mm; }
         }
     </style>
-
-    <!-- ZERO-LATENCY INSTANT PRE-RENDER SCRIPT -->
-    <script>
-        (function() {
-            try {
-                // Apply visual state instantly before anything else loads to prevent lag/blank screen
-                const savedTheme = localStorage.getItem('bahja_theme') || 'dark';
-                document.documentElement.setAttribute('data-theme', savedTheme);
-
-                const savedVisuals = JSON.parse(localStorage.getItem('bahja_visuals') || '{}');
-                if (savedVisuals.fontFamily) document.documentElement.style.setProperty('--main-font', savedVisuals.fontFamily);
-                if (savedVisuals.headerAlign) document.documentElement.style.setProperty('--header-align', savedVisuals.headerAlign);
-
-                window.addEventListener('DOMContentLoaded', () => {
-                    const savedPhase = localStorage.getItem('bahja_current_phase') || 'result';
-                    const regEl = document.getElementById('home-phase-register');
-                    const resEl = document.getElementById('home-phase-result');
-                    if (savedPhase === 'register') {
-                        if(regEl) regEl.style.display = 'block';
-                        if(resEl) resEl.style.display = 'none';
-                    } else {
-                        if(regEl) regEl.style.display = 'none';
-                        if(resEl) resEl.style.display = 'block';
-                    }
-
-                    const isDark = savedTheme === 'dark';
-                    const bTxt = document.getElementById('txt-welcome-banner');
-                    const mTitle = document.getElementById('txt-main-title');
-                    
-                    if (bTxt) {
-                        bTxt.innerText = savedVisuals.bannerText || 'WELCOME TO BAHJA FEST';
-                        bTxt.style.color = isDark ? (savedVisuals.bannerColorDark || '#cbd5e1') : (savedVisuals.bannerColorLight || '#475569');
-                        bTxt.style.fontSize = (savedVisuals.bannerSize || '1.1') + 'rem';
-                    }
-                    if (mTitle) {
-                        mTitle.innerText = savedVisuals.titleText || 'BAHJA 2026';
-                        mTitle.style.color = isDark ? (savedVisuals.titleColorDark || '#ffffff') : (savedVisuals.titleColorLight || '#0f172a');
-                        mTitle.style.fontSize = (savedVisuals.titleSize || '2.8') + 'rem';
-                    }
-
-                    const savedLogoUrl = localStorage.getItem('bahja_logo_url');
-                    const savedLogoPos = localStorage.getItem('bahja_logo_pos') || 'logo-top-left';
-                    const savedLogoSize = localStorage.getItem('bahja_logo_size') || '60';
-                    const logoEl = document.getElementById('corner-logo-view');
-                    if (savedLogoUrl && logoEl) {
-                        logoEl.src = savedLogoUrl;
-                        logoEl.className = `corner-logo ${savedLogoPos}`;
-                        logoEl.style.height = `${savedLogoSize}px`;
-                        logoEl.style.display = 'block';
-                    }
-                });
-            } catch(e) { console.error("Local pre-render error: ", e); }
-        })();
-    </script>
 </head>
 <body data-theme="dark">
     <!-- Dynamic Positioned Logo -->
@@ -851,14 +796,17 @@
                     <form onsubmit="uploadUpdateFeed(event)" style="display:flex; flex-direction:column; gap:8px;">
                         <div class="form-group" style="margin-bottom:6px;">
                             <label>Media Format</label>
-                            <select id="up-type" class="form-control">
+                            <select id="up-type" class="form-control" onchange="toggleUpdateVideoUrl()">
                                 <option value="photo">Photo Post</option>
-                                <option value="video">Video Post (up to 400MB)</option>
+                                <option value="video">Video Post (Link + Thumbnail)</option>
                             </select>
                         </div>
                         <div class="form-group" style="margin-bottom:6px;">
-                            <label>Choose File</label>
-                            <input type="file" id="up-file" class="form-control" accept="image/*,video/*" required>
+                            <label id="lbl-up-file">Choose Photo / Thumbnail Image</label>
+                            <input type="file" id="up-file" class="form-control" accept="image/*" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:6px;">
+                            <input type="url" id="up-video-link" class="form-control" placeholder="Paste YouTube/Drive Link Here" style="display:none;">
                         </div>
                         <button type="submit" id="btn-up-feed" class="btn btn-sm btn-success btn-block">Upload & Publish</button>
                     </form>
@@ -911,6 +859,15 @@
         </div>
     </div>
 
+    <!-- DETAILS MODAL -->
+    <div id="detail-modal-overlay" class="modal-overlay" onclick="this.style.display='none'">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <h3 id="det-modal-title" style="color:#d4af37; margin-bottom:10px; font-size:1.1rem;"></h3>
+            <div id="det-modal-content" style="max-height:300px; overflow-y:auto;"></div>
+            <button class="btn btn-block" style="margin-top:10px;" onclick="document.getElementById('detail-modal-overlay').style.display='none'">Close</button>
+        </div>
+    </div>
+
     <!-- FULL MEDIA VIEW MODAL (DOWNLOAD & SHARE) -->
     <div id="media-viewer-modal" class="modal-overlay" onclick="closeMediaViewer()">
         <div class="modal-box" onclick="event.stopPropagation()" style="max-width:550px; text-align:center;">
@@ -923,11 +880,57 @@
         </div>
     </div>
 
+    <!-- ZERO-LATENCY INSTANT PRE-RENDER SCRIPT FOR FULL STATE -->
+    <script>
+        (function() {
+            try {
+                // Instantly Apply Theme
+                const savedTheme = localStorage.getItem('bahja_theme') || 'dark';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+
+                // Instantly Load Full Cached State to Prevent 30-sec Lag
+                const cachedState = localStorage.getItem('bahja_full_state');
+                if (cachedState) {
+                    window.appState = JSON.parse(cachedState);
+                }
+            } catch(e) { console.error("Cache pre-render error: ", e); }
+
+            window.addEventListener('DOMContentLoaded', () => {
+                if (window.appState && window.appState.visuals) {
+                    const vis = window.appState.visuals;
+                    if (vis.fontFamily) document.documentElement.style.setProperty('--main-font', vis.fontFamily);
+                    if (vis.headerAlign) document.documentElement.style.setProperty('--header-align', vis.headerAlign);
+                    
+                    const isDark = (window.appState.theme || 'dark') === 'dark';
+                    const bTxt = document.getElementById('txt-welcome-banner');
+                    const mTitle = document.getElementById('txt-main-title');
+                    
+                    if (bTxt) {
+                        bTxt.innerText = vis.bannerText || 'WELCOME TO BAHJA FEST';
+                        bTxt.style.color = isDark ? (vis.bannerColorDark || '#cbd5e1') : (vis.bannerColorLight || '#475569');
+                        bTxt.style.fontSize = (vis.bannerSize || '1.1') + 'rem';
+                    }
+                    if (mTitle) {
+                        mTitle.innerText = vis.titleText || 'BAHJA 2026';
+                        mTitle.style.color = isDark ? (vis.titleColorDark || '#ffffff') : (vis.titleColorLight || '#0f172a');
+                        mTitle.style.fontSize = (vis.titleSize || '2.8') + 'rem';
+                    }
+
+                    const logoEl = document.getElementById('corner-logo-view');
+                    if (window.appState.logoUrl && logoEl) {
+                        logoEl.src = window.appState.logoUrl;
+                        logoEl.className = `corner-logo ${window.appState.logoPos || 'logo-top-left'}`;
+                        logoEl.style.height = `${window.appState.logoSize || '60'}px`;
+                        logoEl.style.display = 'block';
+                    }
+                }
+            });
+        })();
+    </script>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-        // Firebase Storage for massive Video Uploads
-        import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBVPGtuHPFRH05snj58ws6xr42O8HluaLY",
@@ -941,10 +944,9 @@
         };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const storage = getStorage(app); // Storage Connected
 
-        // Instant Client-Side Image Compressor
-        function compressImage(file, maxWidth = 1200, quality = 0.75) {
+        // Extremely Aggressive Compressor to ensure DB stays small and zero lag
+        function compressImage(file, maxWidth = 800, quality = 0.6) {
             return new Promise((resolve) => {
                 if (!file.type.startsWith('image/')) {
                     const reader = new FileReader();
@@ -975,67 +977,17 @@
             });
         }
 
-        const initialPhase = localStorage.getItem('bahja_current_phase') || 'result';
-        const initialTheme = localStorage.getItem('bahja_theme') || 'dark';
-        const initialLogo = localStorage.getItem('bahja_logo_url') || '';
-        const initialLogoPos = localStorage.getItem('bahja_logo_pos') || 'logo-top-left';
-        const initialLogoSize = localStorage.getItem('bahja_logo_size') || '60';
-        let initialVisuals = {
-            bannerText: 'WELCOME TO BAHJA FEST',
-            titleText: 'BAHJA 2026',
-            bannerColorDark: '#cbd5e1',
-            titleColorDark: '#ffffff',
-            bannerColorLight: '#475569',
-            titleColorLight: '#0f172a',
-            bannerSize: '1.1',
-            titleSize: '2.8',
-            fontFamily: "'Poppins', sans-serif",
-            headerAlign: 'center'
-        };
-        try {
-            const parsed = JSON.parse(localStorage.getItem('bahja_visuals') || '{}');
-            initialVisuals = { ...initialVisuals, ...parsed };
-        } catch(e){}
-
-        window.appState = {
-            phase: initialPhase,
-            portalOpen: true,
-            theme: initialTheme,
-            logoUrl: initialLogo,
-            splashUrl: '',
-            logoPos: initialLogoPos,
-            logoSize: initialLogoSize,
-            teamStatusUrl: '',
-            teamStatusList: [],
-            maxProgLimit: 3,
-            mainCreds: { user: 'bahja2026', pass: '2026bahjacommitty' },
-            subLocks: {
-                settings: 'settingsbahja',
-                control_panel: 'controlpanelbahja',
-                judge: 'judgebahja',
-                pointroom: 'pointroombahja',
-                states: 'statesbahja',
-                protection: 'Protectionbahja',
-                modify: 'modifymodifybahjag'
-            },
-            visibilities: {
-                'team-states': true,
-                'results-view': true,
-                'updates': true,
-                'livelink': true,
-                'highlights': true
-            },
-            visuals: initialVisuals,
-            teams: [],
-            programs: [],
-            registrations: [],
-            results: [],
-            updates: [],
-            livelinks: [],
-            highlights: [],
-            students: [],
-            points: []
-        };
+        // Initialize State
+        if (!window.appState) {
+            window.appState = {
+                phase: 'result', portalOpen: true, theme: 'dark', logoUrl: '', splashUrl: '', logoPos: 'logo-top-left', logoSize: '60',
+                teamStatusUrl: '', teamStatusList: [], maxProgLimit: 3, mainCreds: { user: 'bahja2026', pass: '2026bahjacommitty' },
+                subLocks: { settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag' },
+                visibilities: { 'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true },
+                visuals: { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center' },
+                teams: [], programs: [], registrations: [], results: [], updates: [], livelinks: [], highlights: [], students: [], points: []
+            };
+        }
 
         window.loggedTeamUser = null;
         window.activePartTeam = null;
@@ -1046,57 +998,31 @@
         onValue(dbRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                const updatedPhase = data.phase || localStorage.getItem('bahja_current_phase') || 'result';
-                const updatedTheme = data.theme || localStorage.getItem('bahja_theme') || 'dark';
-                const updatedLogoUrl = data.logoUrl || '';
-                const updatedLogoPos = data.logoPos || 'logo-top-left';
-                const updatedLogoSize = data.logoSize || '60';
-                const updatedVisuals = data.visuals || window.appState.visuals;
+                // Merge Data
+                window.appState = { ...window.appState, ...data };
 
-                let statusList = data.teamStatusList || [];
-                if(statusList.length === 0 && data.teamStatusUrl) {
-                    statusList = [{ id: 'ts_legacy', url: data.teamStatusUrl }];
+                // Seamless fallback for older team statuses
+                if((!window.appState.teamStatusList || window.appState.teamStatusList.length === 0) && window.appState.teamStatusUrl) {
+                    window.appState.teamStatusList = [{ id: 'ts_legacy', url: window.appState.teamStatusUrl }];
                 }
 
-                localStorage.setItem('bahja_current_phase', updatedPhase);
-                localStorage.setItem('bahja_theme', updatedTheme);
-                localStorage.setItem('bahja_logo_url', updatedLogoUrl);
-                localStorage.setItem('bahja_logo_pos', updatedLogoPos);
-                localStorage.setItem('bahja_logo_size', updatedLogoSize);
-                localStorage.setItem('bahja_visuals', JSON.stringify(updatedVisuals));
-
-                window.appState = {
-                    phase: updatedPhase,
-                    portalOpen: data.portalOpen ?? true,
-                    theme: updatedTheme,
-                    logoUrl: updatedLogoUrl,
-                    splashUrl: data.splashUrl || '',
-                    logoPos: updatedLogoPos,
-                    logoSize: updatedLogoSize,
-                    teamStatusUrl: data.teamStatusUrl || '',
-                    teamStatusList: statusList,
-                    maxProgLimit: data.maxProgLimit || 3,
-                    mainCreds: data.mainCreds || { user: 'bahja2026', pass: '2026bahjacommitty' },
-                    subLocks: data.subLocks || { settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag' },
-                    visibilities: data.visibilities || { 'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true },
-                    visuals: updatedVisuals,
-                    teams: data.teams || [],
-                    programs: data.programs || [],
-                    registrations: data.registrations || [],
-                    results: data.results || [],
-                    updates: data.updates || [],
-                    livelinks: data.livelinks || [],
-                    highlights: data.highlights || [],
-                    students: data.students || [],
-                    points: data.points || []
-                };
+                // Super Fast Offline Cache
+                try {
+                    localStorage.setItem('bahja_full_state', JSON.stringify(window.appState));
+                    localStorage.setItem('bahja_current_phase', window.appState.phase);
+                    localStorage.setItem('bahja_theme', window.appState.theme);
+                } catch(e) { console.warn("Storage quota exceeded. Please clear older big uploads from Control Panel."); }
             }
             
             applyGlobalWebsiteTheme(window.appState.theme || 'dark');
             applyLogoView();
             applyVisualCustomizations();
             render3DotMenu();
-            renderHomePhase();
+            if(!history.state || history.state.panel === 'panel-home') {
+                renderHomePhase();
+            } else {
+                renderResultPhaseFeeds(); // Ensure feeds update even if in another panel
+            }
             syncControlPanelViews();
             renderPtList();
             renderJudgeLeaderboard();
@@ -1114,18 +1040,13 @@
         }
 
         window.saveData = function() {
-            localStorage.setItem('bahja_current_phase', window.appState.phase);
-            localStorage.setItem('bahja_theme', window.appState.theme);
-            localStorage.setItem('bahja_logo_url', window.appState.logoUrl);
-            localStorage.setItem('bahja_logo_pos', window.appState.logoPos);
-            localStorage.setItem('bahja_logo_size', window.appState.logoSize);
-            localStorage.setItem('bahja_visuals', JSON.stringify(window.appState.visuals));
+            try { localStorage.setItem('bahja_full_state', JSON.stringify(window.appState)); } catch(e){}
             set(dbRef, window.appState);
         }
 
         window.updateGlobalWebsiteTheme = function(themeName) {
             window.appState.theme = themeName;
-            localStorage.setItem('bahja_theme', themeName);
+            try{ localStorage.setItem('bahja_theme', themeName); }catch(e){}
             applyGlobalWebsiteTheme(themeName);
             applyVisualCustomizations();
             saveKey('theme', themeName);
@@ -1163,7 +1084,6 @@
 
         window.deleteSysLogo = function() {
             window.appState.logoUrl = ''; 
-            localStorage.removeItem('bahja_logo_url');
             saveKey('logoUrl', '');
             applyLogoView();
             alert("Logo purged.");
@@ -1272,8 +1192,6 @@
                 document.getElementById('panel-home').classList.add('active-panel');
             }
         });
-
-        // Initialize history on first load
         history.replaceState({ panel: 'panel-home' }, "", window.location.pathname);
         // ------------------------------------------
 
@@ -1415,7 +1333,6 @@
                 window.appState.visuals.titleColorLight = tColor;
             }
             saveKey('visuals', window.appState.visuals);
-            localStorage.setItem('bahja_visuals', JSON.stringify(window.appState.visuals));
             applyVisualCustomizations();
             alert("Visual Layout Saved."); 
             navHome();
@@ -1440,13 +1357,10 @@
 
             window.appState.logoPos = document.getElementById('sys-logo-pos').value;
             window.appState.logoSize = document.getElementById('sys-logo-size').value;
-            localStorage.setItem('bahja_logo_pos', window.appState.logoPos);
-            localStorage.setItem('bahja_logo_size', window.appState.logoSize);
 
             const logoF = document.getElementById('sys-logo-input').files[0];
             if(logoF) {
                 window.appState.logoUrl = await compressImage(logoF, 500, 0.8);
-                localStorage.setItem('bahja_logo_url', window.appState.logoUrl);
             }
             
             saveData(); 
@@ -1885,17 +1799,20 @@
             if(f) {
                 btn.innerText = "Processing...";
                 btn.disabled = true;
-                const compressed = await compressImage(f, 1080, 0.75);
+                const compressed = await compressImage(f, 800, 0.6); // smaller file size to avoid lags
                 
                 if(!window.appState.teamStatusList) window.appState.teamStatusList = [];
                 const newStatusItem = { id: 'ts_'+Date.now(), url: compressed };
                 window.appState.teamStatusList.unshift(newStatusItem);
-                window.appState.teamStatusUrl = compressed; // Keep legacy sync
+                window.appState.teamStatusUrl = compressed;
                 
+                // Optimistic Local Update
+                renderResultPhaseFeeds();
+                syncControlPanelViews();
+
                 saveKey('teamStatusList', window.appState.teamStatusList);
                 saveKey('teamStatusUrl', compressed);
-                syncControlPanelViews();
-                renderResultPhaseFeeds();
+                
                 btn.innerText = "Upload Status Poster";
                 btn.disabled = false;
                 e.target.reset();
@@ -1931,14 +1848,16 @@
             if(fileEl && progId) {
                 btn.innerText = "Publishing...";
                 btn.disabled = true;
-                const compressed = await compressImage(fileEl, 1080, 0.75);
+                const compressed = await compressImage(fileEl, 800, 0.6); // aggressively compressed
                 
                 window.appState.results = window.appState.results.filter(r => r.progId !== progId);
                 window.appState.results.push({ progId, number: customNum, poster: compressed, youtube: yt });
                 
-                saveKey('results', window.appState.results);
-                syncControlPanelViews();
+                // Optimistic Local Update
                 filterResultPrograms();
+                syncControlPanelViews();
+
+                saveKey('results', window.appState.results);
                 
                 btn.innerText = "Publish Result";
                 btn.disabled = false;
@@ -1953,69 +1872,64 @@
             filterResultPrograms();
         }
         
-        // FIREBASE STORAGE VIDEO UPLOAD (Handles up to 400MB)
+        // VIDEO LINK TOGGLER
+        window.toggleUpdateVideoUrl = function() {
+            const type = document.getElementById('up-type').value;
+            const linkInput = document.getElementById('up-video-link');
+            const lblFile = document.getElementById('lbl-up-file');
+            if(type === 'video') {
+                linkInput.style.display = 'block';
+                linkInput.required = true;
+                lblFile.innerText = "Choose Video Thumbnail Image";
+            } else {
+                linkInput.style.display = 'none';
+                linkInput.required = false;
+                lblFile.innerText = "Choose Photo";
+            }
+        }
+
+        // Fast Updates Feed Upload (Link + Thumbnail method)
         window.uploadUpdateFeed = async function(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-up-feed');
             const type = document.getElementById('up-type').value;
             const f = document.getElementById('up-file').files[0];
+            const vLink = document.getElementById('up-video-link').value.trim();
 
             if(!f) return;
 
-            btn.innerText = "Preparing...";
+            btn.innerText = "Uploading...";
             btn.disabled = true;
 
             try {
-                if (type === 'photo') {
-                    const finalUrl = await compressImage(f, 1080, 0.75);
-                    if(!window.appState.updates) window.appState.updates = [];
-                    window.appState.updates.unshift({ id:'up_'+Date.now(), type, url: finalUrl });
-                    saveKey('updates', window.appState.updates);
-                    syncControlPanelViews();
-                    renderPinterestUpdates('all');
-                    
-                    btn.innerText = "Upload & Publish";
-                    btn.disabled = false;
-                    e.target.reset();
-                    alert("Photo Published Instantly.");
-                } else {
-                    // Firebase Storage Upload for Videos (400MB capacity)
-                    const storageReference = sRef(storage, `videos/up_${Date.now()}_${f.name}`);
-                    const uploadTask = uploadBytesResumable(storageReference, f);
+                // Aggressive compression for instant updates and zero lag
+                const compressedImage = await compressImage(f, 800, 0.6);
 
-                    uploadTask.on('state_changed',
-                        (snapshot) => {
-                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            btn.innerText = `Uploading Video... ${Math.round(progress)}%`;
-                        },
-                        (error) => {
-                            console.error("Storage Error: ", error);
-                            alert("Video Upload Failed! Please check Firebase Storage Rules (must allow read/write).");
-                            btn.innerText = "Upload & Publish";
-                            btn.disabled = false;
-                        },
-                        () => {
-                            btn.innerText = "Finalizing...";
-                            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                                if(!window.appState.updates) window.appState.updates = [];
-                                window.appState.updates.unshift({ id:'up_'+Date.now(), type, url: downloadURL });
-                                saveKey('updates', window.appState.updates);
-                                syncControlPanelViews();
-                                renderPinterestUpdates('all');
-                                
-                                btn.innerText = "Upload & Publish";
-                                btn.disabled = false;
-                                e.target.reset();
-                                alert("Video Published Successfully!");
-                            });
-                        }
-                    );
+                if(!window.appState.updates) window.appState.updates = [];
+                
+                if (type === 'photo') {
+                    window.appState.updates.unshift({ id:'up_'+Date.now(), type: 'photo', url: compressedImage });
+                } else {
+                    window.appState.updates.unshift({ id:'up_'+Date.now(), type: 'video', url: vLink, thumb: compressedImage });
                 }
+
+                // Optimistic Local Update
+                renderPinterestUpdates('all');
+                syncControlPanelViews();
+                
+                // Save to DB in Background
+                saveKey('updates', window.appState.updates);
+                
+                btn.innerText = "Upload & Publish";
+                btn.disabled = false;
+                e.target.reset();
+                window.toggleUpdateVideoUrl(); // Reset UI
+                alert("Update Published Instantly.");
             } catch(err) {
                 console.error("Upload error: ", err);
                 btn.innerText = "Upload & Publish";
                 btn.disabled = false;
-                alert("Failed to process media.");
+                alert("Failed to upload media. Please try again.");
             }
         }
 
@@ -2037,21 +1951,23 @@
             if(thumbFile) {
                 btn.innerText = "Adding...";
                 btn.disabled = true;
-                const thumbData = await compressImage(thumbFile, 600, 0.7);
+                const thumbData = await compressImage(thumbFile, 600, 0.6);
                 const obj = { id: 'st_'+Date.now(), title, url, thumb: thumbData, mode };
                 
                 if(mode === 'live') {
                     window.appState.livelinks.push(obj);
+                    renderResultPhaseFeeds();
                     saveKey('livelinks', window.appState.livelinks);
                 } else {
                     window.appState.highlights.push(obj);
+                    renderResultPhaseFeeds();
                     saveKey('highlights', window.appState.highlights);
                 }
 
                 syncControlPanelViews();
-                renderResultPhaseFeeds();
                 btn.innerText = "Add Stream";
                 btn.disabled = false;
+                e.target.reset();
                 alert("Stream Added Instantly.");
             }
         }
@@ -2280,20 +2196,18 @@
             }
         }
 
+        // Display Photo and Video Posts Correctly
         window.renderPinterestUpdates = function(filterMode) {
             const feed = document.getElementById('live-updates-feed');
             if(!feed) return;
             const targetUpdates = (window.appState.updates || []).filter(u => filterMode === 'all' || u.type === filterMode);
             feed.innerHTML = targetUpdates.map(u => `
-                <div class="masonry-item" onclick="openMediaViewer('${u.url}', '${u.type}')">
+                <div class="masonry-item" ${u.type === 'photo' ? `onclick="openMediaViewer('${u.url}', 'photo')"` : ''}>
                     ${u.type === 'photo' 
-                        ? `<img src="${u.url}" loading="lazy">` 
-                        : `<video src="${u.url}" playsinline preload="metadata"></video>`}
-                    <div class="media-click-overlay">
-                        <span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:6px; color:#cbd5e1;">
-                            <i class="fa-solid ${u.type === 'photo' ? 'fa-image' : 'fa-play'}"></i> Click to Open
-                        </span>
-                    </div>
+                        ? `<img src="${u.url}" loading="lazy">
+                           <div class="media-click-overlay"><span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:6px; color:#cbd5e1;"><i class="fa-solid fa-image"></i> Click to Open</span></div>` 
+                        : `<img src="${u.thumb}" loading="lazy">
+                           <a href="${u.url}" target="_blank" class="btn btn-sm btn-danger btn-block" style="margin-top:8px;"><i class="fa-solid fa-play"></i> Watch Video</a>`}
                 </div>
             `).join('') || '<p style="grid-column: 1/-1;">No updates cataloged.</p>';
         }
@@ -2368,7 +2282,6 @@
         applyLogoView();
         applyVisualCustomizations();
         render3DotMenu();
-        renderHomePhase();
     </script>
 </body>
 </html>
