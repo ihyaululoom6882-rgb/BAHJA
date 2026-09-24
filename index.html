@@ -1,3 +1,4 @@
+Full updated source code.
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,6 +47,15 @@
             min-height: 100vh;
             position: relative; 
             transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Mobile performance: avoid costly fixed backgrounds and blur on small screens. */
+        @media (max-width: 899px) {
+            body { background-attachment: scroll; }
+            .card, .dots-btn, .dropdown-menu {
+                -webkit-backdrop-filter: none;
+                backdrop-filter: none;
+            }
         }
 
         .corner-logo { 
@@ -176,14 +186,6 @@
         .pill-blue { background-color: #e0f2fe; } .pill-blue .pill-icon-circle { color: #0369a1; }
         .pill-purple { background-color: #f3e8ff; } .pill-purple .pill-icon-circle { color: #7e22ce; }
         
-        .pinterest-masonry { 
-            column-count: 2; 
-            column-gap: 12px; 
-            margin-top: 15px; 
-        }
-        @media (min-width: 900px) {
-            .pinterest-masonry { column-count: 4; column-gap: 16px; }
-        }
         /* Team Status: latest upload featured, older uploads 3 per row */
         .team-status-grid {
             display: grid;
@@ -195,6 +197,8 @@
             break-inside: auto;
             margin-bottom: 0;
             min-width: 0;
+            content-visibility: auto;
+            contain-intrinsic-size: 240px;
         }
         .team-status-grid .team-status-featured {
             grid-column: 1 / -1;
@@ -203,6 +207,7 @@
             width: 100%;
             max-height: 75vh;
             object-fit: contain;
+            background: rgba(0,0,0,0.08);
         }
         .team-status-grid .team-status-regular img {
             width: 100%;
@@ -215,6 +220,22 @@
             }
         }
 
+        .feed-media-img {
+            display: block;
+            width: 100%;
+            height: auto;
+            content-visibility: auto;
+            contain-intrinsic-size: 260px;
+        }
+
+.pinterest-masonry { 
+            column-count: 2; 
+            column-gap: 12px; 
+            margin-top: 15px; 
+        }
+        @media (min-width: 900px) {
+            .pinterest-masonry { column-count: 4; column-gap: 16px; }
+        }
         .masonry-item { 
             break-inside: avoid; 
             margin-bottom: 12px; 
@@ -1026,42 +1047,60 @@
         window.gatekeeperTargetPanel = null;
         const dbRef = ref(db, 'bahja_fest_data');
         
+        let renderScheduled = false;
+        let lastRenderSignature = '';
+        function scheduleAppRender(force = false) {
+            if (renderScheduled && !force) return;
+            renderScheduled = true;
+            requestAnimationFrame(() => {
+                renderScheduled = false;
+                const signature = [
+                    window.appState.phase,
+                    window.appState.theme,
+                    window.appState.teamStatusList?.length || 0,
+                    window.appState.results?.length || 0,
+                    window.appState.updates?.length || 0,
+                    window.appState.livelinks?.length || 0,
+                    window.appState.highlights?.length || 0,
+                    window.appState.points?.length || 0,
+                    window.appState.teams?.length || 0,
+                    window.appState.programs?.length || 0,
+                    window.appState.registrations?.length || 0
+                ].join('|');
+                if (!force && signature === lastRenderSignature) return;
+                lastRenderSignature = signature;
+                applyGlobalWebsiteTheme(window.appState.theme || 'dark');
+                applyLogoView();
+                applyVisualCustomizations();
+                render3DotMenu();
+                if(!history.state || history.state.panel === 'panel-home') renderHomePhase();
+                else renderResultPhaseFeeds();
+                syncControlPanelViews();
+                renderPtList();
+                renderJudgeLeaderboard();
+                renderStatesDashboard();
+                renderRankWinnersList();
+                syncProtectionFields();
+                syncModifyConfigInputs();
+                populateReportProgDropdown();
+            });
+        }
+
         onValue(dbRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                // Merge Data
                 window.appState = { ...window.appState, ...data };
-
-                // Seamless fallback for older team statuses
                 if((!window.appState.teamStatusList || window.appState.teamStatusList.length === 0) && window.appState.teamStatusUrl) {
                     window.appState.teamStatusList = [{ id: 'ts_legacy', url: window.appState.teamStatusUrl }];
                 }
-
-                // Super Fast Offline Cache
+                // Cache the current state without blocking the UI with repeated full renders.
                 try {
                     localStorage.setItem('bahja_full_state', JSON.stringify(window.appState));
                     localStorage.setItem('bahja_current_phase', window.appState.phase);
                     localStorage.setItem('bahja_theme', window.appState.theme);
                 } catch(e) { console.warn("Storage quota exceeded. Please clear older big uploads from Control Panel."); }
             }
-            
-            applyGlobalWebsiteTheme(window.appState.theme || 'dark');
-            applyLogoView();
-            applyVisualCustomizations();
-            render3DotMenu();
-            if(!history.state || history.state.panel === 'panel-home') {
-                renderHomePhase();
-            } else {
-                renderResultPhaseFeeds(); // Ensure feeds update even if in another panel
-            }
-            syncControlPanelViews();
-            renderPtList();
-            renderJudgeLeaderboard();
-            renderStatesDashboard();
-            renderRankWinnersList();
-            syncProtectionFields();
-            syncModifyConfigInputs();
-            populateReportProgDropdown();
+            scheduleAppRender();
         });
 
         window.saveKey = function(key, value) {
@@ -1144,14 +1183,17 @@
             let html = `<button onclick="navHome()"><i class="fa-solid fa-house"></i> Home</button>`;
             if(!window.isMainLoggedIn) {
                 html += `<button onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> Main Login</button>`;
+                // Third home-menu option: Point Room. It remains protected by Main Login.
+                html += `<button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Point Room</button>`;
                 if(window.appState.phase === 'register') {
                     html += `<button onclick="showPanel('panel-participants-entry')"><i class="fa-solid fa-user-plus"></i> Participants Entry</button>`;
                 }
             } else {
+                // Point Room stays directly available after Main Login.
+                html += `<button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Point Room</button>`;
                 html += `
                     <button onclick="interceptRoute('panel-settings', 'settings')"><i class="fa-solid fa-gear"></i> Settings</button>
                     <button onclick="interceptRoute('panel-control-panel', 'control_panel')"><i class="fa-solid fa-sliders"></i> Control Panel</button>
-                    <button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Pointroom</button>
                     <button onclick="interceptRoute('panel-judge', 'judge')"><i class="fa-solid fa-gavel"></i> Judge Leaderboard</button>
                     <button onclick="interceptRoute('panel-states-control', 'states')"><i class="fa-solid fa-flag"></i> States Control</button>
                     <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Protection Settings</button>
@@ -1224,6 +1266,7 @@
             }
         });
         history.replaceState({ panel: 'panel-home' }, "", window.location.pathname);
+        scheduleAppRender(true);
         // ------------------------------------------
 
         window.toggleAccordion = function(boxId) {
@@ -2136,14 +2179,11 @@
             if(statusBox) {
                 const list = window.appState.teamStatusList || [];
                 if(list.length > 0) {
-                    // Newest upload is always first because uploads use unshift().
-                    // The newest poster is featured; all older posters appear 3 per row.
-                    statusBox.innerHTML = list.map((item, idx) => `
-                        <div class="masonry-item ${idx === 0 ? 'team-status-featured' : 'team-status-regular'}"
-                             onclick="openMediaViewer('${item.url}', 'photo')">
-                            <img src="${item.url}" loading="${idx === 0 ? 'eager' : 'lazy'}">
+                    statusBox.innerHTML = list.map((item, index) => `
+                        <div class="masonry-item ${index === 0 ? 'team-status-featured' : 'team-status-regular'}" onclick="openMediaViewer('${item.url}', 'photo')">
+                            <img src="${item.url}" loading="${index === 0 ? 'eager' : 'lazy'}" decoding="async" class="feed-media-img">
                             <div class="media-click-overlay">
-                                <span style="font-size:${idx === 0 ? '0.85rem' : '0.75rem'}; background:rgba(0,0,0,0.6); padding:3px 9px; border-radius:6px; color:#cbd5e1;">
+                                <span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:6px; color:#cbd5e1;">
                                     <i class="fa-solid fa-image"></i> Click to Open
                                 </span>
                             </div>
@@ -2159,7 +2199,7 @@
             if(liveFeed) {
                 liveFeed.innerHTML = window.appState.livelinks.map(l => `
                     <div class="masonry-item">
-                        <img src="${l.thumb}">
+                        <img src="${l.thumb}" loading="lazy" decoding="async" class="feed-media-img">
                         <h5 style="margin-top:6px; font-size:0.9rem;">${l.title}</h5>
                         <a href="${l.url}" target="_blank" class="btn btn-sm btn-danger btn-block" style="margin-top:6px;"><i class="fa-solid fa-play"></i> Watch Stream</a>
                     </div>
@@ -2169,7 +2209,7 @@
             if(hlFeed) {
                 hlFeed.innerHTML = window.appState.highlights.map(h => `
                     <div class="masonry-item">
-                        <img src="${h.thumb}">
+                        <img src="${h.thumb}" loading="lazy" decoding="async" class="feed-media-img">
                         <h5 style="margin-top:6px; font-size:0.9rem;">${h.title}</h5>
                         <a href="${h.url}" target="_blank" class="btn btn-sm btn-block" style="margin-top:6px;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open</a>
                     </div>
@@ -2292,7 +2332,7 @@
                         await navigator.share({
                             files: [file],
                             title: 'BAHJA FEST 2026',
-                            text: 'Check this out from BAHJA Fest!'
+                            text: `Check this out from BAHJA Fest! ${window.location.href}`
                         });
                         return;
                     }
@@ -2301,10 +2341,11 @@
                 if (navigator.share) {
                     await navigator.share({
                         title: 'BAHJA FEST 2026',
+                        text: `Check this out from BAHJA Fest! ${window.location.href}`,
                         url: window.location.href
                     });
                 } else {
-                    navigator.clipboard.writeText(window.location.href);
+                    navigator.clipboard.writeText(`Check this out from BAHJA Fest! ${window.location.href}`);
                     alert("Link copied to clipboard!");
                 }
             } catch (err) {
