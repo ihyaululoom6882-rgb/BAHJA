@@ -292,102 +292,31 @@
         .collapsible-box.show { display: block; }
         
         @media print {
-            html, body {
-                background: #fff !important;
-                color: #000 !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                width: 210mm !important;
-                min-height: 297mm !important;
-            }
+            body { background: white !important; color: black !important; padding: 0 !important; margin: 0 !important; }
             body * { visibility: hidden; }
             .print-target, .print-target * { visibility: visible; }
-            .print-target {
-                position: absolute !important;
-                left: 0 !important;
-                top: 0 !important;
-                width: 210mm !important;
-                min-height: 297mm !important;
-                margin: 0 !important;
-                padding: 4mm !important;
-                color: #000 !important;
-                background: #fff !important;
-                box-sizing: border-box !important;
+            .print-target { 
+                position: absolute !important; left: 0 !important; top: 0 !important; 
+                width: 100% !important; margin: 0 !important; padding: 0 !important; color: black !important;
             }
             .no-print { display: none !important; }
-
-            /* A4 print layout: use the printable area efficiently */
             .bahja-sheet-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                width: 100% !important;
-                border-bottom: 2px solid #000;
-                padding: 3mm 0 2mm !important;
-                margin: 0 0 3mm !important;
+                display: flex; justify-content: space-between; align-items: center;
+                border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 6px;
             }
-            .bahja-sheet-header h2 {
-                font-size: 18px !important;
-                font-weight: 900;
-                letter-spacing: 1px;
-                text-align: center;
-                width: 100%;
-                margin: 0 !important;
-            }
-            .bahja-sheet-table {
-                width: 100% !important;
-                min-width: 100% !important;
-                height: 275mm !important;
-                min-height: 275mm !important;
-                border-collapse: collapse !important;
-                border: 1.5px solid #000 !important;
-                table-layout: fixed !important;
-                margin: 0 !important;
-            }
-            .bahja-sheet-table th,
-            .bahja-sheet-table td {
+            .bahja-sheet-header h2 { font-size: 16px; font-weight: 900; letter-spacing: 2px; text-align: center; width: 100%; }
+            .bahja-sheet-table { width: 100% !important; border-collapse: collapse !important; border: 1.5px solid #000 !important; }
+            .bahja-sheet-table th, .bahja-sheet-table td {
                 border: 1px solid #000 !important;
-                padding: 4px 7px !important;
-                font-size: 12px !important;
-                line-height: 1.25 !important;
-                color: #000 !important;
-                vertical-align: middle !important;
+                padding: 3px 6px !important;
+                font-size: 11px !important;
+                line-height: 1.1 !important;
+                color: black !important;
             }
-            .bahja-sheet-table th {
-                font-weight: 900;
-                text-transform: uppercase;
-                background: #f1f1f1 !important;
-            }
-            .bahja-sheet-table tbody tr {
-                height: 1px !important;
-                break-inside: avoid !important;
-                page-break-inside: avoid !important;
-            }
-            .bahja-sheet-table tbody {
-                height: 255mm !important;
-            }
-            #report-resizable-table th:nth-child(1) { width: 10mm !important; }
-            #report-resizable-table th:nth-child(2) { width: 42mm !important; }
-            #report-resizable-table th:nth-child(3) { width: 48mm !important; }
-            #report-resizable-table th:nth-child(4) { width: 42mm !important; }
-            #report-resizable-table th:nth-child(5) { width: 58mm !important; }
-            .bahja-sheet-table thead {
-                display: table-header-group !important;
-            }
-            .bahja-sheet-table tfoot {
-                display: table-footer-group !important;
-            }
-            .a5-team-standings {
-                font-size: 16px !important;
-                width: 100% !important;
-            }
-            .a5-team-standings td,
-            .a5-team-standings th {
-                padding: 8px 10px !important;
-                font-size: 14px !important;
-            }
-            h1, h2, h3, h4 { break-after: avoid !important; page-break-after: avoid !important; }
-            @page { size: A4 portrait; margin: 4mm; }
+            .bahja-sheet-table th { font-weight: 900; text-transform: uppercase; background-color: #f1f1f1 !important; }
+            .a5-team-standings { font-size: 16px !important; }
+            .a5-team-standings td, .a5-team-standings th { padding: 12px 14px !important; font-size: 15px !important; }
+            @page { size: A4 portrait; margin: 6mm; }
         }
     </style>
 </head>
@@ -1176,10 +1105,7 @@
         window.saveKey = function(key, value) {
             const updateObj = {};
             updateObj[key] = value;
-            // Optimistic local refresh: show changes immediately, without waiting for Firebase round-trip.
-            try { localStorage.setItem('bahja_full_state', JSON.stringify(window.appState)); } catch(e) {}
-            scheduleAppRender(true);
-            update(dbRef, updateObj).catch(err => console.error('Firebase update failed:', err));
+            update(dbRef, updateObj);
         }
 
         window.saveData = function() {
@@ -1664,7 +1590,6 @@
             window.appState.registrations = window.appState.registrations.filter(r => !(r.team === window.loggedTeamUser && r.progId === progId));
             if(names.length > 0) window.appState.registrations.push({ team: window.loggedTeamUser, cat, progId, participants: names });
             saveKey('registrations', window.appState.registrations);
-            renderReportTable();
             alert("Registration updated.");
         }
 
@@ -1716,13 +1641,9 @@
                 window.appState.points.push({ progId, cat, team, student, score });
             });
             saveKey('points', window.appState.points);
-            // Refresh all dependent dashboards immediately.
-            loadPtParticipants();
-            renderPtList();
-            renderStatesDashboard();
-            renderRankWinnersList();
-            renderJudgeLeaderboard();
             alert("Points recorded.");
+            loadPtParticipants(); 
+            renderPtList();
         }
 
         function renderPtList() {
@@ -1846,11 +1767,11 @@
             const tbody = document.getElementById('states-table-body');
             if(!tbody) return;
             const teamTotals = {};
-            (window.appState.teams || []).forEach(t => teamTotals[t.user] = 0);
-            (window.appState.points || []).forEach(pt => {
-                if(teamTotals[pt.team] !== undefined) teamTotals[pt.team] += Number(pt.score) || 0;
+            window.appState.teams.forEach(t => teamTotals[t.user] = 0);
+            window.appState.points.forEach(pt => {
+                if(teamTotals[pt.team] !== undefined) teamTotals[pt.team] += pt.score;
             });
-            const sortedTeams = Object.entries(teamTotals).sort((a,b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+            const sortedTeams = Object.entries(teamTotals).sort((a,b) => b[1] - a[1]);
             tbody.innerHTML = sortedTeams.map(([tName, total]) => `
                 <tr onclick="viewTeamBreakdown('${tName}')" style="cursor:pointer;">
                     <td><strong>${tName}</strong></td>
@@ -1858,54 +1779,37 @@
                 </tr>
             `).join('') || '<tr><td colspan="2">No data.</td></tr>';
             const teamDrop = document.getElementById('rank-team-filter');
-            if(teamDrop) {
-                const current = teamDrop.value;
-                const teams = (window.appState.teams || []).slice().sort((a,b)=>a.user.localeCompare(b.user));
-                teamDrop.innerHTML = '<option value="">All Teams</option>' + teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
-                if(current && teams.some(t => t.user === current)) teamDrop.value = current;
+            if(teamDrop && teamDrop.children.length === 1) {
+                teamDrop.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
             }
         }
 
         window.renderRankWinnersList = function() {
             const tbody = document.getElementById('rank-winners-body');
             if(!tbody) return;
-            const teamEl = document.getElementById('rank-team-filter');
-            const posEl = document.getElementById('rank-pos-filter');
-            const fTeam = teamEl ? teamEl.value : '';
-            const fPos = posEl ? posEl.value : 'all';
-
-            // Calculate rank separately inside each program, then sort the final list
-            // by placement first (1st -> 2nd -> 3rd -> 4th), then program name.
-            const rows = [];
-            const programMap = new Map((window.appState.programs || []).map(p => [p.id, p]));
-            const pointsByProgram = {};
-            (window.appState.points || []).forEach(pt => {
-                if(!pointsByProgram[pt.progId]) pointsByProgram[pt.progId] = [];
-                pointsByProgram[pt.progId].push(pt);
-            });
-
-            Object.entries(pointsByProgram).forEach(([pid, pts]) => {
-                const prog = programMap.get(pid) || { name: 'N/A' };
-                pts.slice().sort((a,b) => (Number(b.score)||0) - (Number(a.score)||0) || String(a.student).localeCompare(String(b.student))).forEach((pt, idx) => {
+            const fTeam = document.getElementById('rank-team-filter').value;
+            const fPos = document.getElementById('rank-pos-filter').value;
+            const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
+            let rows = '';
+            let count = 1;
+            distinctProgs.forEach(pid => {
+                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'N/A' };
+                const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
+                subPts.forEach((pt, idx) => {
                     const rank = idx + 1;
-                    if(rank > 4) return;
                     if(fTeam && pt.team !== fTeam) return;
-                    if(fPos !== 'all' && rank !== parseInt(fPos, 10)) return;
-                    rows.push({ rank, student: pt.student, team: pt.team, program: prog.name, score: Number(pt.score)||0 });
+                    if(fPos !== 'all' && rank !== parseInt(fPos)) return;
+                    rows += `<tr>
+                        <td>${count++}</td>
+                        <td><strong>${pt.student}</strong></td>
+                        <td>${pt.team}</td>
+                        <td>${prog.name}</td>
+                        <td>${pt.score}</td>
+                        <td><span style="font-weight:bold; color:#d4af37;">Rank ${rank}</span></td>
+                    </tr>`;
                 });
             });
-
-            rows.sort((a,b) => a.rank - b.rank || a.program.localeCompare(b.program) || b.score - a.score || a.team.localeCompare(b.team) || a.student.localeCompare(b.student));
-            tbody.innerHTML = rows.map((r, idx) => `
-                <tr>
-                    <td>${idx + 1}</td>
-                    <td><strong>${r.student}</strong></td>
-                    <td>${r.team}</td>
-                    <td>${r.program}</td>
-                    <td>${r.score}</td>
-                    <td><span style="font-weight:bold; color:#d4af37;">${r.rank === 1 ? '1st' : r.rank === 2 ? '2nd' : r.rank === 3 ? '3rd' : '4th'}</span></td>
-                </tr>
-            `).join('') || '<tr><td colspan="6">No winners matching position criteria.</td></tr>';
+            tbody.innerHTML = rows || '<tr><td colspan="6">No winners matching position criteria.</td></tr>';
         }
 
         window.viewTeamBreakdown = function(teamName) {
@@ -2153,27 +2057,12 @@
             renderResultPhaseFeeds();
         }
 
-        function populateReportProgDropdown(preserveValue = true) {
-            const catEl = document.getElementById('rep-cat');
+        function populateReportProgDropdown() {
+            const cat = document.getElementById('rep-cat').value;
             const drop = document.getElementById('rep-prog');
-            if(!catEl || !drop) return;
-            const previous = preserveValue ? drop.value : '';
-            const cat = catEl.value;
-            const matched = window.appState.programs.filter(p => !cat || p.cat === cat).slice().sort((a,b)=>a.name.localeCompare(b.name));
+            if(!drop) return;
+            const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
             drop.innerHTML = '<option value="">All Programs (A-Z)</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-            if(previous && matched.some(p => p.id === previous)) drop.value = previous;
-            else drop.value = '';
-        }
-
-        function refreshRegistrationReportFilters() {
-            const teamDrop = document.getElementById('rep-team');
-            const currentTeam = teamDrop ? teamDrop.value : '';
-            if(teamDrop) {
-                const teams = (window.appState.teams || []).slice().sort((a,b)=>a.user.localeCompare(b.user));
-                teamDrop.innerHTML = '<option value="">All Teams</option>' + teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
-                if(currentTeam && teams.some(t => t.user === currentTeam)) teamDrop.value = currentTeam;
-            }
-            populateReportProgDropdown(true);
         }
 
         function syncControlPanelViews() {
@@ -2200,7 +2089,7 @@
             }
             const mProgs = document.getElementById('master-progs-list');
             if(mProgs) {
-                mProgs.innerHTML = window.appState.programs.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(p => `
+                mProgs.innerHTML = window.appState.programs.sort((a,b)=>a.name.localeCompare(b.name)).map(p => `
                     <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
                         <span><strong>${p.name}</strong> (${p.cat})</span> <button class="btn btn-danger btn-sm" onclick="deleteProgramMaster('${p.id}')">x</button>
                     </div>
@@ -2247,8 +2136,40 @@
                     </div>
                 `).join('');
             }
-            refreshRegistrationReportFilters();
+            const rTeam = document.getElementById('rep-team');
+            if(rTeam && rTeam.children.length === 1) {
+                rTeam.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
+            }
             renderReportTable();
+        }
+
+        window.renderReportTable = function() {
+            const fTeam = document.getElementById('rep-team') ? document.getElementById('rep-team').value : '';
+            const fCat = document.getElementById('rep-cat') ? document.getElementById('rep-cat').value : '';
+            const fProg = document.getElementById('rep-prog') ? document.getElementById('rep-prog').value : '';
+            const searchQ = document.getElementById('rep-prog-search') ? document.getElementById('rep-prog-search').value.toLowerCase().trim() : '';
+            const tbody = document.getElementById('report-table-body');
+            if(!tbody) return;
+            let rows = '';
+            let count = 1;
+            window.appState.registrations.forEach(r => {
+                const p = window.appState.programs.find(pr => pr.id === r.progId);
+                if(!p) return;
+                if(fTeam && r.team !== fTeam) return;
+                if(fCat && r.cat !== fCat) return;
+                if(fProg && r.progId !== fProg) return;
+                if(searchQ && !p.name.toLowerCase().includes(searchQ)) return;
+                r.participants.forEach(name => {
+                    rows += `<tr>
+                        <td style="text-align:center;">${count++}</td>
+                        <td><strong>${name}</strong></td>
+                        <td>${r.team}</td>
+                        <td>${r.cat}</td>
+                        <td>${p.name}</td>
+                    </tr>`;
+                });
+            });
+            tbody.innerHTML = rows || '<tr><td colspan="5" style="text-align:center;">No entries found.</td></tr>';
         }
 
         /* RESULT PHASE VIEWER */
