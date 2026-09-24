@@ -318,16 +318,24 @@
                 visibility: hidden !important;
             }
 
-            /* Only the selected print sheet is visible. */
-            body.printing .print-target,
-            body.printing .print-target * {
+            /* Only the actively selected print sheet is visible.
+               Other print targets must stay hidden; otherwise the browser
+               can place multiple print sheets on the same A4 page. */
+            body.printing .print-target:not(.active-print-target),
+            body.printing .print-target:not(.active-print-target) * {
+                display: none !important;
+                visibility: hidden !important;
+            }
+
+            body.printing .print-target.active-print-target,
+            body.printing .print-target.active-print-target * {
                 visibility: visible !important;
             }
 
             /* The selected sheet is moved directly under <body> by
                triggerCustomPrint(), so no card/container width can
                shrink the A4 print area. */
-            body.printing .print-target {
+            body.printing .print-target.active-print-target {
                 display: block !important;
                 position: absolute !important;
                 left: 0 !important;
@@ -1618,6 +1626,7 @@
             });
 
             target.style.display = 'block';
+            target.classList.add('active-print-target');
             document.body.classList.add('printing');
 
             document.body.appendChild(target);
@@ -1628,6 +1637,7 @@
                 restored = true;
 
                 document.body.classList.remove('printing');
+                target.classList.remove('active-print-target');
 
                 target.style.display = originalDisplay;
 
@@ -2173,29 +2183,61 @@
         window.renderRankWinnersList = function() {
             const tbody = document.getElementById('rank-winners-body');
             if(!tbody) return;
-            const fTeam = document.getElementById('rank-team-filter').value;
-            const fPos = document.getElementById('rank-pos-filter').value;
-            const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
-            let rows = '';
-            let count = 1;
+
+            const teamFilter = document.getElementById('rank-team-filter');
+            const posFilter = document.getElementById('rank-pos-filter');
+            const fTeam = teamFilter ? teamFilter.value : '';
+            const fPos = posFilter ? posFilter.value : 'all';
+
+            const allRows = [];
+            const distinctProgs = [...new Set((window.appState.points || []).map(p => p.progId))];
+
             distinctProgs.forEach(pid => {
                 const prog = window.appState.programs.find(p => p.id === pid) || { name: 'N/A' };
-                const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
+                const subPts = window.appState.points
+                    .filter(pt => pt.progId === pid)
+                    .sort((a,b) => {
+                        const scoreDiff = Number(b.score || 0) - Number(a.score || 0);
+                        if(scoreDiff !== 0) return scoreDiff;
+                        return String(a.student || '').localeCompare(String(b.student || ''));
+                    });
+
                 subPts.forEach((pt, idx) => {
                     const rank = idx + 1;
                     if(fTeam && pt.team !== fTeam) return;
-                    if(fPos !== 'all' && rank !== parseInt(fPos)) return;
-                    rows += `<tr>
-                        <td>${count++}</td>
-                        <td><strong>${pt.student}</strong></td>
-                        <td>${pt.team}</td>
-                        <td>${prog.name}</td>
-                        <td>${pt.score}</td>
-                        <td><span style="font-weight:bold; color:#d4af37;">Rank ${rank}</span></td>
-                    </tr>`;
+                    if(fPos !== 'all' && rank !== parseInt(fPos, 10)) return;
+                    allRows.push({
+                        rank,
+                        student: pt.student || '',
+                        team: pt.team || '',
+                        program: prog.name || 'N/A',
+                        score: Number(pt.score || 0)
+                    });
                 });
             });
-            tbody.innerHTML = rows || '<tr><td colspan="6">No winners matching position criteria.</td></tr>';
+
+            /* For “All Placed Winners”, group by position first:
+               Rank 1 rows -> Rank 2 rows -> Rank 3 rows -> Rank 4 rows... */
+            allRows.sort((a,b) => {
+                if(a.rank !== b.rank) return a.rank - b.rank;
+                const programCmp = a.program.localeCompare(b.program);
+                if(programCmp !== 0) return programCmp;
+                const teamCmp = a.team.localeCompare(b.team);
+                if(teamCmp !== 0) return teamCmp;
+                return a.student.localeCompare(b.student);
+            });
+
+            let count = 1;
+            tbody.innerHTML = allRows.map(row => `
+                <tr>
+                    <td>${count++}</td>
+                    <td><strong>${row.student}</strong></td>
+                    <td>${row.team}</td>
+                    <td>${row.program}</td>
+                    <td>${row.score}</td>
+                    <td><span style="font-weight:bold; color:#d4af37;">Rank ${row.rank}</span></td>
+                </tr>
+            `).join('') || '<tr><td colspan="6">No winners matching position criteria.</td></tr>';
         }
 
         window.viewTeamBreakdown = function(teamName) {
@@ -2275,7 +2317,7 @@
                 btn.innerText = "Upload Status Poster";
                 btn.disabled = false;
                 e.target.reset();
-                alert("Status Poster Uploaded Instantly.");
+                // Upload completed successfully; no blocking OK/alert is shown.
             }
         }
 
@@ -2320,7 +2362,6 @@
                 
                 btn.innerText = "Publish Result";
                 btn.disabled = false;
-                alert("Result Published Instantly.");
             }
         }
 
@@ -2383,7 +2424,6 @@
                 btn.disabled = false;
                 e.target.reset();
                 window.toggleUpdateVideoUrl(); // Reset UI
-                alert("Update Published Instantly.");
             } catch(err) {
                 console.error("Upload error: ", err);
                 btn.innerText = "Upload & Publish";
@@ -2745,3 +2785,4 @@
     </script>
 </body>
 </html>
+
