@@ -1099,9 +1099,18 @@
                     <label>Password</label>
                     <input type="password" id="main-pass-input" class="form-control" required style="border-radius:20px;">
                 </div>
-                <button type="submit" class="btn btn-block" style="border-radius:20px; margin-top:10px;">Sign In</button>
+                <button type="submit" id="main-login-submit" class="btn btn-block" style="border-radius:20px; margin-top:10px;">Sign In</button>
+                <button type="button" id="first-admin-setup-btn" class="btn btn-warning btn-block" style="display:none; margin-top:8px; border-radius:20px;" onclick="openFirstAdminSetup()">Create New Admin Login</button>
                 <button type="button" class="btn btn-danger btn-block" style="margin-top:8px; border-radius:20px; background:transparent; border:1px solid #ef4444;" onclick="closeModal()">Cancel</button>
             </form>
+            <div id="first-admin-setup" style="display:none; margin-top:14px; border-top:1px solid var(--border-color); padding-top:14px; text-align:left;">
+                <h4 style="color:#d4af37; margin-bottom:8px;">Initial Admin Setup</h4>
+                <p style="font-size:0.8rem; color:var(--text-sub); margin-bottom:10px;">No admin credentials are stored in the HTML. Create the new login here.</p>
+                <input type="text" id="first-admin-user" class="form-control" placeholder="New Username" style="margin-bottom:6px;">
+                <input type="password" id="first-admin-pass" class="form-control" placeholder="New Password" style="margin-bottom:6px;">
+                <input type="password" id="first-admin-pass-confirm" class="form-control" placeholder="Confirm Password" style="margin-bottom:8px;">
+                <button type="button" class="btn btn-success btn-block" onclick="saveFirstAdminSetup()">Save Admin Login</button>
+            </div>
         </div>
     </div>
 
@@ -1150,7 +1159,20 @@
                 // Instantly Load Full Cached State to Prevent 30-sec Lag
                 const cachedState = localStorage.getItem('bahja_full_state');
                 if (cachedState) {
-                    window.appState = JSON.parse(cachedState);
+                    const cached = JSON.parse(cachedState);
+                    // Migrate any pre-v2 cached credentials out of the browser immediately.
+                    if (cached.securitySchemaVersion !== 2) {
+                        const preservedLogo = { logoUrl: cached.logoUrl || '', logoPos: cached.logoPos || 'logo-top-left', logoSize: cached.logoSize || '60' };
+                        cached.mainCreds = { user:'', pass:'' };
+                        cached.subLocks = { settings:'', control_panel:'', judge:'', pointroom:'', states:'', protection:'', modify:'' };
+                        cached.teams = [];
+                        cached.securitySchemaVersion = 2;
+                        cached.logoUrl = preservedLogo.logoUrl;
+                        cached.logoPos = preservedLogo.logoPos;
+                        cached.logoSize = preservedLogo.logoSize;
+                        localStorage.setItem('bahja_full_state', JSON.stringify(cached));
+                    }
+                    window.appState = cached;
                 }
             } catch(e) { console.error("Cache pre-render error: ", e); }
 
@@ -1236,16 +1258,50 @@
             });
         }
 
-        // Initialize State
-        if (!window.appState) {
-            window.appState = {
-                phase: 'result', portalOpen: true, theme: 'dark', logoUrl: '', splashUrl: '', logoPos: 'logo-top-left', logoSize: '60',
-                teamStatusUrl: '', teamStatusList: [], maxProgLimit: 3, mainCreds: { user: 'bahja2026', pass: '2026bahjacommitty' },
-                subLocks: { settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag' },
+        // Initialize State - NO CREDENTIALS ARE STORED IN SOURCE CODE
+        const SECURITY_SCHEMA_VERSION = 2;
+        const EMPTY_SUB_LOCKS = { settings:'', control_panel:'', judge:'', pointroom:'', states:'', protection:'', modify:'' };
+
+        function buildCleanState(preservedLogo) {
+            const logo = preservedLogo || {};
+            return {
+                phase: 'result', portalOpen: true, theme: 'dark',
+                logoUrl: logo.logoUrl || '', splashUrl: '',
+                logoPos: logo.logoPos || 'logo-top-left', logoSize: logo.logoSize || '60',
+                teamStatusUrl: '', teamStatusList: [], maxProgLimit: 3,
+                mainCreds: { user: '', pass: '' },
+                subLocks: { ...EMPTY_SUB_LOCKS },
+                securitySchemaVersion: SECURITY_SCHEMA_VERSION,
                 visibilities: { 'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true },
                 visuals: { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center' },
                 teams: [], programs: [], registrations: [], results: [], updates: [], livelinks: [], highlights: [], students: [], points: []
             };
+        }
+
+        function sanitizeSecurityState(state) {
+            if(!state || typeof state !== 'object') return state;
+            // Any database/local-cache created before schema v2 contained credentials.
+            // Remove all old main/sub-panel/team credentials during this one-time migration.
+            if(state.securitySchemaVersion !== SECURITY_SCHEMA_VERSION) {
+                const preservedLogo = { logoUrl: state.logoUrl || '', logoPos: state.logoPos || 'logo-top-left', logoSize: state.logoSize || '60' };
+                state.mainCreds = { user:'', pass:'' };
+                state.subLocks = { ...EMPTY_SUB_LOCKS };
+                state.teams = [];
+                state.securitySchemaVersion = SECURITY_SCHEMA_VERSION;
+                state.logoUrl = preservedLogo.logoUrl;
+                state.logoPos = preservedLogo.logoPos;
+                state.logoSize = preservedLogo.logoSize;
+            }
+            if(!state.mainCreds || typeof state.mainCreds !== 'object') state.mainCreds = { user:'', pass:'' };
+            if(!state.subLocks || typeof state.subLocks !== 'object') state.subLocks = { ...EMPTY_SUB_LOCKS };
+            return state;
+        }
+
+        // Initialize State
+        if (!window.appState) {
+            window.appState = buildCleanState();
+        } else {
+            window.appState = sanitizeSecurityState(window.appState);
         }
 
         window.loggedTeamUser = null;
@@ -1297,6 +1353,12 @@
             const data = snapshot.val();
             if (data) {
                 window.appState = { ...window.appState, ...data };
+                const wasOldSecuritySchema = window.appState.securitySchemaVersion !== SECURITY_SCHEMA_VERSION;
+                window.appState = sanitizeSecurityState(window.appState);
+                if (wasOldSecuritySchema) {
+                    // Persist the migration so old usernames/passwords are removed from Firebase too.
+                    try { set(dbRef, window.appState); } catch(e) { console.warn('Security migration save failed:', e); }
+                }
                 if((!window.appState.teamStatusList || window.appState.teamStatusList.length === 0) && window.appState.teamStatusUrl) {
                     window.appState.teamStatusList = [{ id: 'ts_legacy', url: window.appState.teamStatusUrl }];
                 }
@@ -1480,14 +1542,53 @@
             const el = document.getElementById(boxId); 
             if(el) el.classList.toggle('show');
         }
-        window.openLoginModal = function() { document.getElementById('modal-overlay').style.display = 'flex'; }
+        window.openLoginModal = function() {
+            document.getElementById('modal-overlay').style.display = 'flex';
+            syncMainLoginSetupUI();
+        }
         window.closeModal = function() { document.getElementById('modal-overlay').style.display = 'none'; }
+
+        function syncMainLoginSetupUI() {
+            const hasCreds = !!(window.appState.mainCreds && window.appState.mainCreds.user && window.appState.mainCreds.pass);
+            const setupBtn = document.getElementById('first-admin-setup-btn');
+            const loginBtn = document.getElementById('main-login-submit');
+            if(setupBtn) setupBtn.style.display = hasCreds ? 'none' : 'block';
+            if(loginBtn) loginBtn.innerText = hasCreds ? 'Sign In' : 'Sign In (Credentials Not Set)';
+        }
+
+        window.openFirstAdminSetup = function() {
+            document.getElementById('first-admin-setup').style.display = 'block';
+            document.getElementById('first-admin-user').focus();
+        }
+
+        window.saveFirstAdminSetup = function() {
+            const u = document.getElementById('first-admin-user').value.trim();
+            const p = document.getElementById('first-admin-pass').value;
+            const cp = document.getElementById('first-admin-pass-confirm').value;
+            if(!u || !p) { alert('Enter a username and password.'); return; }
+            if(p !== cp) { alert('Passwords do not match.'); return; }
+            window.appState.mainCreds = { user:u, pass:p };
+            window.appState.securitySchemaVersion = SECURITY_SCHEMA_VERSION;
+            saveKey('mainCreds', window.appState.mainCreds);
+            saveKey('securitySchemaVersion', SECURITY_SCHEMA_VERSION);
+            alert('Admin login created. You can now sign in.');
+            document.getElementById('first-admin-setup').style.display = 'none';
+            document.getElementById('main-user-input').value = u;
+            document.getElementById('main-pass-input').value = '';
+            syncMainLoginSetupUI();
+        }
         
         window.handleMainLogin = function(e) {
             e.preventDefault();
             const u = document.getElementById('main-user-input').value.trim();
             const p = document.getElementById('main-pass-input').value.trim();
-            if(u === window.appState.mainCreds.user && p === window.appState.mainCreds.pass) {
+            const creds = window.appState.mainCreds || {};
+            if(!creds.user || !creds.pass) {
+                alert('No admin credentials are set. Use Create New Admin Login.');
+                syncMainLoginSetupUI();
+                return;
+            }
+            if(u === creds.user && p === creds.pass) {
                 window.isMainLoggedIn = true;
                 closeModal(); render3DotMenu();
                 showPanel('panel-control-panel');
@@ -1574,6 +1675,7 @@
             window.appState.mainCreds.user = nu;
             window.appState.mainCreds.pass = np;
             saveKey('mainCreds', window.appState.mainCreds);
+            saveKey('securitySchemaVersion', SECURITY_SCHEMA_VERSION);
             alert("Main credentials updated.");
             document.getElementById('prot-new-main-block').style.display = 'none';
         }
@@ -1702,11 +1804,36 @@
         }
 
         window.clearAllDataSystem = function() {
-            if(confirm("Completely reset database state?")) {
+            if(!confirm("Clear all system data? The current logo will be preserved, but all registrations, programs, results, team accounts and passwords will be removed.")) return;
+
+            const preservedLogo = {
+                logoUrl: window.appState.logoUrl || '',
+                logoPos: window.appState.logoPos || 'logo-top-left',
+                logoSize: window.appState.logoSize || '60'
+            };
+
+            // Reset EVERYTHING except the currently uploaded logo and its placement.
+            // No old username/password is copied into the reset state.
+            window.appState = buildCleanState(preservedLogo);
+            window.loggedTeamUser = null;
+            window.activePartTeam = null;
+            window.isMainLoggedIn = false;
+
+            // Clear browser storage completely, then cache only the new clean state.
+            // This guarantees that no old credential keys survive locally.
+            try {
                 localStorage.clear();
-                window.appState = { phase:'result', portalOpen:true, theme:'dark', logoUrl:'', splashUrl:'', logoPos:'logo-top-left', logoSize:'60', teamStatusUrl:'', teamStatusList:[], maxProgLimit:3, mainCreds:{user:'bahja2026', pass:'2026bahjacommitty'}, subLocks:{settings:'settingsbahja', control_panel:'controlpanelbahja', judge:'judgebahja', pointroom:'pointroombahja', states:'statesbahja', protection:'Protectionbahja', modify:'modifymodifybahjag'}, visibilities:{'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true}, visuals:{bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center'}, teams:[], programs:[], registrations:[], results:[], updates:[], livelinks:[], highlights:[], students:[], points:[] };
-                saveData(); navHome();
-            }
+                localStorage.setItem('bahja_full_state', JSON.stringify(window.appState));
+                localStorage.setItem('bahja_current_phase', window.appState.phase);
+                localStorage.setItem('bahja_theme', window.appState.theme);
+            } catch(e) {}
+
+            // Save the clean state to Firebase. This removes old credentials there as well.
+            set(dbRef, window.appState);
+            applyLogoView();
+            render3DotMenu();
+            navHome();
+            alert("System data cleared. Logo preserved. All old usernames and passwords were removed.");
         }
 
         window.renderHomePhase = function() {
