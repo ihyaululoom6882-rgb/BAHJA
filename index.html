@@ -132,8 +132,7 @@
             background: var(--glass-card-bg); 
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-       
-     border-radius: 24px; 
+            border-radius: 24px; 
             padding: 24px 20px; 
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); 
             margin-bottom: 20px; 
@@ -272,8 +271,7 @@
         }
         .table-responsive { width: 100%; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 8px 10px
-; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-main); }
+        th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-main); }
         th { background-color: rgba(255, 255, 255, 0.05); font-weight: 700; color: var(--text-sub); }
         .modal-overlay { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
@@ -431,8 +429,7 @@
             }
 
             .bahja-sheet-table th,
-        
-    .bahja-sheet-table td,
+            .bahja-sheet-table td,
             .print-target table th,
             .print-target table td {
                 border: 1px solid #000 !important;
@@ -580,8 +577,7 @@
                         <label>Select Category</label>
                         <select id="reg-cat-select" class="form-control" onchange="loadCategoryPrograms()">
                             <option value="">-- Choose Category --</option>
-                            <option v
-alue="GENERAL">GENERAL</option>
+                            <option value="GENERAL">GENERAL</option>
                             <option value="LOWER ZONE">LOWER ZONE</option>
                             <option value="MIDDLE ZONE">MIDDLE ZONE</option>
                             <option value="HIGHER ZONE">HIGHER ZONE</option>
@@ -592,7 +588,7 @@ alue="GENERAL">GENERAL</option>
                 </div>
             </div>
             <!-- RESULT PHASE -->
-            <div id="home-phase-result" style="display: block;">
+            <div id="home-phase-result" style="display: none;">
                 <div class="result-menu-box" id="result-pills-container">
                     <button class="pill-menu-btn pill-green" id="pill-sec-team-states" onclick="openSection('section-team-states')">
                         <div class="pill-left-content">
@@ -672,8 +668,7 @@ alue="GENERAL">GENERAL</option>
         </div>
         <!-- UPDATES & GALLERY -->
         <div id="section-updates" class="view-panel card">
-            <button class="btn btn-warning btn-sm" oncli
-ck="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <h3 style="color: #d4af37; margin-bottom: 12px;">Updates & Gallery</h3>
             <div style="display:flex; gap:8px; margin-bottom:12px;" class="no-print">
                 <button class="btn btn-sm btn-warning" onclick="renderPinterestUpdates('all')">All</button>
@@ -762,8 +757,7 @@ ck="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></
                 </div>
                 <div class="form-group">
                     <label>Logo Size Height (px): <span id="logo-size-val">60</span>px</label>
-                    <input type="r
-ange" min="30" max="120" value="60" id="sys-logo-size" class="form-control" oninput="updateLogoStylesLocally()">
+                    <input type="range" min="30" max="120" value="60" id="sys-logo-size" class="form-control" oninput="updateLogoStylesLocally()">
                 </div>
                 <button type="submit" class="btn btn-block">Save System Configurations</button>
             </form>
@@ -797,7 +791,7 @@ ange" min="30" max="120" value="60" id="sys-logo-size" class="form-control" onin
                 <div class="no-print" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;padding:8px;background:rgba(255,255,255,.04);border:1px solid var(--border-color);border-radius:8px;">
                     <select id="pt-record-cat-filter" class="form-control" onchange="populatePtRecordProgFilter(); renderPtList();"><option value="">All Categories</option></select>
                     <select id="pt-record-prog-filter" class="form-control" onchange="renderPtList()"><option value="">All Programs</option></select>
-                    <input id="pt-record-search" class="form-control" placeholder="Search student / code / team / program" oninput="renderPtList()">
+                    <input id="pt-record-search" class="form-control" placeholder="Search student / code / team" oninput="renderPtList()">
                 </div>
                 <div id="pt-record-list-content"></div>
             </div><div id="pt-print-area" class="print-target" style="display:none;"></div>
@@ -825,8 +819,7 @@ ange" min="30" max="120" value="60" id="sys-logo-size" class="form-control" onin
                 </div><div id="judge-timer-warning" style="text-align:center;margin-top:8px;font-weight:700;color:#ef4444;min-height:20px;"></div>
             </div>
             <div class="card no-print" style="padding:12px;margin-bottom:12px;">
-                <h4 style="color:#d4af37;margin-bottom:10px;"><i class="fa-solid fa-pen-to-square"></i> Judge Marks
-</h4>
+                <h4 style="color:#d4af37;margin-bottom:10px;"><i class="fa-solid fa-pen-to-square"></i> Judge Marks</h4>
                 <p style="font-size:.82rem;color:var(--text-sub);margin-bottom:10px;">The code letter comes from Pointroom. Enter the judge mark against each code letter.</p>
                 <div id="judge-code-list"></div><button class="btn btn-success btn-block btn-xl" onclick="submitJudgeMarks()" style="margin-top:10px;">Submit Judge Marks</button>
                 <div style="margin-top:14px;border-top:1px solid var(--border-color);padding-top:10px;">
@@ -905,8 +898,7 @@ ange" min="30" max="120" value="60" id="sys-logo-size" class="form-control" onin
 
             <div style="background:rgba(0,0,0,0.16); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-bottom:14px;">
                 <h4 style="color:#d4af37; margin-bottom:10px;">Program Results</h4>
-                <div id="publish-results-list" style="display:flex; flex-direction:column; gap:8px;"
-></div>
+                <div id="publish-results-list" style="display:flex; flex-direction:column; gap:8px;"></div>
             </div>
 
             <div style="background:rgba(0,0,0,0.16); border:1px solid var(--border-color); padding:12px; border-radius:12px;">
@@ -993,8 +985,7 @@ ange" min="30" max="120" value="60" id="sys-logo-size" class="form-control" onin
                 <span>1. REGISTRATION CONTROL</span> <i class="fa-solid fa-chevron-down"></i>
             </div>
             <div id="box-reg-control" class="collapsible-box show" style="padding:12px; background:rgba(0,0,0,0.2); border-radius:12px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px 12px; border-rad
-ius:8px; border:1px solid var(--border-color); margin-bottom:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:12px;">
                     <span>Registration Lock:</span>
                     <button id="lock-reg-btn" class="btn btn-sm" onclick="toggleRegLock()"></button>
                 </div>
@@ -1075,8 +1066,7 @@ ius:8px; border:1px solid var(--border-color); margin-bottom:12px;">
                     </div>
                 </div>
             </div>
-            <div class="collapsible-header" onclick="togg
-leAccordion('box-res-control')">
+            <div class="collapsible-header" onclick="toggleAccordion('box-res-control')">
                 <span>2. RESULT & MEDIA PUBLISHER</span> <i class="fa-solid fa-chevron-down"></i>
             </div>
             <div id="box-res-control" class="collapsible-box" style="padding:12px; background:rgba(0,0,0,0.2); border-radius:12px;">
@@ -1136,8 +1126,7 @@ leAccordion('box-res-control')">
                     <form onsubmit="uploadStreamLinks(event)" style="display:flex; flex-direction:column; gap:6px;">
                         <input type="text" id="st-title" class="form-control" placeholder="Title" required>
                         <input type="url" id="st-url" class="form-control" placeholder="Stream / Video Link" required>
-                        <input type="file" id="st-thumb" class="form-control" accep
-t="image/*" required>
+                        <input type="file" id="st-thumb" class="form-control" accept="image/*" required>
                         <select id="st-mode" class="form-control"><option value="live">LIVE STREAMING</option><option value="highlight">HIGHLIGHTS</option></select>
                         <button type="submit" id="btn-up-stream" class="btn btn-sm btn-success btn-block">Add Stream</button>
                     </form>
@@ -1222,8 +1211,7 @@ t="image/*" required>
                 if (cachedState) {
                     const cached = JSON.parse(cachedState);
                     // Migrate any pre-v2 cached credentials out of the browser immediately.
-                    if (cached.securit
-ySchemaVersion !== 2) {
+                    if (cached.securitySchemaVersion !== 2) {
                         const preservedLogo = { logoUrl: cached.logoUrl || '', logoPos: cached.logoPos || 'logo-top-left', logoSize: cached.logoSize || '60' };
                         cached.mainCreds = { user:'', pass:'' };
                         cached.subLocks = { settings:'', control_panel:'', judge:'', pointroom:'', states:'', protection:'', modify:'' };
@@ -1334,7 +1322,6 @@ ySchemaVersion !== 2) {
                 mainCreds: { user: '', pass: '' },
                 subLocks: { ...EMPTY_SUB_LOCKS },
                 securitySchemaVersion: SECURITY_SCHEMA_VERSION,
-
                 visibilities: { 'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true },
                 visuals: { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center' },
                 teams: [], programs: [], registrations: [], results: [], updates: [], livelinks: [], highlights: [], students: [], points: [], codeEntries: [], judgeScores: [], judgeTopics: {}, pointroomActiveProgramId: '', judgeTimerSeconds: 60
@@ -1441,8 +1428,7 @@ ySchemaVersion !== 2) {
                 window.appState = { ...window.appState, ...data };
                 if(!Array.isArray(window.appState.codeEntries)) window.appState.codeEntries = [];
                 if(!Array.isArray(window.appState.judgeScores)) window.appState.judgeScores = [];
-                if(!window.app
-State.judgeTopics) window.appState.judgeTopics = {};
+                if(!window.appState.judgeTopics) window.appState.judgeTopics = {};
                 if(typeof window.appState.pointroomActiveProgramId !== 'string') window.appState.pointroomActiveProgramId = '';
                 if(!window.appState.judgeTimerSeconds) window.appState.judgeTimerSeconds = 60;
                 const wasOldSecuritySchema = window.appState.securitySchemaVersion !== SECURITY_SCHEMA_VERSION;
@@ -1551,7 +1537,6 @@ State.judgeTopics) window.appState.judgeTopics = {};
                     html += `<button onclick="showPanel('panel-participants-entry')"><i class="fa-solid fa-user-plus"></i> Participants Entry</button>`;
                 }
             } else {
-
                 // Point Room stays directly available after Main Login.
                 html += `<button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Point Room</button>`;
                 html += `
@@ -1652,8 +1637,7 @@ State.judgeTopics) window.appState.judgeTopics = {};
             const setupBtn = document.getElementById('first-admin-setup-btn');
             const loginBtn = document.getElementById('main-login-submit');
             if(setupBtn) setupBtn.style.display = hasCreds ? 'none' : 'block';
-            if(loginBtn) loginBtn.innerText = hasCreds ? 
-'Sign In' : 'Sign In (Credentials Not Set)';
+            if(loginBtn) loginBtn.innerText = hasCreds ? 'Sign In' : 'Sign In (Credentials Not Set)';
         }
 
         window.openFirstAdminSetup = function() {
@@ -1786,8 +1770,7 @@ State.judgeTopics) window.appState.judgeTopics = {};
             const container = document.getElementById('sub-panel-pass-managers-container');
             if(!container) return;
             const schema = [
-                { key: 'settings'
-, name: 'Settings Lock' },
+                { key: 'settings', name: 'Settings Lock' },
                 { key: 'control_panel', name: 'Control Panel Lock' },
                 { key: 'judge', name: 'Judge Leaderboard Lock' },
                 { key: 'pointroom', name: 'Pointroom Input Lock' },
@@ -1892,8 +1875,7 @@ State.judgeTopics) window.appState.judgeTopics = {};
             window.appState.phase = selectedPhase;
             localStorage.setItem('bahja_current_phase', selectedPhase);
 
-            window.appState.logoPos = document.getElem
-entById('sys-logo-pos').value;
+            window.appState.logoPos = document.getElementById('sys-logo-pos').value;
             window.appState.logoSize = document.getElementById('sys-logo-size').value;
 
             const logoF = document.getElementById('sys-logo-input').files[0];
@@ -2011,8 +1993,7 @@ entById('sys-logo-pos').value;
             const filtered = window.appState.students.filter(s => s.team === window.activePartTeam);
             document.getElementById('team-students-list').innerHTML = filtered.map(s => `
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:rgba(0,0,0,0.2); margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
-                    <span><strong>${s.name}</strong> (${s
-.cat})</span>
+                    <span><strong>${s.name}</strong> (${s.cat})</span>
                     <button class="btn btn-danger btn-sm" onclick="deleteStudent('${s.id}')">Delete</button>
                 </div>
             `).join('') || '<p>No students recorded.</p>';
@@ -2086,22 +2067,20 @@ entById('sys-logo-pos').value;
 
         /* POINTROOM */
         window.populatePtProgs=function(){const cat=document.getElementById('pt-cat-select').value,drop=document.getElementById('pt-prog-select');const m=window.appState.programs.filter(p=>p.cat===cat).sort((a,b)=>a.name.localeCompare(b.name));drop.innerHTML='<option value="">-- Choose Program --</option>'+m.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');document.getElementById('pt-candidates-inputs').innerHTML='';document.getElementById('pt-stage-badge').innerText='';const t=document.getElementById('pt-topic-input');if(t)t.value='';}
-        window.loadPtParticipants=function(){const progId=document.getElementById('pt-prog-select').value,p=window.appState.programs.find(p=>p.id===progId),c=document.getElementById('pt-candidates-inputs');if(!p){c.innerHTML='';return;}window.appState.pointroomActiveProgramId=progId;saveKey('pointroomActiveProgramId',progId);document.getElementById('pt-stage-badge').innerText=`Stage: ${p.stage}`;const t=document.getElementById('pt-topic-input');if(t)t.value=window.appState.judgeTopics?.[progId]||'';const regs=window.appState.registrations.filter(r=>r.progId===progId);if(!regs.length){c.innerHTML='<p style="color:#ef4444;">No registered candidates found.</p>';loadJudgeProgram();return;}let h='';regs.forEach(r=>r.participants.forEach(n=>{const ex=(window.appState.codeEntries||[]).find(x=>x.progId===progId&&x.team===r.team&&x.student===n)||{};h+=`<div style="display:grid;grid-template-columns:1fr 120px;gap:8px;align-items:center;background:
-rgba(0,0,0,.2);padding:8px 10px;margin-bottom:6px;border-radius:8px;border:1px solid var(--border-color);"><span><strong>${n}</strong> <span style="color:var(--text-sub);">(${r.team})</span></span><input type="text" maxlength="10" class="form-control pt-code-field" data-team="${r.team}" data-student="${n}" value="${ex.codeLetter||''}" placeholder="Code Letter" style="padding:6px;text-transform:uppercase;"></div>`;}));c.innerHTML=h;loadJudgeProgram();}
+        window.loadPtParticipants=function(){const progId=document.getElementById('pt-prog-select').value,p=window.appState.programs.find(p=>p.id===progId),c=document.getElementById('pt-candidates-inputs');if(!p){c.innerHTML='';return;}window.appState.pointroomActiveProgramId=progId;saveKey('pointroomActiveProgramId',progId);document.getElementById('pt-stage-badge').innerText=`Stage: ${p.stage}`;const t=document.getElementById('pt-topic-input');if(t)t.value=window.appState.judgeTopics?.[progId]||'';const regs=window.appState.registrations.filter(r=>r.progId===progId);if(!regs.length){c.innerHTML='<p style="color:#ef4444;">No registered candidates found.</p>';loadJudgeProgram();return;}let h='';regs.forEach(r=>r.participants.forEach(n=>{const ex=(window.appState.codeEntries||[]).find(x=>x.progId===progId&&x.team===r.team&&x.student===n)||{};h+=`<div style="display:grid;grid-template-columns:1fr 120px;gap:8px;align-items:center;background:rgba(0,0,0,.2);padding:8px 10px;margin-bottom:6px;border-radius:8px;border:1px solid var(--border-color);"><span><strong>${n}</strong> <span style="color:var(--text-sub);">(${r.team})</span></span><input type="text" maxlength="10" class="form-control pt-code-field" data-team="${r.team}" data-student="${n}" value="${ex.codeLetter||''}" placeholder="Code Letter" style="padding:6px;text-transform:uppercase;"></div>`;}));c.innerHTML=h;loadJudgeProgram();}
         window.savePointroomTopic=function(){const pid=document.getElementById('pt-prog-select')?.value;if(!pid){alert('Choose a program first.');return;}if(!window.appState.judgeTopics)window.appState.judgeTopics={};window.appState.judgeTopics[pid]=document.getElementById('pt-topic-input').value.trim();window.appState.pointroomActiveProgramId=pid;saveKey('judgeTopics',window.appState.judgeTopics);saveKey('pointroomActiveProgramId',pid);loadJudgeProgram();}
         window.renderPointroomTopicView=function(){const pid=window.appState.pointroomActiveProgramId||'',t=document.getElementById('pt-topic-input');if(t&&pid)t.value=window.appState.judgeTopics?.[pid]||'';}
         window.savePointroomEntry=function(e){e.preventDefault();const pid=document.getElementById('pt-prog-select').value,cat=document.getElementById('pt-cat-select').value;if(!pid||!cat)return;window.appState.pointroomActiveProgramId=pid;saveKey('pointroomActiveProgramId',pid);if(!Array.isArray(window.appState.codeEntries))window.appState.codeEntries=[];const en=[],used=new Set();let dup=false;document.querySelectorAll('.pt-code-field').forEach(f=>{const code=String(f.value||'').trim().toUpperCase();if(!code)return;if(used.has(code))dup=true;used.add(code);en.push({progId:pid,cat,team:f.getAttribute('data-team'),student:f.getAttribute('data-student'),codeLetter:code});});if(dup){alert('Each code letter must be unique within a program.');return;}window.appState.codeEntries=window.appState.codeEntries.filter(x=>x.progId!==pid).concat(en);saveKey('codeEntries',window.appState.codeEntries);loadPtParticipants();renderPtList();renderJudgeCodeList();}
-        function renderPtList(){const c=document.getElementById('box-pt-list');if(!c)return;const ids=[...new Set((window.appState.codeEntries||[]).map(x=>x.progId))];if(!ids.length){c.innerHTML='<p>No records submitted.</p>';return;}c.innerHTML=ids.map(pid=>{const p=window.appState.programs.find(x=>x.id===pid)||{name:'Unknown',cat:'N/A'},codes=(window.appState.codeEntries||[]).filter(x=>x.progId===pid).sort((a,b)=>String(a.codeLetter).localeCompare(String(b.codeLetter)));return `<div style="background:rgba(0,0,0,.2);border:1px solid var(--border-color);padding:10px;border-radius:8px;margin-bottom:8px;"><div style="display:flex;justify-content:space-between;align-items:center;"><strong>${p.name} (${p.cat})</strong><div><button class="btn btn-warning btn-sm no-print" onclick="printCodeLetterRecord('${pid}')"><i class="fa-solid fa-print"></i> Print</button><button class="btn btn-danger btn-sm no-print" onclick="deleteCodeEntryGroup('${pid}')">Delete</button></div></div><div class="table-responsive" style="margin-top:8px;"><table class="bahja-sheet-table"><thead><tr><th>Code Letter</th><th>Student Name</th><th>Team</th><th>Marks</th></tr></thead><tbody>${codes.map(x=>{const js=(window.appState.judgeScores||[]).find(s=>s.progId===pid&&s.team===x.team&&s.codeLetter===x.codeLetter);return `<tr><td><strong>${x.codeLetter}</strong></td><td>${x.team}</td><td><strong>${js?Number(js.score||0):'-'}</strong></td></tr>`;}).join('')}</tbody></table></div></div>`;}).join('');}
-        window.printCodeLetterRecord=function(pid){const p=window.appState.programs.find(x=>x.id===pid)||{name:'Program',cat:'N/A'},codes=(window.appState.codeEntries||[]).filter(x=>x.progId===pid).sort((a,b)=>String(a.codeLetter).localeCompare(String(b.codeLetter))),t=document.getElementById('pt-print-area');t.innerHTML=`<div class="bahja-sheet-header"><span>TIME:</span><h2>BAHJA 2K26 - ${p.name.toUpperCase()} (${p.cat})</h2><span>DATE:</span></div><table class="bahja-sheet-table"><thead><tr><th>#</th><th>Code Letter</th><th>Student Name</th><th>Team</th><th>Marks</th></tr></thead><tbody>${codes.map((x,i)=>{const js=(window.appState.judgeScores||[]).find(s=>s.progId===pid&&s.team===x.team&&s.codeLetter===x.codeLetter);return `<tr><td>${i+1}</td><td><strong>${x.codeLetter}</strong></td><td>${x.student||'-'}</td><td>${x.team||'-'}</td><td>${js?Number(js.score||0):'-'}</td></tr>`;}).join('')}</tbody></table>`;triggerCustomPrint('pt-print-area');}
+        function renderPtList(){const c=document.getElementById('box-pt-list');if(!c)return;const ids=[...new Set((window.appState.codeEntries||[]).map(x=>x.progId))];if(!ids.length){c.innerHTML='<p>No records submitted.</p>';return;}c.innerHTML=ids.map(pid=>{const p=window.appState.programs.find(x=>x.id===pid)||{name:'Unknown',cat:'N/A'},codes=(window.appState.codeEntries||[]).filter(x=>x.progId===pid).sort((a,b)=>String(a.codeLetter).localeCompare(String(b.codeLetter)));return `<div style="background:rgba(0,0,0,.2);border:1px solid var(--border-color);padding:10px;border-radius:8px;margin-bottom:8px;"><div style="display:flex;justify-content:space-between;align-items:center;"><strong>${p.name} (${p.cat})</strong><div><button class="btn btn-warning btn-sm no-print" onclick="printCodeLetterRecord('${pid}')"><i class="fa-solid fa-print"></i> Print</button><button class="btn btn-danger btn-sm no-print" onclick="deleteCodeEntryGroup('${pid}')">Delete</button></div></div><div class="table-responsive" style="margin-top:8px;"><table class="bahja-sheet-table"><thead><tr><th>Code Letter</th><th>Team</th><th>Marks</th></tr></thead><tbody>${codes.map(x=>{const js=(window.appState.judgeScores||[]).find(s=>s.progId===pid&&s.team===x.team&&s.codeLetter===x.codeLetter);return `<tr><td><strong>${x.codeLetter}</strong></td><td>${x.team}</td><td><strong>${js?Number(js.score||0):'-'}</strong></td></tr>`;}).join('')}</tbody></table></div></div>`;}).join('');}
+        window.printCodeLetterRecord=function(pid){const p=window.appState.programs.find(x=>x.id===pid)||{name:'Program',cat:'N/A'},codes=(window.appState.codeEntries||[]).filter(x=>x.progId===pid).sort((a,b)=>String(a.codeLetter).localeCompare(String(b.codeLetter))),t=document.getElementById('pt-print-area');t.innerHTML=`<div class="bahja-sheet-header"><span>TIME:</span><h2>BAHJA 2K26 - ${p.name.toUpperCase()} (${p.cat})</h2><span>DATE:</span></div><table class="bahja-sheet-table"><thead><tr><th>#</th><th>Code Letter</th><th>Team</th><th>Marks</th></tr></thead><tbody>${codes.map((x,i)=>{const js=(window.appState.judgeScores||[]).find(s=>s.progId===pid&&s.team===x.team&&s.codeLetter===x.codeLetter);return `<tr><td>${i+1}</td><td><strong>${x.codeLetter}</strong></td><td>${x.team}</td><td>${js?Number(js.score||0):'-'}</td></tr>`;}).join('')}</tbody></table>`;triggerCustomPrint('pt-print-area');}
         window.deleteCodeEntryGroup=function(pid){if(confirm('Delete code letters for this program?')){window.appState.codeEntries=(window.appState.codeEntries||[]).filter(x=>x.progId!==pid);window.appState.judgeScores=(window.appState.judgeScores||[]).filter(x=>x.progId!==pid);saveKey('codeEntries',window.appState.codeEntries);saveKey('judgeScores',window.appState.judgeScores);renderPtList();renderJudgeCodeList();renderJudgeLeaderboard();renderStatesDashboard();renderRankWinnersList();}}
         /* JUDGE WORKFLOW */
         let judgeTimerInterval=null,judgeTimerRemaining=60,judgeTimerRunning=false;
         function getActiveJudgeProgramId(){return window.appState.pointroomActiveProgramId||'';}
         window.loadJudgeProgram=function(){const pid=getActiveJudgeProgramId(),p=window.appState.programs.find(x=>x.id===pid),n=document.getElementById('judge-current-program'),t=document.getElementById('judge-current-topic');if(!p){if(n)n.textContent='No program selected in Pointroom.';if(t)t.textContent='Select a program in Pointroom and save its topic.';const m=document.getElementById('judge-timer-minutes');if(m)m.value=1;renderJudgeCodeList();return;}if(n)n.textContent=`${p.name} (${p.cat})`;if(t)t.textContent=window.appState.judgeTopics?.[pid]||'No topic saved.';if(Number.isFinite(Number(p.judgeTimeMinutes))&&Number(p.judgeTimeMinutes)>0){const m=document.getElementById('judge-timer-minutes');if(m)m.value=p.judgeTimeMinutes;}renderJudgeCodeList();}
-
         function getJudgeCodesForProgram(pid){return(window.appState.codeEntries||[]).filter(x=>x.progId===pid).sort((a,b)=>String(a.codeLetter).localeCompare(String(b.codeLetter)));}
         function getJudgeScore(pid,code){const r=(window.appState.judgeScores||[]).find(x=>x.progId===pid&&x.codeLetter===code);return r?Number(r.score||0):0;}
-        window.renderJudgeCodeList=function(){const box=document.getElementById('judge-code-list');if(!box)return;const pid=getActiveJudgeProgramId();if(!pid){box.innerHTML='<p style="color:var(--text-sub);">Select a program in Pointroom first.</p>';return;}const codes=getJudgeCodesForProgram(pid);if(!codes.length){box.innerHTML='<p style="color:#ef4444;">No code letters submitted from Pointroom for this program.</p>';return;}box.innerHTML=`<div class="table-responsive"><table class="bahja-sheet-table"><thead><tr><th>Code Letter</th><th>Student Name</th><th>Team</th><th>Mark</th></tr></thead><tbody>${codes.map(c=>`<tr><td><strong style="font-size:1.1rem;color:#d4af37;">${c.codeLetter}</strong></td><td>${c.student||'-'}</td><td>${c.team||'-'}</td><td><input type="number" min="0" step="0.01" class="form-control judge-mark-field" data-code="${c.codeLetter}" data-team="${c.team}" value="${getJudgeScore(pid,c.codeLetter)}" placeholder="Mark" style="margin:0;"></td></tr>`).join('')}</tbody></table></div>`;}
+        window.renderJudgeCodeList=function(){const box=document.getElementById('judge-code-list');if(!box)return;const pid=getActiveJudgeProgramId();if(!pid){box.innerHTML='<p style="color:var(--text-sub);">Select a program in Pointroom first.</p>';return;}const codes=getJudgeCodesForProgram(pid);if(!codes.length){box.innerHTML='<p style="color:#ef4444;">No code letters submitted from Pointroom for this program.</p>';return;}box.innerHTML=`<div class="table-responsive"><table class="bahja-sheet-table"><thead><tr><th>Code Letter</th><th>Mark</th></tr></thead><tbody>${codes.map(c=>`<tr><td><strong style="font-size:1.1rem;color:#d4af37;">${c.codeLetter}</strong></td><td><input type="number" min="0" step="0.01" class="form-control judge-mark-field" data-code="${c.codeLetter}" data-team="${c.team}" value="${getJudgeScore(pid,c.codeLetter)}" placeholder="Mark" style="margin:0;"></td></tr>`).join('')}</tbody></table></div>`;}
         window.submitJudgeMarks=function(){const pid=getActiveJudgeProgramId(),p=window.appState.programs.find(x=>x.id===pid);if(!pid||!p){alert('Select a program in Pointroom first.');return;}if(!Array.isArray(window.appState.judgeScores))window.appState.judgeScores=[];window.appState.judgeScores=window.appState.judgeScores.filter(x=>x.progId!==pid);document.querySelectorAll('.judge-mark-field').forEach(f=>{const code=String(f.dataset.code||'').trim().toUpperCase(),team=f.dataset.team||'',score=parseFloat(f.value)||0;if(code)window.appState.judgeScores.push({progId:pid,cat:p.cat,team,codeLetter:code,score,updatedAt:Date.now()});});saveKey('judgeScores',window.appState.judgeScores);renderPtList();renderJudgeLeaderboard();renderStatesDashboard();renderRankWinnersList();}
 
         window.renderJudgeLeaderboard=function(){const tbody=document.getElementById('judge-leaderboard-body');if(!tbody)return;const filterStage=document.getElementById('jd-filter-stage')?.value||'all',agg={};(window.appState.judgeScores||[]).forEach(js=>{const p=window.appState.programs.find(x=>x.id===js.progId);if(!p)return;if(filterStage!=='all'&&p.stage!==filterStage)return;const code=(window.appState.codeEntries||[]).find(c=>c.progId===js.progId&&c.team===js.team&&c.codeLetter===js.codeLetter),name=code?.student||js.codeLetter,key=`${js.team}_${name}`;if(!agg[key])agg[key]={name,team:js.team,cat:js.cat||p.cat,total:0};agg[key].total+=Number(js.score||0);});const sorted=Object.values(agg).sort((a,b)=>b.total-a.total||String(a.name).localeCompare(String(b.name)));tbody.innerHTML=sorted.map(s=>`<tr onclick="viewCandidateBreakdown('${String(s.name).replace(/'/g,"&#39;")}','${String(s.team).replace(/'/g,"&#39;")}')" style="cursor:pointer;"><td><strong>${s.name}</strong></td><td>${s.team}</td><td>${s.cat}</td><td><strong style="color:#d4af37;">${s.total}</strong></td></tr>`).join('')||'<tr><td colspan="4">No scores accumulated.</td></tr>';}
@@ -2150,8 +2129,7 @@ rgba(0,0,0,.2);padding:8px 10px;margin-bottom:6px;border-radius:8px;border:1px s
             if(document.getElementById('judge-timer-warning')) document.getElementById('judge-timer-warning').textContent = '';
             if(pid) {
                 const prog = window.appState.programs.find(p => p.id === pid);
-                if(prog) { prog.judgeTim
-eMinutes = mins; saveKey('programs', window.appState.programs); }
+                if(prog) { prog.judgeTimeMinutes = mins; saveKey('programs', window.appState.programs); }
             }
         }
         window.startJudgeTimer = function() {
@@ -2259,8 +2237,7 @@ eMinutes = mins; saveKey('programs', window.appState.programs); }
             const records = getUnifiedScoreRecords().filter(pt => pt.team === teamName);
             document.getElementById('det-modal-title').innerText = `Team Breakdown: ${teamName}`;
             document.getElementById('det-modal-content').innerHTML = `
-                <table style="width:100%;"><thead><tr><th>Student</th><th>Prog</th><th>Pts</th></tr></thead><tbo
-dy>
+                <table style="width:100%;"><thead><tr><th>Student</th><th>Prog</th><th>Pts</th></tr></thead><tbody>
                     ${records.map(r => `<tr><td>${r.student}</td><td>${(window.appState.programs.find(p => p.id === r.progId) || {}).name || ''}</td><td><strong>${r.score}</strong></td></tr>`).join('')}
                 </tbody></table>
             `;
@@ -2385,8 +2362,7 @@ dy>
         window.setResultPublished = function(progId, shouldPublish) {
             const item = (window.appState.results || []).find(r => r.progId === progId);
             if(!item) return;
-            
-item.published = !!shouldPublish;
+            item.published = !!shouldPublish;
             saveKey('results', window.appState.results);
             renderPublishPanel();
             filterResultPrograms();
@@ -2486,8 +2462,7 @@ item.published = !!shouldPublish;
                 if(!window.appState.updates) window.appState.updates = [];
                 
                 if (type === 'photo') {
-             
-       window.appState.updates.unshift({ id:'up_'+Date.now(), type: 'photo', url: compressedImage });
+                    window.appState.updates.unshift({ id:'up_'+Date.now(), type: 'photo', url: compressedImage });
                 } else {
                     window.appState.updates.unshift({ id:'up_'+Date.now(), type: 'video', url: vLink, thumb: compressedImage });
                 }
@@ -2604,8 +2579,7 @@ item.published = !!shouldPublish;
             if(mStatus) {
                 const list = window.appState.teamStatusList || [];
                 mStatus.innerHTML = list.map((item, idx) => `
-                    <div style="display:flex; justify-content:space-betw
-een; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; border-radius:6px; font-size:0.85rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; border-radius:6px; font-size:0.85rem;">
                         <img src="${item.url}" style="height:40px; border-radius:4px; object-fit:contain;">
                         <span>Poster #${idx+1} — ${item.published === true ? '✅ Published' : '❌ Not Published'}</span>
                         <button class="btn btn-danger btn-sm" onclick="deleteStatusItem('${item.id}')">Delete</button>
@@ -2695,8 +2669,7 @@ een; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; border-ra
                         </div>
                     `).join('');
                 } else {
-                    statusBox.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">No Team Status publish
-ed.</p>';
+                    statusBox.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">No Team Status published.</p>';
                 }
             }
             filterResultPrograms();
@@ -2785,8 +2758,7 @@ ed.</p>';
                 <div class="masonry-item" ${u.type === 'photo' ? `onclick="openMediaViewer('${u.url}', 'photo')"` : ''}>
                     ${u.type === 'photo' 
                         ? `<img src="${u.url}" loading="lazy">
-                           <div class="media-click-overlay"><span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:6px; color:#cbd5e1;"><i class="fa-solid fa-image"></i>
- Click to Open</span></div>` 
+                           <div class="media-click-overlay"><span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:6px; color:#cbd5e1;"><i class="fa-solid fa-image"></i> Click to Open</span></div>` 
                         : `<img src="${u.thumb}" loading="lazy">
                            <a href="${u.url}" target="_blank" class="btn btn-sm btn-danger btn-block" style="margin-top:8px;"><i class="fa-solid fa-play"></i> Watch Video</a>`}
                 </div>
@@ -2896,8 +2868,7 @@ ed.</p>';
             host.innerHTML=ids.map(pid=>{
                 const p=(window.appState.programs||[]).find(pr=>pr.id===pid)||{name:'Unknown',cat:'N/A'};
                 const codes=groups[pid].sort((a,b)=>String(a.codeLetter).localeCompare(String(b.codeLetter)));
-                return `<div style="background:rgba(0,0,0,.2);border:1px solid var(--border-color);padding:10px;border
--radius:8px;margin-bottom:8px;">
+                return `<div style="background:rgba(0,0,0,.2);border:1px solid var(--border-color);padding:10px;border-radius:8px;margin-bottom:8px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;"><strong>${p.name} (${p.cat})</strong>
                     <div><button class="btn btn-warning btn-sm no-print" onclick="printCodeLetterRecord('${pid}')"><i class="fa-solid fa-print"></i> Print</button>
                     <button class="btn btn-danger btn-sm no-print" onclick="deleteCodeEntryGroup('${pid}')">Delete</button></div></div>
@@ -2963,8 +2934,7 @@ ed.</p>';
         const _oldPopulatePtProgs=window.populatePtProgs;
         window.populatePtProgs=function(){ _oldPopulatePtProgs(); populatePtRecordProgFilter(); };
         const _oldSavePt=window.savePointroomEntry;
-      
-  window.savePointroomEntry=function(e){ _oldSavePt(e); populatePtRecordProgFilter(); renderPtList(); };
+        window.savePointroomEntry=function(e){ _oldSavePt(e); populatePtRecordProgFilter(); renderPtList(); };
 
         // Ensure the old main-menu controls remain visible after login.
         const _oldRenderMenu=window.render3DotMenu;
@@ -2981,26 +2951,5 @@ ed.</p>';
         applyVisualCustomizations();
         render3DotMenu();
     </script>
-<script>
-/* SAFE STARTUP FALLBACK
-   Keeps the home content visible even if Firebase/module loading is delayed or blocked. */
-window.addEventListener('DOMContentLoaded', function () {
-    setTimeout(function () {
-        try {
-            var home = document.getElementById('panel-home');
-            var result = document.getElementById('home-phase-result');
-            var register = document.getElementById('home-phase-register');
-            if (home) home.classList.add('active-panel');
-            if (window.appState && window.appState.phase === 'register') {
-                if (result) result.style.display = 'none';
-                if (register) register.style.display = 'block';
-            } else {
-                if (result) result.style.display = 'block';
-                if (register) register.style.display = 'none';
-            }
-        } catch (e) { console.warn('Safe startup fallback:', e); }
-    }, 700);
-});
-</script>
 </body>
 </html>
