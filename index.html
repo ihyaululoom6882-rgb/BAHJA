@@ -787,7 +787,14 @@
                 <button type="submit" class="btn btn-success btn-block btn-xl">Submit Code Letters</button>
             </form>
             <div class="collapsible-header no-print" onclick="toggleAccordion('box-pt-list')"><span>Pointroom Records</span><i class="fa-solid fa-chevron-down"></i></div>
-            <div id="box-pt-list" class="collapsible-box show"></div><div id="pt-print-area" class="print-target" style="display:none;"></div>
+            <div id="box-pt-list" class="collapsible-box show">
+                <div class="no-print" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;padding:8px;background:rgba(255,255,255,.04);border:1px solid var(--border-color);border-radius:8px;">
+                    <select id="pt-record-cat-filter" class="form-control" onchange="populatePtRecordProgFilter(); renderPtList();"><option value="">All Categories</option></select>
+                    <select id="pt-record-prog-filter" class="form-control" onchange="renderPtList()"><option value="">All Programs</option></select>
+                    <input id="pt-record-search" class="form-control" placeholder="Search student / code / team" oninput="renderPtList()">
+                </div>
+                <div id="pt-record-list-content"></div>
+            </div><div id="pt-print-area" class="print-target" style="display:none;"></div>
         </div>
 
         <!-- JUDGE PORTAL -->
@@ -815,6 +822,10 @@
                 <h4 style="color:#d4af37;margin-bottom:10px;"><i class="fa-solid fa-pen-to-square"></i> Judge Marks</h4>
                 <p style="font-size:.82rem;color:var(--text-sub);margin-bottom:10px;">The code letter comes from Pointroom. Enter the judge mark against each code letter.</p>
                 <div id="judge-code-list"></div><button class="btn btn-success btn-block btn-xl" onclick="submitJudgeMarks()" style="margin-top:10px;">Submit Judge Marks</button>
+                <div style="margin-top:14px;border-top:1px solid var(--border-color);padding-top:10px;">
+                    <h5 style="color:#d4af37;margin-bottom:8px;"><i class="fa-solid fa-list-check"></i> Submitted Programs</h5>
+                    <div id="judge-submitted-programs"></div>
+                </div>
             </div>
         </div>
 
@@ -2821,8 +2832,122 @@
             }
         }
 
+        /* ===== FINAL JUDGE / POINTROOM UX FIXES ===== */
+        window.populatePtRecordProgFilter = function() {
+            const cat = document.getElementById('pt-record-cat-filter')?.value || '';
+            const drop = document.getElementById('pt-record-prog-filter');
+            if(!drop) return;
+            const current = drop.value;
+            const list = (window.appState.programs || []).filter(p => !cat || p.cat === cat).sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+            drop.innerHTML = '<option value="">All Programs</option>' + list.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            if(list.some(p=>p.id===current)) drop.value=current;
+        };
+
+        window.renderPtList = function() {
+            const host = document.getElementById('pt-record-list-content') || document.getElementById('box-pt-list');
+            if(!host) return;
+            const catFilter = document.getElementById('pt-record-cat-filter')?.value || '';
+            const progFilter = document.getElementById('pt-record-prog-filter')?.value || '';
+            const q = (document.getElementById('pt-record-search')?.value || '').trim().toLowerCase();
+            const all = window.appState.codeEntries || [];
+            const groups = {};
+            all.forEach(x=>{
+                const p=(window.appState.programs||[]).find(pr=>pr.id===x.progId);
+                if(!p) return;
+                if(catFilter && p.cat!==catFilter) return;
+                if(progFilter && p.id!==progFilter) return;
+                const hay=[x.student,x.codeLetter,x.team,p.name,p.cat].join(' ').toLowerCase();
+                if(q && !hay.includes(q)) return;
+                (groups[x.progId] ||= []).push(x);
+            });
+            const ids=Object.keys(groups).sort((a,b)=>{
+                const pa=(window.appState.programs||[]).find(p=>p.id===a)||{}, pb=(window.appState.programs||[]).find(p=>p.id===b)||{};
+                return String(pa.name||'').localeCompare(String(pb.name||''));
+            });
+            if(!ids.length){ host.innerHTML='<p style="padding:10px;color:var(--text-sub);">No Pointroom records found.</p>'; return; }
+            host.innerHTML=ids.map(pid=>{
+                const p=(window.appState.programs||[]).find(pr=>pr.id===pid)||{name:'Unknown',cat:'N/A'};
+                const codes=groups[pid].sort((a,b)=>String(a.codeLetter).localeCompare(String(b.codeLetter)));
+                return `<div style="background:rgba(0,0,0,.2);border:1px solid var(--border-color);padding:10px;border-radius:8px;margin-bottom:8px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;"><strong>${p.name} (${p.cat})</strong>
+                    <div><button class="btn btn-warning btn-sm no-print" onclick="printCodeLetterRecord('${pid}')"><i class="fa-solid fa-print"></i> Print</button>
+                    <button class="btn btn-danger btn-sm no-print" onclick="deleteCodeEntryGroup('${pid}')">Delete</button></div></div>
+                    <div class="table-responsive" style="margin-top:8px;"><table class="bahja-sheet-table"><thead><tr><th>Code Letter</th><th>Student Name</th><th>Team</th><th>Marks</th></tr></thead><tbody>
+                    ${codes.map(x=>{const js=(window.appState.judgeScores||[]).find(s=>s.progId===pid&&s.team===x.team&&s.codeLetter===x.codeLetter);return `<tr><td><strong>${x.codeLetter}</strong></td><td>${x.student||'-'}</td><td>${x.team||'-'}</td><td><strong>${js?Number(js.score||0):'-'}</strong></td></tr>`;}).join('')}
+                    </tbody></table></div></div>`;
+            }).join('');
+        };
+
+        const _oldLoadJudgeProgram = window.loadJudgeProgram;
+        window.loadJudgeProgram = function(){
+            _oldLoadJudgeProgram();
+            renderJudgeSubmittedPrograms();
+        };
+        window.renderJudgeSubmittedPrograms = function(){
+            const box=document.getElementById('judge-submitted-programs'); if(!box) return;
+            const scores=window.appState.judgeScores||[];
+            const by={};
+            scores.forEach(s=>{ const p=(window.appState.programs||[]).find(x=>x.id===s.progId); if(!p)return; (by[s.progId] ||= {name:p.name,cat:p.cat,count:0,total:0}); by[s.progId].count++; by[s.progId].total+=Number(s.score||0); });
+            const arr=Object.values(by).sort((a,b)=>a.name.localeCompare(b.name));
+            box.innerHTML=arr.length?arr.map(x=>`<div style="display:flex;justify-content:space-between;padding:7px 9px;border:1px solid var(--border-color);border-radius:7px;margin-bottom:5px;"><span><strong>${x.name}</strong> <small style="color:var(--text-sub);">(${x.cat})</small></span><span>${x.count} marked</span></div>`).join(''):'<div style="color:var(--text-sub);">No judge program submitted yet.</div>';
+        };
+
+        window.submitJudgeMarks = function(){
+            const pid=getActiveJudgeProgramId(), p=(window.appState.programs||[]).find(x=>x.id===pid);
+            if(!pid||!p){alert('Select a program in Pointroom first.');return;}
+            if(!Array.isArray(window.appState.judgeScores)) window.appState.judgeScores=[];
+            window.appState.judgeScores=window.appState.judgeScores.filter(x=>x.progId!==pid);
+            document.querySelectorAll('.judge-mark-field').forEach(f=>{
+                const code=String(f.dataset.code||'').trim().toUpperCase(), team=f.dataset.team||'', score=parseFloat(f.value);
+                if(code && Number.isFinite(score)) window.appState.judgeScores.push({progId:pid,cat:p.cat,team,codeLetter:code,score,updatedAt:Date.now()});
+            });
+            saveKey('judgeScores',window.appState.judgeScores);
+            renderPtList(); renderJudgeLeaderboard(); renderStatesDashboard(); renderRankWinnersList(); renderJudgeSubmittedPrograms();
+        };
+
+        window.renderJudgeLeaderboard = function(){
+            const tbody=document.getElementById('judge-leaderboard-body'); if(!tbody)return;
+            const filterStage=document.getElementById('jd-filter-stage')?.value||'all', agg={};
+            (window.appState.judgeScores||[]).forEach(js=>{
+                const p=(window.appState.programs||[]).find(x=>x.id===js.progId); if(!p)return;
+                if(filterStage!=='all'&&p.stage!==filterStage)return;
+                const code=(window.appState.codeEntries||[]).find(c=>c.progId===js.progId&&c.team===js.team&&c.codeLetter===js.codeLetter);
+                const name=code?.student||js.codeLetter, key=`${js.team}_${name}`;
+                if(!agg[key])agg[key]={name,team:js.team,cat:js.cat||p.cat,total:0};
+                agg[key].total+=Number(js.score||0);
+            });
+            const sorted=Object.values(agg).sort((a,b)=>b.total-a.total||String(a.name).localeCompare(String(b.name)));
+            tbody.innerHTML=sorted.map(s=>`<tr onclick="viewJudgeStudentPrograms('${String(s.name).replace(/'/g,"&#39;")}','${String(s.team).replace(/'/g,"&#39;")}')" style="cursor:pointer;"><td><strong>${s.name}</strong></td><td>${s.team}</td><td>${s.cat}</td><td><strong style="color:#d4af37;">${s.total}</strong></td></tr>`).join('')||'<tr><td colspan="4">No scores accumulated.</td></tr>';
+        };
+
+        window.viewJudgeStudentPrograms = function(name,team){
+            const rows=(window.appState.judgeScores||[]).filter(js=>{
+                if(js.team!==team)return false;
+                const c=(window.appState.codeEntries||[]).find(x=>x.progId===js.progId&&x.team===team&&x.codeLetter===js.codeLetter);
+                return (c?.student||js.codeLetter)===name;
+            }).map(js=>{const p=(window.appState.programs||[]).find(x=>x.id===js.progId)||{};return {program:p.name||'',mark:Number(js.score||0),cat:p.cat||js.cat||''};}).sort((a,b)=>a.program.localeCompare(b.program));
+            document.getElementById('det-modal-title').innerText=`${name} (${team})`;
+            document.getElementById('det-modal-content').innerHTML=`<table style="width:100%;"><thead><tr><th>Program</th><th>Category</th><th>Mark</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.program}</td><td>${r.cat}</td><td><strong>${r.mark}</strong></td></tr>`).join('')||'<tr><td colspan="3">No judge marks.</td></tr>'}</tbody></table>`;
+            document.getElementById('detail-modal-overlay').style.display='flex';
+        };
+
+        const _oldPopulatePtProgs=window.populatePtProgs;
+        window.populatePtProgs=function(){ _oldPopulatePtProgs(); populatePtRecordProgFilter(); };
+        const _oldSavePt=window.savePointroomEntry;
+        window.savePointroomEntry=function(e){ _oldSavePt(e); populatePtRecordProgFilter(); renderPtList(); };
+
+        // Ensure the old main-menu controls remain visible after login.
+        const _oldRenderMenu=window.render3DotMenu;
+        window.render3DotMenu=function(){ _oldRenderMenu(); };
+
         applyGlobalWebsiteTheme(window.appState.theme || 'dark');
         applyLogoView();
+        setTimeout(()=>{
+            const c=document.getElementById('pt-record-cat-filter');
+            if(c){ c.innerHTML='<option value="">All Categories</option>'+[...new Set((window.appState.programs||[]).map(p=>p.cat).filter(Boolean))].sort().map(x=>`<option value="${x}">${x}</option>`).join(''); }
+            populatePtRecordProgFilter();
+            renderPtList(); renderJudgeLeaderboard(); renderJudgeSubmittedPrograms();
+        },0);
         applyVisualCustomizations();
         render3DotMenu();
     </script>
