@@ -47,6 +47,7 @@
             position: relative; 
             transition: background 0.3s ease, color 0.3s ease;
         }
+
         /* Mobile performance: avoid costly fixed backgrounds and blur on small screens. */
         @media (max-width: 899px) {
             body { background-attachment: scroll; }
@@ -55,11 +56,13 @@
                 backdrop-filter: none;
             }
         }
+
         .corner-logo { 
             display: none; 
             object-fit: contain;
             transition: all 0.3s ease;
         }
+
         @media(max-width: 899px) {
             .corner-logo {
                 position: relative !important;
@@ -74,6 +77,7 @@
                 padding: 10px 20px 15px 20px !important;
             }
         }
+
         @media(min-width: 900px) {
             .corner-logo {
                 position: fixed;
@@ -85,6 +89,7 @@
             .logo-bottom-right { bottom: 15px; right: 15px; }
             .logo-top-center { top: 15px; left: 50%; transform: translateX(-50%); }
         }
+
         .header-title { text-align: var(--header-align, center); padding: 30px 20px 15px 20px; }
         .header-title p { font-size: 1.1rem; margin-bottom: 6px; font-weight: 700; letter-spacing: 3px; color: var(--text-sub); }
         .header-title h1 { font-size: 2.8rem; font-weight: 900; letter-spacing: 2px; color: var(--text-main); text-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -213,6 +218,7 @@
                 gap: 8px;
             }
         }
+
         .feed-media-img {
             display: block;
             width: 100%;
@@ -220,6 +226,7 @@
             content-visibility: auto;
             contain-intrinsic-size: 260px;
         }
+
 .pinterest-masonry { 
             column-count: 2; 
             column-gap: 12px; 
@@ -256,6 +263,7 @@
             gap: 6px;
             margin-top: 6px;
         }
+
         .collapsible-header { 
             background: rgba(255, 255, 255, 0.08); padding: 12px 16px; border-radius: 12px; 
             font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; 
@@ -291,6 +299,7 @@
                 size: A4 portrait;
                 margin: 0 !important;
             }
+
             html,
             body {
                 width: 210mm !important;
@@ -303,10 +312,12 @@
                 color: #000 !important;
                 overflow: visible !important;
             }
+
             /* Hide the normal website while printing. */
             body * {
                 visibility: hidden !important;
             }
+
             /* Only the actively selected print sheet is visible.
                Other print targets must stay hidden; otherwise the browser
                can place multiple print sheets on the same A4 page. */
@@ -315,10 +326,12 @@
                 display: none !important;
                 visibility: hidden !important;
             }
+
             body.printing .print-target.active-print-target,
             body.printing .print-target.active-print-target * {
                 visibility: visible !important;
             }
+
             /* The selected sheet is moved directly under <body> by
                triggerCustomPrint(), so no card/container width can
                shrink the A4 print area. */
@@ -329,24 +342,30 @@
                 top: 0 !important;
                 right: auto !important;
                 bottom: auto !important;
+
                 width: 210mm !important;
                 min-width: 210mm !important;
                 max-width: 210mm !important;
                 min-height: 297mm !important;
+
                 margin: 0 !important;
                 padding: 10mm !important;
+
                 box-sizing: border-box !important;
                 border: 0 !important;
                 border-radius: 0 !important;
                 box-shadow: none !important;
                 background: #fff !important;
                 color: #000 !important;
+
                 overflow: visible !important;
             }
+
             .no-print {
                 display: none !important;
                 visibility: hidden !important;
             }
+
             /* A4 sheet header - mathematically centered. */
             .bahja-sheet-header {
                 display: grid !important;
@@ -354,27 +373,33 @@
                 align-items: center !important;
                 width: 100% !important;
                 min-width: 0 !important;
+
                 border-bottom: 2px solid #000 !important;
                 padding: 3mm 0 2mm !important;
                 margin: 0 0 4mm !important;
+
                 color: #000 !important;
                 background: #fff !important;
             }
+
             .bahja-sheet-header > span:first-child {
                 text-align: left !important;
                 justify-self: start !important;
                 white-space: nowrap !important;
             }
+
             .bahja-sheet-header > span:last-child {
                 text-align: right !important;
                 justify-self: end !important;
                 white-space: nowrap !important;
             }
+
             .bahja-sheet-header h2 {
                 grid-column: 2 !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 width: auto !important;
+
                 font-size: 18px !important;
                 line-height: 1.2 !important;
                 font-weight: 900 !important;
@@ -383,38 +408,47 @@
                 color: #000 !important;
                 white-space: nowrap !important;
             }
+
             /* Every print table uses the entire available A4 width. */
             .bahja-sheet-table,
             .print-target table {
                 width: 100% !important;
                 max-width: 100% !important;
                 min-width: 0 !important;
+
                 border-collapse: collapse !important;
                 border-spacing: 0 !important;
                 table-layout: fixed !important;
+
                 margin: 0 !important;
                 padding: 0 !important;
+
                 border: 1.5px solid #000 !important;
                 color: #000 !important;
                 background: #fff !important;
             }
+
             .bahja-sheet-table th,
             .bahja-sheet-table td,
             .print-target table th,
             .print-target table td {
                 border: 1px solid #000 !important;
                 padding: 4px 6px !important;
+
                 font-size: 11.5px !important;
                 line-height: 1.25 !important;
                 font-family: Arial, Helvetica, sans-serif !important;
+
                 color: #000 !important;
                 background: #fff !important;
                 vertical-align: middle !important;
                 text-align: left !important;
+
                 white-space: normal !important;
                 overflow-wrap: anywhere !important;
                 word-break: normal !important;
             }
+
             .bahja-sheet-table th,
             .print-target table th {
                 font-weight: 900 !important;
@@ -422,55 +456,68 @@
                 background: #f1f1f1 !important;
                 text-align: center !important;
             }
+
             .bahja-sheet-table td:first-child,
             .bahja-sheet-table th:first-child {
                 text-align: center !important;
             }
+
             /* Registration report column proportions. */
             #report-resizable-table th:nth-child(1),
             #report-resizable-table td:nth-child(1) {
                 width: 8% !important;
                 text-align: center !important;
             }
+
             #report-resizable-table th:nth-child(2),
             #report-resizable-table td:nth-child(2) {
                 width: 24% !important;
             }
+
             #report-resizable-table th:nth-child(3),
             #report-resizable-table td:nth-child(3) {
                 width: 21% !important;
             }
+
             #report-resizable-table th:nth-child(4),
             #report-resizable-table td:nth-child(4) {
                 width: 20% !important;
             }
+
             #report-resizable-table th:nth-child(5),
             #report-resizable-table td:nth-child(5) {
                 width: 27% !important;
             }
+
             .bahja-sheet-table tbody tr {
                 min-height: 9mm !important;
                 height: auto !important;
+
                 break-inside: avoid !important;
                 page-break-inside: avoid !important;
             }
+
             .bahja-sheet-table thead,
             .print-target table thead {
                 display: table-header-group !important;
             }
+
             .bahja-sheet-table tfoot,
             .print-target table tfoot {
                 display: table-footer-group !important;
             }
+
             .a5-team-standings {
                 width: 100% !important;
                 font-size: 16px !important;
             }
+
             .a5-team-standings td,
             .a5-team-standings th {
                 padding: 7px 10px !important;
                 font-size: 14px !important;
             }
+
             h1,
             h2,
             h3,
@@ -478,6 +525,7 @@
                 break-after: avoid !important;
                 page-break-after: avoid !important;
             }
+
             /* Prevent the browser from scaling the sheet into a small
                centered rectangle. */
             .print-target,
@@ -816,47 +864,6 @@
                 </table>
             </div>
         </div>
-        
-        <!-- ENTRY SIGN PANEL -->
-        <div id="panel-entry-sign" class="view-panel card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>Entry Sign</h3>
-                <button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('entry-sign-print-container')"><i class="fa-solid fa-print"></i> Print</button>
-            </div>
-            <div class="form-group no-print" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                <select id="es-cat-select" class="form-control" onchange="populateEsProgs(); renderEntrySignTable();">
-                    <option value="">All Categories</option>
-                    <option value="GENERAL">GENERAL</option>
-                    <option value="LOWER ZONE">LOWER ZONE</option>
-                    <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                    <option value="HIGHER ZONE">HIGHER ZONE</option>
-                    <option value="SUPER ZONE">SUPER ZONE</option>
-                </select>
-                <select id="es-prog-select" class="form-control" onchange="renderEntrySignTable()">
-                    <option value="">All Programs</option>
-                </select>
-            </div>
-            <div id="entry-sign-print-container" class="print-target">
-                <div class="bahja-sheet-header" id="es-print-header">
-                    <span style="font-size:11px; font-weight:bold;">TIME:</span>
-                    <h2 id="es-print-title">ENTRY SIGN</h2>
-                    <span style="font-size:11px; font-weight:bold;">DATE:</span>
-                </div>
-                <div class="table-responsive" style="margin-top:12px;">
-                    <table class="bahja-sheet-table">
-                        <thead>
-                            <tr>
-                                <th style="width:15%;">Code Letter</th>
-                                <th style="width:35%;">Name</th>
-                                <th style="width:25%;">Team</th>
-                                <th style="width:25%;">Sign</th>
-                            </tr>
-                        </thead>
-                        <tbody id="entry-sign-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
         <!-- PUBLISH CONTROL PANEL -->
         <div id="panel-publish" class="view-panel card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -869,10 +876,12 @@
             <div style="background:rgba(212,175,55,0.08); border:1px solid rgba(212,175,55,0.28); padding:10px 12px; border-radius:12px; margin-bottom:14px; font-size:0.82rem;">
                 <strong>Important:</strong> Items marked <span style="color:#f59e0b; font-weight:800;">❌ Not Published</span> are stored in the system but are hidden from the public website. They become visible only when switched to <span style="color:#10b981; font-weight:800;">✅ Published</span>.
             </div>
+
             <div style="background:rgba(0,0,0,0.16); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-bottom:14px;">
                 <h4 style="color:#d4af37; margin-bottom:10px;">Program Results</h4>
                 <div id="publish-results-list" style="display:flex; flex-direction:column; gap:8px;"></div>
             </div>
+
             <div style="background:rgba(0,0,0,0.16); border:1px solid var(--border-color); padding:12px; border-radius:12px;">
                 <h4 style="color:#d4af37; margin-bottom:10px;">Result / Team Status Posters</h4>
                 <div id="publish-status-list" style="display:flex; flex-direction:column; gap:8px;"></div>
@@ -1107,6 +1116,7 @@
             </div>
         </div>
     </div>
+
     <!-- MAIN LOGIN MODAL -->
     <div id="modal-overlay" class="modal-overlay">
         <div id="modal-login" class="modal-box" style="text-align: center;">
@@ -1134,6 +1144,7 @@
             </div>
         </div>
     </div>
+
     <!-- GATEKEEPER PASS MODAL -->
     <div id="gatekeeper-modal-overlay" class="modal-overlay">
         <div class="modal-box">
@@ -1146,6 +1157,7 @@
             <button class="btn btn-block" style="margin-top:6px; background:transparent; border:1px solid var(--border-color); color:var(--text-main);" onclick="closeGatekeeper()">Cancel</button>
         </div>
     </div>
+
     <!-- DETAILS MODAL -->
     <div id="detail-modal-overlay" class="modal-overlay" onclick="this.style.display='none'">
         <div class="modal-box" onclick="event.stopPropagation()">
@@ -1154,6 +1166,7 @@
             <button class="btn btn-block" style="margin-top:10px;" onclick="document.getElementById('detail-modal-overlay').style.display='none'">Close</button>
         </div>
     </div>
+
     <!-- FULL MEDIA VIEW MODAL (DOWNLOAD & SHARE) -->
     <div id="media-viewer-modal" class="modal-overlay" onclick="closeMediaViewer()">
         <div class="modal-box" onclick="event.stopPropagation()" style="max-width:550px; text-align:center;">
@@ -1165,6 +1178,7 @@
             <button class="btn btn-block" style="margin-top:10px; background:transparent; border:1px solid var(--border-color); color:var(--text-main);" onclick="closeMediaViewer()">Close</button>
         </div>
     </div>
+
     <!-- ZERO-LATENCY INSTANT PRE-RENDER SCRIPT FOR FULL STATE -->
     <script>
         (function() {
@@ -1172,6 +1186,7 @@
                 // Instantly Apply Theme
                 const savedTheme = localStorage.getItem('bahja_theme') || 'dark';
                 document.documentElement.setAttribute('data-theme', savedTheme);
+
                 // Instantly Load Full Cached State to Prevent 30-sec Lag
                 const cachedState = localStorage.getItem('bahja_full_state');
                 if (cachedState) {
@@ -1191,6 +1206,7 @@
                     window.appState = cached;
                 }
             } catch(e) { console.error("Cache pre-render error: ", e); }
+
             window.addEventListener('DOMContentLoaded', () => {
                 if (window.appState && window.appState.visuals) {
                     const vis = window.appState.visuals;
@@ -1211,6 +1227,7 @@
                         mTitle.style.color = isDark ? (vis.titleColorDark || '#ffffff') : (vis.titleColorLight || '#0f172a');
                         mTitle.style.fontSize = (vis.titleSize || '2.8') + 'rem';
                     }
+
                     const logoEl = document.getElementById('corner-logo-view');
                     if (window.appState.logoUrl && logoEl) {
                         logoEl.src = window.appState.logoUrl;
@@ -1222,9 +1239,11 @@
             });
         })();
     </script>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyBVPGtuHPFRH05snj58ws6xr42O8HluaLY",
             authDomain: "bahja-29712.firebaseapp.com",
@@ -1237,6 +1256,7 @@
         };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+
         // Extremely Aggressive Compressor to ensure DB stays small and zero lag
         function compressImage(file, maxWidth = 800, quality = 0.6) {
             return new Promise((resolve) => {
@@ -1268,9 +1288,11 @@
                 reader.readAsDataURL(file);
             });
         }
+
         // Initialize State - NO CREDENTIALS ARE STORED IN SOURCE CODE
         const SECURITY_SCHEMA_VERSION = 2;
-        const EMPTY_SUB_LOCKS = { settings:'', control_panel:'', judge:'', pointroom:'', states:'', protection:'', modify:'', entry_sign:'' };
+        const EMPTY_SUB_LOCKS = { settings:'', control_panel:'', judge:'', pointroom:'', states:'', protection:'', modify:'' };
+
         function buildCleanState(preservedLogo) {
             const logo = preservedLogo || {};
             return {
@@ -1286,6 +1308,7 @@
                 teams: [], programs: [], registrations: [], results: [], updates: [], livelinks: [], highlights: [], students: [], points: []
             };
         }
+
         function sanitizeSecurityState(state) {
             if(!state || typeof state !== 'object') return state;
             // Any database/local-cache created before schema v2 contained credentials.
@@ -1304,6 +1327,7 @@
             if(!state.subLocks || typeof state.subLocks !== 'object') state.subLocks = { ...EMPTY_SUB_LOCKS };
             return state;
         }
+
         // Publication workflow: uploads are stored immediately but remain hidden until published.
         // Existing records without a publication flag are treated as NOT PUBLISHED so that nothing
         // becomes public accidentally after this workflow is enabled.
@@ -1315,6 +1339,7 @@
             state.teamStatusList = state.teamStatusList.map(item => ({ ...item, published: item.published === true }));
             return state;
         }
+
         // Initialize State
         if (!window.appState) {
             window.appState = buildCleanState();
@@ -1322,6 +1347,7 @@
             window.appState = sanitizeSecurityState(window.appState);
         }
         window.appState = normalizePublicationState(window.appState);
+
         window.loggedTeamUser = null;
         window.activePartTeam = null;
         window.isMainLoggedIn = false;
@@ -1367,6 +1393,7 @@
                 populateReportProgDropdown();
             });
         }
+
         onValue(dbRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -1390,15 +1417,18 @@
             }
             scheduleAppRender();
         });
+
         window.saveKey = function(key, value) {
             const updateObj = {};
             updateObj[key] = value;
             update(dbRef, updateObj);
         }
+
         window.saveData = function() {
             try { localStorage.setItem('bahja_full_state', JSON.stringify(window.appState)); } catch(e){}
             set(dbRef, window.appState);
         }
+
         window.updateGlobalWebsiteTheme = function(themeName) {
             window.appState.theme = themeName;
             try{ localStorage.setItem('bahja_theme', themeName); }catch(e){}
@@ -1406,11 +1436,13 @@
             applyVisualCustomizations();
             saveKey('theme', themeName);
         }
+
         function applyGlobalWebsiteTheme(themeName) {
             document.documentElement.setAttribute('data-theme', themeName);
             const themeSel = document.getElementById('sys-theme-select');
             if(themeSel) themeSel.value = themeName;
         }
+
         function applyLogoView() {
             const el = document.getElementById('corner-logo-view');
             const manageBox = document.getElementById('logo-manage-box');
@@ -1425,6 +1457,7 @@
                 if(manageBox) manageBox.style.display = 'none';
             }
         }
+
         window.updateLogoStylesLocally = function() {
             const pos = document.getElementById('sys-logo-pos').value;
             const size = document.getElementById('sys-logo-size').value;
@@ -1433,12 +1466,14 @@
             el.className = `corner-logo ${pos}`;
             el.style.height = `${size}px`;
         }
+
         window.deleteSysLogo = function() {
             window.appState.logoUrl = ''; 
             saveKey('logoUrl', '');
             applyLogoView();
             alert("Logo purged.");
         }
+
         function applyVisualCustomizations() {
             const vis = window.appState.visuals || {};
             const isDark = (window.appState.theme || 'dark') === 'dark';
@@ -1456,6 +1491,7 @@
                 mTitle.style.fontSize = (vis.titleSize || '2.8') + 'rem';
             }
         }
+
         window.render3DotMenu = function() {
             const menuContainer = document.getElementById('mainDropdown');
             if(!menuContainer) return;
@@ -1474,8 +1510,6 @@
                     <button onclick="interceptRoute('panel-settings', 'settings')"><i class="fa-solid fa-gear"></i> Settings</button>
                     <button onclick="interceptRoute('panel-control-panel', 'control_panel')"><i class="fa-solid fa-sliders"></i> Control Panel</button>
                     <button onclick="showPanel('panel-publish'); document.getElementById('mainDropdown').classList.remove('show'); renderPublishPanel();"><i class="fa-solid fa-cloud-arrow-up"></i> Publish</button>
-                    <button onclick="interceptRoute('panel-entry-sign', 'entry_sign')"><i class="fa-solid fa-signature"></i> Entry Sign</button>
-                    <button onclick="interceptRoute('panel-entry-sign', 'entry_sign')"><i class="fa-solid fa-signature"></i> Entry Sign</button>
                     <button onclick="interceptRoute('panel-judge', 'judge')"><i class="fa-solid fa-gavel"></i> Judge Leaderboard</button>
                     <button onclick="interceptRoute('panel-states-control', 'states')"><i class="fa-solid fa-flag"></i> States Control</button>
                     <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Protection Settings</button>
@@ -1485,6 +1519,7 @@
             }
             menuContainer.innerHTML = html;
         }
+
         window.interceptRoute = function(panelId, key) {
             document.getElementById("mainDropdown").classList.remove("show");
             if(!key || !window.appState.subLocks[key]) {
@@ -1496,6 +1531,7 @@
             document.getElementById('gk-title').innerText = `Access Security Code Required`;
             document.getElementById('gatekeeper-modal-overlay').style.display = 'flex';
         }
+
         window.commitGatekeeperVerification = function() {
             const fieldVal = document.getElementById('gk-pass-field').value;
             const targetKey = window.gatekeeperTargetPanel.lockKey;
@@ -1506,6 +1542,7 @@
                 alert("Incorrect Security Code.");
             }
         }
+
         window.closeGatekeeper = function() { document.getElementById('gatekeeper-modal-overlay').style.display = 'none'; }
         window.toggleDropdown = function() { document.getElementById("mainDropdown").classList.toggle("show"); }
         window.onclick = (e) => { 
@@ -1514,6 +1551,7 @@
                 if(md) md.classList.remove("show"); 
             }
         };
+
         // --- PHONE BACK BUTTON FIX (HISTORY API) ---
         window.showPanel = function(panelId) {
             document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
@@ -1526,11 +1564,13 @@
         }
             }
         }
+
         window.openSection = function(secId) { showPanel(secId); }
         window.navHome = function() { 
             renderHomePhase(); 
             showPanel('panel-home'); 
         }
+
         window.addEventListener('popstate', function(event) {
             if(event.state && event.state.panel && event.state.panel !== 'panel-home') {
                 document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
@@ -1545,6 +1585,7 @@
         history.replaceState({ panel: 'panel-home' }, "", window.location.pathname);
         scheduleAppRender(true);
         // ------------------------------------------
+
         window.toggleAccordion = function(boxId) {
             const el = document.getElementById(boxId); 
             if(el) el.classList.toggle('show');
@@ -1554,6 +1595,7 @@
             syncMainLoginSetupUI();
         }
         window.closeModal = function() { document.getElementById('modal-overlay').style.display = 'none'; }
+
         function syncMainLoginSetupUI() {
             const hasCreds = !!(window.appState.mainCreds && window.appState.mainCreds.user && window.appState.mainCreds.pass);
             const setupBtn = document.getElementById('first-admin-setup-btn');
@@ -1561,10 +1603,12 @@
             if(setupBtn) setupBtn.style.display = hasCreds ? 'none' : 'block';
             if(loginBtn) loginBtn.innerText = hasCreds ? 'Sign In' : 'Sign In (Credentials Not Set)';
         }
+
         window.openFirstAdminSetup = function() {
             document.getElementById('first-admin-setup').style.display = 'block';
             document.getElementById('first-admin-user').focus();
         }
+
         window.saveFirstAdminSetup = function() {
             const u = document.getElementById('first-admin-user').value.trim();
             const p = document.getElementById('first-admin-pass').value;
@@ -1598,7 +1642,9 @@
                 showPanel('panel-control-panel');
             } else { alert("Invalid Credentials!"); }
         }
+
         window.logoutMain = function() { window.isMainLoggedIn = false; render3DotMenu(); navHome(); }
+
         /* PRINT LOGIC */
         window.triggerCustomPrint = function(targetId) {
             const target = document.getElementById(targetId);
@@ -1606,48 +1652,62 @@
                 console.warn("Print target not found:", targetId);
                 return;
             }
+
             /* Keep the exact DOM position so the application is restored
                after printing. Moving the target directly under <body>
                prevents parent .card/.container widths from affecting A4. */
             const originalParent = target.parentNode;
             const originalNextSibling = target.nextSibling;
             const originalDisplay = target.style.display;
+
             /* Hide any other temporary print targets. */
             document.querySelectorAll('.print-target').forEach(p => {
                 if(p !== target) p.style.display = 'none';
             });
+
             target.style.display = 'block';
             target.classList.add('active-print-target');
             document.body.classList.add('printing');
+
             document.body.appendChild(target);
+
             let restored = false;
             const restoreAfterPrint = function() {
                 if(restored) return;
                 restored = true;
+
                 document.body.classList.remove('printing');
                 target.classList.remove('active-print-target');
+
                 target.style.display = originalDisplay;
+
                 if(originalNextSibling && originalNextSibling.parentNode === originalParent) {
                     originalParent.insertBefore(target, originalNextSibling);
                 } else {
                     originalParent.appendChild(target);
                 }
+
                 document.querySelectorAll('.print-target').forEach(p => {
                     if(p !== target) p.style.removeProperty('display');
                 });
+
                 window.removeEventListener('afterprint', restoreAfterPrint);
             };
+
             window.addEventListener('afterprint', restoreAfterPrint);
+
             /* Give the browser one frame to apply the A4 print CSS before
                opening the print dialog. */
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                     window.print();
+
                     /* Fallback for browsers that do not fire afterprint. */
                     setTimeout(restoreAfterPrint, 1500);
                 });
             });
         }
+
         /* PROTECTION SYSTEM */
         window.verifyAndOpenMainCredShift = function() {
             const ou = document.getElementById('prot-old-main-u').value.trim();
@@ -1657,6 +1717,7 @@
                 alert("Verified!");
             } else { alert("Verification failed."); }
         }
+
         window.commitMainCredShift = function() {
             const nu = document.getElementById('prot-new-main-u').value.trim();
             const np = document.getElementById('prot-new-main-p').value.trim();
@@ -1668,6 +1729,7 @@
             alert("Main credentials updated.");
             document.getElementById('prot-new-main-block').style.display = 'none';
         }
+
         function syncProtectionFields() {
             const container = document.getElementById('sub-panel-pass-managers-container');
             if(!container) return;
@@ -1678,9 +1740,7 @@
                 { key: 'pointroom', name: 'Pointroom Input Lock' },
                 { key: 'states', name: 'States Control Lock' },
                 { key: 'protection', name: 'Protection Settings Lock' },
-                { key: 'modify', name: 'Modify Appearance Lock' },
-                { key: 'entry_sign', name: 'Entry Sign Lock' },
-                { key: 'entry_sign', name: 'Entry Sign Lock' }
+                { key: 'modify', name: 'Modify Appearance Lock' }
             ];
             container.innerHTML = schema.map(s => {
                 const val = window.appState.subLocks[s.key] || '';
@@ -1695,11 +1755,13 @@
                 `;
             }).join('');
         }
+
         window.updateSubLockKey = function(key) {
             window.appState.subLocks[key] = document.getElementById(`pass-field-input-${key}`).value.trim();
             saveKey('subLocks', window.appState.subLocks);
             alert("Lock Code Saved.");
         }
+
         /* APPEARANCE MODIFIER */
         function syncModifyConfigInputs() {
             const vis = window.appState.visuals;
@@ -1712,6 +1774,7 @@
             if(document.getElementById('mod-font-family')) document.getElementById('mod-font-family').value = vis.fontFamily || "'Poppins', sans-serif";
             if(document.getElementById('mod-header-align')) document.getElementById('mod-header-align').value = vis.headerAlign || 'center';
         }
+
         window.liveUpdateVisuals = function() {
             const bTxt = document.getElementById('txt-welcome-banner');
             const mTitle = document.getElementById('txt-main-title');
@@ -1732,6 +1795,7 @@
                 mTitle.style.color = tc.value;
             }
         }
+
         window.saveVisualLayoutState = function() {
             const isDark = (window.appState.theme || 'dark') === 'dark';
             const syncLight = document.getElementById('mod-sync-light').checked;
@@ -1757,22 +1821,27 @@
             alert("Visual Layout Saved."); 
             navHome();
         }
+
         window.saveMaxLimitMaster = function() {
             window.appState.maxProgLimit = parseInt(document.getElementById('m-max-limit-input').value) || 3;
             saveKey('maxProgLimit', window.appState.maxProgLimit);
             alert("Limit saved.");
         }
+
         window.togglePhaseControl = function(selectedPhase) {
             document.getElementById('phase-reg-radio').checked = selectedPhase === 'register';
             document.getElementById('phase-res-radio').checked = selectedPhase === 'result';
         }
+
         window.applyPhaseSettings = async function(e) {
             e.preventDefault();
             const selectedPhase = document.querySelector('input[name="phase-toggle"]:checked').value;
             window.appState.phase = selectedPhase;
             localStorage.setItem('bahja_current_phase', selectedPhase);
+
             window.appState.logoPos = document.getElementById('sys-logo-pos').value;
             window.appState.logoSize = document.getElementById('sys-logo-size').value;
+
             const logoF = document.getElementById('sys-logo-input').files[0];
             if(logoF) {
                 window.appState.logoUrl = await compressImage(logoF, 500, 0.8);
@@ -1783,19 +1852,23 @@
             alert("Settings saved."); 
             navHome();
         }
+
         window.clearAllDataSystem = function() {
             if(!confirm("Clear all system data? The current logo will be preserved, but all registrations, programs, results, team accounts and passwords will be removed.")) return;
+
             const preservedLogo = {
                 logoUrl: window.appState.logoUrl || '',
                 logoPos: window.appState.logoPos || 'logo-top-left',
                 logoSize: window.appState.logoSize || '60'
             };
+
             // Reset EVERYTHING except the currently uploaded logo and its placement.
             // No old username/password is copied into the reset state.
             window.appState = buildCleanState(preservedLogo);
             window.loggedTeamUser = null;
             window.activePartTeam = null;
             window.isMainLoggedIn = false;
+
             // Clear browser storage completely, then cache only the new clean state.
             // This guarantees that no old credential keys survive locally.
             try {
@@ -1804,6 +1877,7 @@
                 localStorage.setItem('bahja_current_phase', window.appState.phase);
                 localStorage.setItem('bahja_theme', window.appState.theme);
             } catch(e) {}
+
             // Save the clean state to Firebase. This removes old credentials there as well.
             set(dbRef, window.appState);
             applyLogoView();
@@ -1811,6 +1885,7 @@
             navHome();
             alert("System data cleared. Logo preserved. All old usernames and passwords were removed.");
         }
+
         window.renderHomePhase = function() {
             const regEl = document.getElementById('home-phase-register');
             const resEl = document.getElementById('home-phase-result');
@@ -1832,6 +1907,7 @@
                 renderResultPhaseFeeds();
             }
         }
+
         function applySectionVisibilityUI() {
             const v = window.appState.visibilities || {};
             for(let key in v) {
@@ -1839,6 +1915,7 @@
                 if(btn) btn.style.display = v[key] ? 'flex' : 'none';
             }
         }
+
         window.updateSectionVisibilities = function() {
             window.appState.visibilities = {
                 'team-states': document.getElementById('toggle-vis-team-states').checked,
@@ -1850,6 +1927,7 @@
             saveKey('visibilities', window.appState.visibilities);
             applySectionVisibilityUI();
         }
+
         /* PARTICIPANT ENTRY */
         window.handlePartLogin = function(e) {
             e.preventDefault();
@@ -1864,6 +1942,7 @@
                 renderTeamStudentsList();
             } else alert("Invalid Credentials!");
         }
+
         window.addTeamParticipant = function(e) {
             e.preventDefault();
             const cat = document.getElementById('part-cat').value;
@@ -1873,6 +1952,7 @@
             document.getElementById('part-name').value = ''; 
             renderTeamStudentsList();
         }
+
         window.renderTeamStudentsList = function() {
             const filtered = window.appState.students.filter(s => s.team === window.activePartTeam);
             document.getElementById('team-students-list').innerHTML = filtered.map(s => `
@@ -1882,11 +1962,13 @@
                 </div>
             `).join('') || '<p>No students recorded.</p>';
         }
+
         window.deleteStudent = function(id) {
             window.appState.students = window.appState.students.filter(s => s.id !== id); 
             saveKey('students', window.appState.students);
             renderTeamStudentsList();
         }
+
         /* TEAM PORTAL REGISTRATION */
         window.handleTeamLogin = function(e) {
             e.preventDefault();
@@ -1895,7 +1977,9 @@
             const found = window.appState.teams.find(t => t.user === u && t.pass === p);
             if(found) { window.loggedTeamUser = u; renderHomePhase(); } else alert("Invalid Credentials");
         }
+
         window.logoutTeam = function() { window.loggedTeamUser = null; renderHomePhase(); }
+
         window.loadCategoryPrograms = function() {
             const cat = document.getElementById('reg-cat-select').value;
             const container = document.getElementById('category-programs-container');
@@ -1925,6 +2009,7 @@
                 `;
             }).join('');
         }
+
         window.saveRegistrationItem = function(progId, cat) {
             if(!window.appState.portalOpen) { alert("Registration Locked!"); return; }
             const fields = document.querySelectorAll(`.prog-input-${progId}`);
@@ -1943,6 +2028,7 @@
             saveKey('registrations', window.appState.registrations);
             alert("Registration updated.");
         }
+
         /* POINTROOM */
         window.populatePtProgs = function() {
             const cat = document.getElementById('pt-cat-select').value;
@@ -1952,6 +2038,7 @@
             document.getElementById('pt-candidates-inputs').innerHTML = '';
             document.getElementById('pt-stage-badge').innerText = '';
         }
+
         window.loadPtParticipants = function() {
             const progId = document.getElementById('pt-prog-select').value;
             const targetProg = window.appState.programs.find(p => p.id === progId);
@@ -1976,6 +2063,7 @@
             });
             container.innerHTML = html;
         }
+
         window.savePointroomEntry = function(e) {
             e.preventDefault();
             const progId = document.getElementById('pt-prog-select').value;
@@ -1993,6 +2081,7 @@
             loadPtParticipants(); 
             renderPtList();
         }
+
         function renderPtList() {
             const container = document.getElementById('box-pt-list');
             if(!container) return;
@@ -2017,6 +2106,7 @@
                 `;
             }).join('');
         }
+
         window.printIndividualPointRecord = function(progId) {
             const prog = window.appState.programs.find(p => p.id === progId) || { name: 'Program', cat: 'N/A' };
             const subPts = window.appState.points.filter(pt => pt.progId === progId).sort((a,b)=>b.score - a.score);
@@ -2037,6 +2127,7 @@
             `;
             triggerCustomPrint('pt-print-area');
         }
+
         window.printAllPointRecords = function() {
             const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
             const target = document.getElementById('pt-print-area');
@@ -2061,6 +2152,7 @@
             target.innerHTML = html;
             triggerCustomPrint('pt-print-area');
         }
+
         window.deletePtGroup = function(progId) {
             if(confirm("Delete records?")) {
                 window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
@@ -2068,6 +2160,7 @@
                 renderPtList();
             }
         }
+
         /* JUDGE LEADERBOARD */
         window.renderJudgeLeaderboard = function() {
             const tbody = document.getElementById('judge-leaderboard-body');
@@ -2093,6 +2186,7 @@
                 </tr>
             `).join('') || '<tr><td colspan="4">No scores accumulated.</td></tr>';
         }
+
         window.viewCandidateBreakdown = function(name, team) {
             const records = window.appState.points.filter(pt => pt.student === name && pt.team === team && pt.cat !== 'GENERAL');
             document.getElementById('det-modal-title').innerText = `${name} (${team})`;
@@ -2103,6 +2197,7 @@
             `;
             document.getElementById('detail-modal-overlay').style.display = 'flex';
         }
+
         /* STATES DASHBOARD & RANK-WISE FILTER */
         window.renderStatesDashboard = function() {
             const tbody = document.getElementById('states-table-body');
@@ -2124,15 +2219,19 @@
                 teamDrop.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
             }
         }
+
         window.renderRankWinnersList = function() {
             const tbody = document.getElementById('rank-winners-body');
             if(!tbody) return;
+
             const teamFilter = document.getElementById('rank-team-filter');
             const posFilter = document.getElementById('rank-pos-filter');
             const fTeam = teamFilter ? teamFilter.value : '';
             const fPos = posFilter ? posFilter.value : 'all';
+
             const allRows = [];
             const distinctProgs = [...new Set((window.appState.points || []).map(p => p.progId))];
+
             distinctProgs.forEach(pid => {
                 const prog = window.appState.programs.find(p => p.id === pid) || { name: 'N/A' };
                 const subPts = window.appState.points
@@ -2142,6 +2241,7 @@
                         if(scoreDiff !== 0) return scoreDiff;
                         return String(a.student || '').localeCompare(String(b.student || ''));
                     });
+
                 subPts.forEach((pt, idx) => {
                     const rank = idx + 1;
                     if(fTeam && pt.team !== fTeam) return;
@@ -2155,6 +2255,7 @@
                     });
                 });
             });
+
             /* For “All Placed Winners”, group by position first:
                Rank 1 rows -> Rank 2 rows -> Rank 3 rows -> Rank 4 rows... */
             allRows.sort((a,b) => {
@@ -2165,6 +2266,7 @@
                 if(teamCmp !== 0) return teamCmp;
                 return a.student.localeCompare(b.student);
             });
+
             let count = 1;
             tbody.innerHTML = allRows.map(row => `
                 <tr>
@@ -2177,6 +2279,7 @@
                 </tr>
             `).join('') || '<tr><td colspan="6">No winners matching position criteria.</td></tr>';
         }
+
         window.viewTeamBreakdown = function(teamName) {
             const records = window.appState.points.filter(pt => pt.team === teamName);
             document.getElementById('det-modal-title').innerText = `Team Breakdown: ${teamName}`;
@@ -2187,6 +2290,7 @@
             `;
             document.getElementById('detail-modal-overlay').style.display = 'flex';
         }
+
         /* CONTROL PANEL REPORTERS & BUILDERS */
         window.toggleRegLock = function() { 
             window.appState.portalOpen = !window.appState.portalOpen; 
@@ -2201,6 +2305,7 @@
             syncControlPanelViews();
             e.target.reset();
         }
+
         window.deleteTeamMaster = function(idx) { 
             window.appState.teams.splice(idx, 1); 
             saveKey('teams', window.appState.teams);
@@ -2220,6 +2325,7 @@
             syncControlPanelViews();
             e.target.reset();
         }
+
         window.deleteProgramMaster = function(id) { 
             window.appState.programs = window.appState.programs.filter(p => p.id !== id); 
             saveKey('programs', window.appState.programs);
@@ -2244,6 +2350,7 @@
                 // Optimistic Local Update
                 renderResultPhaseFeeds();
                 syncControlPanelViews();
+
                 saveKey('teamStatusList', window.appState.teamStatusList);
                 saveKey('teamStatusUrl', compressed);
                 
@@ -2253,6 +2360,7 @@
                 // Upload completed successfully; no blocking OK/alert is shown.
             }
         }
+
         window.deleteStatusItem = function(id) {
             if(!window.appState.teamStatusList) return;
             window.appState.teamStatusList = window.appState.teamStatusList.filter(item => item.id !== id);
@@ -2269,6 +2377,7 @@
             const matched = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
             drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
         }
+
         window.uploadProgramResult = async function(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-up-res');
@@ -2276,6 +2385,7 @@
             const customNum = document.getElementById('res-custom-number').value.trim();
             const yt = document.getElementById('res-yt-url').value.trim();
             const fileEl = document.getElementById('res-file').files[0];
+
             if(fileEl && progId) {
                 btn.innerText = "Uploading...";
                 btn.disabled = true;
@@ -2287,12 +2397,14 @@
                 // Optimistic Local Update
                 filterResultPrograms();
                 syncControlPanelViews();
+
                 saveKey('results', window.appState.results);
                 
                 btn.innerText = "Upload Result (Save Only)";
                 btn.disabled = false;
             }
         }
+
         window.setResultPublished = function(progId, shouldPublish) {
             const item = (window.appState.results || []).find(r => r.progId === progId);
             if(!item) return;
@@ -2302,6 +2414,7 @@
             filterResultPrograms();
             syncControlPanelViews();
         }
+
         window.setStatusPublished = function(id, shouldPublish) {
             const item = (window.appState.teamStatusList || []).find(r => r.id === id);
             if(!item) return;
@@ -2311,6 +2424,7 @@
             renderResultPhaseFeeds();
             syncControlPanelViews();
         }
+
         window.renderPublishPanel = function() {
             const resBox = document.getElementById('publish-results-list');
             if(resBox) {
@@ -2350,6 +2464,7 @@
                 }).join('') : '<div style="color:var(--text-sub); text-align:center; padding:12px;">No uploaded posters yet.</div>';
             }
         }
+
         window.deleteResultMaster = function(progId) { 
             window.appState.results = window.appState.results.filter(r => r.progId !== progId); 
             saveKey('results', window.appState.results);
@@ -2372,6 +2487,7 @@
                 lblFile.innerText = "Choose Photo";
             }
         }
+
         // Fast Updates Feed Upload (Link + Thumbnail method)
         window.uploadUpdateFeed = async function(e) {
             e.preventDefault();
@@ -2379,12 +2495,16 @@
             const type = document.getElementById('up-type').value;
             const f = document.getElementById('up-file').files[0];
             const vLink = document.getElementById('up-video-link').value.trim();
+
             if(!f) return;
+
             btn.innerText = "Uploading...";
             btn.disabled = true;
+
             try {
                 // Aggressive compression for instant updates and zero lag
                 const compressedImage = await compressImage(f, 800, 0.6);
+
                 if(!window.appState.updates) window.appState.updates = [];
                 
                 if (type === 'photo') {
@@ -2392,6 +2512,7 @@
                 } else {
                     window.appState.updates.unshift({ id:'up_'+Date.now(), type: 'video', url: vLink, thumb: compressedImage });
                 }
+
                 // Optimistic Local Update
                 renderPinterestUpdates('all');
                 syncControlPanelViews();
@@ -2410,6 +2531,7 @@
                 alert("Failed to upload media. Please try again.");
             }
         }
+
         window.deleteUpdateMaster = function(id) { 
             window.appState.updates = window.appState.updates.filter(u => u.id !== id); 
             saveKey('updates', window.appState.updates);
@@ -2424,6 +2546,7 @@
             const url = document.getElementById('st-url').value.trim();
             const mode = document.getElementById('st-mode').value;
             const thumbFile = document.getElementById('st-thumb').files[0];
+
             if(thumbFile) {
                 btn.innerText = "Adding...";
                 btn.disabled = true;
@@ -2439,6 +2562,7 @@
                     renderResultPhaseFeeds();
                     saveKey('highlights', window.appState.highlights);
                 }
+
                 syncControlPanelViews();
                 btn.innerText = "Add Stream";
                 btn.disabled = false;
@@ -2446,6 +2570,7 @@
                 alert("Stream Added Instantly.");
             }
         }
+
         window.deleteStreamMaster = function(id, mode) {
             if(mode === 'live') {
                 window.appState.livelinks = window.appState.livelinks.filter(l => l.id !== id);
@@ -2457,6 +2582,7 @@
             syncControlPanelViews();
             renderResultPhaseFeeds();
         }
+
         function populateReportProgDropdown() {
             const cat = document.getElementById('rep-cat').value;
             const drop = document.getElementById('rep-prog');
@@ -2464,6 +2590,7 @@
             const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
             drop.innerHTML = '<option value="">All Programs (A-Z)</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
         }
+
         function syncControlPanelViews() {
             const btn = document.getElementById('lock-reg-btn');
             if(btn) {
@@ -2541,6 +2668,7 @@
             }
             renderReportTable();
         }
+
         window.renderReportTable = function() {
             const fTeam = document.getElementById('rep-team') ? document.getElementById('rep-team').value : '';
             const fCat = document.getElementById('rep-cat') ? document.getElementById('rep-cat').value : '';
@@ -2569,50 +2697,7 @@
             });
             tbody.innerHTML = rows || '<tr><td colspan="5" style="text-align:center;">No entries found.</td></tr>';
         }
-        
-        window.populateEsProgs = function() {
-            const cat = document.getElementById('es-cat-select').value;
-            const drop = document.getElementById('es-prog-select');
-            if(!drop) return;
-            const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
-            drop.innerHTML = '<option value="">All Programs</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-        };
-        window.renderEntrySignTable = function() {
-            const fCat = document.getElementById('es-cat-select') ? document.getElementById('es-cat-select').value : '';
-            const fProg = document.getElementById('es-prog-select') ? document.getElementById('es-prog-select').value : '';
-            const tbody = document.getElementById('entry-sign-table-body');
-            const title = document.getElementById('es-print-title');
-            
-            if(!tbody) return;
-            
-            let printTitle = 'ENTRY SIGN';
-            if(fProg) {
-                const p = window.appState.programs.find(pr => pr.id === fProg);
-                if(p) printTitle += ' - ' + p.name;
-            } else if (fCat) {
-                printTitle += ' - ' + fCat;
-            }
-            if(title) title.innerText = printTitle;
 
-            let rows = '';
-            window.appState.registrations.forEach(r => {
-                const p = window.appState.programs.find(pr => pr.id === r.progId);
-                if(!p) return;
-                if(fCat && r.cat !== fCat) return;
-                if(fProg && r.progId !== fProg) return;
-                
-                r.participants.forEach(name => {
-                    rows += '<tr>' +
-                        '<td style="text-align:center;"></td>' +
-                        '<td><strong>' + name + '</strong>' + (!fProg ? '<br><small style="color:gray;">' + p.name + '</small>' : '') + '</td>' +
-                        '<td>' + r.team + '</td>' +
-                        '<td></td>' +
-                    '</tr>';
-                });
-            });
-            tbody.innerHTML = rows || '<tr><td colspan="4" style="text-align:center;">No entries found.</td></tr>';
-        };
-        
         /* RESULT PHASE VIEWER */
         function renderResultPhaseFeeds() {
             const statusBox = document.getElementById('team-status-poster-box');
@@ -2656,6 +2741,7 @@
                 `).join('') || '<p style="grid-column: 1/-1;">No Highlights Cataloged.</p>';
             }
         }
+
         window.filterResultPrograms = function() {
             const catEl = document.getElementById('res-search-cat');
             const searchEl = document.getElementById('res-prog-search');
@@ -2684,6 +2770,7 @@
                 `;
             }).join('') || '<p style="text-align:center; color:var(--text-sub); margin-top:15px;">No published results matching filter.</p>';
         }
+
         window.toggleInlineResultView = function(progId, posterData) {
             const box = document.getElementById(`inline-res-box-${progId}`);
             const btn = document.getElementById(`btn-toggle-res-${progId}`);
@@ -2707,6 +2794,7 @@
                 btn.className = "btn btn-sm btn-success";
             }
         }
+
         // Display Photo and Video Posts Correctly
         window.renderPinterestUpdates = function(filterMode) {
             const feed = document.getElementById('live-updates-feed');
@@ -2722,6 +2810,7 @@
                 </div>
             `).join('') || '<p style="grid-column: 1/-1;">No updates cataloged.</p>';
         }
+
         /* MEDIA VIEWER MODAL, DOWNLOAD & SHARE SYSTEM */
         window.openMediaViewer = function(mediaUrl, type) {
             const container = document.getElementById('media-viewer-container');
@@ -2733,6 +2822,7 @@
             } else {
                 container.innerHTML = `<video src="${mediaUrl}" controls autoplay playsinline style="max-width:100%; max-height:60vh; border-radius:8px;"></video>`;
             }
+
             dBtn.onclick = () => {
                 const a = document.createElement('a');
                 a.href = mediaUrl;
@@ -2741,16 +2831,20 @@
                 a.click();
                 document.body.removeChild(a);
             };
+
             sBtn.onclick = () => {
                 shareMediaDirectly(mediaUrl, type);
             };
+
             document.getElementById('media-viewer-modal').style.display = 'flex';
         }
+
         window.closeMediaViewer = function() {
             const container = document.getElementById('media-viewer-container');
             container.innerHTML = '';
             document.getElementById('media-viewer-modal').style.display = 'none';
         }
+
         window.shareMediaDirectly = async function(mediaUrl, type) {
             try {
                 if (navigator.share) {
@@ -2758,6 +2852,7 @@
                     const blob = await response.blob();
                     const ext = type === 'photo' ? 'jpg' : 'mp4';
                     const file = new File([blob], `bahja_${Date.now()}.${ext}`, { type: blob.type });
+
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
                         await navigator.share({
                             files: [file],
@@ -2782,6 +2877,7 @@
                 console.log("Sharing cancelled or unsupported:", err);
             }
         }
+
         applyGlobalWebsiteTheme(window.appState.theme || 'dark');
         applyLogoView();
         applyVisualCustomizations();
