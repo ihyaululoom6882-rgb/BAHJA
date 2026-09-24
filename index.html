@@ -769,99 +769,67 @@
         </div>
         <!-- POINTROOM PORTAL -->
         <div id="panel-pointroom" class="view-panel card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>Pointroom — Code Letter Entry</h3>
-                <button class="btn btn-warning btn-sm no-print" onclick="printAllPointRecords()"><i class="fa-solid fa-print"></i> Print All Logs</button>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <h3>Pointroom</h3><button class="btn btn-warning btn-sm no-print" onclick="printAllPointRecords()"><i class="fa-solid fa-print"></i> Print All Logs</button>
             </div>
-            
             <form onsubmit="savePointroomEntry(event)" class="no-print" style="margin-top:12px;">
-                <div class="form-group">
-                    <label>Select Category</label>
-                    <select id="pt-cat-select" class="form-control" onchange="populatePtProgs()" required>
-                        <option value="">-- Choose Category --</option>
-                        <option value="GENERAL">GENERAL</option>
-                        <option value="LOWER ZONE">LOWER ZONE</option>
-                        <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                        <option value="HIGHER ZONE">HIGHER ZONE</option>
-                        <option value="SUPER ZONE">SUPER ZONE</option>
-                    </select>
+                <div class="form-group"><label>Select Category</label><select id="pt-cat-select" class="form-control" onchange="populatePtProgs()" required>
+                    <option value="">-- Choose Category --</option><option value="GENERAL">GENERAL</option><option value="LOWER ZONE">LOWER ZONE</option><option value="MIDDLE ZONE">MIDDLE ZONE</option><option value="HIGHER ZONE">HIGHER ZONE</option><option value="SUPER ZONE">SUPER ZONE</option>
+                </select></div>
+                <div class="form-group"><label>Select Program</label><select id="pt-prog-select" class="form-control" onchange="loadPtParticipants()" required></select></div>
+                <div id="pt-stage-badge" style="margin-bottom:12px;font-weight:bold;color:#d4af37;"></div>
+                <div class="card" style="padding:12px;margin-bottom:12px;">
+                    <h4 style="color:#d4af37;margin-bottom:8px;"><i class="fa-solid fa-list"></i> Program Topic</h4>
+                    <textarea id="pt-topic-input" class="form-control" rows="3" placeholder="Enter topic / topic notes for this program..."></textarea>
+                    <button type="button" class="btn btn-success btn-sm" onclick="savePointroomTopic()" style="margin-top:8px;">Save Topic</button>
                 </div>
-                <div class="form-group">
-                    <label>Select Program</label>
-                    <select id="pt-prog-select" class="form-control" onchange="loadPtParticipants()" required></select>
-                </div>
-                <div id="pt-stage-badge" style="margin-bottom:12px; font-weight:bold; color:#d4af37;"></div>
-                
                 <div id="pt-candidates-inputs" style="margin-bottom:12px;"></div>
                 <button type="submit" class="btn btn-success btn-block btn-xl">Submit Code Letters</button>
             </form>
-            <div class="collapsible-header no-print" onclick="toggleAccordion('box-pt-list')"><span>Code Letter Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
-            <div id="box-pt-list" class="collapsible-box show"></div>
-            <div id="pt-print-area" class="print-target" style="display:none;"></div>
+            <div class="collapsible-header no-print" onclick="toggleAccordion('box-pt-list')"><span>Pointroom Records</span><i class="fa-solid fa-chevron-down"></i></div>
+            <div id="box-pt-list" class="collapsible-box show"></div><div id="pt-print-area" class="print-target" style="display:none;"></div>
         </div>
+
         <!-- JUDGE PORTAL -->
         <div id="panel-judge" class="view-panel card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>Judge</h3>
-                <button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('judge-print-container')"><i class="fa-solid fa-print"></i> Print Leaderboard</button>
+            <h3>Judge</h3>
+            <div class="card no-print" style="padding:12px;margin-bottom:12px;">
+                <h4 style="color:#d4af37;margin-bottom:8px;"><i class="fa-solid fa-list"></i> Current Program</h4>
+                <div id="judge-current-program" style="font-size:1.15rem;font-weight:800;">No program selected in Pointroom.</div>
+                <div id="judge-current-topic" style="margin-top:8px;white-space:pre-wrap;color:var(--text-sub);">No topic saved.</div>
             </div>
-
-            <div class="card no-print" style="padding:12px; margin-bottom:12px;">
-                <h4 style="color:#d4af37; margin-bottom:10px;"><i class="fa-solid fa-list"></i> Topics</h4>
-                <div class="form-group">
-                    <label>Program</label>
-                    <select id="judge-prog-select" class="form-control" onchange="loadJudgeProgram()"></select>
-                </div>
-                <div class="form-group">
-                    <label>Topics / Topic Notes</label>
-                    <textarea id="judge-topics-input" class="form-control" rows="3" placeholder="Enter the topic(s) for this program..."></textarea>
-                </div>
-                <button class="btn btn-success btn-sm" onclick="saveJudgeTopics()">Save Topics</button>
-            </div>
-
-            <div class="card no-print" style="padding:12px; margin-bottom:12px;">
-                <h4 style="color:#d4af37; margin-bottom:10px;"><i class="fa-solid fa-stopwatch"></i> Timer</h4>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:end;">
-                    <div class="form-group" style="margin:0;">
-                        <label>Time (minutes)</label>
-                        <input type="number" id="judge-timer-minutes" class="form-control" min="1" max="180" step="1" value="1">
-                    </div>
+            <div class="card no-print" style="padding:12px;margin-bottom:12px;">
+                <h4 style="color:#d4af37;margin-bottom:10px;"><i class="fa-solid fa-stopwatch"></i> Timer</h4>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end;">
+                    <div class="form-group" style="margin:0;"><label>Time (minutes)</label><input type="number" id="judge-timer-minutes" class="form-control" min="1" max="180" step="1" value="1"></div>
                     <button class="btn btn-primary" onclick="setJudgeTimer()">Set Time</button>
                 </div>
-                <div id="judge-timer-display" style="font-size:2.6rem; font-weight:800; text-align:center; letter-spacing:2px; margin:12px 0;">01:00</div>
-                <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+                <div id="judge-timer-display" style="font-size:2.6rem;font-weight:800;text-align:center;letter-spacing:2px;margin:12px 0;">01:00</div>
+                <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
                     <button class="btn btn-success" onclick="startJudgeTimer()"><i class="fa-solid fa-play"></i> Start</button>
                     <button class="btn btn-warning" onclick="pauseJudgeTimer()"><i class="fa-solid fa-pause"></i> Pause</button>
                     <button class="btn btn-danger" onclick="resetJudgeTimer()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
-                </div>
-                <div id="judge-timer-warning" style="text-align:center; margin-top:8px; font-weight:700; color:#ef4444; min-height:20px;"></div>
+                </div><div id="judge-timer-warning" style="text-align:center;margin-top:8px;font-weight:700;color:#ef4444;min-height:20px;"></div>
             </div>
-
-            <div class="card no-print" style="padding:12px; margin-bottom:12px;">
-                <h4 style="color:#d4af37; margin-bottom:10px;"><i class="fa-solid fa-pen-to-square"></i> Judge Marks</h4>
-                <p style="font-size:.82rem; color:var(--text-sub); margin-bottom:10px;">Enter marks against the submitted code letter. The code letter is used instead of the student's name.</p>
-                <div id="judge-code-list"></div>
-                <button class="btn btn-success btn-block btn-xl" onclick="submitJudgeMarks()" style="margin-top:10px;">Submit Judge Marks</button>
+            <div class="card no-print" style="padding:12px;margin-bottom:12px;">
+                <h4 style="color:#d4af37;margin-bottom:10px;"><i class="fa-solid fa-pen-to-square"></i> Judge Marks</h4>
+                <p style="font-size:.82rem;color:var(--text-sub);margin-bottom:10px;">The code letter comes from Pointroom. Enter the judge mark against each code letter.</p>
+                <div id="judge-code-list"></div><button class="btn btn-success btn-block btn-xl" onclick="submitJudgeMarks()" style="margin-top:10px;">Submit Judge Marks</button>
             </div>
+        </div>
 
-            <div id="judge-print-container" class="print-target">
-                <div class="form-group no-print" style="margin-top:12px;">
-                    <label>Filter Stage View</label>
-                    <select id="jd-filter-stage" class="form-control" onchange="renderJudgeLeaderboard()">
-                        <option value="all">ALL STAGES</option>
-                        <option value="ON STAGE">ON STAGE</option>
-                        <option value="OFF STAGE">OFF STAGE</option>
-                    </select>
+        <!-- JUDGE LEADERBOARD - SEPARATE PAGE -->
+        <div id="panel-judge-leaderboard" class="view-panel card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><h3>Judge Leaderboard</h3>
+                <button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('judge-leaderboard-print-container')"><i class="fa-solid fa-print"></i> Print Leaderboard</button>
+            </div>
+            <div id="judge-leaderboard-print-container" class="print-target">
+                <div class="form-group no-print" style="margin-top:12px;"><label>Filter Stage View</label>
+                    <select id="jd-filter-stage" class="form-control" onchange="renderJudgeLeaderboard()"><option value="all">ALL STAGES</option><option value="ON STAGE">ON STAGE</option><option value="OFF STAGE">OFF STAGE</option></select>
                 </div>
-                <h4 style="margin:8px 0;">Judge Leaderboard</h4>
-                <div class="table-responsive">
-                    <table class="bahja-sheet-table">
-                        <thead>
-                            <tr><th>Code Letter</th><th>Team</th><th>Cat</th><th>Points</th></tr>
-                        </thead>
-                        <tbody id="judge-leaderboard-body"></tbody>
-                    </table>
-                </div>
+                <h4 style="margin:8px 0;">Judge Leaderboard</h4><div class="table-responsive"><table class="bahja-sheet-table">
+                    <thead><tr><th>Student Name</th><th>Team</th><th>Cat</th><th>Points</th></tr></thead><tbody id="judge-leaderboard-body"></tbody>
+                </table></div>
             </div>
         </div>
         <!-- STATES CONTROL -->
@@ -1345,7 +1313,7 @@
                 securitySchemaVersion: SECURITY_SCHEMA_VERSION,
                 visibilities: { 'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true },
                 visuals: { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center' },
-                teams: [], programs: [], registrations: [], results: [], updates: [], livelinks: [], highlights: [], students: [], points: [], codeEntries: [], judgeScores: [], judgeTopics: {}, judgeTimerSeconds: 60
+                teams: [], programs: [], registrations: [], results: [], updates: [], livelinks: [], highlights: [], students: [], points: [], codeEntries: [], judgeScores: [], judgeTopics: {}, pointroomActiveProgramId: '', judgeTimerSeconds: 60
             };
         }
 
@@ -1432,8 +1400,9 @@
                 renderPublishPanel();
                 renderPtList();
                 renderJudgeLeaderboard();
-                populateJudgeProgramDropdown();
+                loadJudgeProgram();
                 renderJudgeCodeList();
+                renderPointroomTopicView();
                 renderStatesDashboard();
                 renderRankWinnersList();
                 syncProtectionFields();
@@ -1449,6 +1418,7 @@
                 if(!Array.isArray(window.appState.codeEntries)) window.appState.codeEntries = [];
                 if(!Array.isArray(window.appState.judgeScores)) window.appState.judgeScores = [];
                 if(!window.appState.judgeTopics) window.appState.judgeTopics = {};
+                if(typeof window.appState.pointroomActiveProgramId !== 'string') window.appState.pointroomActiveProgramId = '';
                 if(!window.appState.judgeTimerSeconds) window.appState.judgeTimerSeconds = 60;
                 const wasOldSecuritySchema = window.appState.securitySchemaVersion !== SECURITY_SCHEMA_VERSION;
                 window.appState = sanitizeSecurityState(window.appState);
@@ -1563,6 +1533,7 @@
                     <button onclick="interceptRoute('panel-control-panel', 'control_panel')"><i class="fa-solid fa-sliders"></i> Control Panel</button>
                     <button onclick="showPanel('panel-publish'); document.getElementById('mainDropdown').classList.remove('show'); renderPublishPanel();"><i class="fa-solid fa-cloud-arrow-up"></i> Publish</button>
                     <button onclick="interceptRoute('panel-judge', 'judge')"><i class="fa-solid fa-gavel"></i> Judge</button>
+                    <button onclick="interceptRoute('panel-judge-leaderboard', 'judge')"><i class="fa-solid fa-ranking-star"></i> Judge Leaderboard</button>
                     <button onclick="interceptRoute('panel-states-control', 'states')"><i class="fa-solid fa-flag"></i> States Control</button>
                     <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Protection Settings</button>
                     <button onclick="interceptRoute('panel-modify', 'modify')"><i class="fa-solid fa-pen-to-square"></i> Modify Appearance</button>
@@ -1613,7 +1584,8 @@
                 if(!history.state || history.state.panel !== panelId) {
                     history.pushState({ panel: panelId }, "", `#${panelId}`);
                     if(panelId === 'panel-publish') renderPublishPanel();
-                    if(panelId === 'panel-judge') { populateJudgeProgramDropdown(); loadJudgeProgram(); setJudgeTimer(); }
+                    if(panelId === 'panel-pointroom') { renderPointroomTopicView(); }
+            if(panelId === 'panel-judge') { loadJudgeProgram(); setJudgeTimer(); renderJudgeCodeList(); }
         }
             }
         }
@@ -2083,279 +2055,24 @@
         }
 
         /* POINTROOM */
-        window.populatePtProgs = function() {
-            const cat = document.getElementById('pt-cat-select').value;
-            const drop = document.getElementById('pt-prog-select');
-            const matched = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
-            drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-            document.getElementById('pt-candidates-inputs').innerHTML = '';
-            document.getElementById('pt-stage-badge').innerText = '';
-        }
-
-        window.loadPtParticipants = function() {
-            const progId = document.getElementById('pt-prog-select').value;
-            const targetProg = window.appState.programs.find(p => p.id === progId);
-            const container = document.getElementById('pt-candidates-inputs');
-            if(!targetProg) { container.innerHTML = ''; return; }
-            document.getElementById('pt-stage-badge').innerText = `Stage: ${targetProg.stage}`;
-            const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
-            if(matchedRegs.length === 0) {
-                container.innerHTML = '<p style="color:#ef4444;">No registered candidates found.</p>'; return;
-            }
-            let html = '';
-            matchedRegs.forEach(r => {
-                r.participants.forEach(pName => {
-                    const existing = (window.appState.codeEntries || []).find(x => x.progId === progId && x.team === r.team && x.student === pName) || {};
-                    html += `
-                        <div style="display:grid; grid-template-columns:1fr 120px; gap:8px; align-items:center; background:rgba(0,0,0,0.2); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
-                            <span><strong>${pName}</strong> <span style="color:var(--text-sub);">(${r.team})</span></span>
-                            <input type="text" maxlength="10" class="form-control pt-code-field" data-team="${r.team}" data-student="${pName}" value="${existing.codeLetter || ''}" placeholder="Code Letter" style="padding:6px; text-transform:uppercase;">
-                        </div>
-                    `;
-                });
-            });
-            container.innerHTML = html;
-        }
-
-        window.savePointroomEntry = function(e) {
-            e.preventDefault();
-            const progId = document.getElementById('pt-prog-select').value;
-            const cat = document.getElementById('pt-cat-select').value;
-            if(!progId || !cat) return;
-            if(!Array.isArray(window.appState.codeEntries)) window.appState.codeEntries = [];
-            const newEntries = [];
-            const usedCodes = new Set();
-            let duplicateFound = false;
-            document.querySelectorAll('.pt-code-field').forEach(f => {
-                const codeLetter = String(f.value || '').trim().toUpperCase();
-                if(!codeLetter) return;
-                if(usedCodes.has(codeLetter)) duplicateFound = true;
-                usedCodes.add(codeLetter);
-                const team = f.getAttribute('data-team');
-                const student = f.getAttribute('data-student');
-                newEntries.push({ progId, cat, team, student, codeLetter });
-            });
-            if(duplicateFound) { alert('Each code letter must be unique within a program.'); return; }
-            window.appState.codeEntries = window.appState.codeEntries.filter(x => x.progId !== progId).concat(newEntries);
-            saveKey('codeEntries', window.appState.codeEntries);
-            loadPtParticipants();
-            renderPtList();
-            renderJudgeCodeList();
-            alert("Code letters recorded.");
-        }
-
-        function renderPtList() {
-            const container = document.getElementById('box-pt-list');
-            if(!container) return;
-            const distinctProgs = [...new Set((window.appState.codeEntries || []).map(p => p.progId))];
-            if(distinctProgs.length === 0) { container.innerHTML = '<p>No code letters submitted.</p>'; return; }
-            container.innerHTML = distinctProgs.map(pid => {
-                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
-                const codes = (window.appState.codeEntries || []).filter(x => x.progId === pid).sort((a,b)=>String(a.codeLetter).localeCompare(String(b.codeLetter)));
-                return `
-                    <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:10px; border-radius:8px; margin-bottom:6px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <strong>${prog.name} (${prog.cat})</strong>
-                            <div>
-                                <button class="btn btn-warning btn-sm no-print" onclick="printCodeLetterRecord('${pid}')"><i class="fa-solid fa-print"></i> Print</button>
-                                <button class="btn btn-danger btn-sm no-print" onclick="deleteCodeEntryGroup('${pid}')">Delete</button>
-                            </div>
-                        </div>
-                        <div style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;">
-                            ${codes.map(c => `${c.codeLetter} (${c.team}): <strong>${c.student}</strong>`).join(' | ')}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        window.printCodeLetterRecord = function(progId) {
-            const prog = window.appState.programs.find(p => p.id === progId) || { name:'Program', cat:'N/A' };
-            const codes = (window.appState.codeEntries || []).filter(x => x.progId === progId).sort((a,b)=>String(a.codeLetter).localeCompare(String(b.codeLetter)));
-            const target = document.getElementById('pt-print-area');
-            target.innerHTML = `
-                <div class="bahja-sheet-header"><span>TIME:</span><h2>BAHJA 2K26 - ${prog.name.toUpperCase()} (${prog.cat})</h2><span>DATE:</span></div>
-                <table class="bahja-sheet-table"><thead><tr><th>#</th><th>Code Letter</th><th>Team</th><th>Student</th></tr></thead><tbody>
-                    ${codes.map((c,i)=>`<tr><td>${i+1}</td><td><strong>${c.codeLetter}</strong></td><td>${c.team}</td><td>${c.student}</td></tr>`).join('')}
-                </tbody></table>`;
-            triggerCustomPrint('pt-print-area');
-        }
-
-        window.deleteCodeEntryGroup = function(progId) {
-            if(confirm('Delete code letters for this program?')) {
-                window.appState.codeEntries = (window.appState.codeEntries || []).filter(x => x.progId !== progId);
-                window.appState.judgeScores = (window.appState.judgeScores || []).filter(x => x.progId !== progId);
-                saveKey('codeEntries', window.appState.codeEntries);
-                saveKey('judgeScores', window.appState.judgeScores);
-                renderPtList(); renderJudgeCodeList(); renderJudgeLeaderboard(); renderStatesDashboard(); renderRankWinnersList();
-            }
-        }
-
-        window.printIndividualPointRecord = function(progId) {
-            const prog = window.appState.programs.find(p => p.id === progId) || { name: 'Program', cat: 'N/A' };
-            const subPts = window.appState.points.filter(pt => pt.progId === progId).sort((a,b)=>b.score - a.score);
-            const target = document.getElementById('pt-print-area');
-            
-            target.innerHTML = `
-                <div class="bahja-sheet-header">
-                    <span>TIME:</span>
-                    <h2>BAHJA 2K26 - ${prog.name.toUpperCase()} (${prog.cat})</h2>
-                    <span>DATE:</span>
-                </div>
-                <table class="bahja-sheet-table">
-                    <thead><tr><th>#</th><th>Code Letter / Student</th><th>Team</th><th>Score</th><th>Rank</th></tr></thead>
-                    <tbody>
-                        ${subPts.map((s, idx) => `<tr><td>${idx+1}</td><td>${s.student}</td><td>${s.team}</td><td><strong>${s.score}</strong></td><td>Rank ${idx+1}</td></tr>`).join('')}
-                    </tbody>
-                </table>
-            `;
-            triggerCustomPrint('pt-print-area');
-        }
-
-        window.printAllPointRecords = function() {
-            const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
-            const target = document.getElementById('pt-print-area');
-            let html = `
-                <div class="bahja-sheet-header">
-                    <span>TIME:</span>
-                    <h2>BAHJA 2K26 - ALL POINT EVALUATION LOGS</h2>
-                    <span>DATE:</span>
-                </div>
-            `;
-            distinctProgs.forEach(pid => {
-                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
-                const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
-                html += `
-                    <h4 style="margin-top:10px; font-size:12px;">${prog.name} (${prog.cat})</h4>
-                    <table class="bahja-sheet-table" style="margin-bottom:8px;">
-                        <thead><tr><th>#</th><th>Code Letter / Student</th><th>Team</th><th>Score</th></tr></thead>
-                        <tbody>${subPts.map((s, idx) => `<tr><td>${idx+1}</td><td>${s.student}</td><td>${s.team}</td><td>${s.score}</td></tr>`).join('')}</tbody>
-                    </table>
-                `;
-            });
-            target.innerHTML = html;
-            triggerCustomPrint('pt-print-area');
-        }
-
-        window.deletePtGroup = function(progId) {
-            if(confirm("Delete records?")) {
-                window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
-                saveKey('points', window.appState.points);
-                renderPtList();
-            }
-        }
-
+        window.populatePtProgs=function(){const cat=document.getElementById('pt-cat-select').value,drop=document.getElementById('pt-prog-select');const m=window.appState.programs.filter(p=>p.cat===cat).sort((a,b)=>a.name.localeCompare(b.name));drop.innerHTML='<option value="">-- Choose Program --</option>'+m.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');document.getElementById('pt-candidates-inputs').innerHTML='';document.getElementById('pt-stage-badge').innerText='';const t=document.getElementById('pt-topic-input');if(t)t.value='';}
+        window.loadPtParticipants=function(){const progId=document.getElementById('pt-prog-select').value,p=window.appState.programs.find(p=>p.id===progId),c=document.getElementById('pt-candidates-inputs');if(!p){c.innerHTML='';return;}window.appState.pointroomActiveProgramId=progId;saveKey('pointroomActiveProgramId',progId);document.getElementById('pt-stage-badge').innerText=`Stage: ${p.stage}`;const t=document.getElementById('pt-topic-input');if(t)t.value=window.appState.judgeTopics?.[progId]||'';const regs=window.appState.registrations.filter(r=>r.progId===progId);if(!regs.length){c.innerHTML='<p style="color:#ef4444;">No registered candidates found.</p>';loadJudgeProgram();return;}let h='';regs.forEach(r=>r.participants.forEach(n=>{const ex=(window.appState.codeEntries||[]).find(x=>x.progId===progId&&x.team===r.team&&x.student===n)||{};h+=`<div style="display:grid;grid-template-columns:1fr 120px;gap:8px;align-items:center;background:rgba(0,0,0,.2);padding:8px 10px;margin-bottom:6px;border-radius:8px;border:1px solid var(--border-color);"><span><strong>${n}</strong> <span style="color:var(--text-sub);">(${r.team})</span></span><input type="text" maxlength="10" class="form-control pt-code-field" data-team="${r.team}" data-student="${n}" value="${ex.codeLetter||''}" placeholder="Code Letter" style="padding:6px;text-transform:uppercase;"></div>`;}));c.innerHTML=h;loadJudgeProgram();}
+        window.savePointroomTopic=function(){const pid=document.getElementById('pt-prog-select')?.value;if(!pid){alert('Choose a program first.');return;}if(!window.appState.judgeTopics)window.appState.judgeTopics={};window.appState.judgeTopics[pid]=document.getElementById('pt-topic-input').value.trim();window.appState.pointroomActiveProgramId=pid;saveKey('judgeTopics',window.appState.judgeTopics);saveKey('pointroomActiveProgramId',pid);loadJudgeProgram();}
+        window.renderPointroomTopicView=function(){const pid=window.appState.pointroomActiveProgramId||'',t=document.getElementById('pt-topic-input');if(t&&pid)t.value=window.appState.judgeTopics?.[pid]||'';}
+        window.savePointroomEntry=function(e){e.preventDefault();const pid=document.getElementById('pt-prog-select').value,cat=document.getElementById('pt-cat-select').value;if(!pid||!cat)return;window.appState.pointroomActiveProgramId=pid;saveKey('pointroomActiveProgramId',pid);if(!Array.isArray(window.appState.codeEntries))window.appState.codeEntries=[];const en=[],used=new Set();let dup=false;document.querySelectorAll('.pt-code-field').forEach(f=>{const code=String(f.value||'').trim().toUpperCase();if(!code)return;if(used.has(code))dup=true;used.add(code);en.push({progId:pid,cat,team:f.getAttribute('data-team'),student:f.getAttribute('data-student'),codeLetter:code});});if(dup){alert('Each code letter must be unique within a program.');return;}window.appState.codeEntries=window.appState.codeEntries.filter(x=>x.progId!==pid).concat(en);saveKey('codeEntries',window.appState.codeEntries);loadPtParticipants();renderPtList();renderJudgeCodeList();}
+        function renderPtList(){const c=document.getElementById('box-pt-list');if(!c)return;const ids=[...new Set((window.appState.codeEntries||[]).map(x=>x.progId))];if(!ids.length){c.innerHTML='<p>No records submitted.</p>';return;}c.innerHTML=ids.map(pid=>{const p=window.appState.programs.find(x=>x.id===pid)||{name:'Unknown',cat:'N/A'},codes=(window.appState.codeEntries||[]).filter(x=>x.progId===pid).sort((a,b)=>String(a.codeLetter).localeCompare(String(b.codeLetter)));return `<div style="background:rgba(0,0,0,.2);border:1px solid var(--border-color);padding:10px;border-radius:8px;margin-bottom:8px;"><div style="display:flex;justify-content:space-between;align-items:center;"><strong>${p.name} (${p.cat})</strong><div><button class="btn btn-warning btn-sm no-print" onclick="printCodeLetterRecord('${pid}')"><i class="fa-solid fa-print"></i> Print</button><button class="btn btn-danger btn-sm no-print" onclick="deleteCodeEntryGroup('${pid}')">Delete</button></div></div><div class="table-responsive" style="margin-top:8px;"><table class="bahja-sheet-table"><thead><tr><th>Code Letter</th><th>Team</th><th>Marks</th></tr></thead><tbody>${codes.map(x=>{const js=(window.appState.judgeScores||[]).find(s=>s.progId===pid&&s.team===x.team&&s.codeLetter===x.codeLetter);return `<tr><td><strong>${x.codeLetter}</strong></td><td>${x.team}</td><td><strong>${js?Number(js.score||0):'-'}</strong></td></tr>`;}).join('')}</tbody></table></div></div>`;}).join('');}
+        window.printCodeLetterRecord=function(pid){const p=window.appState.programs.find(x=>x.id===pid)||{name:'Program',cat:'N/A'},codes=(window.appState.codeEntries||[]).filter(x=>x.progId===pid).sort((a,b)=>String(a.codeLetter).localeCompare(String(b.codeLetter))),t=document.getElementById('pt-print-area');t.innerHTML=`<div class="bahja-sheet-header"><span>TIME:</span><h2>BAHJA 2K26 - ${p.name.toUpperCase()} (${p.cat})</h2><span>DATE:</span></div><table class="bahja-sheet-table"><thead><tr><th>#</th><th>Code Letter</th><th>Team</th><th>Marks</th></tr></thead><tbody>${codes.map((x,i)=>{const js=(window.appState.judgeScores||[]).find(s=>s.progId===pid&&s.team===x.team&&s.codeLetter===x.codeLetter);return `<tr><td>${i+1}</td><td><strong>${x.codeLetter}</strong></td><td>${x.team}</td><td>${js?Number(js.score||0):'-'}</td></tr>`;}).join('')}</tbody></table>`;triggerCustomPrint('pt-print-area');}
+        window.deleteCodeEntryGroup=function(pid){if(confirm('Delete code letters for this program?')){window.appState.codeEntries=(window.appState.codeEntries||[]).filter(x=>x.progId!==pid);window.appState.judgeScores=(window.appState.judgeScores||[]).filter(x=>x.progId!==pid);saveKey('codeEntries',window.appState.codeEntries);saveKey('judgeScores',window.appState.judgeScores);renderPtList();renderJudgeCodeList();renderJudgeLeaderboard();renderStatesDashboard();renderRankWinnersList();}}
         /* JUDGE WORKFLOW */
-        let judgeTimerInterval = null;
-        let judgeTimerRemaining = 60;
-        let judgeTimerRunning = false;
+        let judgeTimerInterval=null,judgeTimerRemaining=60,judgeTimerRunning=false;
+        function getActiveJudgeProgramId(){return window.appState.pointroomActiveProgramId||'';}
+        window.loadJudgeProgram=function(){const pid=getActiveJudgeProgramId(),p=window.appState.programs.find(x=>x.id===pid),n=document.getElementById('judge-current-program'),t=document.getElementById('judge-current-topic');if(!p){if(n)n.textContent='No program selected in Pointroom.';if(t)t.textContent='Select a program in Pointroom and save its topic.';const m=document.getElementById('judge-timer-minutes');if(m)m.value=1;renderJudgeCodeList();return;}if(n)n.textContent=`${p.name} (${p.cat})`;if(t)t.textContent=window.appState.judgeTopics?.[pid]||'No topic saved.';if(Number.isFinite(Number(p.judgeTimeMinutes))&&Number(p.judgeTimeMinutes)>0){const m=document.getElementById('judge-timer-minutes');if(m)m.value=p.judgeTimeMinutes;}renderJudgeCodeList();}
+        function getJudgeCodesForProgram(pid){return(window.appState.codeEntries||[]).filter(x=>x.progId===pid).sort((a,b)=>String(a.codeLetter).localeCompare(String(b.codeLetter)));}
+        function getJudgeScore(pid,code){const r=(window.appState.judgeScores||[]).find(x=>x.progId===pid&&x.codeLetter===code);return r?Number(r.score||0):0;}
+        window.renderJudgeCodeList=function(){const box=document.getElementById('judge-code-list');if(!box)return;const pid=getActiveJudgeProgramId();if(!pid){box.innerHTML='<p style="color:var(--text-sub);">Select a program in Pointroom first.</p>';return;}const codes=getJudgeCodesForProgram(pid);if(!codes.length){box.innerHTML='<p style="color:#ef4444;">No code letters submitted from Pointroom for this program.</p>';return;}box.innerHTML=`<div class="table-responsive"><table class="bahja-sheet-table"><thead><tr><th>Code Letter</th><th>Mark</th></tr></thead><tbody>${codes.map(c=>`<tr><td><strong style="font-size:1.1rem;color:#d4af37;">${c.codeLetter}</strong></td><td><input type="number" min="0" step="0.01" class="form-control judge-mark-field" data-code="${c.codeLetter}" data-team="${c.team}" value="${getJudgeScore(pid,c.codeLetter)}" placeholder="Mark" style="margin:0;"></td></tr>`).join('')}</tbody></table></div>`;}
+        window.submitJudgeMarks=function(){const pid=getActiveJudgeProgramId(),p=window.appState.programs.find(x=>x.id===pid);if(!pid||!p){alert('Select a program in Pointroom first.');return;}if(!Array.isArray(window.appState.judgeScores))window.appState.judgeScores=[];window.appState.judgeScores=window.appState.judgeScores.filter(x=>x.progId!==pid);document.querySelectorAll('.judge-mark-field').forEach(f=>{const code=String(f.dataset.code||'').trim().toUpperCase(),team=f.dataset.team||'',score=parseFloat(f.value)||0;if(code)window.appState.judgeScores.push({progId:pid,cat:p.cat,team,codeLetter:code,score,updatedAt:Date.now()});});saveKey('judgeScores',window.appState.judgeScores);renderPtList();renderJudgeLeaderboard();renderStatesDashboard();renderRankWinnersList();}
 
-        function populateJudgeProgramDropdown() {
-            const sel = document.getElementById('judge-prog-select');
-            if(!sel) return;
-            const current = sel.value;
-            sel.innerHTML = '<option value="">-- Choose Program --</option>' + (window.appState.programs || []).map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
-            if(current && window.appState.programs.some(p => p.id === current)) sel.value = current;
-        }
-
-        window.loadJudgeProgram = function() {
-            const pid = document.getElementById('judge-prog-select')?.value;
-            const topicInput = document.getElementById('judge-topics-input');
-            if(topicInput) topicInput.value = pid ? (window.appState.judgeTopics?.[pid] || '') : '';
-            const prog = window.appState.programs.find(p => p.id === pid);
-            if(prog && Number.isFinite(Number(prog.judgeTimeMinutes)) && Number(prog.judgeTimeMinutes) > 0) {
-                const minEl = document.getElementById('judge-timer-minutes');
-                if(minEl) minEl.value = prog.judgeTimeMinutes;
-            }
-            renderJudgeCodeList();
-        }
-
-        window.saveJudgeTopics = function() {
-            const pid = document.getElementById('judge-prog-select')?.value;
-            if(!pid) return;
-            if(!window.appState.judgeTopics) window.appState.judgeTopics = {};
-            window.appState.judgeTopics[pid] = document.getElementById('judge-topics-input').value.trim();
-            saveKey('judgeTopics', window.appState.judgeTopics);
-            alert('Topics saved.');
-        }
-
-        function getJudgeCodesForProgram(progId) {
-            return (window.appState.codeEntries || []).filter(x => x.progId === progId).sort((a,b) => String(a.codeLetter).localeCompare(String(b.codeLetter)));
-        }
-
-        function getJudgeScore(progId, codeLetter) {
-            const rec = (window.appState.judgeScores || []).find(x => x.progId === progId && x.codeLetter === codeLetter);
-            return rec ? Number(rec.score || 0) : 0;
-        }
-
-        window.renderJudgeCodeList = function() {
-            const box = document.getElementById('judge-code-list');
-            if(!box) return;
-            const pid = document.getElementById('judge-prog-select')?.value;
-            if(!pid) { box.innerHTML = '<p style="color:var(--text-sub);">Choose a program first.</p>'; return; }
-            const codes = getJudgeCodesForProgram(pid);
-            if(!codes.length) { box.innerHTML = '<p style="color:#ef4444;">No code letters submitted from Pointroom for this program.</p>'; return; }
-            box.innerHTML = codes.map(c => `
-                <div style="display:grid; grid-template-columns:90px 1fr 110px; gap:8px; align-items:center; padding:8px 10px; margin-bottom:6px; border:1px solid var(--border-color); border-radius:8px; background:rgba(0,0,0,.2);">
-                    <strong style="font-size:1.1rem; color:#d4af37; text-align:center;">${c.codeLetter}</strong>
-                    <span style="color:var(--text-sub);">${c.team}</span>
-                    <input type="number" min="0" step="0.01" class="form-control judge-mark-field" data-code="${c.codeLetter}" data-team="${c.team}" value="${getJudgeScore(pid,c.codeLetter)}" placeholder="Mark">
-                </div>
-            `).join('');
-        }
-
-        window.submitJudgeMarks = function() {
-            const pid = document.getElementById('judge-prog-select')?.value;
-            const prog = window.appState.programs.find(p => p.id === pid);
-            if(!pid || !prog) { alert('Choose a program first.'); return; }
-            if(!Array.isArray(window.appState.judgeScores)) window.appState.judgeScores = [];
-            window.appState.judgeScores = window.appState.judgeScores.filter(x => x.progId !== pid);
-            document.querySelectorAll('.judge-mark-field').forEach(f => {
-                const codeLetter = String(f.dataset.code || '').trim().toUpperCase();
-                const team = f.dataset.team || '';
-                const score = parseFloat(f.value) || 0;
-                if(!codeLetter) return;
-                window.appState.judgeScores.push({ progId:pid, cat:prog.cat, team, codeLetter, score, updatedAt:Date.now() });
-            });
-            saveKey('judgeScores', window.appState.judgeScores);
-            renderJudgeLeaderboard();
-            renderStatesDashboard();
-            renderRankWinnersList();
-            alert('Judge marks recorded. Team and student totals updated.');
-        }
-
-        function getUnifiedScoreRecords() {
-            const legacy = (window.appState.points || []).map(pt => ({...pt, source:'pointroom', student:pt.student || '', codeLetter:pt.codeLetter || ''}));
-            const judged = (window.appState.judgeScores || []).map(js => {
-                const code = (window.appState.codeEntries || []).find(c => c.progId === js.progId && c.codeLetter === js.codeLetter && c.team === js.team);
-                return {...js, source:'judge', student:code?.student || js.codeLetter, codeLetter:js.codeLetter};
-            });
-            return legacy.concat(judged);
-        }
-
-        window.renderJudgeLeaderboard = function() {
-            const tbody = document.getElementById('judge-leaderboard-body');
-            if(!tbody) return;
-            const filterStage = document.getElementById('jd-filter-stage')?.value || 'all';
-            const aggregate = {};
-            (window.appState.judgeScores || []).forEach(js => {
-                const prog = window.appState.programs.find(p => p.id === js.progId);
-                if(!prog) return;
-                if(filterStage !== 'all' && prog.stage !== filterStage) return;
-                const key = `${js.team}_${js.codeLetter}`;
-                if(!aggregate[key]) aggregate[key] = { codeLetter:js.codeLetter, team:js.team, cat:js.cat || prog.cat, total:0 };
-                aggregate[key].total += Number(js.score || 0);
-            });
-            const sorted = Object.values(aggregate).sort((a,b) => b.total - a.total || String(a.codeLetter).localeCompare(String(b.codeLetter)));
-            tbody.innerHTML = sorted.map(s => `
-                <tr>
-                    <td><strong>${s.codeLetter}</strong></td>
-                    <td>${s.team}</td>
-                    <td>${s.cat}</td>
-                    <td><strong style="color:#d4af37;">${s.total}</strong></td>
-                </tr>
-            `).join('') || '<tr><td colspan="4">No judge scores accumulated.</td></tr>';
-        }
+        window.renderJudgeLeaderboard=function(){const tbody=document.getElementById('judge-leaderboard-body');if(!tbody)return;const filterStage=document.getElementById('jd-filter-stage')?.value||'all',agg={};(window.appState.judgeScores||[]).forEach(js=>{const p=window.appState.programs.find(x=>x.id===js.progId);if(!p)return;if(filterStage!=='all'&&p.stage!==filterStage)return;const code=(window.appState.codeEntries||[]).find(c=>c.progId===js.progId&&c.team===js.team&&c.codeLetter===js.codeLetter),name=code?.student||js.codeLetter,key=`${js.team}_${name}`;if(!agg[key])agg[key]={name,team:js.team,cat:js.cat||p.cat,total:0};agg[key].total+=Number(js.score||0);});const sorted=Object.values(agg).sort((a,b)=>b.total-a.total||String(a.name).localeCompare(String(b.name)));tbody.innerHTML=sorted.map(s=>`<tr onclick="viewCandidateBreakdown('${String(s.name).replace(/'/g,"&#39;")}','${String(s.team).replace(/'/g,"&#39;")}')" style="cursor:pointer;"><td><strong>${s.name}</strong></td><td>${s.team}</td><td>${s.cat}</td><td><strong style="color:#d4af37;">${s.total}</strong></td></tr>`).join('')||'<tr><td colspan="4">No scores accumulated.</td></tr>';}
 
         window.viewCandidateBreakdown = function(name, team) {
             const records = getUnifiedScoreRecords().filter(pt => pt.student === name && pt.team === team);
