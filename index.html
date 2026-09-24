@@ -184,6 +184,37 @@
         @media (min-width: 900px) {
             .pinterest-masonry { column-count: 4; column-gap: 16px; }
         }
+        /* Team Status: latest upload featured, older uploads 3 per row */
+        .team-status-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 15px;
+        }
+        .team-status-grid .masonry-item {
+            break-inside: auto;
+            margin-bottom: 0;
+            min-width: 0;
+        }
+        .team-status-grid .team-status-featured {
+            grid-column: 1 / -1;
+        }
+        .team-status-grid .team-status-featured img {
+            width: 100%;
+            max-height: 75vh;
+            object-fit: contain;
+        }
+        .team-status-grid .team-status-regular img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        @media (max-width: 520px) {
+            .team-status-grid {
+                gap: 8px;
+            }
+        }
+
         .masonry-item { 
             break-inside: avoid; 
             margin-bottom: 12px; 
@@ -380,7 +411,7 @@
         <div id="section-team-states" class="view-panel card">
             <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <h3 style="color: #d4af37; margin-bottom: 12px;">Team Status</h3>
-            <div id="team-status-poster-box" class="pinterest-masonry"></div>
+            <div id="team-status-poster-box" class="team-status-grid"></div>
         </div>
         <!-- RESULTS VIEW SECTION -->
         <div id="section-results-view" class="view-panel card">
@@ -2105,11 +2136,14 @@
             if(statusBox) {
                 const list = window.appState.teamStatusList || [];
                 if(list.length > 0) {
-                    statusBox.innerHTML = list.map(item => `
-                        <div class="masonry-item" onclick="openMediaViewer('${item.url}', 'photo')">
-                            <img src="${item.url}" loading="lazy">
+                    // Newest upload is always first because uploads use unshift().
+                    // The newest poster is featured; all older posters appear 3 per row.
+                    statusBox.innerHTML = list.map((item, idx) => `
+                        <div class="masonry-item ${idx === 0 ? 'team-status-featured' : 'team-status-regular'}"
+                             onclick="openMediaViewer('${item.url}', 'photo')">
+                            <img src="${item.url}" loading="${idx === 0 ? 'eager' : 'lazy'}">
                             <div class="media-click-overlay">
-                                <span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:6px; color:#cbd5e1;">
+                                <span style="font-size:${idx === 0 ? '0.85rem' : '0.75rem'}; background:rgba(0,0,0,0.6); padding:3px 9px; border-radius:6px; color:#cbd5e1;">
                                     <i class="fa-solid fa-image"></i> Click to Open
                                 </span>
                             </div>
@@ -2285,4 +2319,3 @@
     </script>
 </body>
 </html>
-
