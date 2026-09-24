@@ -770,7 +770,7 @@
         <!-- POINTROOM PORTAL -->
         <div id="panel-pointroom" class="view-panel card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>Pointroom Management</h3>
+                <h3>Pointroom — Code Letter Entry</h3>
                 <button class="btn btn-warning btn-sm no-print" onclick="printAllPointRecords()"><i class="fa-solid fa-print"></i> Print All Logs</button>
             </div>
             
@@ -793,18 +793,57 @@
                 <div id="pt-stage-badge" style="margin-bottom:12px; font-weight:bold; color:#d4af37;"></div>
                 
                 <div id="pt-candidates-inputs" style="margin-bottom:12px;"></div>
-                <button type="submit" class="btn btn-success btn-block btn-xl">Submit Point Records</button>
+                <button type="submit" class="btn btn-success btn-block btn-xl">Submit Code Letters</button>
             </form>
-            <div class="collapsible-header no-print" onclick="toggleAccordion('box-pt-list')"><span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="collapsible-header no-print" onclick="toggleAccordion('box-pt-list')"><span>Code Letter Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
             <div id="box-pt-list" class="collapsible-box show"></div>
             <div id="pt-print-area" class="print-target" style="display:none;"></div>
         </div>
         <!-- JUDGE PORTAL -->
         <div id="panel-judge" class="view-panel card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>Judge Leaderboard</h3>
+                <h3>Judge</h3>
                 <button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('judge-print-container')"><i class="fa-solid fa-print"></i> Print Leaderboard</button>
             </div>
+
+            <div class="card no-print" style="padding:12px; margin-bottom:12px;">
+                <h4 style="color:#d4af37; margin-bottom:10px;"><i class="fa-solid fa-list"></i> Topics</h4>
+                <div class="form-group">
+                    <label>Program</label>
+                    <select id="judge-prog-select" class="form-control" onchange="loadJudgeProgram()"></select>
+                </div>
+                <div class="form-group">
+                    <label>Topics / Topic Notes</label>
+                    <textarea id="judge-topics-input" class="form-control" rows="3" placeholder="Enter the topic(s) for this program..."></textarea>
+                </div>
+                <button class="btn btn-success btn-sm" onclick="saveJudgeTopics()">Save Topics</button>
+            </div>
+
+            <div class="card no-print" style="padding:12px; margin-bottom:12px;">
+                <h4 style="color:#d4af37; margin-bottom:10px;"><i class="fa-solid fa-stopwatch"></i> Timer</h4>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:end;">
+                    <div class="form-group" style="margin:0;">
+                        <label>Time (minutes)</label>
+                        <input type="number" id="judge-timer-minutes" class="form-control" min="1" max="180" step="1" value="1">
+                    </div>
+                    <button class="btn btn-primary" onclick="setJudgeTimer()">Set Time</button>
+                </div>
+                <div id="judge-timer-display" style="font-size:2.6rem; font-weight:800; text-align:center; letter-spacing:2px; margin:12px 0;">01:00</div>
+                <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+                    <button class="btn btn-success" onclick="startJudgeTimer()"><i class="fa-solid fa-play"></i> Start</button>
+                    <button class="btn btn-warning" onclick="pauseJudgeTimer()"><i class="fa-solid fa-pause"></i> Pause</button>
+                    <button class="btn btn-danger" onclick="resetJudgeTimer()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+                </div>
+                <div id="judge-timer-warning" style="text-align:center; margin-top:8px; font-weight:700; color:#ef4444; min-height:20px;"></div>
+            </div>
+
+            <div class="card no-print" style="padding:12px; margin-bottom:12px;">
+                <h4 style="color:#d4af37; margin-bottom:10px;"><i class="fa-solid fa-pen-to-square"></i> Judge Marks</h4>
+                <p style="font-size:.82rem; color:var(--text-sub); margin-bottom:10px;">Enter marks against the submitted code letter. The code letter is used instead of the student's name.</p>
+                <div id="judge-code-list"></div>
+                <button class="btn btn-success btn-block btn-xl" onclick="submitJudgeMarks()" style="margin-top:10px;">Submit Judge Marks</button>
+            </div>
+
             <div id="judge-print-container" class="print-target">
                 <div class="form-group no-print" style="margin-top:12px;">
                     <label>Filter Stage View</label>
@@ -814,10 +853,11 @@
                         <option value="OFF STAGE">OFF STAGE</option>
                     </select>
                 </div>
+                <h4 style="margin:8px 0;">Judge Leaderboard</h4>
                 <div class="table-responsive">
                     <table class="bahja-sheet-table">
                         <thead>
-                            <tr><th>Student Name</th><th>Team</th><th>Cat</th><th>Points</th></tr>
+                            <tr><th>Code Letter</th><th>Team</th><th>Cat</th><th>Points</th></tr>
                         </thead>
                         <tbody id="judge-leaderboard-body"></tbody>
                     </table>
@@ -1305,7 +1345,7 @@
                 securitySchemaVersion: SECURITY_SCHEMA_VERSION,
                 visibilities: { 'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true },
                 visuals: { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center' },
-                teams: [], programs: [], registrations: [], results: [], updates: [], livelinks: [], highlights: [], students: [], points: []
+                teams: [], programs: [], registrations: [], results: [], updates: [], livelinks: [], highlights: [], students: [], points: [], codeEntries: [], judgeScores: [], judgeTopics: {}, judgeTimerSeconds: 60
             };
         }
 
@@ -1337,6 +1377,10 @@
             if(!Array.isArray(state.teamStatusList)) state.teamStatusList = [];
             state.results = state.results.map(r => ({ ...r, published: r.published === true }));
             state.teamStatusList = state.teamStatusList.map(item => ({ ...item, published: item.published === true }));
+            if(!Array.isArray(state.codeEntries)) state.codeEntries = [];
+            if(!Array.isArray(state.judgeScores)) state.judgeScores = [];
+            if(!state.judgeTopics || typeof state.judgeTopics !== 'object') state.judgeTopics = {};
+            if(!Number.isFinite(Number(state.judgeTimerSeconds)) || Number(state.judgeTimerSeconds) <= 0) state.judgeTimerSeconds = 60;
             return state;
         }
 
@@ -1372,7 +1416,9 @@
                     window.appState.points?.length || 0,
                     window.appState.teams?.length || 0,
                     window.appState.programs?.length || 0,
-                    window.appState.registrations?.length || 0
+                    window.appState.registrations?.length || 0,
+                    window.appState.codeEntries?.length || 0,
+                    window.appState.judgeScores?.length || 0
                 ].join('|');
                 if (!force && signature === lastRenderSignature) return;
                 lastRenderSignature = signature;
@@ -1386,6 +1432,8 @@
                 renderPublishPanel();
                 renderPtList();
                 renderJudgeLeaderboard();
+                populateJudgeProgramDropdown();
+                renderJudgeCodeList();
                 renderStatesDashboard();
                 renderRankWinnersList();
                 syncProtectionFields();
@@ -1398,6 +1446,10 @@
             const data = snapshot.val();
             if (data) {
                 window.appState = { ...window.appState, ...data };
+                if(!Array.isArray(window.appState.codeEntries)) window.appState.codeEntries = [];
+                if(!Array.isArray(window.appState.judgeScores)) window.appState.judgeScores = [];
+                if(!window.appState.judgeTopics) window.appState.judgeTopics = {};
+                if(!window.appState.judgeTimerSeconds) window.appState.judgeTimerSeconds = 60;
                 const wasOldSecuritySchema = window.appState.securitySchemaVersion !== SECURITY_SCHEMA_VERSION;
                 window.appState = sanitizeSecurityState(window.appState);
                 window.appState = normalizePublicationState(window.appState);
@@ -1510,7 +1562,7 @@
                     <button onclick="interceptRoute('panel-settings', 'settings')"><i class="fa-solid fa-gear"></i> Settings</button>
                     <button onclick="interceptRoute('panel-control-panel', 'control_panel')"><i class="fa-solid fa-sliders"></i> Control Panel</button>
                     <button onclick="showPanel('panel-publish'); document.getElementById('mainDropdown').classList.remove('show'); renderPublishPanel();"><i class="fa-solid fa-cloud-arrow-up"></i> Publish</button>
-                    <button onclick="interceptRoute('panel-judge', 'judge')"><i class="fa-solid fa-gavel"></i> Judge Leaderboard</button>
+                    <button onclick="interceptRoute('panel-judge', 'judge')"><i class="fa-solid fa-gavel"></i> Judge</button>
                     <button onclick="interceptRoute('panel-states-control', 'states')"><i class="fa-solid fa-flag"></i> States Control</button>
                     <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Protection Settings</button>
                     <button onclick="interceptRoute('panel-modify', 'modify')"><i class="fa-solid fa-pen-to-square"></i> Modify Appearance</button>
@@ -1561,6 +1613,7 @@
                 if(!history.state || history.state.panel !== panelId) {
                     history.pushState({ panel: panelId }, "", `#${panelId}`);
                     if(panelId === 'panel-publish') renderPublishPanel();
+                    if(panelId === 'panel-judge') { populateJudgeProgramDropdown(); loadJudgeProgram(); setJudgeTimer(); }
         }
             }
         }
@@ -2052,11 +2105,11 @@
             let html = '';
             matchedRegs.forEach(r => {
                 r.participants.forEach(pName => {
-                    const savedPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === pName) || { score: 0 };
+                    const existing = (window.appState.codeEntries || []).find(x => x.progId === progId && x.team === r.team && x.student === pName) || {};
                     html += `
-                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
-                            <span><strong>${pName}</strong> (${r.team})</span>
-                            <input type="number" min="0" class="form-control pt-score-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.score}" style="width:80px; padding:6px;">
+                        <div style="display:grid; grid-template-columns:1fr 120px; gap:8px; align-items:center; background:rgba(0,0,0,0.2); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
+                            <span><strong>${pName}</strong> <span style="color:var(--text-sub);">(${r.team})</span></span>
+                            <input type="text" maxlength="10" class="form-control pt-code-field" data-team="${r.team}" data-student="${pName}" value="${existing.codeLetter || ''}" placeholder="Code Letter" style="padding:6px; text-transform:uppercase;">
                         </div>
                     `;
                 });
@@ -2069,42 +2122,73 @@
             const progId = document.getElementById('pt-prog-select').value;
             const cat = document.getElementById('pt-cat-select').value;
             if(!progId || !cat) return;
-            window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
-            document.querySelectorAll('.pt-score-field').forEach(f => {
-                const score = parseFloat(f.value) || 0;
+            if(!Array.isArray(window.appState.codeEntries)) window.appState.codeEntries = [];
+            const newEntries = [];
+            const usedCodes = new Set();
+            let duplicateFound = false;
+            document.querySelectorAll('.pt-code-field').forEach(f => {
+                const codeLetter = String(f.value || '').trim().toUpperCase();
+                if(!codeLetter) return;
+                if(usedCodes.has(codeLetter)) duplicateFound = true;
+                usedCodes.add(codeLetter);
                 const team = f.getAttribute('data-team');
                 const student = f.getAttribute('data-student');
-                window.appState.points.push({ progId, cat, team, student, score });
+                newEntries.push({ progId, cat, team, student, codeLetter });
             });
-            saveKey('points', window.appState.points);
-            alert("Points recorded.");
-            loadPtParticipants(); 
+            if(duplicateFound) { alert('Each code letter must be unique within a program.'); return; }
+            window.appState.codeEntries = window.appState.codeEntries.filter(x => x.progId !== progId).concat(newEntries);
+            saveKey('codeEntries', window.appState.codeEntries);
+            loadPtParticipants();
             renderPtList();
+            renderJudgeCodeList();
+            alert("Code letters recorded.");
         }
 
         function renderPtList() {
             const container = document.getElementById('box-pt-list');
             if(!container) return;
-            const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
-            if(distinctProgs.length === 0) { container.innerHTML = '<p>No marks processed.</p>'; return; }
+            const distinctProgs = [...new Set((window.appState.codeEntries || []).map(p => p.progId))];
+            if(distinctProgs.length === 0) { container.innerHTML = '<p>No code letters submitted.</p>'; return; }
             container.innerHTML = distinctProgs.map(pid => {
                 const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
-                const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
+                const codes = (window.appState.codeEntries || []).filter(x => x.progId === pid).sort((a,b)=>String(a.codeLetter).localeCompare(String(b.codeLetter)));
                 return `
                     <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:10px; border-radius:8px; margin-bottom:6px;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <strong>${prog.name} (${prog.cat})</strong>
                             <div>
-                                <button class="btn btn-warning btn-sm no-print" onclick="printIndividualPointRecord('${pid}')"><i class="fa-solid fa-print"></i> Print</button>
-                                <button class="btn btn-danger btn-sm no-print" onclick="deletePtGroup('${pid}')">Delete</button>
+                                <button class="btn btn-warning btn-sm no-print" onclick="printCodeLetterRecord('${pid}')"><i class="fa-solid fa-print"></i> Print</button>
+                                <button class="btn btn-danger btn-sm no-print" onclick="deleteCodeEntryGroup('${pid}')">Delete</button>
                             </div>
                         </div>
                         <div style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;">
-                            ${subPts.map(s => `${s.student} (${s.team}): <strong>${s.score}</strong>`).join(' | ')}
+                            ${codes.map(c => `${c.codeLetter} (${c.team}): <strong>${c.student}</strong>`).join(' | ')}
                         </div>
                     </div>
                 `;
             }).join('');
+        }
+
+        window.printCodeLetterRecord = function(progId) {
+            const prog = window.appState.programs.find(p => p.id === progId) || { name:'Program', cat:'N/A' };
+            const codes = (window.appState.codeEntries || []).filter(x => x.progId === progId).sort((a,b)=>String(a.codeLetter).localeCompare(String(b.codeLetter)));
+            const target = document.getElementById('pt-print-area');
+            target.innerHTML = `
+                <div class="bahja-sheet-header"><span>TIME:</span><h2>BAHJA 2K26 - ${prog.name.toUpperCase()} (${prog.cat})</h2><span>DATE:</span></div>
+                <table class="bahja-sheet-table"><thead><tr><th>#</th><th>Code Letter</th><th>Team</th><th>Student</th></tr></thead><tbody>
+                    ${codes.map((c,i)=>`<tr><td>${i+1}</td><td><strong>${c.codeLetter}</strong></td><td>${c.team}</td><td>${c.student}</td></tr>`).join('')}
+                </tbody></table>`;
+            triggerCustomPrint('pt-print-area');
+        }
+
+        window.deleteCodeEntryGroup = function(progId) {
+            if(confirm('Delete code letters for this program?')) {
+                window.appState.codeEntries = (window.appState.codeEntries || []).filter(x => x.progId !== progId);
+                window.appState.judgeScores = (window.appState.judgeScores || []).filter(x => x.progId !== progId);
+                saveKey('codeEntries', window.appState.codeEntries);
+                saveKey('judgeScores', window.appState.judgeScores);
+                renderPtList(); renderJudgeCodeList(); renderJudgeLeaderboard(); renderStatesDashboard(); renderRankWinnersList();
+            }
         }
 
         window.printIndividualPointRecord = function(progId) {
@@ -2119,7 +2203,7 @@
                     <span>DATE:</span>
                 </div>
                 <table class="bahja-sheet-table">
-                    <thead><tr><th>#</th><th>Student Name</th><th>Team</th><th>Score</th><th>Rank</th></tr></thead>
+                    <thead><tr><th>#</th><th>Code Letter / Student</th><th>Team</th><th>Score</th><th>Rank</th></tr></thead>
                     <tbody>
                         ${subPts.map((s, idx) => `<tr><td>${idx+1}</td><td>${s.student}</td><td>${s.team}</td><td><strong>${s.score}</strong></td><td>Rank ${idx+1}</td></tr>`).join('')}
                     </tbody>
@@ -2144,7 +2228,7 @@
                 html += `
                     <h4 style="margin-top:10px; font-size:12px;">${prog.name} (${prog.cat})</h4>
                     <table class="bahja-sheet-table" style="margin-bottom:8px;">
-                        <thead><tr><th>#</th><th>Student Name</th><th>Team</th><th>Score</th></tr></thead>
+                        <thead><tr><th>#</th><th>Code Letter / Student</th><th>Team</th><th>Score</th></tr></thead>
                         <tbody>${subPts.map((s, idx) => `<tr><td>${idx+1}</td><td>${s.student}</td><td>${s.team}</td><td>${s.score}</td></tr>`).join('')}</tbody>
                     </table>
                 `;
@@ -2161,42 +2245,183 @@
             }
         }
 
-        /* JUDGE LEADERBOARD */
+        /* JUDGE WORKFLOW */
+        let judgeTimerInterval = null;
+        let judgeTimerRemaining = 60;
+        let judgeTimerRunning = false;
+
+        function populateJudgeProgramDropdown() {
+            const sel = document.getElementById('judge-prog-select');
+            if(!sel) return;
+            const current = sel.value;
+            sel.innerHTML = '<option value="">-- Choose Program --</option>' + (window.appState.programs || []).map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
+            if(current && window.appState.programs.some(p => p.id === current)) sel.value = current;
+        }
+
+        window.loadJudgeProgram = function() {
+            const pid = document.getElementById('judge-prog-select')?.value;
+            const topicInput = document.getElementById('judge-topics-input');
+            if(topicInput) topicInput.value = pid ? (window.appState.judgeTopics?.[pid] || '') : '';
+            const prog = window.appState.programs.find(p => p.id === pid);
+            if(prog && Number.isFinite(Number(prog.judgeTimeMinutes)) && Number(prog.judgeTimeMinutes) > 0) {
+                const minEl = document.getElementById('judge-timer-minutes');
+                if(minEl) minEl.value = prog.judgeTimeMinutes;
+            }
+            renderJudgeCodeList();
+        }
+
+        window.saveJudgeTopics = function() {
+            const pid = document.getElementById('judge-prog-select')?.value;
+            if(!pid) return;
+            if(!window.appState.judgeTopics) window.appState.judgeTopics = {};
+            window.appState.judgeTopics[pid] = document.getElementById('judge-topics-input').value.trim();
+            saveKey('judgeTopics', window.appState.judgeTopics);
+            alert('Topics saved.');
+        }
+
+        function getJudgeCodesForProgram(progId) {
+            return (window.appState.codeEntries || []).filter(x => x.progId === progId).sort((a,b) => String(a.codeLetter).localeCompare(String(b.codeLetter)));
+        }
+
+        function getJudgeScore(progId, codeLetter) {
+            const rec = (window.appState.judgeScores || []).find(x => x.progId === progId && x.codeLetter === codeLetter);
+            return rec ? Number(rec.score || 0) : 0;
+        }
+
+        window.renderJudgeCodeList = function() {
+            const box = document.getElementById('judge-code-list');
+            if(!box) return;
+            const pid = document.getElementById('judge-prog-select')?.value;
+            if(!pid) { box.innerHTML = '<p style="color:var(--text-sub);">Choose a program first.</p>'; return; }
+            const codes = getJudgeCodesForProgram(pid);
+            if(!codes.length) { box.innerHTML = '<p style="color:#ef4444;">No code letters submitted from Pointroom for this program.</p>'; return; }
+            box.innerHTML = codes.map(c => `
+                <div style="display:grid; grid-template-columns:90px 1fr 110px; gap:8px; align-items:center; padding:8px 10px; margin-bottom:6px; border:1px solid var(--border-color); border-radius:8px; background:rgba(0,0,0,.2);">
+                    <strong style="font-size:1.1rem; color:#d4af37; text-align:center;">${c.codeLetter}</strong>
+                    <span style="color:var(--text-sub);">${c.team}</span>
+                    <input type="number" min="0" step="0.01" class="form-control judge-mark-field" data-code="${c.codeLetter}" data-team="${c.team}" value="${getJudgeScore(pid,c.codeLetter)}" placeholder="Mark">
+                </div>
+            `).join('');
+        }
+
+        window.submitJudgeMarks = function() {
+            const pid = document.getElementById('judge-prog-select')?.value;
+            const prog = window.appState.programs.find(p => p.id === pid);
+            if(!pid || !prog) { alert('Choose a program first.'); return; }
+            if(!Array.isArray(window.appState.judgeScores)) window.appState.judgeScores = [];
+            window.appState.judgeScores = window.appState.judgeScores.filter(x => x.progId !== pid);
+            document.querySelectorAll('.judge-mark-field').forEach(f => {
+                const codeLetter = String(f.dataset.code || '').trim().toUpperCase();
+                const team = f.dataset.team || '';
+                const score = parseFloat(f.value) || 0;
+                if(!codeLetter) return;
+                window.appState.judgeScores.push({ progId:pid, cat:prog.cat, team, codeLetter, score, updatedAt:Date.now() });
+            });
+            saveKey('judgeScores', window.appState.judgeScores);
+            renderJudgeLeaderboard();
+            renderStatesDashboard();
+            renderRankWinnersList();
+            alert('Judge marks recorded. Team and student totals updated.');
+        }
+
+        function getUnifiedScoreRecords() {
+            const legacy = (window.appState.points || []).map(pt => ({...pt, source:'pointroom', student:pt.student || '', codeLetter:pt.codeLetter || ''}));
+            const judged = (window.appState.judgeScores || []).map(js => {
+                const code = (window.appState.codeEntries || []).find(c => c.progId === js.progId && c.codeLetter === js.codeLetter && c.team === js.team);
+                return {...js, source:'judge', student:code?.student || js.codeLetter, codeLetter:js.codeLetter};
+            });
+            return legacy.concat(judged);
+        }
+
         window.renderJudgeLeaderboard = function() {
             const tbody = document.getElementById('judge-leaderboard-body');
             if(!tbody) return;
-            const filterStage = document.getElementById('jd-filter-stage').value;
+            const filterStage = document.getElementById('jd-filter-stage')?.value || 'all';
             const aggregate = {};
-            window.appState.points.forEach(pt => {
-                if(pt.cat === 'GENERAL') return;
-                const prog = window.appState.programs.find(p => p.id === pt.progId);
+            (window.appState.judgeScores || []).forEach(js => {
+                const prog = window.appState.programs.find(p => p.id === js.progId);
                 if(!prog) return;
                 if(filterStage !== 'all' && prog.stage !== filterStage) return;
-                const key = `${pt.team}_${pt.student}`;
-                if(!aggregate[key]) aggregate[key] = { name: pt.student, team: pt.team, cat: pt.cat, total: 0 };
-                aggregate[key].total += pt.score;
+                const key = `${js.team}_${js.codeLetter}`;
+                if(!aggregate[key]) aggregate[key] = { codeLetter:js.codeLetter, team:js.team, cat:js.cat || prog.cat, total:0 };
+                aggregate[key].total += Number(js.score || 0);
             });
-            const sorted = Object.values(aggregate).sort((a,b) => b.total - a.total);
+            const sorted = Object.values(aggregate).sort((a,b) => b.total - a.total || String(a.codeLetter).localeCompare(String(b.codeLetter)));
             tbody.innerHTML = sorted.map(s => `
-                <tr onclick="viewCandidateBreakdown('${s.name}', '${s.team}')" style="cursor:pointer;">
-                    <td><strong>${s.name}</strong></td>
+                <tr>
+                    <td><strong>${s.codeLetter}</strong></td>
                     <td>${s.team}</td>
                     <td>${s.cat}</td>
                     <td><strong style="color:#d4af37;">${s.total}</strong></td>
                 </tr>
-            `).join('') || '<tr><td colspan="4">No scores accumulated.</td></tr>';
+            `).join('') || '<tr><td colspan="4">No judge scores accumulated.</td></tr>';
         }
 
         window.viewCandidateBreakdown = function(name, team) {
-            const records = window.appState.points.filter(pt => pt.student === name && pt.team === team && pt.cat !== 'GENERAL');
+            const records = getUnifiedScoreRecords().filter(pt => pt.student === name && pt.team === team);
             document.getElementById('det-modal-title').innerText = `${name} (${team})`;
             document.getElementById('det-modal-content').innerHTML = `
-                <table style="width:100%;"><thead><tr><th>Program</th><th>Pts</th></tr></thead><tbody>
-                    ${records.map(r => `<tr><td>${(window.appState.programs.find(p => p.id === r.progId) || {}).name || ''}</td><td><strong>${r.score}</strong></td></tr>`).join('')}
+                <table style="width:100%;"><thead><tr><th>Program</th><th>Source</th><th>Pts</th></tr></thead><tbody>
+                    ${records.map(r => `<tr><td>${(window.appState.programs.find(p => p.id === r.progId) || {}).name || ''}</td><td>${r.source || ''}</td><td><strong>${r.score}</strong></td></tr>`).join('')}
                 </tbody></table>
             `;
             document.getElementById('detail-modal-overlay').style.display = 'flex';
         }
+
+        function updateJudgeTimerDisplay() {
+            const el = document.getElementById('judge-timer-display');
+            if(!el) return;
+            const s = Math.max(0, Math.floor(judgeTimerRemaining));
+            const m = Math.floor(s / 60).toString().padStart(2,'0');
+            const sec = (s % 60).toString().padStart(2,'0');
+            el.textContent = `${m}:${sec}`;
+        }
+        function beepJudgeBell() {
+            try {
+                const Ctx = window.AudioContext || window.webkitAudioContext;
+                if(!Ctx) return;
+                const ctx = new Ctx();
+                const now = ctx.currentTime;
+                [0,0.28,0.56].forEach((offset,i)=>{
+                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                    osc.type = 'sine'; osc.frequency.value = i === 1 ? 740 : 660;
+                    gain.gain.setValueAtTime(0.0001, now+offset);
+                    gain.gain.exponentialRampToValueAtTime(0.18, now+offset+0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now+offset+0.22);
+                    osc.connect(gain); gain.connect(ctx.destination);
+                    osc.start(now+offset); osc.stop(now+offset+0.24);
+                });
+            } catch(e) {}
+        }
+        window.setJudgeTimer = function() {
+            const mins = Math.max(1, Math.min(180, parseInt(document.getElementById('judge-timer-minutes')?.value || '1',10)));
+            const pid = document.getElementById('judge-prog-select')?.value;
+            judgeTimerRemaining = mins * 60;
+            updateJudgeTimerDisplay();
+            if(document.getElementById('judge-timer-warning')) document.getElementById('judge-timer-warning').textContent = '';
+            if(pid) {
+                const prog = window.appState.programs.find(p => p.id === pid);
+                if(prog) { prog.judgeTimeMinutes = mins; saveKey('programs', window.appState.programs); }
+            }
+        }
+        window.startJudgeTimer = function() {
+            if(judgeTimerRunning) return;
+            if(judgeTimerRemaining <= 0) window.setJudgeTimer();
+            judgeTimerRunning = true;
+            if(document.getElementById('judge-timer-warning')) document.getElementById('judge-timer-warning').textContent = '';
+            clearInterval(judgeTimerInterval);
+            judgeTimerInterval = setInterval(() => {
+                judgeTimerRemaining -= 1;
+                updateJudgeTimerDisplay();
+                if(judgeTimerRemaining <= 0) {
+                    clearInterval(judgeTimerInterval); judgeTimerRunning = false; judgeTimerRemaining = 0; updateJudgeTimerDisplay();
+                    const w = document.getElementById('judge-timer-warning'); if(w) w.textContent = '⏰ Time is over!';
+                    beepJudgeBell();
+                }
+            },1000);
+        }
+        window.pauseJudgeTimer = function() { judgeTimerRunning = false; clearInterval(judgeTimerInterval); }
+        window.resetJudgeTimer = function() { judgeTimerRunning = false; clearInterval(judgeTimerInterval); const mins = Math.max(1, parseInt(document.getElementById('judge-timer-minutes')?.value || '1',10)); judgeTimerRemaining = mins*60; updateJudgeTimerDisplay(); const w=document.getElementById('judge-timer-warning'); if(w) w.textContent=''; }
 
         /* STATES DASHBOARD & RANK-WISE FILTER */
         window.renderStatesDashboard = function() {
@@ -2204,8 +2429,8 @@
             if(!tbody) return;
             const teamTotals = {};
             window.appState.teams.forEach(t => teamTotals[t.user] = 0);
-            window.appState.points.forEach(pt => {
-                if(teamTotals[pt.team] !== undefined) teamTotals[pt.team] += pt.score;
+            getUnifiedScoreRecords().forEach(pt => {
+                if(teamTotals[pt.team] !== undefined) teamTotals[pt.team] += Number(pt.score || 0);
             });
             const sortedTeams = Object.entries(teamTotals).sort((a,b) => b[1] - a[1]);
             tbody.innerHTML = sortedTeams.map(([tName, total]) => `
@@ -2230,11 +2455,11 @@
             const fPos = posFilter ? posFilter.value : 'all';
 
             const allRows = [];
-            const distinctProgs = [...new Set((window.appState.points || []).map(p => p.progId))];
+            const distinctProgs = [...new Set(getUnifiedScoreRecords().map(p => p.progId))];
 
             distinctProgs.forEach(pid => {
                 const prog = window.appState.programs.find(p => p.id === pid) || { name: 'N/A' };
-                const subPts = window.appState.points
+                const subPts = getUnifiedScoreRecords()
                     .filter(pt => pt.progId === pid)
                     .sort((a,b) => {
                         const scoreDiff = Number(b.score || 0) - Number(a.score || 0);
@@ -2248,7 +2473,7 @@
                     if(fPos !== 'all' && rank !== parseInt(fPos, 10)) return;
                     allRows.push({
                         rank,
-                        student: pt.student || '',
+                        student: pt.source === 'judge' ? (pt.codeLetter || pt.student || '') : (pt.student || pt.codeLetter || ''),
                         team: pt.team || '',
                         program: prog.name || 'N/A',
                         score: Number(pt.score || 0)
@@ -2281,7 +2506,7 @@
         }
 
         window.viewTeamBreakdown = function(teamName) {
-            const records = window.appState.points.filter(pt => pt.team === teamName);
+            const records = getUnifiedScoreRecords().filter(pt => pt.team === teamName);
             document.getElementById('det-modal-title').innerText = `Team Breakdown: ${teamName}`;
             document.getElementById('det-modal-content').innerHTML = `
                 <table style="width:100%;"><thead><tr><th>Student</th><th>Prog</th><th>Pts</th></tr></thead><tbody>
@@ -2319,7 +2544,8 @@
                 name: document.getElementById('m-prog-name').value.trim(),
                 cat: document.getElementById('m-prog-cat').value,
                 stage: document.getElementById('m-prog-stage').value,
-                limit: parseInt(document.getElementById('m-prog-limit').value)
+                limit: parseInt(document.getElementById('m-prog-limit').value),
+                judgeTimeMinutes: 1
             });
             saveKey('programs', window.appState.programs);
             syncControlPanelViews();
