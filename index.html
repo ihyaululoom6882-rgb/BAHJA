@@ -925,7 +925,7 @@
                 </div>
             </div>
             <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:15px;">
-                <h4 style="font-size:0.95rem; color:#d4af37;">Modify Sub-Panel Access Passwords</h4>
+                <h4 style="font-size:0.95rem; color:#d4af37;">Modify Sub-Panel Access Passwords</h4><p style="font-size:0.78rem;color:var(--text-sub);margin:5px 0 0;">Set a separate access password for every menu item below. Home and Main Login use the main login controls.</p>
                 <div id="sub-panel-pass-managers-container" style="margin-top:8px; display:flex; flex-direction:column; gap:10px;"></div>
             </div>
         </div>
@@ -1310,7 +1310,7 @@
 
         // Initialize State - NO CREDENTIALS ARE STORED IN SOURCE CODE
         const SECURITY_SCHEMA_VERSION = 2;
-        const EMPTY_SUB_LOCKS = { settings:'', control_panel:'', judge:'', pointroom:'', states:'', protection:'', modify:'' };
+        const EMPTY_SUB_LOCKS = { pointroom:'', participants_entry:'', settings:'', control_panel:'', publish:'', judge:'', judge_leaderboard:'', states:'', protection:'', modify:'' };
 
         function buildCleanState(preservedLogo) {
             const logo = preservedLogo || {};
@@ -1344,6 +1344,7 @@
             }
             if(!state.mainCreds || typeof state.mainCreds !== 'object') state.mainCreds = { user:'', pass:'' };
             if(!state.subLocks || typeof state.subLocks !== 'object') state.subLocks = { ...EMPTY_SUB_LOCKS };
+            else state.subLocks = { ...EMPTY_SUB_LOCKS, ...state.subLocks };
             return state;
         }
 
@@ -1531,25 +1532,26 @@
             let html = `<button onclick="navHome()"><i class="fa-solid fa-house"></i> Home</button>`;
             if(!window.isMainLoggedIn) {
                 html += `<button onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> Main Login</button>`;
-                // Third home-menu option: Point Room. It remains protected by Main Login.
                 html += `<button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Point Room</button>`;
                 if(window.appState.phase === 'register') {
-                    html += `<button onclick="showPanel('panel-participants-entry')"><i class="fa-solid fa-user-plus"></i> Participants Entry</button>`;
+                    html += `<button onclick="interceptRoute('panel-participants-entry', 'participants_entry')"><i class="fa-solid fa-user-plus"></i> Participants Entry</button>`;
                 }
             } else {
-                // Point Room stays directly available after Main Login.
                 html += `<button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Point Room</button>`;
                 html += `
                     <button onclick="interceptRoute('panel-settings', 'settings')"><i class="fa-solid fa-gear"></i> Settings</button>
                     <button onclick="interceptRoute('panel-control-panel', 'control_panel')"><i class="fa-solid fa-sliders"></i> Control Panel</button>
-                    <button onclick="showPanel('panel-publish'); document.getElementById('mainDropdown').classList.remove('show'); renderPublishPanel();"><i class="fa-solid fa-cloud-arrow-up"></i> Publish</button>
+                    <button onclick="interceptRoute('panel-publish', 'publish')"><i class="fa-solid fa-cloud-arrow-up"></i> Publish</button>
                     <button onclick="interceptRoute('panel-judge', 'judge')"><i class="fa-solid fa-gavel"></i> Judge</button>
-                    <button onclick="interceptRoute('panel-judge-leaderboard', 'judge')"><i class="fa-solid fa-ranking-star"></i> Judge Leaderboard</button>
+                    <button onclick="interceptRoute('panel-judge-leaderboard', 'judge_leaderboard')"><i class="fa-solid fa-ranking-star"></i> Judge Leaderboard</button>
                     <button onclick="interceptRoute('panel-states-control', 'states')"><i class="fa-solid fa-flag"></i> States Control</button>
                     <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Protection Settings</button>
                     <button onclick="interceptRoute('panel-modify', 'modify')"><i class="fa-solid fa-pen-to-square"></i> Modify Appearance</button>
                     <button onclick="logoutMain()" style="color:#ef4444;"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
                 `;
+                if(window.appState.phase === 'register') {
+                    html += `<button onclick="interceptRoute('panel-participants-entry', 'participants_entry')"><i class="fa-solid fa-user-plus"></i> Participants Entry</button>`;
+                }
             }
             menuContainer.innerHTML = html;
         }
@@ -1770,13 +1772,16 @@
             const container = document.getElementById('sub-panel-pass-managers-container');
             if(!container) return;
             const schema = [
-                { key: 'settings', name: 'Settings Lock' },
-                { key: 'control_panel', name: 'Control Panel Lock' },
-                { key: 'judge', name: 'Judge Leaderboard Lock' },
-                { key: 'pointroom', name: 'Pointroom Input Lock' },
-                { key: 'states', name: 'States Control Lock' },
-                { key: 'protection', name: 'Protection Settings Lock' },
-                { key: 'modify', name: 'Modify Appearance Lock' }
+                { key: 'pointroom', name: 'Pointroom Access Password' },
+                { key: 'participants_entry', name: 'Participants Entry Access Password' },
+                { key: 'settings', name: 'Settings Access Password' },
+                { key: 'control_panel', name: 'Control Panel Access Password' },
+                { key: 'publish', name: 'Publish Access Password' },
+                { key: 'judge', name: 'Judge Access Password' },
+                { key: 'judge_leaderboard', name: 'Judge Leaderboard Access Password' },
+                { key: 'states', name: 'States Control Access Password' },
+                { key: 'protection', name: 'Protection Settings Access Password' },
+                { key: 'modify', name: 'Modify Appearance Access Password' }
             ];
             container.innerHTML = schema.map(s => {
                 const val = window.appState.subLocks[s.key] || '';
@@ -1784,8 +1789,11 @@
                     <div style="background:rgba(0,0,0,0.2); padding:10px; border:1px solid var(--border-color); border-radius:8px;">
                         <label style="font-weight:bold; font-size:0.8rem;">${s.name}</label>
                         <div style="display:flex; gap:6px; margin-top:4px;">
-                            <input type="text" id="pass-field-input-${s.key}" class="form-control" value="${val}" style="margin-bottom:0; font-size:0.85rem;">
+                            <input type="password" id="pass-field-input-${s.key}" class="form-control" value="${val}" placeholder="Set password for this menu item" autocomplete="new-password" style="margin-bottom:0; font-size:0.85rem;">
                             <button class="btn btn-sm btn-success" onclick="updateSubLockKey('${s.key}')">Save</button>
+                        </div>
+                        <div style="margin-top:5px; font-size:0.72rem; color:var(--text-sub);">
+                            ${val ? 'Password is set. This menu item will require the password.' : 'No password set yet. Save a password to protect this menu item.'}
                         </div>
                     </div>
                 `;
@@ -1793,9 +1801,18 @@
         }
 
         window.updateSubLockKey = function(key) {
-            window.appState.subLocks[key] = document.getElementById(`pass-field-input-${key}`).value.trim();
+            const field = document.getElementById(`pass-field-input-${key}`);
+            if(!field) return;
+            const value = field.value.trim();
+            if(!value) {
+                alert("Please enter a password before saving.");
+                return;
+            }
+            window.appState.subLocks[key] = value;
             saveKey('subLocks', window.appState.subLocks);
-            alert("Lock Code Saved.");
+            syncProtectionFields();
+            render3DotMenu();
+            alert("Access password saved for this menu item.");
         }
 
         /* APPEARANCE MODIFIER */
