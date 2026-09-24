@@ -864,6 +864,29 @@
                 </table>
             </div>
         </div>
+        <!-- PUBLISH CONTROL PANEL -->
+        <div id="panel-publish" class="view-panel card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <div>
+                    <h3 style="color:#d4af37; margin-bottom:4px;">Publish</h3>
+                    <p style="color:var(--text-sub); font-size:0.82rem;">Upload first. Publish only after the result is announced on stage.</p>
+                </div>
+                <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            </div>
+            <div style="background:rgba(212,175,55,0.08); border:1px solid rgba(212,175,55,0.28); padding:10px 12px; border-radius:12px; margin-bottom:14px; font-size:0.82rem;">
+                <strong>Important:</strong> Items marked <span style="color:#f59e0b; font-weight:800;">❌ Not Published</span> are stored in the system but are hidden from the public website. They become visible only when switched to <span style="color:#10b981; font-weight:800;">✅ Published</span>.
+            </div>
+
+            <div style="background:rgba(0,0,0,0.16); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-bottom:14px;">
+                <h4 style="color:#d4af37; margin-bottom:10px;">Program Results</h4>
+                <div id="publish-results-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+            </div>
+
+            <div style="background:rgba(0,0,0,0.16); border:1px solid var(--border-color); padding:12px; border-radius:12px;">
+                <h4 style="color:#d4af37; margin-bottom:10px;">Result / Team Status Posters</h4>
+                <div id="publish-status-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+            </div>
+        </div>
         <!-- PROTECTION SYSTEM PANEL -->
         <div id="panel-protection" class="view-panel card">
             <h3>Protection Settings Dashboard</h3>
@@ -1038,15 +1061,15 @@
                         <label><input type="checkbox" id="toggle-vis-highlights" onchange="updateSectionVisibilities()"> Highlights</label>
                     </div>
                 </div>
-                <div class="collapsible-header" onclick="toggleAccordion('sub-status-box')"><span>Upload Team Status Posters</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div class="collapsible-header" onclick="toggleAccordion('sub-status-box')"><span>Upload Team Status Posters (Publish Separately)</span> <i class="fa-solid fa-chevron-down"></i></div>
                 <div id="sub-status-box" class="collapsible-box">
                     <form onsubmit="uploadTeamStatusPoster(event)">
                         <input type="file" id="status-file" class="form-control" accept="image/*" required>
-                        <button type="submit" id="btn-up-status" class="btn btn-sm btn-success btn-block" style="margin-top:5px;">Upload Status Poster</button>
+                        <button type="submit" id="btn-up-status" class="btn btn-sm btn-success btn-block" style="margin-top:5px;">Upload Status Poster (Save Only)</button>
                     </form>
                     <div id="master-status-preview" style="margin-top:10px; display:flex; flex-direction:column; gap:6px;"></div>
                 </div>
-                <div class="collapsible-header" onclick="toggleAccordion('sub-res-box')"><span>Publish Program Result (Numbered)</span> <i class="fa-solid fa-chevron-down"></i></div>
+                <div class="collapsible-header" onclick="toggleAccordion('sub-res-box')"><span>Upload Program Result (Publish Separately)</span> <i class="fa-solid fa-chevron-down"></i></div>
                 <div id="sub-res-box" class="collapsible-box">
                     <form onsubmit="uploadProgramResult(event)" style="display:flex; flex-direction:column; gap:6px;">
                         <select id="res-upload-cat" class="form-control" onchange="populateResProgDropdown()"><option value="">-- Choose Category --</option><option value="GENERAL">GENERAL</option><option value="LOWER ZONE">LOWER ZONE</option><option value="MIDDLE ZONE">MIDDLE ZONE</option><option value="HIGHER ZONE">HIGHER ZONE</option><option value="SUPER ZONE">SUPER ZONE</option></select>
@@ -1054,7 +1077,7 @@
                         <input type="number" id="res-custom-number" class="form-control" placeholder="Result Sequence Number (e.g. 1, 2, 3...)" required>
                         <input type="file" id="res-file" class="form-control" accept="image/*" required>
                         <input type="url" id="res-yt-url" class="form-control" placeholder="YouTube Link (Optional)">
-                        <button type="submit" id="btn-up-res" class="btn btn-sm btn-success btn-block">Publish Result</button>
+                        <button type="submit" id="btn-up-res" class="btn btn-sm btn-success btn-block">Upload Result (Save Only)</button>
                     </form>
                     <div id="master-results-list" style="margin-top:10px;"></div>
                 </div>
@@ -1305,12 +1328,25 @@
             return state;
         }
 
+        // Publication workflow: uploads are stored immediately but remain hidden until published.
+        // Existing records without a publication flag are treated as NOT PUBLISHED so that nothing
+        // becomes public accidentally after this workflow is enabled.
+        function normalizePublicationState(state) {
+            if(!state || typeof state !== 'object') return state;
+            if(!Array.isArray(state.results)) state.results = [];
+            if(!Array.isArray(state.teamStatusList)) state.teamStatusList = [];
+            state.results = state.results.map(r => ({ ...r, published: r.published === true }));
+            state.teamStatusList = state.teamStatusList.map(item => ({ ...item, published: item.published === true }));
+            return state;
+        }
+
         // Initialize State
         if (!window.appState) {
             window.appState = buildCleanState();
         } else {
             window.appState = sanitizeSecurityState(window.appState);
         }
+        window.appState = normalizePublicationState(window.appState);
 
         window.loggedTeamUser = null;
         window.activePartTeam = null;
@@ -1347,6 +1383,7 @@
                 if(!history.state || history.state.panel === 'panel-home') renderHomePhase();
                 else renderResultPhaseFeeds();
                 syncControlPanelViews();
+                renderPublishPanel();
                 renderPtList();
                 renderJudgeLeaderboard();
                 renderStatesDashboard();
@@ -1363,6 +1400,7 @@
                 window.appState = { ...window.appState, ...data };
                 const wasOldSecuritySchema = window.appState.securitySchemaVersion !== SECURITY_SCHEMA_VERSION;
                 window.appState = sanitizeSecurityState(window.appState);
+                window.appState = normalizePublicationState(window.appState);
                 if (wasOldSecuritySchema) {
                     // Persist the migration so old usernames/passwords are removed from Firebase too.
                     try { set(dbRef, window.appState); } catch(e) { console.warn('Security migration save failed:', e); }
@@ -1471,6 +1509,7 @@
                 html += `
                     <button onclick="interceptRoute('panel-settings', 'settings')"><i class="fa-solid fa-gear"></i> Settings</button>
                     <button onclick="interceptRoute('panel-control-panel', 'control_panel')"><i class="fa-solid fa-sliders"></i> Control Panel</button>
+                    <button onclick="showPanel('panel-publish'); document.getElementById('mainDropdown').classList.remove('show'); renderPublishPanel();"><i class="fa-solid fa-cloud-arrow-up"></i> Publish</button>
                     <button onclick="interceptRoute('panel-judge', 'judge')"><i class="fa-solid fa-gavel"></i> Judge Leaderboard</button>
                     <button onclick="interceptRoute('panel-states-control', 'states')"><i class="fa-solid fa-flag"></i> States Control</button>
                     <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Protection Settings</button>
@@ -1521,7 +1560,8 @@
                 p.classList.add('active-panel');
                 if(!history.state || history.state.panel !== panelId) {
                     history.pushState({ panel: panelId }, "", `#${panelId}`);
-                }
+                    if(panelId === 'panel-publish') renderPublishPanel();
+        }
             }
         }
 
@@ -2303,7 +2343,7 @@
                 const compressed = await compressImage(f, 800, 0.6); // smaller file size to avoid lags
                 
                 if(!window.appState.teamStatusList) window.appState.teamStatusList = [];
-                const newStatusItem = { id: 'ts_'+Date.now(), url: compressed };
+                const newStatusItem = { id: 'ts_'+Date.now(), url: compressed, published: false };
                 window.appState.teamStatusList.unshift(newStatusItem);
                 window.appState.teamStatusUrl = compressed;
                 
@@ -2347,12 +2387,12 @@
             const fileEl = document.getElementById('res-file').files[0];
 
             if(fileEl && progId) {
-                btn.innerText = "Publishing...";
+                btn.innerText = "Uploading...";
                 btn.disabled = true;
                 const compressed = await compressImage(fileEl, 800, 0.6); // aggressively compressed
                 
                 window.appState.results = window.appState.results.filter(r => r.progId !== progId);
-                window.appState.results.push({ progId, number: customNum, poster: compressed, youtube: yt });
+                window.appState.results.push({ progId, number: customNum, poster: compressed, youtube: yt, published: false });
                 
                 // Optimistic Local Update
                 filterResultPrograms();
@@ -2360,8 +2400,68 @@
 
                 saveKey('results', window.appState.results);
                 
-                btn.innerText = "Publish Result";
+                btn.innerText = "Upload Result (Save Only)";
                 btn.disabled = false;
+            }
+        }
+
+        window.setResultPublished = function(progId, shouldPublish) {
+            const item = (window.appState.results || []).find(r => r.progId === progId);
+            if(!item) return;
+            item.published = !!shouldPublish;
+            saveKey('results', window.appState.results);
+            renderPublishPanel();
+            filterResultPrograms();
+            syncControlPanelViews();
+        }
+
+        window.setStatusPublished = function(id, shouldPublish) {
+            const item = (window.appState.teamStatusList || []).find(r => r.id === id);
+            if(!item) return;
+            item.published = !!shouldPublish;
+            saveKey('teamStatusList', window.appState.teamStatusList);
+            renderPublishPanel();
+            renderResultPhaseFeeds();
+            syncControlPanelViews();
+        }
+
+        window.renderPublishPanel = function() {
+            const resBox = document.getElementById('publish-results-list');
+            if(resBox) {
+                const results = [...(window.appState.results || [])].sort((a,b) => Number(a.number || 999999) - Number(b.number || 999999));
+                resBox.innerHTML = results.length ? results.map(r => {
+                    const p = window.appState.programs.find(pr => pr.id === r.progId) || { name:'Unknown Program', cat:'' };
+                    const pub = r.published === true;
+                    return `
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:10px; background:rgba(255,255,255,0.03);">
+                            <div style="min-width:0;">
+                                <div style="font-weight:800;">Result ${r.number || ''} — ${p.name}</div>
+                                <div style="font-size:0.75rem; color:var(--text-sub);">${p.cat || ''} • ${pub ? 'Published to public site' : 'Stored only — not visible publicly'}</div>
+                            </div>
+                            <label style="display:flex; align-items:center; gap:7px; white-space:nowrap; font-size:0.78rem; font-weight:800;">
+                                <input type="checkbox" ${pub ? 'checked' : ''} onchange="setResultPublished('${r.progId}', this.checked)" style="width:20px;height:20px;">
+                                <span style="color:${pub ? '#10b981' : '#f59e0b'}">${pub ? '✅ Published' : '❌ Not Published'}</span>
+                            </label>
+                        </div>`;
+                }).join('') : '<div style="color:var(--text-sub); text-align:center; padding:12px;">No uploaded results yet.</div>';
+            }
+            const stBox = document.getElementById('publish-status-list');
+            if(stBox) {
+                const items = window.appState.teamStatusList || [];
+                stBox.innerHTML = items.length ? items.map((item,idx) => {
+                    const pub = item.published === true;
+                    return `
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:10px; background:rgba(255,255,255,0.03);">
+                            <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+                                <img src="${item.url}" style="width:56px;height:40px;border-radius:6px;object-fit:cover;">
+                                <div><div style="font-weight:800;">Result Poster #${idx+1}</div><div style="font-size:0.75rem;color:var(--text-sub);">${pub ? 'Visible publicly' : 'Stored only — hidden from public site'}</div></div>
+                            </div>
+                            <label style="display:flex; align-items:center; gap:7px; white-space:nowrap; font-size:0.78rem; font-weight:800;">
+                                <input type="checkbox" ${pub ? 'checked' : ''} onchange="setStatusPublished('${item.id}', this.checked)" style="width:20px;height:20px;">
+                                <span style="color:${pub ? '#10b981' : '#f59e0b'}">${pub ? '✅ Published' : '❌ Not Published'}</span>
+                            </label>
+                        </div>`;
+                }).join('') : '<div style="color:var(--text-sub); text-align:center; padding:12px;">No uploaded posters yet.</div>';
             }
         }
 
@@ -2527,7 +2627,7 @@
                 mStatus.innerHTML = list.map((item, idx) => `
                     <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; border-radius:6px; font-size:0.85rem;">
                         <img src="${item.url}" style="height:40px; border-radius:4px; object-fit:contain;">
-                        <span>Poster #${idx+1}</span>
+                        <span>Poster #${idx+1} — ${item.published === true ? '✅ Published' : '❌ Not Published'}</span>
                         <button class="btn btn-danger btn-sm" onclick="deleteStatusItem('${item.id}')">Delete</button>
                     </div>
                 `).join('');
@@ -2538,7 +2638,7 @@
                     const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Unknown' };
                     return `
                         <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-                            <span>Result ${r.number || ''}: ${p.name}</span> <button class="btn btn-danger btn-sm" onclick="deleteResultMaster('${r.progId}')">x</button>
+                            <span>Result ${r.number || ''}: ${p.name} — ${r.published === true ? '✅ Published' : '❌ Not Published'}</span> <button class="btn btn-danger btn-sm" onclick="deleteResultMaster('${r.progId}')">x</button>
                         </div>
                     `;
                 }).join('');
@@ -2602,7 +2702,7 @@
         function renderResultPhaseFeeds() {
             const statusBox = document.getElementById('team-status-poster-box');
             if(statusBox) {
-                const list = window.appState.teamStatusList || [];
+                const list = (window.appState.teamStatusList || []).filter(item => item.published === true);
                 if(list.length > 0) {
                     statusBox.innerHTML = list.map((item, index) => `
                         <div class="masonry-item ${index === 0 ? 'team-status-featured' : 'team-status-regular'}" onclick="openMediaViewer('${item.url}', 'photo')">
@@ -2649,7 +2749,7 @@
             if(!container) return;
             const cat = catEl ? catEl.value : '';
             const searchQ = searchEl ? searchEl.value.toLowerCase().trim() : '';
-            const matchedResults = window.appState.results.filter(r => {
+            const matchedResults = window.appState.results.filter(r => r.published === true).filter(r => {
                 const p = window.appState.programs.find(pr => pr.id === r.progId);
                 if(!p) return false;
                 if(cat && p.cat !== cat) return false;
@@ -2785,4 +2885,3 @@
     </script>
 </body>
 </html>
-
