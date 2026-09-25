@@ -282,7 +282,7 @@
         .collapsible-box.show { display: block; }
         
         .timer-display {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: 800;
             text-align: center;
             font-family: monospace;
@@ -321,14 +321,12 @@
             }
             .no-print { display: none !important; visibility: hidden !important; }
             .bahja-sheet-header {
-                display: grid !important; grid-template-columns: 1fr auto 1fr !important; align-items: center !important;
+                display: flex !important; justify-content: space-between !important; align-items: center !important;
                 width: 100% !important; border-bottom: 2px solid #000 !important; padding: 3mm 0 2mm !important; margin: 0 0 4mm !important;
                 color: #000 !important; background: #fff !important;
             }
-            .bahja-sheet-header > span:first-child { text-align: left !important; justify-self: start !important; white-space: nowrap !important; }
-            .bahja-sheet-header > span:last-child { text-align: right !important; justify-self: end !important; white-space: nowrap !important; }
             .bahja-sheet-header h2 {
-                grid-column: 2 !important; margin: 0 !important; font-size: 18px !important; line-height: 1.2 !important;
+                margin: 0 !important; font-size: 18px !important; line-height: 1.2 !important;
                 font-weight: 900 !important; letter-spacing: 1px !important; text-align: center !important; color: #000 !important; white-space: nowrap !important;
             }
             .bahja-sheet-table, .print-target table {
@@ -551,13 +549,10 @@
                 <div id="ej-topic-display-box" style="background:var(--input-bg); border:1px solid var(--border-color); border-radius:12px; padding:12px; min-height:80px; color:#f8fafc; font-size:1rem; white-space:pre-wrap; line-height:1.5;">Topic will appear here...</div>
             </div>
 
-            <!-- Seconds & Minutes Timer Control -->
+            <!-- Precision Timer Control (hh:mm:ss:ms) -->
             <div class="form-group">
-                <label style="color:#d4af37; font-weight:bold;">Timer Control (Minutes & Seconds)</label>
-                <div class="timer-display" id="ej-timer-display">00:00</div>
-                <div style="text-align:center; font-size:0.85rem; color:var(--text-sub); margin-bottom:8px;">
-                    Total Elapsed Time: <span id="ej-timer-total-sec" style="color:#d4af37; font-weight:bold;">0</span> Seconds
-                </div>
+                <label style="color:#d4af37; font-weight:bold;">Timer Control (hh = മണി, mm = മിനിറ്റ്, ss = സെക്കൻഡ്, ms = മില്ലിസെക്കൻഡ്)</label>
+                <div class="timer-display" id="ej-timer-display">00:00:00:000</div>
                 <div class="timer-controls">
                     <button class="btn btn-success btn-sm" onclick="startEjTimer()"><i class="fa-solid fa-play"></i> Start</button>
                     <button class="btn btn-warning btn-sm" onclick="pauseEjTimer()"><i class="fa-solid fa-pause"></i> Pause</button>
@@ -646,10 +641,6 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Search Program</label>
-                    <input type="text" id="pt-search" class="form-control" placeholder="Type to search program..." oninput="populatePtProgs()">
-                </div>
-                <div class="form-group">
                     <label>Select Program</label>
                     <select id="pt-prog-select" class="form-control" onchange="loadPtParticipants()" required></select>
                 </div>
@@ -658,8 +649,17 @@
                 <div id="pt-candidates-inputs" style="margin-bottom:12px;"></div>
                 <button type="submit" class="btn btn-success btn-block btn-xl">Submit Point Records</button>
             </form>
-            <div class="collapsible-header no-print" onclick="toggleAccordion('box-pt-list')"><span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
-            <div id="box-pt-list" class="collapsible-box show"></div>
+            
+            <div class="collapsible-header no-print" onclick="toggleAccordion('box-pt-list')">
+                <span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div id="box-pt-list" class="collapsible-box show">
+                <!-- Result Search Bar Inside Point Evaluation Logs -->
+                <div class="form-group no-print" style="margin-top:10px;">
+                    <input type="text" id="pt-logs-search" class="form-control" placeholder="Search Result / Program Name..." oninput="renderPtList()">
+                </div>
+                <div id="box-pt-list-content"></div>
+            </div>
             <div id="pt-print-area" class="print-target" style="display:none;"></div>
         </div>
         <!-- POINTROOM COPY (Code Portal) -->
@@ -691,7 +691,7 @@
                 </div>
                 <div class="form-group">
                     <label>Program Topic (Multi-line Support)</label>
-                    <textarea id="pt-topic-copy" class="form-control" rows="3" placeholder="Enter program topic for judges... (Supports 2, 3, 4 lines of text)"></textarea>
+                    <textarea id="pt-topic-copy" class="form-control" rows="3" placeholder="Enter program topic for judges..."></textarea>
                 </div>
                 <div id="pt-stage-badge-copy" style="margin-bottom:12px; font-weight:bold; color:#d4af37;"></div>
                 
@@ -789,9 +789,7 @@
             </div>
             <div id="entry-sign-print-container" class="print-target">
                 <div class="bahja-sheet-header" id="es-print-header">
-                    <span style="font-size:11px; font-weight:bold;">TIME:</span>
                     <h2 id="es-print-title">ENTRY SIGN</h2>
-                    <span style="font-size:11px; font-weight:bold;">DATE:</span>
                 </div>
                 <div class="table-responsive" style="margin-top:12px;">
                     <table class="bahja-sheet-table">
@@ -970,9 +968,7 @@
                     </div>
                     <div id="print-exact-report-area" class="print-target">
                         <div class="bahja-sheet-header">
-                            <span style="font-size:11px; font-weight:bold;">TIME:</span>
                             <h2>BAHJA 2K26</h2>
-                            <span style="font-size:11px; font-weight:bold;">DATE:</span>
                         </div>
                         <table class="bahja-sheet-table" id="report-resizable-table">
                             <thead>
@@ -1397,20 +1393,21 @@
                 mTitle.style.fontSize = (vis.titleSize || '2.8') + 'rem';
             }
         }
-        /* UPDATED MENU LOGIC (NEW ORDER & NEW NAMES) */
+        /* DROPDOWN MENU CONFIGURATION (PUBLIC VS LOGGED IN) */
         window.render3DotMenu = function() {
             const menuContainer = document.getElementById('mainDropdown');
             if(!menuContainer) return;
             let html = `<button onclick="navHome()"><i class="fa-solid fa-house"></i> Home</button>`;
+            
             if(!window.isMainLoggedIn) {
+                // VISITOR VIEW: ONLY HOME, MAIN LOGIN, JUDGE PORTAL
                 html += `<button onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> Main Login</button>`;
                 html += `<button onclick="interceptRoute('panel-entry-judge', 'entry_judge')"><i class="fa-solid fa-gavel"></i> Judge Portal</button>`;
-                html += `<button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Record Terminal</button>`;
-                html += `<button onclick="interceptRoute('panel-pointroom-copy', 'pointroom')"><i class="fa-solid fa-copy"></i> Code Portal</button>`;
                 if(window.appState.phase === 'register') {
                     html += `<button onclick="showPanel('panel-participants-entry')"><i class="fa-solid fa-user-plus"></i> Participants Entry</button>`;
                 }
             } else {
+                // LOGGED IN ADMIN MENU WITH REQUESTED ORDER
                 html += `
                     <button onclick="interceptRoute('panel-settings', 'settings')"><i class="fa-solid fa-gear"></i> Settings</button>
                     <button onclick="interceptRoute('panel-control-panel', 'control_panel')"><i class="fa-solid fa-sliders"></i> Control Deck</button>
@@ -1541,10 +1538,26 @@
             } else { alert("Invalid Credentials!"); }
         }
         window.logoutMain = function() { window.isMainLoggedIn = false; render3DotMenu(); navHome(); }
-        /* PRINT LOGIC */
+        
+        /* DYNAMIC PRINTING TIME & DATE LOGIC */
         window.triggerCustomPrint = function(targetId) {
             const target = document.getElementById(targetId);
             if(!target) return;
+            
+            // Generate exact current date & time string at print moment
+            const now = new Date();
+            const timeDateStr = now.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+
+            // Attach dynamic header/footer stamp to print target
+            let printStamp = target.querySelector('.dynamic-print-stamp');
+            if(!printStamp) {
+                printStamp = document.createElement('div');
+                printStamp.className = 'dynamic-print-stamp';
+                printStamp.style.cssText = 'display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:bold; border-bottom:2px solid #000; padding-bottom:4px; margin-bottom:8px; width:100%; color:#000;';
+                target.insertBefore(printStamp, target.firstChild);
+            }
+            printStamp.innerHTML = `<span>BAHJA 2K26 OFFICIAL REPORT</span><span>PRINTED: ${timeDateStr}</span>`;
+
             const originalParent = target.parentNode;
             const originalNextSibling = target.nextSibling;
             const originalDisplay = target.style.display;
@@ -1580,7 +1593,8 @@
                 });
             });
         }
-        /* JUDGE PORTAL ENTRY LOGIC & ENHANCED SECONDS TIMER */
+
+        /* JUDGE PORTAL ENTRY LOGIC & HIGH-PRECISION TIMER (hh:mm:ss:ms) */
         function renderEjActiveProgram() {
             const activeProgId = window.appState.activeEjProgId;
             const titleEl = document.getElementById('ej-active-prog-title');
@@ -1641,31 +1655,52 @@
             renderJudgeLeaderboard();
             renderStatesDashboard();
         }
+
         let ejTimerInterval = null;
-        let ejSeconds = 0;
+        let ejStartTime = 0;
+        let ejElapsedTime = 0;
+
         window.updateEjTimerDisplay = function() {
-            const mins = String(Math.floor(ejSeconds / 60)).padStart(2, '0');
-            const secs = String(ejSeconds % 60).padStart(2, '0');
-            document.getElementById('ej-timer-display').innerText = `${mins}:${secs}`;
-            const totalSecEl = document.getElementById('ej-timer-total-sec');
-            if(totalSecEl) totalSecEl.innerText = ejSeconds;
+            let totalMs = ejElapsedTime;
+            if (ejTimerInterval) {
+                totalMs += Date.now() - ejStartTime;
+            }
+            const hrs = String(Math.floor(totalMs / 3600000)).padStart(2, '0');
+            const mins = String(Math.floor((totalMs % 3600000) / 60000)).padStart(2, '0');
+            const secs = String(Math.floor((totalMs % 60000) / 1000)).padStart(2, '0');
+            const ms = String(totalMs % 1000).padStart(3, '0');
+
+            const timerEl = document.getElementById('ej-timer-display');
+            if(timerEl) timerEl.innerText = `${hrs}:${mins}:${secs}:${ms}`;
         }
+
         window.startEjTimer = function() {
             if (ejTimerInterval) return;
+            ejStartTime = Date.now();
             ejTimerInterval = setInterval(() => {
-                ejSeconds++;
                 updateEjTimerDisplay();
-            }, 1000);
+            }, 30);
         }
+
         window.pauseEjTimer = function() {
-            clearInterval(ejTimerInterval);
-            ejTimerInterval = null;
+            if (ejTimerInterval) {
+                ejElapsedTime += Date.now() - ejStartTime;
+                clearInterval(ejTimerInterval);
+                ejTimerInterval = null;
+                updateEjTimerDisplay();
+            }
         }
+
         window.resetEjTimer = function() {
-            pauseEjTimer();
-            ejSeconds = 0;
+            if (ejTimerInterval) {
+                clearInterval(ejTimerInterval);
+                ejTimerInterval = null;
+            }
+            ejElapsedTime = 0;
+            ejStartTime = 0;
             updateEjTimerDisplay();
         }
+
         /* CODE PORTAL FUNCTIONS */
         window.populatePtProgsCopy = function() {
             const cat = document.getElementById('pt-cat-select-copy').value;
@@ -1739,6 +1774,7 @@
             renderPtList();
             renderEjActiveProgram();
         }
+        
         /* PROTECTION & SECURITY VAULT SETTINGS */
         function syncProtectionFields() {
             const container = document.getElementById('sub-panel-pass-managers-container');
@@ -2006,13 +2042,12 @@
             saveKey('registrations', window.appState.registrations);
             alert("Registration updated.");
         }
-        /* RECORD TERMINAL EVALUATION LOGS & PRINTS */
+
+        /* RECORD TERMINAL EVALUATION LOGS & SEARCH LOGIC */
         window.populatePtProgs = function() {
             const cat = document.getElementById('pt-cat-select').value;
-            const query = document.getElementById('pt-search') ? document.getElementById('pt-search').value.toLowerCase().trim() : '';
             const drop = document.getElementById('pt-prog-select');
             let matched = window.appState.programs.filter(p => p.cat === cat);
-            if(query) matched = matched.filter(p => p.name.toLowerCase().includes(query));
             matched.sort((a,b)=>a.name.localeCompare(b.name));
             drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
             document.getElementById('pt-candidates-inputs').innerHTML = '';
@@ -2065,12 +2100,23 @@
             renderPtList();
         }
         function renderPtList() {
-            const container = document.getElementById('box-pt-list');
+            const containerContent = document.getElementById('box-pt-list-content');
             const containerCopy = document.getElementById('box-pt-list-copy');
-            const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
+            const searchInput = document.getElementById('pt-logs-search');
+            const searchQ = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+            let distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
+            
+            if(searchQ) {
+                distinctProgs = distinctProgs.filter(pid => {
+                    const prog = window.appState.programs.find(p => p.id === pid);
+                    return prog && prog.name.toLowerCase().includes(searchQ);
+                });
+            }
+
             if(distinctProgs.length === 0) {
-                if(container) container.innerHTML = '<p>No marks processed.</p>';
-                if(containerCopy) containerCopy.innerHTML = '<p>No marks processed.</p>';
+                if(containerContent) containerContent.innerHTML = '<p style="padding:8px 0;">No marks processed matching search.</p>';
+                if(containerCopy) containerCopy.innerHTML = '<p style="padding:8px 0;">No marks processed.</p>';
                 return; 
             }
             const htmlContent = distinctProgs.map(pid => {
@@ -2091,7 +2137,7 @@
                     </div>
                 `;
             }).join('');
-            if(container) container.innerHTML = htmlContent;
+            if(containerContent) containerContent.innerHTML = htmlContent;
             if(containerCopy) containerCopy.innerHTML = htmlContent;
         }
         window.printIndividualPointRecord = function(progId) {
@@ -2101,9 +2147,7 @@
             
             target.innerHTML = `
                 <div class="bahja-sheet-header">
-                    <span>TIME:</span>
                     <h2>BAHJA 2K26 - ${prog.name.toUpperCase()} (${prog.cat})</h2>
-                    <span>DATE:</span>
                 </div>
                 <table class="bahja-sheet-table">
                     <thead><tr><th>#</th><th>Student Name</th><th>Team</th><th>Score</th><th>Rank</th></tr></thead>
@@ -2119,9 +2163,7 @@
             const target = document.getElementById('pt-print-area');
             let html = `
                 <div class="bahja-sheet-header">
-                    <span>TIME:</span>
                     <h2>BAHJA 2K26 - ALL POINT EVALUATION LOGS</h2>
-                    <span>DATE:</span>
                 </div>
             `;
             distinctProgs.forEach(pid => {
