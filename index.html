@@ -538,28 +538,19 @@
                 <h3 style="color:#d4af37;">Judge Entry Portal</h3>
                 <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
             </div>
-            <!-- Program Selection -->
-            <div class="form-group">
-                <label>Select Category & Program</label>
-                <select id="ej-cat-select" class="form-control" onchange="populateEjProgs()">
-                    <option value="">-- Choose Category --</option>
-                    <option value="GENERAL">GENERAL</option>
-                    <option value="LOWER ZONE">LOWER ZONE</option>
-                    <option value="MIDDLE ZONE">MIDDLE ZONE</option>
-                    <option value="HIGHER ZONE">HIGHER ZONE</option>
-                    <option value="SUPER ZONE">SUPER ZONE</option>
-                </select>
+            
+            <!-- Program Name Header Display -->
+            <div style="background:rgba(212,175,55,0.1); border:1px solid #d4af37; padding:12px; border-radius:12px; margin-bottom:15px; text-align:center;">
+                <span style="font-size:0.8rem; text-transform:uppercase; color:var(--text-sub); letter-spacing:1px;">Active Program Name</span>
+                <h2 id="ej-active-prog-title" style="color:#d4af37; font-size:1.5rem; margin-top:4px;">No Active Program Loaded</h2>
             </div>
+
+            <!-- Program Topics Display -->
             <div class="form-group">
-                <select id="ej-prog-select" class="form-control" onchange="loadEjParticipants()">
-                    <option value="">-- Select Program --</option>
-                </select>
+                <label style="color:#d4af37; font-weight:bold;">Program Topic</label>
+                <div id="ej-topic-display-box" style="background:var(--input-bg); border:1px solid var(--border-color); border-radius:12px; padding:12px; min-height:80px; color:#f8fafc; font-size:1rem; white-space:pre-wrap; line-height:1.5;">Topic will appear here...</div>
             </div>
-            <!-- Program Topics -->
-            <div class="form-group">
-                <label>Program Topic</label>
-                <input type="text" id="ej-topic-display" class="form-control" placeholder="Topic for selected program..." readonly style="color:#d4af37; font-weight:bold;">
-            </div>
+
             <!-- Seconds Timer -->
             <div class="form-group">
                 <label>Timer Control (Seconds)</label>
@@ -570,6 +561,7 @@
                     <button class="btn btn-danger btn-sm" onclick="resetEjTimer()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
                 </div>
             </div>
+
             <!-- Code Letter and Mark Entry Table -->
             <h4 style="margin-top:20px; margin-bottom:10px; color:#d4af37;">Participant Marks Marking</h4>
             <div class="table-responsive">
@@ -581,7 +573,7 @@
                         </tr>
                     </thead>
                     <tbody id="ej-candidates-inputs">
-                        <tr><td colspan="2" style="text-align:center;">Select a program to load participants.</td></tr>
+                        <tr><td colspan="2" style="text-align:center;">Select or configure a program in Pointroom Copy to view.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -684,21 +676,21 @@
                 </div>
                 <div class="form-group">
                     <label>Search Program</label>
-                    <input type="text" id="pt-search-copy" class="form-control" placeholder="Search program name..." oninput="populatePtProgsCopy()">
+                    <input type="text" id="pt-search-copy" class="form-control" placeholder="Type to search program..." oninput="populatePtProgsCopy()">
                 </div>
                 <div class="form-group">
                     <label>Select Program</label>
                     <select id="pt-prog-select-copy" class="form-control" onchange="loadPtParticipantsCopy()" required></select>
                 </div>
                 <div class="form-group">
-                    <label>Program Topic</label>
-                    <input type="text" id="pt-topic-copy" class="form-control" placeholder="Enter program topic for judges...">
+                    <label>Program Topic (Multi-line Support)</label>
+                    <textarea id="pt-topic-copy" class="form-control" rows="3" placeholder="Enter program topic for judges... (Supports 2, 3, 4 lines of text)"></textarea>
                 </div>
                 <div id="pt-stage-badge-copy" style="margin-bottom:12px; font-weight:bold; color:#d4af37;"></div>
                 
                 <h4 style="margin-top:15px; margin-bottom:10px; color:#d4af37;">Code Letter Assigning & Points</h4>
                 <div id="pt-candidates-inputs-copy" style="margin-bottom:12px;"></div>
-                <button type="submit" class="btn btn-success btn-block btn-xl">Save Code Letters & Topics</button>
+                <button type="submit" class="btn btn-success btn-block btn-xl">Save Code Letters & Send to Judge Entry</button>
             </form>
             <div class="collapsible-header no-print" onclick="toggleAccordion('box-pt-list-copy')"><span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
             <div id="box-pt-list-copy" class="collapsible-box show"></div>
@@ -1222,6 +1214,7 @@
             const logo = preservedLogo || {};
             return {
                 phase: 'result', portalOpen: true, theme: 'dark',
+                activeEjProgId: '',
                 logoUrl: logo.logoUrl || '', splashUrl: '',
                 logoPos: logo.logoPos || 'logo-top-left', logoSize: logo.logoSize || '60',
                 teamStatusUrl: '', teamStatusList: [], maxProgLimit: 3,
@@ -1279,6 +1272,7 @@
                 const signature = [
                     window.appState.phase,
                     window.appState.theme,
+                    window.appState.activeEjProgId || '',
                     window.appState.teamStatusList?.length || 0,
                     window.appState.results?.length || 0,
                     window.appState.updates?.length || 0,
@@ -1300,6 +1294,7 @@
                 syncControlPanelViews();
                 renderPublishPanel();
                 renderPtList();
+                renderEjActiveProgram();
                 renderJudgeLeaderboard();
                 renderStatesDashboard();
                 renderRankWinnersList();
@@ -1462,6 +1457,7 @@
                 if(!history.state || history.state.panel !== panelId) {
                     history.pushState({ panel: panelId }, "", `#${panelId}`);
                     if(panelId === 'panel-publish') renderPublishPanel();
+                    if(panelId === 'panel-entry-judge') renderEjActiveProgram();
                 }
             }
         }
@@ -1576,42 +1572,49 @@
                 });
             });
         }
-        /* ENTRY JUDGE LOGIC */
-        window.populateEjProgs = function() {
-            const cat = document.getElementById('ej-cat-select').value;
-            const drop = document.getElementById('ej-prog-select');
-            const matched = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
-            drop.innerHTML = '<option value="">-- Select Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-            document.getElementById('ej-candidates-inputs').innerHTML = '<tr><td colspan="2" style="text-align:center;">Select a program to load participants.</td></tr>';
-            document.getElementById('ej-topic-display').value = '';
-        }
-        window.loadEjParticipants = function() {
-            const progId = document.getElementById('ej-prog-select').value;
-            const targetProg = window.appState.programs.find(p => p.id === progId);
+        /* ENTRY JUDGE LOGIC (UPDATED AUTOMATED FLOW) */
+        function renderEjActiveProgram() {
+            const activeProgId = window.appState.activeEjProgId;
+            const titleEl = document.getElementById('ej-active-prog-title');
+            const topicBox = document.getElementById('ej-topic-display-box');
             const container = document.getElementById('ej-candidates-inputs');
-            if(!targetProg) { container.innerHTML = '<tr><td colspan="2" style="text-align:center;">Select a program to load.</td></tr>'; return; }
             
-            document.getElementById('ej-topic-display').value = targetProg.topic || `Topic for ${targetProg.name}`;
-            const matchedPts = window.appState.points.filter(pt => pt.progId === progId && pt.codeLetter && pt.codeLetter.trim() !== '');
-            if(matchedPts.length === 0) {
-                container.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#ef4444;">No code letters configured in Pointroom (Copy).</td></tr>';
+            if(!activeProgId) {
+                if(titleEl) titleEl.innerText = "No Program Assigned";
+                if(topicBox) topicBox.innerText = "Topic will appear here when a program is assigned in Pointroom Copy...";
+                if(container) container.innerHTML = '<tr><td colspan="2" style="text-align:center;">No active program assigned from Pointroom Copy.</td></tr>';
                 return;
             }
+            const targetProg = window.appState.programs.find(p => p.id === activeProgId);
+            if(!targetProg) {
+                if(titleEl) titleEl.innerText = "Program Not Found";
+                if(topicBox) topicBox.innerText = "No Topic";
+                if(container) container.innerHTML = '<tr><td colspan="2" style="text-align:center;">Program error.</td></tr>';
+                return;
+            }
+            if(titleEl) titleEl.innerText = `${targetProg.name} (${targetProg.cat})`;
+            if(topicBox) topicBox.innerText = targetProg.topic || "No Topic Specified";
+            
+            const matchedPts = window.appState.points.filter(pt => pt.progId === activeProgId && pt.codeLetter && pt.codeLetter.trim() !== '');
+            if(matchedPts.length === 0) {
+                if(container) container.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#ef4444;">No code letters configured for this program in Pointroom (Copy).</td></tr>';
+                return;
+            }
+            
             let html = '';
             matchedPts.forEach(pt => {
                 html += `
                     <tr>
-                        <td style="text-align:center; font-weight:bold; font-size:1.1rem; color:#d4af37;">${pt.codeLetter}</td>
+                        <td style="text-align:center; font-weight:bold; font-size:1.2rem; color:#d4af37;">${pt.codeLetter}</td>
                         <td><input type="number" min="0" class="form-control ej-score-field" data-code="${pt.codeLetter}" data-team="${pt.team}" data-student="${pt.student}" value="${pt.score || 0}"></td>
                     </tr>
                 `;
             });
-            container.innerHTML = html;
+            if(container) container.innerHTML = html;
         }
         window.saveEjMarks = function() {
-            const progId = document.getElementById('ej-prog-select').value;
-            const cat = document.getElementById('ej-cat-select').value;
-            if(!progId || !cat) { alert("Please select a valid category and program."); return; }
+            const activeProgId = window.appState.activeEjProgId;
+            if(!activeProgId) { alert("No active program to submit marks for!"); return; }
             
             const scoreFields = document.querySelectorAll('.ej-score-field');
             scoreFields.forEach(f => {
@@ -1619,7 +1622,7 @@
                 const student = f.getAttribute('data-student');
                 const score = parseFloat(f.value) || 0;
                 
-                const existingPt = window.appState.points.find(pt => pt.progId === progId && pt.team === team && pt.student === student);
+                const existingPt = window.appState.points.find(pt => pt.progId === activeProgId && pt.team === team && pt.student === student);
                 if(existingPt) {
                     existingPt.score = score;
                 }
@@ -1664,6 +1667,7 @@
             drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
             document.getElementById('pt-candidates-inputs-copy').innerHTML = '';
             document.getElementById('pt-stage-badge-copy').innerText = '';
+            document.getElementById('pt-topic-copy').value = '';
         }
         window.loadPtParticipantsCopy = function() {
             const progId = document.getElementById('pt-prog-select-copy').value;
@@ -1704,7 +1708,9 @@
             
             const targetProg = window.appState.programs.find(p => p.id === progId);
             if(targetProg) targetProg.topic = topic;
+            window.appState.activeEjProgId = progId; // Automatically set as active Judge Entry program
             saveKey('programs', window.appState.programs);
+            saveKey('activeEjProgId', window.appState.activeEjProgId);
             
             document.querySelectorAll('.pt-code-field-copy').forEach(f => {
                 const team = f.getAttribute('data-team');
@@ -1722,9 +1728,10 @@
                 }
             });
             saveKey('points', window.appState.points);
-            alert("Code Letters & Topics updated successfully!");
+            alert("Code Letters & Topic updated! Active program sent to Judge Entry Portal.");
             loadPtParticipantsCopy();
             renderPtList();
+            renderEjActiveProgram();
         }
         /* PROTECTION & OTHER SETTINGS */
         function syncProtectionFields() {
