@@ -535,7 +535,7 @@
         <!-- ENTRY JUDGE PANEL -->
         <div id="panel-entry-judge" class="view-panel card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3 style="color:#d4af37;">Entry Judge Portal</h3>
+                <h3 style="color:#d4af37;">Judge Entry Portal</h3>
                 <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
             </div>
             <!-- Program Selection -->
@@ -558,7 +558,7 @@
             <!-- Program Topics -->
             <div class="form-group">
                 <label>Program Topic</label>
-                <input type="text" id="ej-topic-display" class="form-control" placeholder="Topic details for selected program..." style="color:#d4af37; font-weight:bold;">
+                <input type="text" id="ej-topic-display" class="form-control" placeholder="Topic for selected program..." readonly style="color:#d4af37; font-weight:bold;">
             </div>
             <!-- Seconds Timer -->
             <div class="form-group">
@@ -576,13 +576,12 @@
                 <table class="bahja-sheet-table">
                     <thead>
                         <tr>
-                            <th style="width:30%;">Code Letter</th>
-                            <th style="width:40%;">Candidate Code</th>
-                            <th style="width:30%;">Mark</th>
+                            <th style="width:40%;">Code Letter</th>
+                            <th style="width:60%;">Mark</th>
                         </tr>
                     </thead>
                     <tbody id="ej-candidates-inputs">
-                        <tr><td colspan="3" style="text-align:center;">Select a program to load participants.</td></tr>
+                        <tr><td colspan="2" style="text-align:center;">Select a program to load participants.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -652,8 +651,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Search / Select Program</label>
-                    <input type="text" id="pt-prog-search" class="form-control" placeholder="Search program name..." oninput="filterPtProgs()" style="margin-bottom:6px;">
+                    <label>Select Program</label>
                     <select id="pt-prog-select" class="form-control" onchange="loadPtParticipants()" required></select>
                 </div>
                 <div id="pt-stage-badge" style="margin-bottom:12px; font-weight:bold; color:#d4af37;"></div>
@@ -665,14 +663,14 @@
             <div id="box-pt-list" class="collapsible-box show"></div>
             <div id="pt-print-area" class="print-target" style="display:none;"></div>
         </div>
-        <!-- POINTROOM PORTAL DUPLICATE -->
+        <!-- POINTROOM PORTAL DUPLICATE (POINTROOM COPY) -->
         <div id="panel-pointroom-copy" class="view-panel card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                 <h3>Pointroom Management (Copy)</h3>
                 <button class="btn btn-warning btn-sm no-print" onclick="printAllPointRecords()"><i class="fa-solid fa-print"></i> Print All Logs</button>
             </div>
             
-            <form onsubmit="savePointroomEntryCopy(event)" class="no-print" style="margin-top:12px;">
+            <form onsubmit="savePointroomCopyEntry(event)" class="no-print" style="margin-top:12px;">
                 <div class="form-group">
                     <label>Select Category</label>
                     <select id="pt-cat-select-copy" class="form-control" onchange="populatePtProgsCopy()" required>
@@ -685,14 +683,22 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Search / Select Program</label>
-                    <input type="text" id="pt-prog-search-copy" class="form-control" placeholder="Search program name..." oninput="filterPtProgsCopy()" style="margin-bottom:6px;">
+                    <label>Search Program</label>
+                    <input type="text" id="pt-search-copy" class="form-control" placeholder="Search program name..." oninput="populatePtProgsCopy()">
+                </div>
+                <div class="form-group">
+                    <label>Select Program</label>
                     <select id="pt-prog-select-copy" class="form-control" onchange="loadPtParticipantsCopy()" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Program Topic</label>
+                    <input type="text" id="pt-topic-copy" class="form-control" placeholder="Enter program topic for judges...">
                 </div>
                 <div id="pt-stage-badge-copy" style="margin-bottom:12px; font-weight:bold; color:#d4af37;"></div>
                 
+                <h4 style="margin-top:15px; margin-bottom:10px; color:#d4af37;">Code Letter Assigning & Points</h4>
                 <div id="pt-candidates-inputs-copy" style="margin-bottom:12px;"></div>
-                <button type="submit" class="btn btn-success btn-block btn-xl">Submit Code Letter Records</button>
+                <button type="submit" class="btn btn-success btn-block btn-xl">Save Code Letters & Topics</button>
             </form>
             <div class="collapsible-header no-print" onclick="toggleAccordion('box-pt-list-copy')"><span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
             <div id="box-pt-list-copy" class="collapsible-box show"></div>
@@ -1576,34 +1582,29 @@
             const drop = document.getElementById('ej-prog-select');
             const matched = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
             drop.innerHTML = '<option value="">-- Select Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-            document.getElementById('ej-candidates-inputs').innerHTML = '<tr><td colspan="3" style="text-align:center;">Select a program to load participants.</td></tr>';
+            document.getElementById('ej-candidates-inputs').innerHTML = '<tr><td colspan="2" style="text-align:center;">Select a program to load participants.</td></tr>';
             document.getElementById('ej-topic-display').value = '';
         }
         window.loadEjParticipants = function() {
             const progId = document.getElementById('ej-prog-select').value;
             const targetProg = window.appState.programs.find(p => p.id === progId);
             const container = document.getElementById('ej-candidates-inputs');
-            if(!targetProg) { container.innerHTML = '<tr><td colspan="3" style="text-align:center;">Select a program to load.</td></tr>'; return; }
+            if(!targetProg) { container.innerHTML = '<tr><td colspan="2" style="text-align:center;">Select a program to load.</td></tr>'; return; }
             
             document.getElementById('ej-topic-display').value = targetProg.topic || `Topic for ${targetProg.name}`;
-            const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
-            if(matchedRegs.length === 0) {
-                container.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#ef4444;">No registered candidates found.</td></tr>';
+            const matchedPts = window.appState.points.filter(pt => pt.progId === progId && pt.codeLetter && pt.codeLetter.trim() !== '');
+            if(matchedPts.length === 0) {
+                container.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#ef4444;">No code letters configured in Pointroom (Copy).</td></tr>';
                 return;
             }
             let html = '';
-            let candidateIdx = 1;
-            matchedRegs.forEach(r => {
-                r.participants.forEach(pName => {
-                    const savedPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === pName) || { score: 0, codeLetter: '' };
-                    html += `
-                        <tr>
-                            <td><input type="text" class="form-control ej-code-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.codeLetter || ''}" placeholder="e.g. A" style="text-transform:uppercase;"></td>
-                            <td><strong>Candidate ${candidateIdx++}</strong></td>
-                            <td><input type="number" min="0" class="form-control ej-score-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.score}"></td>
-                        </tr>
-                    `;
-                });
+            matchedPts.forEach(pt => {
+                html += `
+                    <tr>
+                        <td style="text-align:center; font-weight:bold; font-size:1.1rem; color:#d4af37;">${pt.codeLetter}</td>
+                        <td><input type="number" min="0" class="form-control ej-score-field" data-code="${pt.codeLetter}" data-team="${pt.team}" data-student="${pt.student}" value="${pt.score || 0}"></td>
+                    </tr>
+                `;
             });
             container.innerHTML = html;
         }
@@ -1612,22 +1613,22 @@
             const cat = document.getElementById('ej-cat-select').value;
             if(!progId || !cat) { alert("Please select a valid category and program."); return; }
             
-            window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
-            
             const scoreFields = document.querySelectorAll('.ej-score-field');
             scoreFields.forEach(f => {
                 const team = f.getAttribute('data-team');
                 const student = f.getAttribute('data-student');
                 const score = parseFloat(f.value) || 0;
                 
-                const codeInput = document.querySelector(`.ej-code-field[data-team="${team}"][data-student="${student}"]`);
-                const codeLetter = codeInput ? codeInput.value.toUpperCase().trim() : '';
-                window.appState.points.push({ progId, cat, team, student, score, codeLetter });
+                const existingPt = window.appState.points.find(pt => pt.progId === progId && pt.team === team && pt.student === student);
+                if(existingPt) {
+                    existingPt.score = score;
+                }
             });
             saveKey('points', window.appState.points);
-            alert("Entry Judge Marks & Code Letters Saved Successfully!");
-            loadEjParticipants();
+            alert("Judge marks auto-upgraded in system and Pointroom!");
             renderPtList();
+            renderJudgeLeaderboard();
+            renderStatesDashboard();
         }
         let ejTimerInterval = null;
         let ejSeconds = 0;
@@ -1652,28 +1653,27 @@
             ejSeconds = 0;
             updateEjTimerDisplay();
         }
-
-        /* POINTROOM SEARCH AND CODE LETTER LOGIC */
-        window.populatePtProgs = function() {
-            filterPtProgs();
+        /* POINTROOM DUPLICATE (POINTROOM COPY) FUNCTIONS */
+        window.populatePtProgsCopy = function() {
+            const cat = document.getElementById('pt-cat-select-copy').value;
+            const query = document.getElementById('pt-search-copy').value.toLowerCase().trim();
+            const drop = document.getElementById('pt-prog-select-copy');
+            let matched = window.appState.programs.filter(p => p.cat === cat);
+            if(query) matched = matched.filter(p => p.name.toLowerCase().includes(query));
+            matched.sort((a,b)=>a.name.localeCompare(b.name));
+            drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            document.getElementById('pt-candidates-inputs-copy').innerHTML = '';
+            document.getElementById('pt-stage-badge-copy').innerText = '';
         }
-        window.filterPtProgs = function() {
-            const cat = document.getElementById('pt-cat-select').value;
-            const query = (document.getElementById('pt-prog-search').value || '').toLowerCase();
-            const drop = document.getElementById('pt-prog-select');
-            const matched = window.appState.programs
-                .filter(p => (!cat || p.cat === cat) && p.name.toLowerCase().includes(query))
-                .sort((a,b)=>a.name.localeCompare(b.name));
-            drop.innerHTML = '<option value="">-- Select Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
-            document.getElementById('pt-candidates-inputs').innerHTML = '';
-            document.getElementById('pt-stage-badge').innerText = '';
-        }
-        window.loadPtParticipants = function() {
-            const progId = document.getElementById('pt-prog-select').value;
+        window.loadPtParticipantsCopy = function() {
+            const progId = document.getElementById('pt-prog-select-copy').value;
             const targetProg = window.appState.programs.find(p => p.id === progId);
-            const container = document.getElementById('pt-candidates-inputs');
+            const container = document.getElementById('pt-candidates-inputs-copy');
             if(!targetProg) { container.innerHTML = ''; return; }
-            document.getElementById('pt-stage-badge').innerText = `Stage: ${targetProg.stage}`;
+            
+            document.getElementById('pt-stage-badge-copy').innerText = `Stage: ${targetProg.stage}`;
+            document.getElementById('pt-topic-copy').value = targetProg.topic || '';
+            
             const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
             if(matchedRegs.length === 0) {
                 container.innerHTML = '<p style="color:#ef4444;">No registered candidates found.</p>'; return;
@@ -1685,9 +1685,9 @@
                     html += `
                         <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
                             <span><strong>${pName}</strong> (${r.team})</span>
-                            <div style="display:flex; gap:6px;">
-                                <input type="text" placeholder="Code" class="form-control pt-code-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.codeLetter || ''}" style="width:60px; padding:6px; text-transform:uppercase;">
-                                <input type="number" min="0" class="form-control pt-score-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.score}" style="width:80px; padding:6px;">
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <input type="text" class="form-control pt-code-field-copy" data-team="${r.team}" data-student="${pName}" value="${savedPt.codeLetter || ''}" placeholder="Code" style="width:70px; padding:6px; text-transform:uppercase;">
+                                <input type="number" min="0" class="form-control pt-score-field-copy" data-team="${r.team}" data-student="${pName}" value="${savedPt.score || 0}" style="width:70px; padding:6px;">
                             </div>
                         </div>
                     `;
@@ -1695,89 +1695,37 @@
             });
             container.innerHTML = html;
         }
-        window.savePointroomEntry = function(e) {
+        window.savePointroomCopyEntry = function(e) {
             e.preventDefault();
-            const progId = document.getElementById('pt-prog-select').value;
-            const cat = document.getElementById('pt-cat-select').value;
-            if(!progId) { alert("Please select a program."); return; }
-            
-            window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
-            const scoreFields = document.querySelectorAll('#pt-candidates-inputs .pt-score-field');
-            scoreFields.forEach(f => {
-                const team = f.getAttribute('data-team');
-                const student = f.getAttribute('data-student');
-                const score = parseFloat(f.value) || 0;
-                const codeInput = document.querySelector(`#pt-candidates-inputs .pt-code-field[data-team="${team}"][data-student="${student}"]`);
-                const codeLetter = codeInput ? codeInput.value.toUpperCase().trim() : '';
-                window.appState.points.push({ progId, cat, team, student, score, codeLetter });
-            });
-            saveKey('points', window.appState.points);
-            alert("Pointroom records updated.");
-            renderPtList();
-        }
-
-        /* POINTROOM COPY FUNCTIONS */
-        window.populatePtProgsCopy = function() {
-            filterPtProgsCopy();
-        }
-        window.filterPtProgsCopy = function() {
+            const progId = document.getElementById('pt-prog-select-copy').value;
             const cat = document.getElementById('pt-cat-select-copy').value;
-            const query = (document.getElementById('pt-prog-search-copy').value || '').toLowerCase();
-            const drop = document.getElementById('pt-prog-select-copy');
-            const matched = window.appState.programs
-                .filter(p => (!cat || p.cat === cat) && p.name.toLowerCase().includes(query))
-                .sort((a,b)=>a.name.localeCompare(b.name));
-            drop.innerHTML = '<option value="">-- Select Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
-            document.getElementById('pt-candidates-inputs-copy').innerHTML = '';
-            document.getElementById('pt-stage-badge-copy').innerText = '';
-        }
-        window.loadPtParticipantsCopy = function() {
-            const progId = document.getElementById('pt-prog-select-copy').value;
-            const targetProg = window.appState.programs.find(p => p.id === progId);
-            const container = document.getElementById('pt-candidates-inputs-copy');
-            if(!targetProg) { container.innerHTML = ''; return; }
-            document.getElementById('pt-stage-badge-copy').innerText = `Stage: ${targetProg.stage}`;
-            const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
-            if(matchedRegs.length === 0) {
-                container.innerHTML = '<p style="color:#ef4444;">No registered candidates found.</p>'; return;
-            }
-            let html = '';
-            matchedRegs.forEach(r => {
-                r.participants.forEach(pName => {
-                    const savedPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === pName) || { codeLetter: '' };
-                    html += `
-                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
-                            <span><strong>${pName}</strong> (${r.team})</span>
-                            <input type="text" placeholder="Code" class="form-control pt-copy-code-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.codeLetter || ''}" style="width:100px; padding:6px; text-transform:uppercase;">
-                        </div>
-                    `;
-                });
-            });
-            container.innerHTML = html;
-        }
-        window.savePointroomEntryCopy = function(e) {
-            e.preventDefault();
-            const progId = document.getElementById('pt-prog-select-copy').value;
-            if(!progId) { alert("Please select a program."); return; }
+            const topic = document.getElementById('pt-topic-copy').value.trim();
+            if(!progId || !cat) return;
             
-            const codeFields = document.querySelectorAll('.pt-copy-code-field');
-            codeFields.forEach(f => {
+            const targetProg = window.appState.programs.find(p => p.id === progId);
+            if(targetProg) targetProg.topic = topic;
+            saveKey('programs', window.appState.programs);
+            
+            document.querySelectorAll('.pt-code-field-copy').forEach(f => {
                 const team = f.getAttribute('data-team');
                 const student = f.getAttribute('data-student');
                 const codeLetter = f.value.toUpperCase().trim();
-                let ptObj = window.appState.points.find(pt => pt.progId === progId && pt.team === team && pt.student === student);
-                if(ptObj) {
-                    ptObj.codeLetter = codeLetter;
+                const scoreField = document.querySelector(`.pt-score-field-copy[data-team="${team}"][data-student="${student}"]`);
+                const score = parseFloat(scoreField.value) || 0;
+                
+                let existingPt = window.appState.points.find(pt => pt.progId === progId && pt.team === team && pt.student === student);
+                if(existingPt) {
+                    existingPt.codeLetter = codeLetter;
+                    existingPt.score = score;
                 } else {
-                    const prog = window.appState.programs.find(p => p.id === progId);
-                    window.appState.points.push({ progId, cat: prog ? prog.cat : '', team, student, score: 0, codeLetter });
+                    window.appState.points.push({ progId, cat, team, student, score, codeLetter });
                 }
             });
             saveKey('points', window.appState.points);
-            alert("Code Letters updated successfully.");
+            alert("Code Letters & Topics updated successfully!");
+            loadPtParticipantsCopy();
             renderPtList();
         }
-
         /* PROTECTION & OTHER SETTINGS */
         function syncProtectionFields() {
             const container = document.getElementById('sub-panel-pass-managers-container');
@@ -1916,10 +1864,955 @@
             alert("System data cleared.");
         }
         window.renderHomePhase = function() {
-            const isReg = window.appState.phase === 'register';
-            document.getElementById('home-phase-register').style.display = isReg ? 'block' : 'none';
-            document.getElementById('home-phase-result').style.display = isReg ? 'none' : 'block';
+            const regEl = document.getElementById('home-phase-register');
+            const resEl = document.getElementById('home-phase-result');
+            if(window.appState.phase === 'register') {
+                if(regEl) regEl.style.display = 'block';
+                if(resEl) resEl.style.display = 'none';
+                if(window.loggedTeamUser) {
+                    document.getElementById('team-login-block').style.display = 'none';
+                    document.getElementById('team-portal-block').style.display = 'block';
+                    document.getElementById('logged-team-name').innerText = window.loggedTeamUser;
+                } else {
+                    document.getElementById('team-login-block').style.display = 'block';
+                    document.getElementById('team-portal-block').style.display = 'none';
+                }
+            } else {
+                if(regEl) regEl.style.display = 'none';
+                if(resEl) resEl.style.display = 'block';
+                applySectionVisibilityUI();
+                renderResultPhaseFeeds();
+            }
         }
+        function applySectionVisibilityUI() {
+            const v = window.appState.visibilities || {};
+            for(let key in v) {
+                const btn = document.getElementById(`pill-sec-${key}`);
+                if(btn) btn.style.display = v[key] ? 'flex' : 'none';
+            }
+        }
+        window.updateSectionVisibilities = function() {
+            window.appState.visibilities = {
+                'team-states': document.getElementById('toggle-vis-team-states').checked,
+                'results-view': document.getElementById('toggle-vis-results-view').checked,
+                'updates': document.getElementById('toggle-vis-updates').checked,
+                'livelink': document.getElementById('toggle-vis-livelink').checked,
+                'highlights': document.getElementById('toggle-vis-highlights').checked
+            };
+            saveKey('visibilities', window.appState.visibilities);
+            applySectionVisibilityUI();
+        }
+        window.handlePartLogin = function(e) {
+            e.preventDefault();
+            const u = document.getElementById('part-user').value.trim();
+            const p = document.getElementById('part-pass').value.trim();
+            const found = window.appState.teams.find(t => t.user === u && t.pass === p);
+            if(found) {
+                window.activePartTeam = u;
+                document.getElementById('part-login-block').style.display = 'none';
+                document.getElementById('part-manage-block').style.display = 'block';
+                document.getElementById('part-active-team').innerText = u;
+                renderTeamStudentsList();
+            } else alert("Invalid Credentials!");
+        }
+        window.addTeamParticipant = function(e) {
+            e.preventDefault();
+            const cat = document.getElementById('part-cat').value;
+            const name = document.getElementById('part-name').value.trim();
+            window.appState.students.push({ id:'st_'+Date.now(), name, cat, team: window.activePartTeam });
+            saveKey('students', window.appState.students);
+            document.getElementById('part-name').value = ''; 
+            renderTeamStudentsList();
+        }
+        window.renderTeamStudentsList = function() {
+            const filtered = window.appState.students.filter(s => s.team === window.activePartTeam);
+            document.getElementById('team-students-list').innerHTML = filtered.map(s => `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:rgba(0,0,0,0.2); margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
+                    <span><strong>${s.name}</strong> (${s.cat})</span>
+                    <button class="btn btn-danger btn-sm" onclick="deleteStudent('${s.id}')">Delete</button>
+                </div>
+            `).join('') || '<p>No students recorded.</p>';
+        }
+        window.deleteStudent = function(id) {
+            window.appState.students = window.appState.students.filter(s => s.id !== id); 
+            saveKey('students', window.appState.students);
+            renderTeamStudentsList();
+        }
+        window.handleTeamLogin = function(e) {
+            e.preventDefault();
+            const u = document.getElementById('login-team-user').value.trim();
+            const p = document.getElementById('login-team-pass').value.trim();
+            const found = window.appState.teams.find(t => t.user === u && t.pass === p);
+            if(found) { window.loggedTeamUser = u; renderHomePhase(); } else alert("Invalid Credentials");
+        }
+        window.logoutTeam = function() { window.loggedTeamUser = null; renderHomePhase(); }
+        window.loadCategoryPrograms = function() {
+            const cat = document.getElementById('reg-cat-select').value;
+            const container = document.getElementById('category-programs-container');
+            if(!cat) { container.innerHTML = ''; return; }
+            const filtered = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
+            if(filtered.length === 0) { container.innerHTML = '<p>No programs in category.</p>'; return; }
+            const allowedStudents = window.appState.students.filter(s => s.team === window.loggedTeamUser && s.cat === cat);
+            container.innerHTML = filtered.map(p => {
+                const reg = window.appState.registrations.find(r => r.team === window.loggedTeamUser && r.progId === p.id) || { participants: [] };
+                let selectors = '';
+                for(let i=0; i < p.limit; i++) {
+                    if(cat === 'GENERAL') {
+                        selectors += `<input type="text" class="form-control prog-input-${p.id}" value="${reg.participants[i] || ''}" placeholder="Enter Name Manually" style="margin-top:5px;">`;
+                    } else {
+                        selectors += `<select class="form-control prog-input-${p.id}" style="margin-top:5px;">
+                            <option value="">-- Choose Student --</option>
+                            ${allowedStudents.map(st => `<option value="${st.name}" ${reg.participants[i] === st.name ? 'selected':''}>${st.name}</option>`).join('')}
+                        </select>`;
+                    }
+                }
+                return `
+                    <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-bottom:10px;">
+                        <strong>${p.name} (${p.stage})</strong>
+                        <div>${selectors}</div>
+                        <button class="btn btn-success btn-sm btn-block" style="margin-top:8px;" onclick="saveRegistrationItem('${p.id}', '${cat}')">Submit Entry</button>
+                    </div>
+                `;
+            }).join('');
+        }
+        window.saveRegistrationItem = function(progId, cat) {
+            if(!window.appState.portalOpen) { alert("Registration Locked!"); return; }
+            const fields = document.querySelectorAll(`.prog-input-${progId}`);
+            const names = Array.from(fields).map(f => f.value.trim()).filter(n => n !== '');
+            if(cat !== 'GENERAL') {
+                for (let sName of names) {
+                    const matchCount = window.appState.registrations.filter(r => r.team === window.loggedTeamUser && r.cat !== 'GENERAL' && r.progId !== progId && r.participants.includes(sName)).length;
+                    if(matchCount >= window.appState.maxProgLimit) {
+                        alert(`Limit violation! Student "${sName}" already registered for ${matchCount} items.`);
+                        return;
+                    }
+                }
+            }
+            window.appState.registrations = window.appState.registrations.filter(r => !(r.team === window.loggedTeamUser && r.progId === progId));
+            if(names.length > 0) window.appState.registrations.push({ team: window.loggedTeamUser, cat, progId, participants: names });
+            saveKey('registrations', window.appState.registrations);
+            alert("Registration updated.");
+        }
+        /* POINTROOM EVALUATION LOGS & PRINTS */
+        window.populatePtProgs = function() {
+            const cat = document.getElementById('pt-cat-select').value;
+            const drop = document.getElementById('pt-prog-select');
+            const matched = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
+            drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            document.getElementById('pt-candidates-inputs').innerHTML = '';
+            document.getElementById('pt-stage-badge').innerText = '';
+        }
+        window.loadPtParticipants = function() {
+            const progId = document.getElementById('pt-prog-select').value;
+            const targetProg = window.appState.programs.find(p => p.id === progId);
+            const container = document.getElementById('pt-candidates-inputs');
+            if(!targetProg) { container.innerHTML = ''; return; }
+            document.getElementById('pt-stage-badge').innerText = `Stage: ${targetProg.stage}`;
+            const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
+            if(matchedRegs.length === 0) {
+                container.innerHTML = '<p style="color:#ef4444;">No registered candidates found.</p>'; return;
+            }
+            let html = '';
+            matchedRegs.forEach(r => {
+                r.participants.forEach(pName => {
+                    const savedPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === pName) || { score: 0 };
+                    html += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
+                            <span><strong>${pName}</strong> (${r.team})</span>
+                            <input type="number" min="0" class="form-control pt-score-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.score}" style="width:80px; padding:6px;">
+                        </div>
+                    `;
+                });
+            });
+            container.innerHTML = html;
+        }
+        window.savePointroomEntry = function(e) {
+            e.preventDefault();
+            const progId = document.getElementById('pt-prog-select').value;
+            const cat = document.getElementById('pt-cat-select').value;
+            if(!progId || !cat) return;
+            document.querySelectorAll('.pt-score-field').forEach(f => {
+                const score = parseFloat(f.value) || 0;
+                const team = f.getAttribute('data-team');
+                const student = f.getAttribute('data-student');
+                
+                let existingPt = window.appState.points.find(pt => pt.progId === progId && pt.team === team && pt.student === student);
+                if(existingPt) {
+                    existingPt.score = score;
+                } else {
+                    window.appState.points.push({ progId, cat, team, student, score });
+                }
+            });
+            saveKey('points', window.appState.points);
+            alert("Points recorded.");
+            loadPtParticipants(); 
+            renderPtList();
+        }
+        function renderPtList() {
+            const container = document.getElementById('box-pt-list');
+            const containerCopy = document.getElementById('box-pt-list-copy');
+            const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
+            if(distinctProgs.length === 0) {
+                if(container) container.innerHTML = '<p>No marks processed.</p>';
+                if(containerCopy) containerCopy.innerHTML = '<p>No marks processed.</p>';
+                return; 
+            }
+            const htmlContent = distinctProgs.map(pid => {
+                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
+                const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
+                return `
+                    <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:10px; border-radius:8px; margin-bottom:6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong>${prog.name} (${prog.cat})</strong>
+                            <div>
+                                <button class="btn btn-warning btn-sm no-print" onclick="printIndividualPointRecord('${pid}')"><i class="fa-solid fa-print"></i> Print</button>
+                                <button class="btn btn-danger btn-sm no-print" onclick="deletePtGroup('${pid}')">Delete</button>
+                            </div>
+                        </div>
+                        <div style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;">
+                            ${subPts.map(s => `${s.student} (${s.team}): <strong>${s.score}</strong>`).join(' | ')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            if(container) container.innerHTML = htmlContent;
+            if(containerCopy) containerCopy.innerHTML = htmlContent;
+        }
+        window.printIndividualPointRecord = function(progId) {
+            const prog = window.appState.programs.find(p => p.id === progId) || { name: 'Program', cat: 'N/A' };
+            const subPts = window.appState.points.filter(pt => pt.progId === progId).sort((a,b)=>b.score - a.score);
+            const target = document.getElementById('pt-print-area');
+            
+            target.innerHTML = `
+                <div class="bahja-sheet-header">
+                    <span>TIME:</span>
+                    <h2>BAHJA 2K26 - ${prog.name.toUpperCase()} (${prog.cat})</h2>
+                    <span>DATE:</span>
+                </div>
+                <table class="bahja-sheet-table">
+                    <thead><tr><th>#</th><th>Student Name</th><th>Team</th><th>Score</th><th>Rank</th></tr></thead>
+                    <tbody>
+                        ${subPts.map((s, idx) => `<tr><td>${idx+1}</td><td>${s.student}</td><td>${s.team}</td><td><strong>${s.score}</strong></td><td>Rank ${idx+1}</td></tr>`).join('')}
+                    </tbody>
+                </table>
+            `;
+            triggerCustomPrint('pt-print-area');
+        }
+        window.printAllPointRecords = function() {
+            const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
+            const target = document.getElementById('pt-print-area');
+            let html = `
+                <div class="bahja-sheet-header">
+                    <span>TIME:</span>
+                    <h2>BAHJA 2K26 - ALL POINT EVALUATION LOGS</h2>
+                    <span>DATE:</span>
+                </div>
+            `;
+            distinctProgs.forEach(pid => {
+                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
+                const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
+                html += `
+                    <h4 style="margin-top:10px; font-size:12px;">${prog.name} (${prog.cat})</h4>
+                    <table class="bahja-sheet-table" style="margin-bottom:8px;">
+                        <thead><tr><th>#</th><th>Student Name</th><th>Team</th><th>Score</th></tr></thead>
+                        <tbody>${subPts.map((s, idx) => `<tr><td>${idx+1}</td><td>${s.student}</td><td>${s.team}</td><td>${s.score}</td></tr>`).join('')}</tbody>
+                    </table>
+                `;
+            });
+            target.innerHTML = html;
+            triggerCustomPrint('pt-print-area');
+        }
+        window.deletePtGroup = function(progId) {
+            if(confirm("Delete records?")) {
+                window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
+                saveKey('points', window.appState.points);
+                renderPtList();
+            }
+        }
+        /* JUDGE LEADERBOARD */
+        window.renderJudgeLeaderboard = function() {
+            const tbody = document.getElementById('judge-leaderboard-body');
+            if(!tbody) return;
+            const filterStage = document.getElementById('jd-filter-stage').value;
+            const aggregate = {};
+            window.appState.points.forEach(pt => {
+                if(pt.cat === 'GENERAL') return;
+                const prog = window.appState.programs.find(p => p.id === pt.progId);
+                if(!prog) return;
+                if(filterStage !== 'all' && prog.stage !== filterStage) return;
+                const key = `${pt.team}_${pt.student}`;
+                if(!aggregate[key]) aggregate[key] = { name: pt.student, team: pt.team, cat: pt.cat, total: 0 };
+                aggregate[key].total += pt.score;
+            });
+            const sorted = Object.values(aggregate).sort((a,b) => b.total - a.total);
+            tbody.innerHTML = sorted.map(s => `
+                <tr onclick="viewCandidateBreakdown('${s.name}', '${s.team}')" style="cursor:pointer;">
+                    <td><strong>${s.name}</strong></td>
+                    <td>${s.team}</td>
+                    <td>${s.cat}</td>
+                    <td><strong style="color:#d4af37;">${s.total}</strong></td>
+                </tr>
+            `).join('') || '<tr><td colspan="4">No scores accumulated.</td></tr>';
+        }
+        window.renderStatesDashboard = function() {
+            const tbody = document.getElementById('states-table-body');
+            if(!tbody) return;
+            const teamTotals = {};
+            window.appState.teams.forEach(t => teamTotals[t.user] = 0);
+            window.appState.points.forEach(pt => {
+                if(teamTotals[pt.team] !== undefined) teamTotals[pt.team] += pt.score;
+            });
+            const sortedTeams = Object.entries(teamTotals).sort((a,b) => b[1] - a[1]);
+            tbody.innerHTML = sortedTeams.map(([tName, total]) => `
+                <tr onclick="viewTeamBreakdown('${tName}')" style="cursor:pointer;">
+                    <td><strong>${tName}</strong></td>
+                    <td><strong style="color:#d4af37;">${total}</strong></td>
+                </tr>
+            `).join('') || '<tr><td colspan="2">No data.</td></tr>';
+            const teamDrop = document.getElementById('rank-team-filter');
+            if(teamDrop && teamDrop.children.length === 1) {
+                teamDrop.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
+            }
+        }
+        window.renderRankWinnersList = function() {
+            const tbody = document.getElementById('rank-winners-body');
+            if(!tbody) return;
+            const teamFilter = document.getElementById('rank-team-filter');
+            const posFilter = document.getElementById('rank-pos-filter');
+            const fTeam = teamFilter ? teamFilter.value : '';
+            const fPos = posFilter ? posFilter.value : 'all';
+            const allRows = [];
+            const distinctProgs = [...new Set((window.appState.points || []).map(p => p.progId))];
+            distinctProgs.forEach(pid => {
+                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'N/A' };
+                const subPts = window.appState.points
+                    .filter(pt => pt.progId === pid)
+                    .sort((a,b) => {
+                        const scoreDiff = Number(b.score || 0) - Number(a.score || 0);
+                        if(scoreDiff !== 0) return scoreDiff;
+                        return String(a.student || '').localeCompare(String(b.student || ''));
+                    });
+                subPts.forEach((pt, idx) => {
+                    const rank = idx + 1;
+                    if(fTeam && pt.team !== fTeam) return;
+                    if(fPos !== 'all' && rank !== parseInt(fPos, 10)) return;
+                    allRows.push({
+                        rank,
+                        student: pt.student || '',
+                        team: pt.team || '',
+                        program: prog.name || 'N/A',
+                        score: Number(pt.score || 0)
+                    });
+                });
+            });
+            allRows.sort((a,b) => {
+                if(a.rank !== b.rank) return a.rank - b.rank;
+                const programCmp = a.program.localeCompare(b.program);
+                if(programCmp !== 0) return programCmp;
+                const teamCmp = a.team.localeCompare(b.team);
+                if(teamCmp !== 0) return teamCmp;
+                return a.student.localeCompare(b.student);
+            });
+            let count = 1;
+            tbody.innerHTML = allRows.map(row => `
+                <tr>
+                    <td>${count++}</td>
+                    <td><strong>${row.student}</strong></td>
+                    <td>${row.team}</td>
+                    <td>${row.program}</td>
+                    <td>${row.score}</td>
+                    <td><span style="font-weight:bold; color:#d4af37;">Rank ${row.rank}</span></td>
+                </tr>
+            `).join('') || '<tr><td colspan="6">No winners matching position criteria.</td></tr>';
+        }
+        window.toggleRegLock = function() { 
+            window.appState.portalOpen = !window.appState.portalOpen; 
+            saveKey('portalOpen', window.appState.portalOpen); 
+            syncControlPanelViews();
+        }
+        
+        window.addTeamMaster = function(e) {
+            e.preventDefault();
+            window.appState.teams.push({ user: document.getElementById('m-team-user').value.trim(), pass: document.getElementById('m-team-pass').value.trim() });
+            saveKey('teams', window.appState.teams);
+            syncControlPanelViews();
+            e.target.reset();
+        }
+        window.deleteTeamMaster = function(idx) { 
+            window.appState.teams.splice(idx, 1); 
+            saveKey('teams', window.appState.teams);
+            syncControlPanelViews();
+        }
+        
+        window.addProgramMaster = function(e) {
+            e.preventDefault();
+            window.appState.programs.push({
+                id: 'pr_'+Date.now(),
+                name: document.getElementById('m-prog-name').value.trim(),
+                cat: document.getElementById('m-prog-cat').value,
+                stage: document.getElementById('m-prog-stage').value,
+                limit: parseInt(document.getElementById('m-prog-limit').value),
+                topic: ''
+            });
+            saveKey('programs', window.appState.programs);
+            syncControlPanelViews();
+            e.target.reset();
+        }
+        window.deleteProgramMaster = function(id) { 
+            window.appState.programs = window.appState.programs.filter(p => p.id !== id); 
+            saveKey('programs', window.appState.programs);
+            syncControlPanelViews();
+        }
+        
+        window.uploadTeamStatusPoster = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-up-status');
+            const f = document.getElementById('status-file').files[0];
+            if(f) {
+                btn.innerText = "Processing...";
+                btn.disabled = true;
+                const compressed = await compressImage(f, 800, 0.6);
+                
+                if(!window.appState.teamStatusList) window.appState.teamStatusList = [];
+                const newStatusItem = { id: 'ts_'+Date.now(), url: compressed, published: false };
+                window.appState.teamStatusList.unshift(newStatusItem);
+                window.appState.teamStatusUrl = compressed;
+                
+                renderResultPhaseFeeds();
+                syncControlPanelViews();
+                saveKey('teamStatusList', window.appState.teamStatusList);
+                saveKey('teamStatusUrl', compressed);
+                
+                btn.innerText = "Upload Status Poster";
+                btn.disabled = false;
+                e.target.reset();
+            }
+        }
+        window.deleteStatusItem = function(id) {
+            if(!window.appState.teamStatusList) return;
+            window.appState.teamStatusList = window.appState.teamStatusList.filter(item => item.id !== id);
+            window.appState.teamStatusUrl = window.appState.teamStatusList.length > 0 ? window.appState.teamStatusList[0].url : '';
+            saveKey('teamStatusList', window.appState.teamStatusList);
+            saveKey('teamStatusUrl', window.appState.teamStatusUrl);
+            syncControlPanelViews();
+            renderResultPhaseFeeds();
+        }
+        
+        window.populateResProgDropdown = function() {
+            const cat = document.getElementById('res-upload-cat').value;
+            const drop = document.getElementById('res-upload-prog');
+            const matched = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
+            drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        }
+        window.uploadProgramResult = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-up-res');
+            const progId = document.getElementById('res-upload-prog').value;
+            const customNum = document.getElementById('res-custom-number').value.trim();
+            const yt = document.getElementById('res-yt-url').value.trim();
+            const fileEl = document.getElementById('res-file').files[0];
+            if(fileEl && progId) {
+                btn.innerText = "Uploading...";
+                btn.disabled = true;
+                const compressed = await compressImage(fileEl, 800, 0.6);
+                
+                window.appState.results = window.appState.results.filter(r => r.progId !== progId);
+                window.appState.results.push({ progId, number: customNum, poster: compressed, youtube: yt, published: false });
+                
+                filterResultPrograms();
+                syncControlPanelViews();
+                saveKey('results', window.appState.results);
+                
+                btn.innerText = "Upload Result (Save Only)";
+                btn.disabled = false;
+            }
+        }
+        window.setResultPublished = function(progId, shouldPublish) {
+            const item = (window.appState.results || []).find(r => r.progId === progId);
+            if(!item) return;
+            item.published = !!shouldPublish;
+            saveKey('results', window.appState.results);
+            renderPublishPanel();
+            filterResultPrograms();
+            syncControlPanelViews();
+        }
+        window.setStatusPublished = function(id, shouldPublish) {
+            const item = (window.appState.teamStatusList || []).find(r => r.id === id);
+            if(!item) return;
+            item.published = !!shouldPublish;
+            saveKey('teamStatusList', window.appState.teamStatusList);
+            renderPublishPanel();
+            renderResultPhaseFeeds();
+            syncControlPanelViews();
+        }
+        window.renderPublishPanel = function() {
+            const resBox = document.getElementById('publish-results-list');
+            if(resBox) {
+                const results = [...(window.appState.results || [])].sort((a,b) => Number(a.number || 999999) - Number(b.number || 999999));
+                resBox.innerHTML = results.length ? results.map(r => {
+                    const p = window.appState.programs.find(pr => pr.id === r.progId) || { name:'Unknown Program', cat:'' };
+                    const pub = r.published === true;
+                    return `
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:10px; background:rgba(255,255,255,0.03);">
+                            <div style="min-width:0;">
+                                <div style="font-weight:800;">Result ${r.number || ''} — ${p.name}</div>
+                                <div style="font-size:0.75rem; color:var(--text-sub);">${p.cat || ''} · ${pub ? 'Published to public site' : 'Stored only — not visible publicly'}</div>
+                            </div>
+                            <label style="display:flex; align-items:center; gap:7px; white-space:nowrap; font-size:0.78rem; font-weight:800;">
+                                <input type="checkbox" ${pub ? 'checked' : ''} onchange="setResultPublished('${r.progId}', this.checked)" style="width:20px;height:20px;">
+                                <span style="color:${pub ? '#10b981' : '#f59e0b'}">${pub ? '✅ Published' : '❌ Not Published'}</span>
+                            </label>
+                        </div>`;
+                }).join('') : '<div style="color:var(--text-sub); text-align:center; padding:12px;">No uploaded results yet.</div>';
+            }
+            const stBox = document.getElementById('publish-status-list');
+            if(stBox) {
+                const items = window.appState.teamStatusList || [];
+                stBox.innerHTML = items.length ? items.map((item,idx) => {
+                    const pub = item.published === true;
+                    return `
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:10px; background:rgba(255,255,255,0.03);">
+                            <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+                                <img src="${item.url}" style="width:56px;height:40px;border-radius:6px;object-fit:cover;">
+                                <div><div style="font-weight:800;">Result Poster #${idx+1}</div><div style="font-size:0.75rem;color:var(--text-sub);">${pub ? 'Visible publicly' : 'Stored only — hidden from public site'}</div></div>
+                            </div>
+                            <label style="display:flex; align-items:center; gap:7px; white-space:nowrap; font-size:0.78rem; font-weight:800;">
+                                <input type="checkbox" ${pub ? 'checked' : ''} onchange="setStatusPublished('${item.id}', this.checked)" style="width:20px;height:20px;">
+                                <span style="color:${pub ? '#10b981' : '#f59e0b'}">${pub ? '✅ Published' : '❌ Not Published'}</span>
+                            </label>
+                        </div>`;
+                }).join('') : '<div style="color:var(--text-sub); text-align:center; padding:12px;">No uploaded posters yet.</div>';
+            }
+        }
+        window.deleteResultMaster = function(progId) { 
+            window.appState.results = window.appState.results.filter(r => r.progId !== progId); 
+            saveKey('results', window.appState.results);
+            syncControlPanelViews();
+            filterResultPrograms();
+        }
+        
+        window.toggleUpdateVideoUrl = function() {
+            const type = document.getElementById('up-type').value;
+            const linkInput = document.getElementById('up-video-link');
+            const lblFile = document.getElementById('lbl-up-file');
+            if(type === 'video') {
+                linkInput.style.display = 'block';
+                linkInput.required = true;
+                lblFile.innerText = "Choose Video Thumbnail Image";
+            } else {
+                linkInput.style.display = 'none';
+                linkInput.required = false;
+                lblFile.innerText = "Choose Photo";
+            }
+        }
+        window.uploadUpdateFeed = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-up-feed');
+            const type = document.getElementById('up-type').value;
+            const f = document.getElementById('up-file').files[0];
+            const vLink = document.getElementById('up-video-link').value.trim();
+            if(!f) return;
+            btn.innerText = "Uploading...";
+            btn.disabled = true;
+            try {
+                const compressedImage = await compressImage(f, 800, 0.6);
+                if(!window.appState.updates) window.appState.updates = [];
+                
+                if (type === 'photo') {
+                    window.appState.updates.unshift({ id:'up_'+Date.now(), type: 'photo', url: compressedImage });
+                } else {
+                    window.appState.updates.unshift({ id:'up_'+Date.now(), type: 'video', url: vLink, thumb: compressedImage });
+                }
+                renderPinterestUpdates('all');
+                syncControlPanelViews();
+                
+                saveKey('updates', window.appState.updates);
+                
+                btn.innerText = "Upload & Publish";
+                btn.disabled = false;
+                e.target.reset();
+                window.toggleUpdateVideoUrl();
+            } catch(err) {
+                console.error("Upload error: ", err);
+                btn.innerText = "Upload & Publish";
+                btn.disabled = false;
+                alert("Failed to upload media. Please try again.");
+            }
+        }
+        window.deleteUpdateMaster = function(id) { 
+            window.appState.updates = window.appState.updates.filter(u => u.id !== id); 
+            saveKey('updates', window.appState.updates);
+            syncControlPanelViews();
+            renderPinterestUpdates('all');
+        }
+        
+        window.uploadStreamLinks = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-up-stream');
+            const title = document.getElementById('st-title').value.trim();
+            const url = document.getElementById('st-url').value.trim();
+            const mode = document.getElementById('st-mode').value;
+            const thumbFile = document.getElementById('st-thumb').files[0];
+            if(thumbFile) {
+                btn.innerText = "Adding...";
+                btn.disabled = true;
+                const thumbData = await compressImage(thumbFile, 600, 0.6);
+                const obj = { id: 'st_'+Date.now(), title, url, thumb: thumbData, mode };
+                
+                if(mode === 'live') {
+                    window.appState.livelinks.push(obj);
+                    renderResultPhaseFeeds();
+                    saveKey('livelinks', window.appState.livelinks);
+                } else {
+                    window.appState.highlights.push(obj);
+                    renderResultPhaseFeeds();
+                    saveKey('highlights', window.appState.highlights);
+                }
+                syncControlPanelViews();
+                btn.innerText = "Add Stream";
+                btn.disabled = false;
+                e.target.reset();
+                alert("Stream Added Instantly.");
+            }
+        }
+        window.deleteStreamMaster = function(id, mode) {
+            if(mode === 'live') {
+                window.appState.livelinks = window.appState.livelinks.filter(l => l.id !== id);
+                saveKey('livelinks', window.appState.livelinks);
+            } else {
+                window.appState.highlights = window.appState.highlights.filter(h => h.id !== id);
+                saveKey('highlights', window.appState.highlights);
+            }
+            syncControlPanelViews();
+            renderResultPhaseFeeds();
+        }
+        function populateReportProgDropdown() {
+            const cat = document.getElementById('rep-cat').value;
+            const drop = document.getElementById('rep-prog');
+            if(!drop) return;
+            const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
+            drop.innerHTML = '<option value="">All Programs (A-Z)</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        }
+        function syncControlPanelViews() {
+            const btn = document.getElementById('lock-reg-btn');
+            if(btn) {
+                btn.innerText = window.appState.portalOpen ? "Lock Reg" : "Unlock Reg";
+                btn.className = window.appState.portalOpen ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
+            }
+            if(document.getElementById('m-max-limit-input')) {
+                document.getElementById('m-max-limit-input').value = window.appState.maxProgLimit;
+            }
+            const v = window.appState.visibilities || {};
+            for(let key in v) {
+                const el = document.getElementById(`toggle-vis-${key}`);
+                if(el) el.checked = !!v[key];
+            }
+            const mTeams = document.getElementById('master-teams-list');
+            if(mTeams) {
+                mTeams.innerHTML = window.appState.teams.map((t, idx) => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+                        <span>${t.user}</span> <button class="btn btn-danger btn-sm" onclick="deleteTeamMaster(${idx})">x</button>
+                    </div>
+                `).join('');
+            }
+            const mProgs = document.getElementById('master-progs-list');
+            if(mProgs) {
+                mProgs.innerHTML = window.appState.programs.sort((a,b)=>a.name.localeCompare(b.name)).map(p => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+                        <span><strong>${p.name}</strong> (${p.cat})</span> <button class="btn btn-danger btn-sm" onclick="deleteProgramMaster('${p.id}')">x</button>
+                    </div>
+                `).join('');
+            }
+            const mStatus = document.getElementById('master-status-preview');
+            if(mStatus) {
+                const list = window.appState.teamStatusList || [];
+                mStatus.innerHTML = list.map((item, idx) => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; border-radius:6px; font-size:0.85rem;">
+                        <img src="${item.url}" style="height:40px; border-radius:4px; object-fit:contain;">
+                        <span>Poster #${idx+1} — ${item.published === true ? '✅ Published' : '❌ Not Published'}</span>
+                        <button class="btn btn-danger btn-sm" onclick="deleteStatusItem('${item.id}')">Delete</button>
+                    </div>
+                `).join('');
+            }
+            const mRes = document.getElementById('master-results-list');
+            if(mRes) {
+                mRes.innerHTML = window.appState.results.map(r => {
+                    const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Unknown' };
+                    return `
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+                            <span>Result ${r.number || ''}: ${p.name} — ${r.published === true ? '✅ Published' : '❌ Not Published'}</span> <button class="btn btn-danger btn-sm" onclick="deleteResultMaster('${r.progId}')">x</button>
+                        </div>
+                    `;
+                }).join('');
+            }
+            const mUpdates = document.getElementById('master-updates-list');
+            if(mUpdates) {
+                mUpdates.innerHTML = (window.appState.updates || []).map(u => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+                        <span>Update (${u.type})</span> <button class="btn btn-danger btn-sm" onclick="deleteUpdateMaster('${u.id}')">x</button>
+                    </div>
+                `).join('');
+            }
+            const mStreams = document.getElementById('master-streams-list');
+            if(mStreams) {
+                mStreams.innerHTML = [
+                    ...window.appState.livelinks.map(l => ({ ...l, mode:'live' })),
+                    ...window.appState.highlights.map(h => ({ ...h, mode:'highlight' }))
+                ].map(s => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+                        <span>${s.mode.toUpperCase()}: ${s.title}</span> <button class="btn btn-danger btn-sm" onclick="deleteStreamMaster('${s.id}', '${s.mode}')">x</button>
+                    </div>
+                `).join('');
+            }
+            const rTeam = document.getElementById('rep-team');
+            if(rTeam && rTeam.children.length === 1) {
+                rTeam.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
+            }
+            renderReportTable();
+        }
+        window.renderReportTable = function() {
+            const fTeam = document.getElementById('rep-team') ? document.getElementById('rep-team').value : '';
+            const fCat = document.getElementById('rep-cat') ? document.getElementById('rep-cat').value : '';
+            const fProg = document.getElementById('rep-prog') ? document.getElementById('rep-prog').value : '';
+            const searchQ = document.getElementById('rep-prog-search') ? document.getElementById('rep-prog-search').value.toLowerCase().trim() : '';
+            const tbody = document.getElementById('report-table-body');
+            if(!tbody) return;
+            let rows = '';
+            let count = 1;
+            window.appState.registrations.forEach(r => {
+                const p = window.appState.programs.find(pr => pr.id === r.progId);
+                if(!p) return;
+                if(fTeam && r.team !== fTeam) return;
+                if(fCat && r.cat !== fCat) return;
+                if(fProg && r.progId !== fProg) return;
+                if(searchQ && !p.name.toLowerCase().includes(searchQ)) return;
+                r.participants.forEach(name => {
+                    rows += `<tr>
+                        <td style="text-align:center;">${count++}</td>
+                        <td><strong>${name}</strong></td>
+                        <td>${r.team}</td>
+                        <td>${r.cat}</td>
+                        <td>${p.name}</td>
+                    </tr>`;
+                });
+            });
+            tbody.innerHTML = rows || '<tr><td colspan="5" style="text-align:center;">No entries found.</td></tr>';
+        }
+        
+        window.populateEsProgs = function() {
+            const cat = document.getElementById('es-cat-select').value;
+            const drop = document.getElementById('es-prog-select');
+            if(!drop) return;
+            const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
+            drop.innerHTML = '<option value="">All Programs</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        };
+        window.renderEntrySignTable = function() {
+            const fCat = document.getElementById('es-cat-select') ? document.getElementById('es-cat-select').value : '';
+            const fProg = document.getElementById('es-prog-select') ? document.getElementById('es-prog-select').value : '';
+            const tbody = document.getElementById('entry-sign-table-body');
+            const title = document.getElementById('es-print-title');
+            
+            if(!tbody) return;
+            
+            let printTitle = 'ENTRY SIGN';
+            if(fProg) {
+                const p = window.appState.programs.find(pr => pr.id === fProg);
+                if(p) printTitle += ' - ' + p.name;
+            } else if (fCat) {
+                printTitle += ' - ' + fCat;
+            }
+            if(title) title.innerText = printTitle;
+            let rows = '';
+            window.appState.registrations.forEach(r => {
+                const p = window.appState.programs.find(pr => pr.id === r.progId);
+                if(!p) return;
+                if(fCat && r.cat !== fCat) return;
+                if(fProg && r.progId !== fProg) return;
+                
+                r.participants.forEach(name => {
+                    const savedPt = window.appState.points.find(pt => pt.progId === r.progId && pt.team === r.team && pt.student === name);
+                    const codeLet = savedPt ? (savedPt.codeLetter || '') : '';
+                    rows += '<tr>' +
+                        '<td style="text-align:center; font-weight:bold;">' + codeLet + '</td>' +
+                        '<td><strong>' + name + '</strong>' + (!fProg ? '<br><small style="color:gray;">' + p.name + '</small>' : '') + '</td>' +
+                        '<td>' + r.team + '</td>' +
+                        '<td></td>' +
+                    '</tr>';
+                });
+            });
+            tbody.innerHTML = rows || '<tr><td colspan="4" style="text-align:center;">No entries found.</td></tr>';
+        };
+        
+        function renderResultPhaseFeeds() {
+            const statusBox = document.getElementById('team-status-poster-box');
+            if(statusBox) {
+                const list = (window.appState.teamStatusList || []).filter(item => item.published === true);
+                if(list.length > 0) {
+                    statusBox.innerHTML = list.map((item, index) => `
+                        <div class="masonry-item ${index === 0 ? 'team-status-featured' : 'team-status-regular'}" onclick="openMediaViewer('${item.url}', 'photo')">
+                            <img src="${item.url}" loading="${index === 0 ? 'eager' : 'lazy'}" decoding="async" class="feed-media-img">
+                            <div class="media-click-overlay">
+                                <span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:6px; color:#cbd5e1;">
+                                    <i class="fa-solid fa-image"></i> Click to Open
+                                </span>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    statusBox.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">No Team Status published.</p>';
+                }
+            }
+            filterResultPrograms();
+            renderPinterestUpdates('all');
+            const liveFeed = document.getElementById('livelink-feed');
+            if(liveFeed) {
+                liveFeed.innerHTML = window.appState.livelinks.map(l => `
+                    <div class="masonry-item">
+                        <img src="${l.thumb}" loading="lazy" decoding="async" class="feed-media-img">
+                        <h5 style="margin-top:6px; font-size:0.9rem;">${l.title}</h5>
+                        <a href="${l.url}" target="_blank" class="btn btn-sm btn-danger btn-block" style="margin-top:6px;"><i class="fa-solid fa-play"></i> Watch Stream</a>
+                    </div>
+                `).join('') || '<p style="grid-column: 1/-1;">No Active Live Streams.</p>';
+            }
+            const hlFeed = document.getElementById('highlights-feed');
+            if(hlFeed) {
+                hlFeed.innerHTML = window.appState.highlights.map(h => `
+                    <div class="masonry-item">
+                        <img src="${h.thumb}" loading="lazy" decoding="async" class="feed-media-img">
+                        <h5 style="margin-top:6px; font-size:0.9rem;">${h.title}</h5>
+                        <a href="${h.url}" target="_blank" class="btn btn-sm btn-block" style="margin-top:6px;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open</a>
+                    </div>
+                `).join('') || '<p style="grid-column: 1/-1;">No Highlights Cataloged.</p>';
+            }
+        }
+        window.filterResultPrograms = function() {
+            const catEl = document.getElementById('res-search-cat');
+            const searchEl = document.getElementById('res-prog-search');
+            const container = document.getElementById('results-display-list');
+            if(!container) return;
+            const cat = catEl ? catEl.value : '';
+            const searchQ = searchEl ? searchEl.value.toLowerCase().trim() : '';
+            const matchedResults = window.appState.results.filter(r => r.published === true).filter(r => {
+                const p = window.appState.programs.find(pr => pr.id === r.progId);
+                if(!p) return false;
+                if(cat && p.cat !== cat) return false;
+                if(searchQ && !p.name.toLowerCase().includes(searchQ)) return false;
+                return true;
+            });
+            container.innerHTML = matchedResults.map(r => {
+                const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Program', cat: 'N/A' };
+                return `
+                    <div style="background:rgba(0,0,0,0.2); padding:14px; border:1px solid var(--border-color); margin-bottom:10px; border-radius:16px;">
+                        <h4>${p.name} <span style="font-size:0.75rem; color:var(--text-sub);">(${p.cat})</span> - <span style="color:#d4af37;">Result ${r.number || ''}</span></h4>
+                        <div style="margin-top:8px;">
+                            <button class="btn btn-sm btn-success" id="btn-toggle-res-${r.progId}" onclick="toggleInlineResultView('${r.progId}', '${r.poster}')">Result View</button>
+                            <div id="inline-res-box-${r.progId}" style="display:none; margin-top:10px; text-align:center;"></div>
+                            ${r.youtube ? `<div style="margin-top:6px;"><a href="${r.youtube}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-brands fa-youtube"></i> Watch Video</a></div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('') || '<p style="text-align:center; color:var(--text-sub); margin-top:15px;">No published results matching filter.</p>';
+        }
+        window.toggleInlineResultView = function(progId, posterData) {
+            const box = document.getElementById(`inline-res-box-${progId}`);
+            const btn = document.getElementById(`btn-toggle-res-${progId}`);
+            if(!box || !btn) return;
+            if(box.style.display === 'none') {
+                confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
+                box.innerHTML = `
+                    <img src="${posterData}" style="width:100%; border-radius:10px; cursor:pointer;" onclick="openMediaViewer('${posterData}', 'photo')">
+                    <div style="margin-top:8px; display:flex; justify-content:center; gap:8px;">
+                        <a href="${posterData}" download="Result_${progId}.png" class="btn btn-sm"><i class="fa-solid fa-download"></i> Download</a>
+                        <button class="btn btn-sm btn-warning" onclick="shareMediaDirectly('${posterData}', 'photo')"><i class="fa-solid fa-share-nodes"></i> Share</button>
+                    </div>
+                `;
+                box.style.display = 'block';
+                btn.innerText = "Hide Result";
+                btn.className = "btn btn-sm btn-danger";
+            } else {
+                box.style.display = 'none';
+                box.innerHTML = '';
+                btn.innerText = "Result View";
+                btn.className = "btn btn-sm btn-success";
+            }
+        }
+        window.renderPinterestUpdates = function(filterMode) {
+            const feed = document.getElementById('live-updates-feed');
+            if(!feed) return;
+            const targetUpdates = (window.appState.updates || []).filter(u => filterMode === 'all' || u.type === filterMode);
+            feed.innerHTML = targetUpdates.map(u => `
+                <div class="masonry-item" ${u.type === 'photo' ? `onclick="openMediaViewer('${u.url}', 'photo')"` : ''}>
+                    ${u.type === 'photo' 
+                        ? `<img src="${u.url}" loading="lazy">
+                           <div class="media-click-overlay"><span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:6px; color:#cbd5e1;"><i class="fa-solid fa-image"></i> Click to Open</span></div>` 
+                        : `<img src="${u.thumb}" loading="lazy">
+                           <a href="${u.url}" target="_blank" class="btn btn-sm btn-danger btn-block" style="margin-top:8px;"><i class="fa-solid fa-play"></i> Watch Video</a>`}
+                </div>
+            `).join('') || '<p style="grid-column: 1/-1;">No updates cataloged.</p>';
+        }
+        window.openMediaViewer = function(mediaUrl, type) {
+            const container = document.getElementById('media-viewer-container');
+            const dBtn = document.getElementById('btn-media-download');
+            const sBtn = document.getElementById('btn-media-share');
+            
+            if(type === 'photo') {
+                container.innerHTML = `<img src="${mediaUrl}" style="max-width:100%; max-height:60vh; border-radius:8px; object-fit:contain;">`;
+            } else {
+                container.innerHTML = `<video src="${mediaUrl}" controls autoplay playsinline style="max-width:100%; max-height:60vh; border-radius:8px;"></video>`;
+            }
+            dBtn.onclick = () => {
+                const a = document.createElement('a');
+                a.href = mediaUrl;
+                a.download = type === 'photo' ? `Bahja_Photo_${Date.now()}.jpg` : `Bahja_Video_${Date.now()}.mp4`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+            sBtn.onclick = () => {
+                shareMediaDirectly(mediaUrl, type);
+            };
+            document.getElementById('media-viewer-modal').style.display = 'flex';
+        }
+        window.closeMediaViewer = function() {
+            const container = document.getElementById('media-viewer-container');
+            container.innerHTML = '';
+            document.getElementById('media-viewer-modal').style.display = 'none';
+        }
+        window.shareMediaDirectly = async function(mediaUrl, type) {
+            try {
+                if (navigator.share) {
+                    const response = await fetch(mediaUrl);
+                    const blob = await response.blob();
+                    const ext = type === 'photo' ? 'jpg' : 'mp4';
+                    const file = new File([blob], `bahja_${Date.now()}.${ext}`, { type: blob.type });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            files: [file],
+                            title: 'BAHJA FEST 2026',
+                            text: `Check this out from BAHJA Fest! ${window.location.href}`
+                        });
+                        return;
+                    }
+                }
+                
+                if (navigator.share) {
+                    await navigator.share({
+                        title: 'BAHJA FEST 2026',
+                        text: `Check this out from BAHJA Fest! ${window.location.href}`,
+                        url: window.location.href
+                    });
+                } else {
+                    navigator.clipboard.writeText(`Check this out from BAHJA Fest! ${window.location.href}`);
+                    alert("Link copied to clipboard!");
+                }
+            } catch (err) {
+                console.log("Sharing cancelled or unsupported:", err);
+            }
+        }
+        applyGlobalWebsiteTheme(window.appState.theme || 'dark');
+        applyLogoView();
+        applyVisualCustomizations();
+        render3DotMenu();
     </script>
 </body>
 </html>
