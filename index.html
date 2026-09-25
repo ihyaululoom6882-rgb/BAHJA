@@ -532,10 +532,10 @@
                 <div id="team-students-list" style="margin-top:15px;"></div>
             </div>
         </div>
-        <!-- ENTRY JUDGE PANEL -->
+        <!-- ENTRY JUDGE PANEL (Judge Portal) -->
         <div id="panel-entry-judge" class="view-panel card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3 style="color:#d4af37;">Judge Entry Portal</h3>
+                <h3 style="color:#d4af37;">Judge Portal</h3>
                 <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
             </div>
             
@@ -551,10 +551,13 @@
                 <div id="ej-topic-display-box" style="background:var(--input-bg); border:1px solid var(--border-color); border-radius:12px; padding:12px; min-height:80px; color:#f8fafc; font-size:1rem; white-space:pre-wrap; line-height:1.5;">Topic will appear here...</div>
             </div>
 
-            <!-- Seconds Timer -->
+            <!-- Seconds & Minutes Timer Control -->
             <div class="form-group">
-                <label>Timer Control (Seconds)</label>
+                <label style="color:#d4af37; font-weight:bold;">Timer Control (Minutes & Seconds)</label>
                 <div class="timer-display" id="ej-timer-display">00:00</div>
+                <div style="text-align:center; font-size:0.85rem; color:var(--text-sub); margin-bottom:8px;">
+                    Total Elapsed Time: <span id="ej-timer-total-sec" style="color:#d4af37; font-weight:bold;">0</span> Seconds
+                </div>
                 <div class="timer-controls">
                     <button class="btn btn-success btn-sm" onclick="startEjTimer()"><i class="fa-solid fa-play"></i> Start</button>
                     <button class="btn btn-warning btn-sm" onclick="pauseEjTimer()"><i class="fa-solid fa-pause"></i> Pause</button>
@@ -573,7 +576,7 @@
                         </tr>
                     </thead>
                     <tbody id="ej-candidates-inputs">
-                        <tr><td colspan="2" style="text-align:center;">Select or configure a program in Pointroom Copy to view.</td></tr>
+                        <tr><td colspan="2" style="text-align:center;">Select or configure a program in Code Portal to view.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -581,7 +584,7 @@
         </div>
         <!-- SYSTEM SETTINGS -->
         <div id="panel-settings" class="view-panel card">
-            <h3 style="color: #d4af37; margin-bottom: 15px;">System Settings</h3>
+            <h3 style="color: #d4af37; margin-bottom: 15px;">Settings</h3>
             <form onsubmit="applyPhaseSettings(event)">
                 <div class="form-group">
                     <label>Active Festival Phase</label>
@@ -623,10 +626,10 @@
             <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
             <button class="btn btn-danger btn-block" onclick="clearAllDataSystem()">Clear All System Data</button>
         </div>
-        <!-- POINTROOM PORTAL -->
+        <!-- POINTROOM PORTAL (Record Terminal) -->
         <div id="panel-pointroom" class="view-panel card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>Pointroom Management</h3>
+                <h3>Record Terminal</h3>
                 <button class="btn btn-warning btn-sm no-print" onclick="printAllPointRecords()"><i class="fa-solid fa-print"></i> Print All Logs</button>
             </div>
             
@@ -659,10 +662,10 @@
             <div id="box-pt-list" class="collapsible-box show"></div>
             <div id="pt-print-area" class="print-target" style="display:none;"></div>
         </div>
-        <!-- POINTROOM PORTAL DUPLICATE (POINTROOM COPY - NO SCORE OPTION) -->
+        <!-- POINTROOM COPY (Code Portal) -->
         <div id="panel-pointroom-copy" class="view-panel card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>Pointroom Management (Copy)</h3>
+                <h3>Code Portal</h3>
                 <button class="btn btn-warning btn-sm no-print" onclick="printAllPointRecords()"><i class="fa-solid fa-print"></i> Print All Logs</button>
             </div>
             
@@ -694,15 +697,15 @@
                 
                 <h4 style="margin-top:15px; margin-bottom:10px; color:#d4af37;">Code Letter Assigning</h4>
                 <div id="pt-candidates-inputs-copy" style="margin-bottom:12px;"></div>
-                <button type="submit" class="btn btn-success btn-block btn-xl">Save Code Letters & Send to Judge Entry</button>
+                <button type="submit" class="btn btn-success btn-block btn-xl">Save Code Letters & Send to Judge Portal</button>
             </form>
             <div class="collapsible-header no-print" onclick="toggleAccordion('box-pt-list-copy')"><span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i></div>
             <div id="box-pt-list-copy" class="collapsible-box show"></div>
         </div>
-        <!-- JUDGE PORTAL -->
+        <!-- JUDGE PORTAL (Candidate's Standing) -->
         <div id="panel-judge" class="view-panel card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>Judge Leaderboard</h3>
+                <h3>Candidate's Standing</h3>
                 <button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('judge-print-container')"><i class="fa-solid fa-print"></i> Print Leaderboard</button>
             </div>
             <div id="judge-print-container" class="print-target">
@@ -724,10 +727,10 @@
                 </div>
             </div>
         </div>
-        <!-- STATES CONTROL -->
+        <!-- STATES CONTROL (Lead Zone) -->
         <div id="panel-states-control" class="view-panel card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>States Control Dashboard</h3>
+                <h3>Lead Zone</h3>
                 <button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('states-print-container')"><i class="fa-solid fa-print"></i> Print Large Standings</button>
             </div>
             <div id="states-print-container" class="print-target">
@@ -765,10 +768,10 @@
             </div>
         </div>
         
-        <!-- ENTRY SIGN PANEL -->
+        <!-- ENTRY SIGN (Sign Portal) -->
         <div id="panel-entry-sign" class="view-panel card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3>Entry Sign</h3>
+                <h3>Sign Portal</h3>
                 <button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('entry-sign-print-container')"><i class="fa-solid fa-print"></i> Print</button>
             </div>
             <div class="form-group no-print" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
@@ -805,11 +808,11 @@
                 </div>
             </div>
         </div>
-        <!-- PUBLISH CONTROL PANEL -->
+        <!-- PUBLISH PANEL (Launch Pad) -->
         <div id="panel-publish" class="view-panel card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                 <div>
-                    <h3 style="color:#d4af37; margin-bottom:4px;">Publish</h3>
+                    <h3 style="color:#d4af37; margin-bottom:4px;">Launch Pad</h3>
                     <p style="color:var(--text-sub); font-size:0.82rem;">Upload first. Publish only after the result is announced on stage.</p>
                 </div>
                 <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
@@ -826,9 +829,9 @@
                 <div id="publish-status-list" style="display:flex; flex-direction:column; gap:8px;"></div>
             </div>
         </div>
-        <!-- PROTECTION SYSTEM PANEL -->
+        <!-- PROTECTION SYSTEM PANEL (Security Vault) -->
         <div id="panel-protection" class="view-panel card">
-            <h3>Protection Settings Dashboard</h3>
+            <h3>Security Vault</h3>
             <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:12px;">
                 <h4 style="font-size:0.95rem; color:#d4af37;">Change Main Login Credentials</h4>
                 <div class="form-group" style="margin-top:8px;">
@@ -849,9 +852,9 @@
                 <div id="sub-panel-pass-managers-container" style="margin-top:8px; display:flex; flex-direction:column; gap:10px;"></div>
             </div>
         </div>
-        <!-- MODIFY APPEARANCE -->
+        <!-- MODIFY APPEARANCE (Layout Studio) -->
         <div id="panel-modify" class="view-panel card">
-            <h3>Modify Visuals & Alignment</h3>
+            <h3>Layout Studio</h3>
             <div style="margin-top:12px; display:flex; flex-direction:column; gap:12px;">
                 <div class="form-group">
                     <label>Welcome Banner Text</label>
@@ -895,10 +898,10 @@
                 <button class="btn btn-success" onclick="saveVisualLayoutState()">Save Appearance Layout</button>
             </div>
         </div>
-        <!-- CONTROL PANEL -->
+        <!-- CONTROL PANEL (Control Deck) -->
         <div id="panel-control-panel" class="view-panel card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3>Committee Control Panel</h3>
+                <h3>Control Deck</h3>
                 <button class="btn btn-danger btn-sm" onclick="navHome()">Exit</button>
             </div>
             <div class="collapsible-header" onclick="toggleAccordion('box-reg-control')">
@@ -1394,32 +1397,33 @@
                 mTitle.style.fontSize = (vis.titleSize || '2.8') + 'rem';
             }
         }
+        /* UPDATED MENU LOGIC (NEW ORDER & NEW NAMES) */
         window.render3DotMenu = function() {
             const menuContainer = document.getElementById('mainDropdown');
             if(!menuContainer) return;
             let html = `<button onclick="navHome()"><i class="fa-solid fa-house"></i> Home</button>`;
             if(!window.isMainLoggedIn) {
                 html += `<button onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> Main Login</button>`;
-                html += `<button onclick="interceptRoute('panel-entry-judge', 'entry_judge')"><i class="fa-solid fa-gavel"></i> Entry Judge</button>`;
-                html += `<button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Point Room</button>`;
-                html += `<button onclick="interceptRoute('panel-pointroom-copy', 'pointroom')"><i class="fa-solid fa-copy"></i> Point Room (Copy)</button>`;
+                html += `<button onclick="interceptRoute('panel-entry-judge', 'entry_judge')"><i class="fa-solid fa-gavel"></i> Judge Portal</button>`;
+                html += `<button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Record Terminal</button>`;
+                html += `<button onclick="interceptRoute('panel-pointroom-copy', 'pointroom')"><i class="fa-solid fa-copy"></i> Code Portal</button>`;
                 if(window.appState.phase === 'register') {
                     html += `<button onclick="showPanel('panel-participants-entry')"><i class="fa-solid fa-user-plus"></i> Participants Entry</button>`;
                 }
             } else {
-                html += `<button onclick="interceptRoute('panel-entry-judge', 'entry_judge')"><i class="fa-solid fa-gavel"></i> Entry Judge</button>`;
-                html += `<button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Point Room</button>`;
-                html += `<button onclick="interceptRoute('panel-pointroom-copy', 'pointroom')"><i class="fa-solid fa-copy"></i> Point Room (Copy)</button>`;
                 html += `
                     <button onclick="interceptRoute('panel-settings', 'settings')"><i class="fa-solid fa-gear"></i> Settings</button>
-                    <button onclick="interceptRoute('panel-control-panel', 'control_panel')"><i class="fa-solid fa-sliders"></i> Control Panel</button>
-                    <button onclick="showPanel('panel-publish'); document.getElementById('mainDropdown').classList.remove('show'); renderPublishPanel();"><i class="fa-solid fa-cloud-arrow-up"></i> Publish</button>
-                    <button onclick="interceptRoute('panel-entry-sign', 'entry_sign')"><i class="fa-solid fa-signature"></i> Entry Sign</button>
-                    <button onclick="interceptRoute('panel-judge', 'judge')"><i class="fa-solid fa-gavel"></i> Judge Leaderboard</button>
-                    <button onclick="interceptRoute('panel-states-control', 'states')"><i class="fa-solid fa-flag"></i> States Control</button>
-                    <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Protection Settings</button>
-                    <button onclick="interceptRoute('panel-modify', 'modify')"><i class="fa-solid fa-pen-to-square"></i> Modify Appearance</button>
-                    <button onclick="logoutMain()" style="color:#ef4444;"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                    <button onclick="interceptRoute('panel-control-panel', 'control_panel')"><i class="fa-solid fa-sliders"></i> Control Deck</button>
+                    <button onclick="showPanel('panel-publish'); document.getElementById('mainDropdown').classList.remove('show'); renderPublishPanel();"><i class="fa-solid fa-cloud-arrow-up"></i> Launch Pad</button>
+                    <button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Record Terminal</button>
+                    <button onclick="interceptRoute('panel-entry-judge', 'entry_judge')"><i class="fa-solid fa-gavel"></i> Judge Portal</button>
+                    <button onclick="interceptRoute('panel-judge', 'judge')"><i class="fa-solid fa-chart-simple"></i> Candidate's Standing</button>
+                    <button onclick="interceptRoute('panel-states-control', 'states')"><i class="fa-solid fa-flag"></i> Lead Zone</button>
+                    <button onclick="interceptRoute('panel-pointroom-copy', 'pointroom')"><i class="fa-solid fa-copy"></i> Code Portal</button>
+                    <button onclick="interceptRoute('panel-entry-sign', 'entry_sign')"><i class="fa-solid fa-signature"></i> Sign Portal</button>
+                    <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Security Vault</button>
+                    <button onclick="interceptRoute('panel-modify', 'modify')"><i class="fa-solid fa-pen-to-square"></i> Layout Studio</button>
+                    <button onclick="logoutMain()" style="color:#ef4444;"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
                 `;
             }
             menuContainer.innerHTML = html;
@@ -1576,7 +1580,7 @@
                 });
             });
         }
-        /* ENTRY JUDGE LOGIC */
+        /* JUDGE PORTAL ENTRY LOGIC & ENHANCED SECONDS TIMER */
         function renderEjActiveProgram() {
             const activeProgId = window.appState.activeEjProgId;
             const titleEl = document.getElementById('ej-active-prog-title');
@@ -1585,8 +1589,8 @@
             
             if(!activeProgId) {
                 if(titleEl) titleEl.innerText = "No Program Assigned";
-                if(topicBox) topicBox.innerText = "Topic will appear here when a program is assigned in Pointroom Copy...";
-                if(container) container.innerHTML = '<tr><td colspan="2" style="text-align:center;">No active program assigned from Pointroom Copy.</td></tr>';
+                if(topicBox) topicBox.innerText = "Topic will appear here when a program is assigned in Code Portal...";
+                if(container) container.innerHTML = '<tr><td colspan="2" style="text-align:center;">No active program assigned from Code Portal.</td></tr>';
                 return;
             }
             const targetProg = window.appState.programs.find(p => p.id === activeProgId);
@@ -1601,7 +1605,7 @@
             
             const matchedPts = window.appState.points.filter(pt => pt.progId === activeProgId && pt.codeLetter && pt.codeLetter.trim() !== '');
             if(matchedPts.length === 0) {
-                if(container) container.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#ef4444;">No code letters configured for this program in Pointroom (Copy).</td></tr>';
+                if(container) container.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#ef4444;">No code letters configured for this program in Code Portal.</td></tr>';
                 return;
             }
             
@@ -1632,7 +1636,7 @@
                 }
             });
             saveKey('points', window.appState.points);
-            alert("Judge marks auto-upgraded in system and Pointroom!");
+            alert("Judge marks auto-upgraded in system and Record Terminal!");
             renderPtList();
             renderJudgeLeaderboard();
             renderStatesDashboard();
@@ -1643,6 +1647,8 @@
             const mins = String(Math.floor(ejSeconds / 60)).padStart(2, '0');
             const secs = String(ejSeconds % 60).padStart(2, '0');
             document.getElementById('ej-timer-display').innerText = `${mins}:${secs}`;
+            const totalSecEl = document.getElementById('ej-timer-total-sec');
+            if(totalSecEl) totalSecEl.innerText = ejSeconds;
         }
         window.startEjTimer = function() {
             if (ejTimerInterval) return;
@@ -1660,7 +1666,7 @@
             ejSeconds = 0;
             updateEjTimerDisplay();
         }
-        /* POINTROOM DUPLICATE (POINTROOM COPY) FUNCTIONS */
+        /* CODE PORTAL FUNCTIONS */
         window.populatePtProgsCopy = function() {
             const cat = document.getElementById('pt-cat-select-copy').value;
             const query = document.getElementById('pt-search-copy').value.toLowerCase().trim();
@@ -1711,7 +1717,7 @@
             
             const targetProg = window.appState.programs.find(p => p.id === progId);
             if(targetProg) targetProg.topic = topic;
-            window.appState.activeEjProgId = progId; // Automatically set as active Judge Entry program
+            window.appState.activeEjProgId = progId; 
             saveKey('programs', window.appState.programs);
             saveKey('activeEjProgId', window.appState.activeEjProgId);
             
@@ -1728,25 +1734,25 @@
                 }
             });
             saveKey('points', window.appState.points);
-            alert("Code Letters & Topic updated! Active program sent to Judge Entry Portal.");
+            alert("Code Letters & Topic updated! Active program sent to Judge Portal.");
             loadPtParticipantsCopy();
             renderPtList();
             renderEjActiveProgram();
         }
-        /* PROTECTION & OTHER SETTINGS */
+        /* PROTECTION & SECURITY VAULT SETTINGS */
         function syncProtectionFields() {
             const container = document.getElementById('sub-panel-pass-managers-container');
             if(!container) return;
             const schema = [
                 { key: 'settings', name: 'Settings Lock' },
-                { key: 'control_panel', name: 'Control Panel Lock' },
-                { key: 'judge', name: 'Judge Leaderboard Lock' },
-                { key: 'pointroom', name: 'Pointroom Input Lock' },
-                { key: 'states', name: 'States Control Lock' },
-                { key: 'protection', name: 'Protection Settings Lock' },
-                { key: 'modify', name: 'Modify Appearance Lock' },
-                { key: 'entry_sign', name: 'Entry Sign Lock' },
-                { key: 'entry_judge', name: 'Entry Judge Lock' }
+                { key: 'control_panel', name: 'Control Deck Lock' },
+                { key: 'judge', name: "Candidate's Standing Lock" },
+                { key: 'pointroom', name: 'Record Terminal Input Lock' },
+                { key: 'states', name: 'Lead Zone Lock' },
+                { key: 'protection', name: 'Security Vault Lock' },
+                { key: 'modify', name: 'Layout Studio Lock' },
+                { key: 'entry_sign', name: 'Sign Portal Lock' },
+                { key: 'entry_judge', name: 'Judge Portal Lock' }
             ];
             container.innerHTML = schema.map(s => {
                 const val = window.appState.subLocks[s.key] || '';
@@ -2000,7 +2006,7 @@
             saveKey('registrations', window.appState.registrations);
             alert("Registration updated.");
         }
-        /* POINTROOM EVALUATION LOGS & PRINTS */
+        /* RECORD TERMINAL EVALUATION LOGS & PRINTS */
         window.populatePtProgs = function() {
             const cat = document.getElementById('pt-cat-select').value;
             const query = document.getElementById('pt-search') ? document.getElementById('pt-search').value.toLowerCase().trim() : '';
@@ -2139,7 +2145,7 @@
                 renderPtList();
             }
         }
-        /* JUDGE LEADERBOARD & BREAKDOWN FIXED */
+        /* CANDIDATE'S STANDING BREAKDOWN */
         window.renderJudgeLeaderboard = function() {
             const tbody = document.getElementById('judge-leaderboard-body');
             if(!tbody) return;
@@ -2179,7 +2185,7 @@
             document.getElementById('detail-modal-overlay').style.display = 'flex';
         }
 
-        /* STATES CONTROL & TEAM BREAKDOWN FIXED */
+        /* LEAD ZONE & TEAM BREAKDOWN */
         window.renderStatesDashboard = function() {
             const tbody = document.getElementById('states-table-body');
             if(!tbody) return;
