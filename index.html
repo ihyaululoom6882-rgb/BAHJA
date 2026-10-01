@@ -3087,6 +3087,14 @@
 
                 });
 
+                // Participants Entry is a Register-phase-only public option, as in the original menu.
+
+                if(currentPhase === 'register') {
+
+                    html += `<button onclick="showPanel('panel-participants-entry'); document.getElementById('mainDropdown').classList.remove('show');"><i class="fa-solid fa-user-plus"></i> Participants Entry</button>`;
+
+                }
+
             } else {
 
                 // LOGGED IN ADMIN MENU
