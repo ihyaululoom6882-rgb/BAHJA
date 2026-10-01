@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BAHJA - DAWA FEST</title>
+    <!-- Favicon Icon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Optimization -->
@@ -1707,97 +1709,374 @@
             const progId = document.getElementById('pt-prog-select-copy').value;
             const targetProg = window.appState.programs.find(p => p.id === progId);
             const container = document.getElementById('pt-candidates-inputs-copy');
-            if(!targetProg) {
-                container.innerHTML = '';
-                return;
-            }
-            document.getElementById('pt-stage-badge-copy').innerText = `Stage: ${targetProg.stage || 'ON STAGE'}`;
+            if(!targetProg) { container.innerHTML = ''; return; }
+            
+            document.getElementById('pt-stage-badge-copy').innerText = `Stage: ${targetProg.stage}`;
             document.getElementById('pt-topic-copy').value = targetProg.topic || '';
             
             const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
             if(matchedRegs.length === 0) {
-                container.innerHTML = '<p style="color:#ef4444;">No registrations for this program yet.</p>';
-                return;
+                container.innerHTML = '<p style="color:#ef4444;">No registered candidates found.</p>'; return;
             }
             let html = '';
-            matchedRegs.forEach((r, idx) => {
-                const existingPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === r.student);
-                const codeLetter = existingPt ? (existingPt.codeLetter || '') : '';
-                html += `
-                    <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <strong>${r.student}</strong> <span style="font-size:0.8rem; color:var(--text-sub);">(${r.team})</span>
+            matchedRegs.forEach(r => {
+                r.participants.forEach(pName => {
+                    const savedPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === pName) || { codeLetter: '' };
+                    html += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
+                            <span><strong>${pName}</strong> (${r.team})</span>
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <input type="text" class="form-control pt-code-field-copy" data-team="${r.team}" data-student="${pName}" value="${savedPt.codeLetter || ''}" placeholder="Code" style="width:100px; padding:6px; text-transform:uppercase;">
+                            </div>
                         </div>
-                        <input type="text" class="form-control copy-code-input" style="width:90px; text-transform:uppercase;" placeholder="Code" data-team="${r.team}" data-student="${r.student}" value="${codeLetter}">
-                    </div>
-                `;
+                    `;
+                });
             });
             container.innerHTML = html;
         }
         window.savePointroomCopyEntry = function(e) {
             e.preventDefault();
             const progId = document.getElementById('pt-prog-select-copy').value;
-            if(!progId) return;
+            const cat = document.getElementById('pt-cat-select-copy').value;
+            const topic = document.getElementById('pt-topic-copy').value.trim();
+            if(!progId || !cat) return;
+            
             const targetProg = window.appState.programs.find(p => p.id === progId);
-            if(targetProg) {
-                targetProg.topic = document.getElementById('pt-topic-copy').value.trim();
-            }
-            const inputs = document.querySelectorAll('.copy-code-input');
-            inputs.forEach(i => {
-                const team = i.getAttribute('data-team');
-                const student = i.getAttribute('data-student');
-                const codeLetter = i.value.trim().toUpperCase();
+            if(targetProg) targetProg.topic = topic;
+            window.appState.activeEjProgId = progId; 
+            saveKey('programs', window.appState.programs);
+            saveKey('activeEjProgId', window.appState.activeEjProgId);
+            
+            document.querySelectorAll('.pt-code-field-copy').forEach(f => {
+                const team = f.getAttribute('data-team');
+                const student = f.getAttribute('data-student');
+                const codeLetter = f.value.toUpperCase().trim();
                 
-                let pt = window.appState.points.find(p => p.progId === progId && p.team === team && p.student === student);
-                if(!pt) {
-                    pt = { id: 'pt_' + Date.now() + '_' + Math.random().toString(36).substring(2,5), progId, cat: targetProg.cat, progName: targetProg.name, team, student, score: 0, codeLetter };
-                    window.appState.points.push(pt);
+                let existingPt = window.appState.points.find(pt => pt.progId === progId && pt.team === team && pt.student === student);
+                if(existingPt) {
+                    existingPt.codeLetter = codeLetter;
                 } else {
-                    pt.codeLetter = codeLetter;
+                    window.appState.points.push({ progId, cat, team, student, score: 0, codeLetter });
                 }
             });
-            window.appState.activeEjProgId = progId;
-            saveData();
-            alert("Code Letters assigned & active program pushed to Judge Portal!");
+            saveKey('points', window.appState.points);
+            alert("Code Letters & Topic updated! Active program sent to Judge Portal.");
+            loadPtParticipantsCopy();
             renderCodeFormsList();
             renderEjActiveProgram();
         }
+        /* DISPLAY SAVED CODE FORMS IN CODE PORTAL */
         function renderCodeFormsList() {
             const container = document.getElementById('box-code-forms-content');
             if(!container) return;
-            const progsWithCodes = window.appState.programs.filter(p => window.appState.points.some(pt => pt.progId === p.id && pt.codeLetter));
-            if(progsWithCodes.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-sub); font-size:0.85rem;">No saved code forms found.</p>';
+            const codedProgs = [...new Set(window.appState.points.filter(pt => pt.codeLetter && pt.codeLetter.trim() !== '').map(pt => pt.progId))];
+            
+            if(codedProgs.length === 0) {
+                container.innerHTML = '<p style="padding:10px 0; color:var(--text-sub);">No code forms saved yet.</p>';
                 return;
             }
-            let html = '';
-            progsWithCodes.forEach(p => {
-                const isCurrentActive = window.appState.activeEjProgId === p.id;
-                html += `
-                    <div style="background:rgba(255,255,255,0.05); padding:10px 12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <strong>${p.name}</strong> <span style="font-size:0.8rem; color:var(--text-sub);">(${p.cat})</span>
-                            ${isCurrentActive ? '<span style="background:#10b981; color:#fff; font-size:0.7rem; padding:2px 6px; border-radius:4px; margin-left:6px;">ACTIVE IN JUDGE PORTAL</span>' : ''}
+            container.innerHTML = codedProgs.map(pid => {
+                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown Program', cat: 'N/A', topic: '' };
+                const subPts = window.appState.points.filter(pt => pt.progId === pid && pt.codeLetter && pt.codeLetter.trim() !== '');
+                const isActive = window.appState.activeEjProgId === pid;
+                return `
+                    <div style="background:rgba(0,0,0,0.25); border:1px solid ${isActive ? '#d4af37' : 'var(--border-color)'}; padding:12px; border-radius:12px; margin-bottom:10px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <strong style="font-size:1rem; color:#d4af37;">${prog.name} (${prog.cat})</strong>
+                                ${isActive ? '<span style="background:#d4af37; color:#000; font-size:0.7rem; padding:2px 6px; border-radius:4px; margin-left:8px; font-weight:bold;">ACTIVE IN JUDGE PORTAL</span>' : ''}
+                            </div>
+                            <button class="btn btn-sm btn-primary" onclick="loadCodeFormToEdit('${prog.cat}', '${pid}')">Edit / Send to Judge</button>
                         </div>
-                        <button class="btn btn-sm btn-primary" onclick="setActiveJudgeProg('${p.id}')">Push to Judge</button>
+                        ${prog.topic ? `<div style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;"><strong>Topic:</strong> ${prog.topic}</div>` : ''}
+                        <div style="margin-top:8px; font-size:0.85rem; background:rgba(0,0,0,0.2); padding:8px; border-radius:8px;">
+                            ${subPts.map(s => `<span style="display:inline-block; margin-right:12px; margin-bottom:4px;">Code: <strong style="color:#d4af37;">${s.codeLetter}</strong> (${s.student} - ${s.team})</span>`).join('')}
+                        </div>
                     </div>
                 `;
-            });
-            container.innerHTML = html;
+            }).join('');
         }
-        window.setActiveJudgeProg = function(progId) {
-            window.appState.activeEjProgId = progId;
-            saveKey('activeEjProgId', progId);
-            renderEjActiveProgram();
-            renderCodeFormsList();
-            alert("Active program updated on Judge Portal!");
+        window.loadCodeFormToEdit = function(cat, progId) {
+            document.getElementById('pt-cat-select-copy').value = cat;
+            populatePtProgsCopy();
+            document.getElementById('pt-prog-select-copy').value = progId;
+            loadPtParticipantsCopy();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        /* POINTROOM RECORD TERMINAL LOGIC */
+        
+        /* PROTECTION & SECURITY VAULT SETTINGS */
+        function syncProtectionFields() {
+            const container = document.getElementById('sub-panel-pass-managers-container');
+            if(!container) return;
+            const schema = [
+                { key: 'settings', name: 'Settings Lock' },
+                { key: 'control_panel', name: 'Control Deck Lock' },
+                { key: 'judge', name: "Candidate's Standing Lock" },
+                { key: 'pointroom', name: 'Record Terminal Input Lock' },
+                { key: 'states', name: 'Lead Zone Lock' },
+                { key: 'protection', name: 'Security Vault Lock' },
+                { key: 'modify', name: 'Layout Studio Lock' },
+                { key: 'entry_sign', name: 'Sign Portal Lock' },
+                { key: 'entry_judge', name: 'Judge Portal Lock' }
+            ];
+            container.innerHTML = schema.map(s => {
+                const val = window.appState.subLocks[s.key] || '';
+                return `
+                    <div style="background:rgba(0,0,0,0.2); padding:10px; border:1px solid var(--border-color); border-radius:8px;">
+                        <label style="font-weight:bold; font-size:0.8rem;">${s.name}</label>
+                        <div style="display:flex; gap:6px; margin-top:4px;">
+                            <input type="text" id="pass-field-input-${s.key}" class="form-control" value="${val}" style="margin-bottom:0; font-size:0.85rem;">
+                            <button class="btn btn-sm btn-success" onclick="updateSubLockKey('${s.key}')">Save</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        window.updateSubLockKey = function(key) {
+            window.appState.subLocks[key] = document.getElementById(`pass-field-input-${key}`).value.trim();
+            saveKey('subLocks', window.appState.subLocks);
+            alert("Lock Code Saved.");
+        }
+        function syncModifyConfigInputs() {
+            const vis = window.appState.visuals;
+            const isDark = (window.appState.theme || 'dark') === 'dark';
+            if(!document.getElementById('mod-banner-text')) return;
+            document.getElementById('mod-banner-text').value = vis.bannerText || '';
+            document.getElementById('mod-title-text').value = vis.titleText || '';
+            document.getElementById('mod-banner-color').value = isDark ? (vis.bannerColorDark || '#cbd5e1') : (vis.bannerColorLight || '#475569');
+            document.getElementById('mod-title-color').value = isDark ? (vis.titleColorDark || '#ffffff') : (vis.titleColorLight || '#0f172a');
+            if(document.getElementById('mod-font-family')) document.getElementById('mod-font-family').value = vis.fontFamily || "'Poppins', sans-serif";
+            if(document.getElementById('mod-header-align')) document.getElementById('mod-header-align').value = vis.headerAlign || 'center';
+        }
+        window.liveUpdateVisuals = function() {
+            const bTxt = document.getElementById('txt-welcome-banner');
+            const mTitle = document.getElementById('txt-main-title');
+            const ff = document.getElementById('mod-font-family');
+            const ha = document.getElementById('mod-header-align');
+            const bc = document.getElementById('mod-banner-color');
+            const tc = document.getElementById('mod-title-color');
+            const bt = document.getElementById('mod-banner-text');
+            const mt = document.getElementById('mod-title-text');
+            if(ff) document.documentElement.style.setProperty('--main-font', ff.value);
+            if(ha) document.documentElement.style.setProperty('--header-align', ha.value);
+            if(bTxt && bt && bc) {
+                bTxt.innerText = bt.value;
+                bTxt.style.color = bc.value;
+            }
+            if(mTitle && mt && tc) {
+                mTitle.innerText = mt.value;
+                mTitle.style.color = tc.value;
+            }
+        }
+        window.saveVisualLayoutState = function() {
+            const isDark = (window.appState.theme || 'dark') === 'dark';
+            const syncLight = document.getElementById('mod-sync-light').checked;
+            const bColor = document.getElementById('mod-banner-color').value;
+            const tColor = document.getElementById('mod-title-color').value;
+            window.appState.visuals.bannerText = document.getElementById('mod-banner-text').value;
+            window.appState.visuals.titleText = document.getElementById('mod-title-text').value;
+            window.appState.visuals.fontFamily = document.getElementById('mod-font-family').value;
+            window.appState.visuals.headerAlign = document.getElementById('mod-header-align').value;
+            if(isDark) {
+                window.appState.visuals.bannerColorDark = bColor;
+                window.appState.visuals.titleColorDark = tColor;
+                if(syncLight) {
+                    window.appState.visuals.bannerColorLight = bColor;
+                    window.appState.visuals.titleColorLight = tColor;
+                }
+            } else {
+                window.appState.visuals.bannerColorLight = bColor;
+                window.appState.visuals.titleColorLight = tColor;
+            }
+            saveKey('visuals', window.appState.visuals);
+            applyVisualCustomizations();
+            alert("Visual Layout Saved."); 
+            navHome();
+        }
+        window.saveMaxLimitMaster = function() {
+            window.appState.maxProgLimit = parseInt(document.getElementById('m-max-limit-input').value) || 3;
+            saveKey('maxProgLimit', window.appState.maxProgLimit);
+            alert("Limit saved.");
+        }
+        window.togglePhaseControl = function(selectedPhase) {
+            document.getElementById('phase-reg-radio').checked = selectedPhase === 'register';
+            document.getElementById('phase-res-radio').checked = selectedPhase === 'result';
+        }
+        window.applyPhaseSettings = async function(e) {
+            e.preventDefault();
+            const selectedPhase = document.querySelector('input[name="phase-toggle"]:checked').value;
+            window.appState.phase = selectedPhase;
+            localStorage.setItem('bahja_current_phase', selectedPhase);
+            window.appState.logoPos = document.getElementById('sys-logo-pos').value;
+            window.appState.logoSize = document.getElementById('sys-logo-size').value;
+            const logoF = document.getElementById('sys-logo-input').files[0];
+            if(logoF) {
+                window.appState.logoUrl = await compressImage(logoF, 500, 0.8);
+            }
+            saveData(); 
+            applyLogoView();
+            alert("Settings saved."); 
+            navHome();
+        }
+        window.clearAllDataSystem = function() {
+            if(!confirm("Clear all system data?")) return;
+            const preservedLogo = {
+                logoUrl: window.appState.logoUrl || '',
+                logoPos: window.appState.logoPos || 'logo-top-left',
+                logoSize: window.appState.logoSize || '60'
+            };
+            window.appState = buildCleanState(preservedLogo);
+            window.loggedTeamUser = null;
+            window.activePartTeam = null;
+            window.isMainLoggedIn = false;
+            try {
+                localStorage.clear();
+                localStorage.setItem('bahja_full_state', JSON.stringify(window.appState));
+                localStorage.setItem('bahja_current_phase', window.appState.phase);
+                localStorage.setItem('bahja_theme', window.appState.theme);
+            } catch(e) {}
+            set(dbRef, window.appState);
+            applyLogoView();
+            render3DotMenu();
+            navHome();
+            alert("System data cleared.");
+        }
+        window.renderHomePhase = function() {
+            const regEl = document.getElementById('home-phase-register');
+            const resEl = document.getElementById('home-phase-result');
+            if(window.appState.phase === 'register') {
+                if(regEl) regEl.style.display = 'block';
+                if(resEl) resEl.style.display = 'none';
+                if(window.loggedTeamUser) {
+                    document.getElementById('team-login-block').style.display = 'none';
+                    document.getElementById('team-portal-block').style.display = 'block';
+                    document.getElementById('logged-team-name').innerText = window.loggedTeamUser;
+                } else {
+                    document.getElementById('team-login-block').style.display = 'block';
+                    document.getElementById('team-portal-block').style.display = 'none';
+                }
+            } else {
+                if(regEl) regEl.style.display = 'none';
+                if(resEl) resEl.style.display = 'block';
+                applySectionVisibilityUI();
+                renderResultPhaseFeeds();
+            }
+        }
+        function applySectionVisibilityUI() {
+            const v = window.appState.visibilities || {};
+            for(let key in v) {
+                const btn = document.getElementById(`pill-sec-${key}`);
+                if(btn) btn.style.display = v[key] ? 'flex' : 'none';
+            }
+        }
+        window.updateSectionVisibilities = function() {
+            window.appState.visibilities = {
+                'team-states': document.getElementById('toggle-vis-team-states').checked,
+                'results-view': document.getElementById('toggle-vis-results-view').checked,
+                'updates': document.getElementById('toggle-vis-updates').checked,
+                'livelink': document.getElementById('toggle-vis-livelink').checked,
+                'highlights': document.getElementById('toggle-vis-highlights').checked
+            };
+            saveKey('visibilities', window.appState.visibilities);
+            applySectionVisibilityUI();
+        }
+        window.handlePartLogin = function(e) {
+            e.preventDefault();
+            const u = document.getElementById('part-user').value.trim();
+            const p = document.getElementById('part-pass').value.trim();
+            const found = window.appState.teams.find(t => t.user === u && t.pass === p);
+            if(found) {
+                window.activePartTeam = u;
+                document.getElementById('part-login-block').style.display = 'none';
+                document.getElementById('part-manage-block').style.display = 'block';
+                document.getElementById('part-active-team').innerText = u;
+                renderTeamStudentsList();
+            } else alert("Invalid Credentials!");
+        }
+        window.addTeamParticipant = function(e) {
+            e.preventDefault();
+            const cat = document.getElementById('part-cat').value;
+            const name = document.getElementById('part-name').value.trim();
+            window.appState.students.push({ id:'st_'+Date.now(), name, cat, team: window.activePartTeam });
+            saveKey('students', window.appState.students);
+            document.getElementById('part-name').value = ''; 
+            renderTeamStudentsList();
+        }
+        window.renderTeamStudentsList = function() {
+            const filtered = window.appState.students.filter(s => s.team === window.activePartTeam);
+            document.getElementById('team-students-list').innerHTML = filtered.map(s => `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:rgba(0,0,0,0.2); margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
+                    <span><strong>${s.name}</strong> (${s.cat})</span>
+                    <button class="btn btn-danger btn-sm" onclick="deleteStudent('${s.id}')">Delete</button>
+                </div>
+            `).join('') || '<p>No students recorded.</p>';
+        }
+        window.deleteStudent = function(id) {
+            window.appState.students = window.appState.students.filter(s => s.id !== id); 
+            saveKey('students', window.appState.students);
+            renderTeamStudentsList();
+        }
+        window.handleTeamLogin = function(e) {
+            e.preventDefault();
+            const u = document.getElementById('login-team-user').value.trim();
+            const p = document.getElementById('login-team-pass').value.trim();
+            const found = window.appState.teams.find(t => t.user === u && t.pass === p);
+            if(found) { window.loggedTeamUser = u; renderHomePhase(); } else alert("Invalid Credentials");
+        }
+        window.logoutTeam = function() { window.loggedTeamUser = null; renderHomePhase(); }
+        window.loadCategoryPrograms = function() {
+            const cat = document.getElementById('reg-cat-select').value;
+            const container = document.getElementById('category-programs-container');
+            if(!cat) { container.innerHTML = ''; return; }
+            const filtered = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
+            if(filtered.length === 0) { container.innerHTML = '<p>No programs in category.</p>'; return; }
+            const allowedStudents = window.appState.students.filter(s => s.team === window.loggedTeamUser && s.cat === cat);
+            container.innerHTML = filtered.map(p => {
+                const reg = window.appState.registrations.find(r => r.team === window.loggedTeamUser && r.progId === p.id) || { participants: [] };
+                let selectors = '';
+                for(let i=0; i < p.limit; i++) {
+                    if(cat === 'GENERAL') {
+                        selectors += `<input type="text" class="form-control prog-input-${p.id}" value="${reg.participants[i] || ''}" placeholder="Enter Name Manually" style="margin-top:5px;">`;
+                    } else {
+                        selectors += `<select class="form-control prog-input-${p.id}" style="margin-top:5px;">
+                            <option value="">-- Choose Student --</option>
+                            ${allowedStudents.map(st => `<option value="${st.name}" ${reg.participants[i] === st.name ? 'selected':''}>${st.name}</option>`).join('')}
+                        </select>`;
+                    }
+                }
+                return `
+                    <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-bottom:10px;">
+                        <strong>${p.name} (${p.stage})</strong>
+                        <div>${selectors}</div>
+                        <button class="btn btn-success btn-sm btn-block" style="margin-top:8px;" onclick="saveRegistrationItem('${p.id}', '${cat}')">Submit Entry</button>
+                    </div>
+                `;
+            }).join('');
+        }
+        window.saveRegistrationItem = function(progId, cat) {
+            if(!window.appState.portalOpen) { alert("Registration Locked!"); return; }
+            const fields = document.querySelectorAll(`.prog-input-${progId}`);
+            const names = Array.from(fields).map(f => f.value.trim()).filter(n => n !== '');
+            if(cat !== 'GENERAL') {
+                for (let sName of names) {
+                    const matchCount = window.appState.registrations.filter(r => r.team === window.loggedTeamUser && r.cat !== 'GENERAL' && r.progId !== progId && r.participants.includes(sName)).length;
+                    if(matchCount >= window.appState.maxProgLimit) {
+                        alert(`Limit violation! Student "${sName}" already registered for ${matchCount} items.`);
+                        return;
+                    }
+                }
+            }
+            window.appState.registrations = window.appState.registrations.filter(r => !(r.team === window.loggedTeamUser && r.progId === progId));
+            if(names.length > 0) window.appState.registrations.push({ team: window.loggedTeamUser, cat, progId, participants: names });
+            saveKey('registrations', window.appState.registrations);
+            alert("Registration updated.");
+        }
+        /* RECORD TERMINAL EVALUATION LOGS WITH PROGRAM + CATEGORY SEARCH */
         window.populatePtProgs = function() {
             const cat = document.getElementById('pt-cat-select').value;
             const drop = document.getElementById('pt-prog-select');
-            const matched = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
+            let matched = window.appState.programs.filter(p => p.cat === cat);
+            matched.sort((a,b)=>a.name.localeCompare(b.name));
             drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
             document.getElementById('pt-candidates-inputs').innerHTML = '';
             document.getElementById('pt-stage-badge').innerText = '';
@@ -1807,743 +2086,845 @@
             const targetProg = window.appState.programs.find(p => p.id === progId);
             const container = document.getElementById('pt-candidates-inputs');
             if(!targetProg) { container.innerHTML = ''; return; }
-            document.getElementById('pt-stage-badge').innerText = `Stage: ${targetProg.stage || 'ON STAGE'}`;
+            document.getElementById('pt-stage-badge').innerText = `Stage: ${targetProg.stage}`;
             const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
             if(matchedRegs.length === 0) {
-                container.innerHTML = '<p style="color:#ef4444;">No registrations found for this program.</p>';
-                return;
+                container.innerHTML = '<p style="color:#ef4444;">No registered candidates found.</p>'; return;
             }
             let html = '';
             matchedRegs.forEach(r => {
-                const existingPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === r.student);
-                const val = existingPt ? existingPt.score : 0;
-                html += `
-                    <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                        <div><strong>${r.student}</strong> <span style="font-size:0.8rem; color:var(--text-sub);">(${r.team})</span></div>
-                        <input type="number" min="0" class="form-control pt-score-field" style="width:90px;" data-team="${r.team}" data-student="${r.student}" value="${val}">
-                    </div>
-                `;
+                r.participants.forEach(pName => {
+                    const savedPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === pName) || { score: 0 };
+                    html += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
+                            <span><strong>${pName}</strong> (${r.team})</span>
+                            <input type="number" min="0" class="form-control pt-score-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.score}" style="width:80px; padding:6px;">
+                        </div>
+                    `;
+                });
             });
             container.innerHTML = html;
         }
         window.savePointroomEntry = function(e) {
             e.preventDefault();
             const progId = document.getElementById('pt-prog-select').value;
-            if(!progId) return;
-            const targetProg = window.appState.programs.find(p => p.id === progId);
-            const scoreInputs = document.querySelectorAll('.pt-score-field');
-            scoreInputs.forEach(input => {
-                const team = input.getAttribute('data-team');
-                const student = input.getAttribute('data-student');
-                const score = parseFloat(input.value) || 0;
-                let existing = window.appState.points.find(pt => pt.progId === progId && pt.team === team && pt.student === student);
-                if(existing) {
-                    existing.score = score;
+            const cat = document.getElementById('pt-cat-select').value;
+            if(!progId || !cat) return;
+            document.querySelectorAll('.pt-score-field').forEach(f => {
+                const score = parseFloat(f.value) || 0;
+                const team = f.getAttribute('data-team');
+                const student = f.getAttribute('data-student');
+                
+                let existingPt = window.appState.points.find(pt => pt.progId === progId && pt.team === team && pt.student === student);
+                if(existingPt) {
+                    existingPt.score = score;
                 } else {
-                    window.appState.points.push({
-                        id: 'pt_' + Date.now() + '_' + Math.random().toString(36).substring(2,5),
-                        progId, cat: targetProg.cat, progName: targetProg.name, team, student, score, codeLetter: ''
-                    });
+                    window.appState.points.push({ progId, cat, team, student, score });
                 }
             });
-            saveData();
-            alert("Point records saved!");
+            saveKey('points', window.appState.points);
+            alert("Points recorded.");
+            loadPtParticipants(); 
             renderPtList();
-            renderJudgeLeaderboard();
-            renderStatesDashboard();
         }
         function renderPtList() {
-            const container = document.getElementById('box-pt-list-content');
-            if(!container) return;
-            const query = (document.getElementById('pt-logs-search')?.value || '').toLowerCase().trim();
-            let matched = window.appState.points;
-            if(query) matched = matched.filter(p => p.progName.toLowerCase().includes(query) || p.cat.toLowerCase().includes(query) || p.student.toLowerCase().includes(query) || p.team.toLowerCase().includes(query));
+            const containerContent = document.getElementById('box-pt-list-content');
+            const searchInput = document.getElementById('pt-logs-search');
+            const searchQ = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            let distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
             
-            if(matched.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-sub); font-size:0.85rem;">No evaluation logs matching search criteria.</p>';
-                return;
-            }
-            let html = '<div class="table-responsive"><table class="bahja-sheet-table"><thead><tr><th>Category</th><th>Program</th><th>Participant</th><th>Team</th><th>Score</th></tr></thead><tbody>';
-            matched.forEach(pt => {
-                html += `<tr><td>${pt.cat}</td><td>${pt.progName}</td><td>${pt.student}</td><td>${pt.team}</td><td><strong>${pt.score}</strong></td></tr>`;
-            });
-            html += '</tbody></table></div>';
-            container.innerHTML = html;
-        }
-
-        /* LEADERBOARDS & RANKINGS */
-        function renderJudgeLeaderboard() {
-            const container = document.getElementById('judge-leaderboard-body');
-            if(!container) return;
-            const filterStage = document.getElementById('jd-filter-stage')?.value || 'all';
-            let matchedPts = [...window.appState.points];
-            if(filterStage !== 'all') {
-                matchedPts = matchedPts.filter(pt => {
-                    const prog = window.appState.programs.find(p => p.id === pt.progId);
-                    return prog && (prog.stage || 'ON STAGE') === filterStage;
+            if(searchQ) {
+                distinctProgs = distinctProgs.filter(pid => {
+                    const prog = window.appState.programs.find(p => p.id === pid);
+                    if(!prog) return false;
+                    const fullString = `${prog.cat} ${prog.name}`.toLowerCase();
+                    return fullString.includes(searchQ);
                 });
             }
-            matchedPts.sort((a,b) => b.score - a.score);
-            if(matchedPts.length === 0) {
-                container.innerHTML = '<tr><td colspan="4" style="text-align:center;">No records available.</td></tr>';
-                return;
+            if(distinctProgs.length === 0) {
+                if(containerContent) containerContent.innerHTML = '<p style="padding:8px 0; color:var(--text-sub);">No marks processed matching search query.</p>';
+                return; 
             }
-            let html = '';
-            matchedPts.forEach(pt => {
-                html += `<tr><td>${pt.student}</td><td>${pt.team}</td><td>${pt.cat}</td><td><strong>${pt.score}</strong></td></tr>`;
-            });
-            container.innerHTML = html;
-        }
-        function renderStatesDashboard() {
-            const container = document.getElementById('states-table-body');
-            if(!container) return;
-            const teamScores = {};
-            (window.appState.teams || []).forEach(t => teamScores[t.user] = 0);
-            (window.appState.points || []).forEach(pt => {
-                teamScores[pt.team] = (teamScores[pt.team] || 0) + (pt.score || 0);
-            });
-            const sorted = Object.keys(teamScores).map(k => ({ team: k, score: teamScores[k] })).sort((a,b) => b.score - a.score);
-            if(sorted.length === 0) {
-                container.innerHTML = '<tr><td colspan="2" style="text-align:center;">No team data available.</td></tr>';
-                return;
-            }
-            let html = '';
-            sorted.forEach(item => {
-                html += `<tr><td style="font-weight:bold;">${item.team}</td><td style="font-weight:bold; color:#d4af37;">${item.score}</td></tr>`;
-            });
-            container.innerHTML = html;
-            
-            // Populate team filter dropdown in rank zone
-            const rankTeamSelect = document.getElementById('rank-team-filter');
-            if(rankTeamSelect) {
-                const currentVal = rankTeamSelect.value;
-                rankTeamSelect.innerHTML = '<option value="">All Teams</option>' + (window.appState.teams || []).map(t => `<option value="${t.user}">${t.user}</option>`).join('');
-                rankTeamSelect.value = currentVal;
-            }
-        }
-        function renderRankWinnersList() {
-            const container = document.getElementById('rank-winners-body');
-            if(!container) return;
-            const selectedTeam = document.getElementById('rank-team-filter')?.value || '';
-            const selectedPos = document.getElementById('rank-pos-filter')?.value || '1';
-            
-            // Group points by program to compute positions
-            const progGroup = {};
-            (window.appState.points || []).forEach(pt => {
-                if(!progGroup[pt.progId]) progGroup[pt.progId] = [];
-                progGroup[pt.progId].push(pt);
-            });
-            
-            let winners = [];
-            Object.keys(progGroup).forEach(progId => {
-                const list = progGroup[progId].sort((a,b) => b.score - a.score);
-                list.forEach((pt, idx) => {
-                    const pos = idx + 1;
-                    if(pos <= 4) {
-                        winners.push({ ...pt, position: pos });
-                    }
-                });
-            });
-            
-            if(selectedTeam) winners = winners.filter(w => w.team === selectedTeam);
-            if(selectedPos !== 'all') winners = winners.filter(w => w.position === parseInt(selectedPos));
-            
-            winners.sort((a,b) => a.position - b.position || b.score - a.score);
-            
-            if(winners.length === 0) {
-                container.innerHTML = '<tr><td colspan="6" style="text-align:center;">No rank placements match current filters.</td></tr>';
-                return;
-            }
-            let html = '';
-            winners.forEach((w, idx) => {
-                const posStr = w.position === 1 ? '1st Rank' : w.position === 2 ? '2nd Rank' : w.position === 3 ? '3rd Rank' : '4th Rank';
-                html += `<tr><td>${idx+1}</td><td>${w.student}</td><td>${w.team}</td><td>${w.progName}</td><td>${w.score}</td><td><strong>${posStr}</strong></td></tr>`;
-            });
-            container.innerHTML = html;
-        }
-
-        /* ENTRY SIGN PORTAL */
-        window.populateEsProgs = function() {
-            const cat = document.getElementById('es-cat-select').value;
-            const drop = document.getElementById('es-prog-select');
-            let matched = window.appState.programs;
-            if(cat) matched = matched.filter(p => p.cat === cat);
-            matched.sort((a,b)=>a.name.localeCompare(b.name));
-            drop.innerHTML = '<option value="">All Programs</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-        }
-        window.renderEntrySignTable = function() {
-            const container = document.getElementById('entry-sign-table-body');
-            if(!container) return;
-            const cat = document.getElementById('es-cat-select').value;
-            const progId = document.getElementById('es-prog-select').value;
-            
-            let matchedRegs = [...window.appState.registrations];
-            if(cat) matchedRegs = matchedRegs.filter(r => r.cat === cat);
-            if(progId) matchedRegs = matchedRegs.filter(r => r.progId === progId);
-            
-            if(matchedRegs.length === 0) {
-                container.innerHTML = '<tr><td colspan="4" style="text-align:center;">No sign sheet entries found.</td></tr>';
-                return;
-            }
-            let html = '';
-            matchedRegs.forEach(r => {
-                const pt = window.appState.points.find(p => p.progId === r.progId && p.team === r.team && p.student === r.student);
-                const code = pt ? (pt.codeLetter || '-') : '-';
-                html += `<tr><td style="text-align:center; font-weight:bold;">${code}</td><td>${r.student}</td><td>${r.team}</td><td></td></tr>`;
-            });
-            container.innerHTML = html;
-        }
-
-        /* PUBLIC FEEDS & GALLERY SYSTEM */
-        function renderHomePhase() {
-            const regBlock = document.getElementById('home-phase-register');
-            const resBlock = document.getElementById('home-phase-result');
-            if(window.appState.phase === 'register') {
-                if(regBlock) regBlock.style.display = 'block';
-                if(resBlock) resBlock.style.display = 'none';
-                syncTeamLoginPortalUI();
-            } else {
-                if(regBlock) regBlock.style.display = 'none';
-                if(resBlock) resBlock.style.display = 'block';
-                renderResultPhaseFeeds();
-            }
-        }
-        function renderResultPhaseFeeds() {
-            renderTeamStatusGrid();
-            filterResultPrograms();
-            renderPinterestUpdates('all');
-            renderLiveStreamsFeed();
-            renderHighlightsFeed();
-        }
-        function renderTeamStatusGrid() {
-            const container = document.getElementById('team-status-poster-box');
-            if(!container) return;
-            const publishedPosters = (window.appState.teamStatusList || []).filter(p => p.published);
-            if(publishedPosters.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-sub); text-align:center; grid-column:1/-1;">No status posters published yet.</p>';
-                return;
-            }
-            let html = '';
-            publishedPosters.forEach((p, idx) => {
-                const isFeatured = idx === 0 ? 'team-status-featured' : 'team-status-regular';
-                html += `<div class="masonry-item ${isFeatured}" onclick="openMediaViewer('${p.url}', 'image')"><img src="${p.url}" alt="Status Poster"></div>`;
-            });
-            container.innerHTML = html;
-        }
-        window.filterResultPrograms = function() {
-            const container = document.getElementById('results-display-list');
-            if(!container) return;
-            const cat = document.getElementById('res-search-cat')?.value || '';
-            const query = (document.getElementById('res-prog-search')?.value || '').toLowerCase().trim();
-            
-            let list = (window.appState.results || []).filter(r => r.published);
-            if(cat) list = list.filter(r => r.cat === cat);
-            if(query) list = list.filter(r => r.progName.toLowerCase().includes(query));
-            
-            if(list.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-sub); text-align:center;">No published results available.</p>';
-                return;
-            }
-            let html = '';
-            list.forEach(r => {
-                html += `
-                    <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:14px; margin-bottom:10px; border:1px solid var(--border-color);">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                            <strong>${r.progName}</strong> <span style="font-size:0.75rem; background:#d4af37; color:#000; padding:2px 8px; border-radius:10px; font-weight:bold;">#${r.seq || 1}</span>
+            const htmlContent = distinctProgs.map(pid => {
+                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
+                const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
+                return `
+                    <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:10px; border-radius:8px; margin-bottom:6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong>${prog.name} <span style="color:#d4af37;">(${prog.cat})</span></strong>
+                            <div>
+                                <button class="btn btn-warning btn-sm no-print" onclick="printIndividualPointRecord('${pid}')"><i class="fa-solid fa-print"></i> Print</button>
+                                <button class="btn btn-danger btn-sm no-print" onclick="deletePtGroup('${pid}')">Delete</button>
+                            </div>
                         </div>
-                        <img src="${r.imageUrl}" style="width:100%; border-radius:10px; cursor:pointer;" onclick="openMediaViewer('${r.imageUrl}', 'image')">
-                        ${r.ytUrl ? `<a href="${r.ytUrl}" target="_blank" class="btn btn-sm btn-danger btn-block" style="margin-top:8px;"><i class="fa-brands fa-youtube"></i> Watch Stage Performance</a>` : ''}
+                        <div style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;">
+                            ${subPts.map(s => `${s.student} (${s.team}): <strong>${s.score}</strong>`).join(' | ')}
+                        </div>
                     </div>
                 `;
+            }).join('');
+            if(containerContent) containerContent.innerHTML = htmlContent;
+        }
+        window.printIndividualPointRecord = function(progId) {
+            const prog = window.appState.programs.find(p => p.id === progId) || { name: 'Program', cat: 'N/A' };
+            const subPts = window.appState.points.filter(pt => pt.progId === progId).sort((a,b)=>b.score - a.score);
+            const target = document.getElementById('pt-print-area');
+            
+            target.innerHTML = `
+                <div class="bahja-sheet-header">
+                    <h2>BAHJA 2K26 - ${prog.name.toUpperCase()} (${prog.cat})</h2>
+                </div>
+                <table class="bahja-sheet-table">
+                    <thead><tr><th>#</th><th>Student Name</th><th>Team</th><th>Score</th><th>Rank</th></tr></thead>
+                    <tbody>
+                        ${subPts.map((s, idx) => `<tr><td>${idx+1}</td><td>${s.student}</td><td>${s.team}</td><td><strong>${s.score}</strong></td><td>Rank ${idx+1}</td></tr>`).join('')}
+                    </tbody>
+                </table>
+            `;
+            triggerCustomPrint('pt-print-area');
+        }
+        window.printAllPointRecords = function() {
+            const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
+            const target = document.getElementById('pt-print-area');
+            let html = `
+                <div class="bahja-sheet-header">
+                    <h2>BAHJA 2K26 - ALL POINT EVALUATION LOGS</h2>
+                </div>
+            `;
+            distinctProgs.forEach(pid => {
+                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
+                const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
+                html += `
+                    <h4 style="margin-top:10px; font-size:12px;">${prog.name} (${prog.cat})</h4>
+                    <table class="bahja-sheet-table" style="margin-bottom:8px;">
+                        <thead><tr><th>#</th><th>Student Name</th><th>Team</th><th>Score</th></tr></thead>
+                        <tbody>${subPts.map((s, idx) => `<tr><td>${idx+1}</td><td>${s.student}</td><td>${s.team}</td><td>${s.score}</td></tr>`).join('')}</tbody>
+                    </table>
+                `;
             });
-            container.innerHTML = html;
+            target.innerHTML = html;
+            triggerCustomPrint('pt-print-area');
         }
-        window.renderPinterestUpdates = function(filter) {
-            const container = document.getElementById('live-updates-feed');
-            if(!container) return;
-            let list = window.appState.updates || [];
-            if(filter === 'photo') list = list.filter(u => u.type === 'photo');
-            if(filter === 'video') list = list.filter(u => u.type === 'video');
-            if(list.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-sub); text-align:center; grid-column:1/-1;">No updates posted yet.</p>';
-                return;
+        window.deletePtGroup = function(progId) {
+            if(confirm("Delete records?")) {
+                window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
+                saveKey('points', window.appState.points);
+                renderPtList();
             }
-            let html = '';
-            list.forEach(u => {
-                if(u.type === 'photo') {
-                    html += `<div class="masonry-item" onclick="openMediaViewer('${u.fileUrl}', 'image')"><img src="${u.fileUrl}"></div>`;
-                } else {
-                    html += `<div class="masonry-item" onclick="window.open('${u.videoUrl}', '_blank')"><img src="${u.fileUrl}"><div class="media-click-overlay"><span class="btn btn-sm btn-danger"><i class="fa-solid fa-play"></i> Watch</span></div></div>`;
-                }
+        }
+        /* CANDIDATE'S STANDING BREAKDOWN */
+        window.renderJudgeLeaderboard = function() {
+            const tbody = document.getElementById('judge-leaderboard-body');
+            if(!tbody) return;
+            const filterStage = document.getElementById('jd-filter-stage').value;
+            const aggregate = {};
+            window.appState.points.forEach(pt => {
+                if(pt.cat === 'GENERAL') return;
+                const prog = window.appState.programs.find(p => p.id === pt.progId);
+                if(!prog) return;
+                if(filterStage !== 'all' && prog.stage !== filterStage) return;
+                const key = `${pt.team}_${pt.student}`;
+                if(!aggregate[key]) aggregate[key] = { name: pt.student, team: pt.team, cat: pt.cat, total: 0 };
+                aggregate[key].total += pt.score;
             });
-            container.innerHTML = html;
+            const sorted = Object.values(aggregate).sort((a,b) => b.total - a.total);
+            tbody.innerHTML = sorted.map(s => `
+                <tr onclick="viewCandidateBreakdown('${s.name}', '${s.team}')" style="cursor:pointer;">
+                    <td><strong>${s.name}</strong></td>
+                    <td>${s.team}</td>
+                    <td>${s.cat}</td>
+                    <td><strong style="color:#d4af37;">${s.total}</strong></td>
+                </tr>
+            `).join('') || '<tr><td colspan="4">No scores accumulated.</td></tr>';
         }
-        function renderLiveStreamsFeed() {
-            const container = document.getElementById('livelink-feed');
-            if(!container) return;
-            const list = (window.appState.livelinks || []).filter(l => l.mode === 'live');
-            if(list.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-sub); text-align:center;">No live streams active.</p>';
-                return;
-            }
-            let html = '';
-            list.forEach(l => {
-                html += `<div class="masonry-item" onclick="window.open('${l.url}', '_blank')"><img src="${l.thumb}"><p style="font-weight:bold; margin-top:6px;">${l.title}</p></div>`;
+        window.viewCandidateBreakdown = function(sName, team) {
+            const studentPts = window.appState.points.filter(pt => pt.student === sName && pt.team === team);
+            let content = '<table style="width:100%; border-collapse:collapse;"><thead><tr><th>Program</th><th>Score</th></tr></thead><tbody>';
+            let total = 0;
+            studentPts.forEach(pt => {
+                const prog = window.appState.programs.find(p => p.id === pt.progId) || { name: 'Unknown' };
+                content += `<tr><td>${prog.name}</td><td><strong>${pt.score}</strong></td></tr>`;
+                total += pt.score;
             });
-            container.innerHTML = html;
+            content += `</tbody></table><div style="margin-top:10px; font-weight:bold; text-align:right;">Total Points: <span style="color:#d4af37;">${total}</span></div>`;
+            document.getElementById('det-modal-title').innerText = `${sName} (${team}) - Program Breakdown`;
+            document.getElementById('det-modal-content').innerHTML = content;
+            document.getElementById('detail-modal-overlay').style.display = 'flex';
         }
-        function renderHighlightsFeed() {
-            const container = document.getElementById('highlights-feed');
-            if(!container) return;
-            const list = (window.appState.livelinks || []).filter(l => l.mode === 'highlight');
-            if(list.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-sub); text-align:center;">No highlights available.</p>';
-                return;
-            }
-            let html = '';
-            list.forEach(l => {
-                html += `<div class="masonry-item" onclick="window.open('${l.url}', '_blank')"><img src="${l.thumb}"><p style="font-weight:bold; margin-top:6px;">${l.title}</p></div>`;
+        /* LEAD ZONE & TEAM BREAKDOWN */
+        window.renderStatesDashboard = function() {
+            const tbody = document.getElementById('states-table-body');
+            if(!tbody) return;
+            const teamTotals = {};
+            window.appState.teams.forEach(t => teamTotals[t.user] = 0);
+            window.appState.points.forEach(pt => {
+                if(teamTotals[pt.team] !== undefined) teamTotals[pt.team] += pt.score;
             });
-            container.innerHTML = html;
-        }
-
-        /* MEDIA VIEWER MODAL */
-        window.openMediaViewer = function(url, type) {
-            const modal = document.getElementById('media-viewer-modal');
-            const container = document.getElementById('media-viewer-container');
-            const dBtn = document.getElementById('btn-media-download');
-            const sBtn = document.getElementById('btn-media-share');
-            if(type === 'image') {
-                container.innerHTML = `<img src="${url}" style="max-width:100%; max-height:60vh; object-fit:contain;">`;
+            const sortedTeams = Object.entries(teamTotals).sort((a,b) => b[1] - a[1]);
+            tbody.innerHTML = sortedTeams.map(([tName, total]) => `
+                <tr onclick="viewTeamBreakdown('${tName}')" style="cursor:pointer;">
+                    <td><strong>${tName}</strong></td>
+                    <td><strong style="color:#d4af37;">${total}</strong></td>
+                </tr>
+            `).join('') || '<tr><td colspan="2">No data.</td></tr>';
+            const teamDrop = document.getElementById('rank-team-filter');
+            if(teamDrop && teamDrop.children.length === 1) {
+                teamDrop.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
             }
-            dBtn.onclick = () => { const a = document.createElement('a'); a.href = url; a.download = 'bahja_media'; a.click(); };
-            sBtn.onclick = () => { if(navigator.share) { navigator.share({ title:'BAHJA Fest Media', url }); } else { alert("Sharing not supported on this browser."); } };
-            modal.style.display = 'flex';
         }
-        window.closeMediaViewer = function() { document.getElementById('media-viewer-modal').style.display = 'none'; }
-
-        /* LAUNCH PAD (PUBLISH CONTROL) */
-        function renderPublishPanel() {
-            const resContainer = document.getElementById('publish-results-list');
-            const statusContainer = document.getElementById('publish-status-list');
-            if(resContainer) {
-                const results = window.appState.results || [];
-                if(results.length === 0) resContainer.innerHTML = '<p style="font-size:0.8rem; color:var(--text-sub);">No result items uploaded.</p>';
-                else {
-                    let html = '';
-                    results.forEach(r => {
-                        html += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:8px;">
-                                <span style="font-size:0.85rem;">${r.progName} (#${r.seq || 1})</span>
-                                <button class="btn btn-sm ${r.published ? 'btn-success' : 'btn-warning'}" onclick="togglePublishResult('${r.id}')">${r.published ? '✅ Published' : '❌ Not Published'}</button>
-                            </div>
-                        `;
+        window.viewTeamBreakdown = function(tName) {
+            const teamPts = window.appState.points.filter(pt => pt.team === tName);
+            let content = '<table style="width:100%; border-collapse:collapse;"><thead><tr><th>Student</th><th>Program</th><th>Score</th></tr></thead><tbody>';
+            let total = 0;
+            teamPts.forEach(pt => {
+                const prog = window.appState.programs.find(p => p.id === pt.progId) || { name: 'Unknown' };
+                content += `<tr><td>${pt.student}</td><td>${prog.name}</td><td><strong>${pt.score}</strong></td></tr>`;
+                total += pt.score;
+            });
+            content += `</tbody></table><div style="margin-top:10px; font-weight:bold; text-align:right;">Aggregated Team Score: <span style="color:#d4af37;">${total}</span></div>`;
+            document.getElementById('det-modal-title').innerText = `Team Breakdown - ${tName}`;
+            document.getElementById('det-modal-content').innerHTML = content;
+            document.getElementById('detail-modal-overlay').style.display = 'flex';
+        }
+        window.renderRankWinnersList = function() {
+            const tbody = document.getElementById('rank-winners-body');
+            if(!tbody) return;
+            const teamFilter = document.getElementById('rank-team-filter');
+            const posFilter = document.getElementById('rank-pos-filter');
+            const fTeam = teamFilter ? teamFilter.value : '';
+            const fPos = posFilter ? posFilter.value : 'all';
+            const allRows = [];
+            const distinctProgs = [...new Set((window.appState.points || []).map(p => p.progId))];
+            distinctProgs.forEach(pid => {
+                const prog = window.appState.programs.find(p => p.id === pid) || { name: 'N/A' };
+                const subPts = window.appState.points
+                    .filter(pt => pt.progId === pid)
+                    .sort((a,b) => {
+                        const scoreDiff = Number(b.score || 0) - Number(a.score || 0);
+                        if(scoreDiff !== 0) return scoreDiff;
+                        return String(a.student || '').localeCompare(String(b.student || ''));
                     });
-                    resContainer.innerHTML = html;
-                }
-            }
-            if(statusContainer) {
-                const statusList = window.appState.teamStatusList || [];
-                if(statusList.length === 0) statusContainer.innerHTML = '<p style="font-size:0.8rem; color:var(--text-sub);">No status posters uploaded.</p>';
-                else {
-                    let html = '';
-                    statusList.forEach((s, idx) => {
-                        html += `
-                            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:8px;">
-                                <span style="font-size:0.85rem;">Status Poster ${idx + 1}</span>
-                                <button class="btn btn-sm ${s.published ? 'btn-success' : 'btn-warning'}" onclick="togglePublishStatus('${s.id}')">${s.published ? '✅ Published' : '❌ Not Published'}</button>
-                            </div>
-                        `;
+                subPts.forEach((pt, idx) => {
+                    const rank = idx + 1;
+                    if(fTeam && pt.team !== fTeam) return;
+                    if(fPos !== 'all' && rank !== parseInt(fPos, 10)) return;
+                    allRows.push({
+                        rank,
+                        student: pt.student || '',
+                        team: pt.team || '',
+                        program: prog.name || 'N/A',
+                        score: Number(pt.score || 0)
                     });
-                    statusContainer.innerHTML = html;
-                }
-            }
+                });
+            });
+            allRows.sort((a,b) => {
+                if(a.rank !== b.rank) return a.rank - b.rank;
+                const programCmp = a.program.localeCompare(b.program);
+                if(programCmp !== 0) return programCmp;
+                const teamCmp = a.team.localeCompare(b.team);
+                if(teamCmp !== 0) return teamCmp;
+                return a.student.localeCompare(b.student);
+            });
+            let count = 1;
+            tbody.innerHTML = allRows.map(row => `
+                <tr>
+                    <td>${count++}</td>
+                    <td><strong>${row.student}</strong></td>
+                    <td>${row.team}</td>
+                    <td>${row.program}</td>
+                    <td>${row.score}</td>
+                    <td><span style="font-weight:bold; color:#d4af37;">Rank ${row.rank}</span></td>
+                </tr>
+            `).join('') || '<tr><td colspan="6">No winners matching position criteria.</td></tr>';
         }
-        window.togglePublishResult = function(id) {
-            const target = window.appState.results.find(r => r.id === id);
-            if(target) {
-                target.published = !target.published;
-                saveKey('results', window.appState.results);
-                renderPublishPanel();
-                filterResultPrograms();
-            }
+        window.toggleRegLock = function() { 
+            window.appState.portalOpen = !window.appState.portalOpen; 
+            saveKey('portalOpen', window.appState.portalOpen); 
+            syncControlPanelViews();
         }
-        window.togglePublishStatus = function(id) {
-            const target = window.appState.teamStatusList.find(s => s.id === id);
-            if(target) {
-                target.published = !target.published;
-                saveKey('teamStatusList', window.appState.teamStatusList);
-                renderPublishPanel();
-                renderTeamStatusGrid();
-            }
+        
+        window.addTeamMaster = function(e) {
+            e.preventDefault();
+            window.appState.teams.push({ user: document.getElementById('m-team-user').value.trim(), pass: document.getElementById('m-team-pass').value.trim() });
+            saveKey('teams', window.appState.teams);
+            syncControlPanelViews();
+            e.target.reset();
         }
-
-        /* CONTROL DECK ACTIONS & MEDIA UPLOADS */
+        window.deleteTeamMaster = function(idx) { 
+            window.appState.teams.splice(idx, 1); 
+            saveKey('teams', window.appState.teams);
+            syncControlPanelViews();
+        }
+        
+        window.addProgramMaster = function(e) {
+            e.preventDefault();
+            window.appState.programs.push({
+                id: 'pr_'+Date.now(),
+                name: document.getElementById('m-prog-name').value.trim(),
+                cat: document.getElementById('m-prog-cat').value,
+                stage: document.getElementById('m-prog-stage').value,
+                limit: parseInt(document.getElementById('m-prog-limit').value),
+                topic: ''
+            });
+            saveKey('programs', window.appState.programs);
+            syncControlPanelViews();
+            e.target.reset();
+        }
+        window.deleteProgramMaster = function(id) { 
+            window.appState.programs = window.appState.programs.filter(p => p.id !== id); 
+            saveKey('programs', window.appState.programs);
+            syncControlPanelViews();
+        }
+        
         window.uploadTeamStatusPoster = async function(e) {
             e.preventDefault();
-            const file = document.getElementById('status-file').files[0];
-            if(!file) return;
-            const compressed = await compressImage(file, 1000, 0.7);
-            const newItem = { id: 'ts_' + Date.now(), url: compressed, published: false };
-            if(!window.appState.teamStatusList) window.appState.teamStatusList = [];
-            window.appState.teamStatusList.push(newItem);
-            saveKey('teamStatusList', window.appState.teamStatusList);
-            alert("Poster saved! Use Launch Pad to publish.");
-            document.getElementById('status-file').value = '';
-            renderPublishPanel();
+            const btn = document.getElementById('btn-up-status');
+            const f = document.getElementById('status-file').files[0];
+            if(f) {
+                btn.innerText = "Processing...";
+                btn.disabled = true;
+                const compressed = await compressImage(f, 800, 0.6);
+                
+                if(!window.appState.teamStatusList) window.appState.teamStatusList = [];
+                const newStatusItem = { id: 'ts_'+Date.now(), url: compressed, published: false };
+                window.appState.teamStatusList.unshift(newStatusItem);
+                window.appState.teamStatusUrl = compressed;
+                
+                renderResultPhaseFeeds();
+                syncControlPanelViews();
+                saveKey('teamStatusList', window.appState.teamStatusList);
+                saveKey('teamStatusUrl', compressed);
+                
+                btn.innerText = "Upload Status Poster";
+                btn.disabled = false;
+                e.target.reset();
+            }
         }
+        window.deleteStatusItem = function(id) {
+            if(!window.appState.teamStatusList) return;
+            window.appState.teamStatusList = window.appState.teamStatusList.filter(item => item.id !== id);
+            window.appState.teamStatusUrl = window.appState.teamStatusList.length > 0 ? window.appState.teamStatusList[0].url : '';
+            saveKey('teamStatusList', window.appState.teamStatusList);
+            saveKey('teamStatusUrl', window.appState.teamStatusUrl);
+            syncControlPanelViews();
+            renderResultPhaseFeeds();
+        }
+        
         window.populateResProgDropdown = function() {
             const cat = document.getElementById('res-upload-cat').value;
             const drop = document.getElementById('res-upload-prog');
             const matched = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
-            drop.innerHTML = '<option value="">-- Select Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
         }
         window.uploadProgramResult = async function(e) {
             e.preventDefault();
+            const btn = document.getElementById('btn-up-res');
             const progId = document.getElementById('res-upload-prog').value;
-            const seq = document.getElementById('res-custom-number').value;
-            const file = document.getElementById('res-file').files[0];
-            const ytUrl = document.getElementById('res-yt-url').value;
-            if(!progId || !file) return;
-            const targetProg = window.appState.programs.find(p => p.id === progId);
-            const compressed = await compressImage(file, 1000, 0.7);
-            const newItem = {
-                id: 'res_' + Date.now(), progId, cat: targetProg.cat, progName: targetProg.name,
-                seq: parseInt(seq) || 1, imageUrl: compressed, ytUrl, published: false
-            };
-            if(!window.appState.results) window.appState.results = [];
-            window.appState.results.push(newItem);
-            saveKey('results', window.appState.results);
-            alert("Result uploaded! Use Launch Pad to publish.");
-            renderPublishPanel();
+            const customNum = document.getElementById('res-custom-number').value.trim();
+            const yt = document.getElementById('res-yt-url').value.trim();
+            const fileEl = document.getElementById('res-file').files[0];
+            if(fileEl && progId) {
+                btn.innerText = "Uploading...";
+                btn.disabled = true;
+                const compressed = await compressImage(fileEl, 800, 0.6);
+                
+                window.appState.results = window.appState.results.filter(r => r.progId !== progId);
+                window.appState.results.push({ progId, number: customNum, poster: compressed, youtube: yt, published: false });
+                
+                filterResultPrograms();
+                syncControlPanelViews();
+                saveKey('results', window.appState.results);
+                
+                btn.innerText = "Upload Result (Save Only)";
+                btn.disabled = false;
+            }
         }
+        window.setResultPublished = function(progId, shouldPublish) {
+            const item = (window.appState.results || []).find(r => r.progId === progId);
+            if(!item) return;
+            item.published = !!shouldPublish;
+            saveKey('results', window.appState.results);
+            renderPublishPanel();
+            filterResultPrograms();
+            syncControlPanelViews();
+        }
+        window.setStatusPublished = function(id, shouldPublish) {
+            const item = (window.appState.teamStatusList || []).find(r => r.id === id);
+            if(!item) return;
+            item.published = !!shouldPublish;
+            saveKey('teamStatusList', window.appState.teamStatusList);
+            renderPublishPanel();
+            renderResultPhaseFeeds();
+            syncControlPanelViews();
+        }
+        window.renderPublishPanel = function() {
+            const resBox = document.getElementById('publish-results-list');
+            if(resBox) {
+                const results = [...(window.appState.results || [])].sort((a,b) => Number(a.number || 999999) - Number(b.number || 999999));
+                resBox.innerHTML = results.length ? results.map(r => {
+                    const p = window.appState.programs.find(pr => pr.id === r.progId) || { name:'Unknown Program', cat:'' };
+                    const pub = r.published === true;
+                    return `
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:10px; background:rgba(255,255,255,0.03);">
+                            <div style="min-width:0;">
+                                <div style="font-weight:800;">Result ${r.number || ''} — ${p.name}</div>
+                                <div style="font-size:0.75rem; color:var(--text-sub);">${p.cat || ''} · ${pub ? 'Published to public site' : 'Stored only — not visible publicly'}</div>
+                            </div>
+                            <label style="display:flex; align-items:center; gap:7px; white-space:nowrap; font-size:0.78rem; font-weight:800;">
+                                <input type="checkbox" ${pub ? 'checked' : ''} onchange="setResultPublished('${r.progId}', this.checked)" style="width:20px;height:20px;">
+                                <span style="color:${pub ? '#10b981' : '#f59e0b'}">${pub ? '✅ Published' : '❌ Not Published'}</span>
+                            </label>
+                        </div>`;
+                }).join('') : '<div style="color:var(--text-sub); text-align:center; padding:12px;">No uploaded results yet.</div>';
+            }
+            const stBox = document.getElementById('publish-status-list');
+            if(stBox) {
+                const items = window.appState.teamStatusList || [];
+                stBox.innerHTML = items.length ? items.map((item,idx) => {
+                    const pub = item.published === true;
+                    return `
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:10px; background:rgba(255,255,255,0.03);">
+                            <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+                                <img src="${item.url}" style="width:56px;height:40px;border-radius:6px;object-fit:cover;">
+                                <div><div style="font-weight:800;">Result Poster #${idx+1}</div><div style="font-size:0.75rem;color:var(--text-sub);">${pub ? 'Visible publicly' : 'Stored only — hidden from public site'}</div></div>
+                            </div>
+                            <label style="display:flex; align-items:center; gap:7px; white-space:nowrap; font-size:0.78rem; font-weight:800;">
+                                <input type="checkbox" ${pub ? 'checked' : ''} onchange="setStatusPublished('${item.id}', this.checked)" style="width:20px;height:20px;">
+                                <span style="color:${pub ? '#10b981' : '#f59e0b'}">${pub ? '✅ Published' : '❌ Not Published'}</span>
+                            </label>
+                        </div>`;
+                }).join('') : '<div style="color:var(--text-sub); text-align:center; padding:12px;">No uploaded posters yet.</div>';
+            }
+        }
+        window.deleteResultMaster = function(progId) { 
+            window.appState.results = window.appState.results.filter(r => r.progId !== progId); 
+            saveKey('results', window.appState.results);
+            syncControlPanelViews();
+            filterResultPrograms();
+        }
+        
         window.toggleUpdateVideoUrl = function() {
             const type = document.getElementById('up-type').value;
             const linkInput = document.getElementById('up-video-link');
-            const lbl = document.getElementById('lbl-up-file');
+            const lblFile = document.getElementById('lbl-up-file');
             if(type === 'video') {
                 linkInput.style.display = 'block';
-                lbl.innerText = 'Choose Thumbnail Image';
+                linkInput.required = true;
+                lblFile.innerText = "Choose Video Thumbnail Image";
             } else {
                 linkInput.style.display = 'none';
-                lbl.innerText = 'Choose Photo';
+                linkInput.required = false;
+                lblFile.innerText = "Choose Photo";
             }
         }
         window.uploadUpdateFeed = async function(e) {
             e.preventDefault();
+            const btn = document.getElementById('btn-up-feed');
             const type = document.getElementById('up-type').value;
-            const file = document.getElementById('up-file').files[0];
-            const videoUrl = document.getElementById('up-video-link').value;
-            if(!file) return;
-            const compressed = await compressImage(file, 800, 0.6);
-            const newItem = { id: 'up_' + Date.now(), type, fileUrl: compressed, videoUrl: type === 'video' ? videoUrl : '' };
-            if(!window.appState.updates) window.appState.updates = [];
-            window.appState.updates.push(newItem);
+            const f = document.getElementById('up-file').files[0];
+            const vLink = document.getElementById('up-video-link').value.trim();
+            if(!f) return;
+            btn.innerText = "Uploading...";
+            btn.disabled = true;
+            try {
+                const compressedImage = await compressImage(f, 800, 0.6);
+                if(!window.appState.updates) window.appState.updates = [];
+                
+                if (type === 'photo') {
+                    window.appState.updates.unshift({ id:'up_'+Date.now(), type: 'photo', url: compressedImage });
+                } else {
+                    window.appState.updates.unshift({ id:'up_'+Date.now(), type: 'video', url: vLink, thumb: compressedImage });
+                }
+                renderPinterestUpdates('all');
+                syncControlPanelViews();
+                
+                saveKey('updates', window.appState.updates);
+                
+                btn.innerText = "Upload & Publish";
+                btn.disabled = false;
+                e.target.reset();
+                window.toggleUpdateVideoUrl();
+            } catch(err) {
+                console.error("Upload error: ", err);
+                btn.innerText = "Upload & Publish";
+                btn.disabled = false;
+                alert("Failed to upload media. Please try again.");
+            }
+        }
+        window.deleteUpdateMaster = function(id) { 
+            window.appState.updates = window.appState.updates.filter(u => u.id !== id); 
             saveKey('updates', window.appState.updates);
-            alert("Update posted!");
+            syncControlPanelViews();
             renderPinterestUpdates('all');
         }
+        
         window.uploadStreamLinks = async function(e) {
             e.preventDefault();
-            const title = document.getElementById('st-title').value;
-            const url = document.getElementById('st-url').value;
-            const file = document.getElementById('st-thumb').files[0];
+            const btn = document.getElementById('btn-up-stream');
+            const title = document.getElementById('st-title').value.trim();
+            const url = document.getElementById('st-url').value.trim();
             const mode = document.getElementById('st-mode').value;
-            if(!file || !url) return;
-            const compressed = await compressImage(file, 600, 0.6);
-            const newItem = { id: 'st_' + Date.now(), title, url, thumb: compressed, mode };
-            if(!window.appState.livelinks) window.appState.livelinks = [];
-            window.appState.livelinks.push(newItem);
-            saveKey('livelinks', window.appState.livelinks);
-            alert("Stream link added!");
-            renderLiveStreamsFeed();
-            renderHighlightsFeed();
-        }
-
-        /* CONTROL DECK - TEAM & PROGRAM MASTER MANAGERS */
-        function syncControlPanelViews() {
-            renderMasterTeamsList();
-            renderMasterProgsList();
-            syncRegLockBtn();
-        }
-        function syncRegLockBtn() {
-            const btn = document.getElementById('lock-reg-btn');
-            if(!btn) return;
-            btn.className = window.appState.portalOpen ? 'btn btn-sm btn-success' : 'btn btn-sm btn-danger';
-            btn.innerText = window.appState.portalOpen ? 'UNLOCKED (Open)' : 'LOCKED (Closed)';
-        }
-        window.toggleRegLock = function() {
-            window.appState.portalOpen = !window.appState.portalOpen;
-            saveKey('portalOpen', window.appState.portalOpen);
-            syncRegLockBtn();
-        }
-        window.saveMaxLimitMaster = function() {
-            const val = parseInt(document.getElementById('m-max-limit-input').value) || 3;
-            window.appState.maxProgLimit = val;
-            saveKey('maxProgLimit', val);
-            alert("Limit updated!");
-        }
-        window.addTeamMaster = function(e) {
-            e.preventDefault();
-            const user = document.getElementById('m-team-user').value.trim();
-            const pass = document.getElementById('m-team-pass').value.trim();
-            if(!user || !pass) return;
-            if(window.appState.teams.some(t => t.user === user)) { alert("Team already exists!"); return; }
-            window.appState.teams.push({ id: 'tm_' + Date.now(), user, pass });
-            saveKey('teams', window.appState.teams);
-            renderMasterTeamsList();
-            document.getElementById('m-team-user').value = '';
-            document.getElementById('m-team-pass').value = '';
-        }
-        function renderMasterTeamsList() {
-            const container = document.getElementById('master-teams-list');
-            if(!container) return;
-            let html = '';
-            (window.appState.teams || []).forEach(t => {
-                html += `<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:6px 10px; border-radius:6px; margin-bottom:4px; font-size:0.85rem;"><span>${t.user}</span><button class="btn btn-sm btn-danger" onclick="deleteTeamMaster('${t.id}')">Delete</button></div>`;
-            });
-            container.innerHTML = html;
-        }
-        window.deleteTeamMaster = function(id) {
-            window.appState.teams = window.appState.teams.filter(t => t.id !== id);
-            saveKey('teams', window.appState.teams);
-            renderMasterTeamsList();
-        }
-        window.addProgramMaster = function(e) {
-            e.preventDefault();
-            const name = document.getElementById('m-prog-name').value.trim();
-            const cat = document.getElementById('m-prog-cat').value;
-            const stage = document.getElementById('m-prog-stage').value;
-            const limit = parseInt(document.getElementById('m-prog-limit').value) || 1;
-            if(!name) return;
-            window.appState.programs.push({ id: 'pr_' + Date.now(), name, cat, stage, limit });
-            saveKey('programs', window.appState.programs);
-            renderMasterProgsList();
-            document.getElementById('m-prog-name').value = '';
-        }
-        function renderMasterProgsList() {
-            const container = document.getElementById('master-progs-list');
-            if(!container) return;
-            let html = '';
-            (window.appState.programs || []).forEach(p => {
-                html += `<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:6px 10px; border-radius:6px; margin-bottom:4px; font-size:0.82rem;"><span>${p.name} (${p.cat}) - Max: ${p.limit}</span><button class="btn btn-sm btn-danger" onclick="deleteProgMaster('${p.id}')">Delete</button></div>`;
-            });
-            container.innerHTML = html;
-        }
-        window.deleteProgMaster = function(id) {
-            window.appState.programs = window.appState.programs.filter(p => p.id !== id);
-            saveKey('programs', window.appState.programs);
-            renderMasterProgsList();
-        }
-
-        /* REGISTRATION REPORT GENERATOR */
-        function populateReportProgDropdown() {
-            const cat = document.getElementById('rep-cat')?.value || '';
-            const drop = document.getElementById('rep-prog');
-            const teamDrop = document.getElementById('rep-team');
-            if(teamDrop) {
-                const currentTeam = teamDrop.value;
-                teamDrop.innerHTML = '<option value="">All Teams</option>' + (window.appState.teams || []).map(t => `<option value="${t.user}">${t.user}</option>`).join('');
-                teamDrop.value = currentTeam;
+            const thumbFile = document.getElementById('st-thumb').files[0];
+            if(thumbFile) {
+                btn.innerText = "Adding...";
+                btn.disabled = true;
+                const thumbData = await compressImage(thumbFile, 600, 0.6);
+                const obj = { id: 'st_'+Date.now(), title, url, thumb: thumbData, mode };
+                
+                if(mode === 'live') {
+                    window.appState.livelinks.push(obj);
+                    renderResultPhaseFeeds();
+                    saveKey('livelinks', window.appState.livelinks);
+                } else {
+                    window.appState.highlights.push(obj);
+                    renderResultPhaseFeeds();
+                    saveKey('highlights', window.appState.highlights);
+                }
+                syncControlPanelViews();
+                btn.innerText = "Add Stream";
+                btn.disabled = false;
+                e.target.reset();
+                alert("Stream Added Instantly.");
             }
-            if(drop) {
-                let matched = window.appState.programs || [];
-                if(cat) matched = matched.filter(p => p.cat === cat);
-                matched.sort((a,b)=>a.name.localeCompare(b.name));
-                drop.innerHTML = '<option value="">All Programs (A-Z)</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        }
+        window.deleteStreamMaster = function(id, mode) {
+            if(mode === 'live') {
+                window.appState.livelinks = window.appState.livelinks.filter(l => l.id !== id);
+                saveKey('livelinks', window.appState.livelinks);
+            } else {
+                window.appState.highlights = window.appState.highlights.filter(h => h.id !== id);
+                saveKey('highlights', window.appState.highlights);
+            }
+            syncControlPanelViews();
+            renderResultPhaseFeeds();
+        }
+        function populateReportProgDropdown() {
+            const cat = document.getElementById('rep-cat').value;
+            const drop = document.getElementById('rep-prog');
+            if(!drop) return;
+            const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
+            drop.innerHTML = '<option value="">All Programs (A-Z)</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        }
+        function syncControlPanelViews() {
+            const btn = document.getElementById('lock-reg-btn');
+            if(btn) {
+                btn.innerText = window.appState.portalOpen ? "Lock Reg" : "Unlock Reg";
+                btn.className = window.appState.portalOpen ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
+            }
+            if(document.getElementById('m-max-limit-input')) {
+                document.getElementById('m-max-limit-input').value = window.appState.maxProgLimit;
+            }
+            const v = window.appState.visibilities || {};
+            for(let key in v) {
+                const el = document.getElementById(`toggle-vis-${key}`);
+                if(el) el.checked = !!v[key];
+            }
+            const mTeams = document.getElementById('master-teams-list');
+            if(mTeams) {
+                mTeams.innerHTML = window.appState.teams.map((t, idx) => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+                        <span>${t.user}</span> <button class="btn btn-danger btn-sm" onclick="deleteTeamMaster(${idx})">x</button>
+                    </div>
+                `).join('');
+            }
+            const mProgs = document.getElementById('master-progs-list');
+            if(mProgs) {
+                mProgs.innerHTML = window.appState.programs.sort((a,b)=>a.name.localeCompare(b.name)).map(p => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+                        <span><strong>${p.name}</strong> (${p.cat})</span> <button class="btn btn-danger btn-sm" onclick="deleteProgramMaster('${p.id}')">x</button>
+                    </div>
+                `).join('');
+            }
+            const mStatus = document.getElementById('master-status-preview');
+            if(mStatus) {
+                const list = window.appState.teamStatusList || [];
+                mStatus.innerHTML = list.map((item, idx) => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; border-radius:6px; font-size:0.85rem;">
+                        <img src="${item.url}" style="height:40px; border-radius:4px; object-fit:contain;">
+                        <span>Poster #${idx+1} — ${item.published === true ? '✅ Published' : '❌ Not Published'}</span>
+                        <button class="btn btn-danger btn-sm" onclick="deleteStatusItem('${item.id}')">Delete</button>
+                    </div>
+                `).join('');
+            }
+            const mRes = document.getElementById('master-results-list');
+            if(mRes) {
+                mRes.innerHTML = window.appState.results.map(r => {
+                    const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Unknown' };
+                    return `
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+                            <span>Result ${r.number || ''}: ${p.name} — ${r.published === true ? '✅ Published' : '❌ Not Published'}</span> <button class="btn btn-danger btn-sm" onclick="deleteResultMaster('${r.progId}')">x</button>
+                        </div>
+                    `;
+                }).join('');
+            }
+            const mUpdates = document.getElementById('master-updates-list');
+            if(mUpdates) {
+                mUpdates.innerHTML = (window.appState.updates || []).map(u => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+                        <span>Update (${u.type})</span> <button class="btn btn-danger btn-sm" onclick="deleteUpdateMaster('${u.id}')">x</button>
+                    </div>
+                `).join('');
+            }
+            const mStreams = document.getElementById('master-streams-list');
+            if(mStreams) {
+                mStreams.innerHTML = [
+                    ...window.appState.livelinks.map(l => ({ ...l, mode:'live' })),
+                    ...window.appState.highlights.map(h => ({ ...h, mode:'highlight' }))
+                ].map(s => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+                        <span>${s.mode.toUpperCase()}: ${s.title}</span> <button class="btn btn-danger btn-sm" onclick="deleteStreamMaster('${s.id}', '${s.mode}')">x</button>
+                    </div>
+                `).join('');
+            }
+            const rTeam = document.getElementById('rep-team');
+            if(rTeam && rTeam.children.length === 1) {
+                rTeam.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
             }
             renderReportTable();
         }
-        function renderReportTable() {
-            const container = document.getElementById('report-table-body');
-            if(!container) return;
-            const team = document.getElementById('rep-team')?.value || '';
-            const cat = document.getElementById('rep-cat')?.value || '';
-            const progId = document.getElementById('rep-prog')?.value || '';
-            const search = (document.getElementById('rep-prog-search')?.value || '').toLowerCase().trim();
-            
-            let list = window.appState.registrations || [];
-            if(team) list = list.filter(r => r.team === team);
-            if(cat) list = list.filter(r => r.cat === cat);
-            if(progId) list = list.filter(r => r.progId === progId);
-            if(search) list = list.filter(r => r.progName.toLowerCase().includes(search) || r.student.toLowerCase().includes(search));
-            
-            if(list.length === 0) {
-                container.innerHTML = '<tr><td colspan="5" style="text-align:center;">No registration entries match filters.</td></tr>';
-                return;
-            }
-            let html = '';
-            list.forEach((r, idx) => {
-                html += `<tr><td>${idx+1}</td><td>${r.student}</td><td>${r.team}</td><td>${r.cat}</td><td>${r.progName}</td></tr>`;
+        window.renderReportTable = function() {
+            const fTeam = document.getElementById('rep-team') ? document.getElementById('rep-team').value : '';
+            const fCat = document.getElementById('rep-cat') ? document.getElementById('rep-cat').value : '';
+            const fProg = document.getElementById('rep-prog') ? document.getElementById('rep-prog').value : '';
+            const searchQ = document.getElementById('rep-prog-search') ? document.getElementById('rep-prog-search').value.toLowerCase().trim() : '';
+            const tbody = document.getElementById('report-table-body');
+            if(!tbody) return;
+            let rows = '';
+            let count = 1;
+            window.appState.registrations.forEach(r => {
+                const p = window.appState.programs.find(pr => pr.id === r.progId);
+                if(!p) return;
+                if(fTeam && r.team !== fTeam) return;
+                if(fCat && r.cat !== fCat) return;
+                if(fProg && r.progId !== fProg) return;
+                if(searchQ && !p.name.toLowerCase().includes(searchQ)) return;
+                r.participants.forEach(name => {
+                    rows += `<tr>
+                        <td style="text-align:center;">${count++}</td>
+                        <td><strong>${name}</strong></td>
+                        <td>${r.team}</td>
+                        <td>${r.cat}</td>
+                        <td>${p.name}</td>
+                    </tr>`;
+                });
             });
-            container.innerHTML = html;
+            tbody.innerHTML = rows || '<tr><td colspan="5" style="text-align:center;">No entries found.</td></tr>';
         }
-
-        /* SECURITY VAULT & LAYOUT STUDIO CONFIGS */
-        function syncProtectionFields() {
-            const container = document.getElementById('sub-panel-pass-managers-container');
-            if(!container) return;
-            const locks = window.appState.subLocks || {};
-            const keys = [
-                { key: 'settings', label: 'Settings Access Password' },
-                { key: 'control_panel', label: 'Control Deck Access Password' },
-                { key: 'entry_judge', label: 'Judge Portal Access Password' },
-                { key: 'pointroom', label: 'Record Terminal Access Password' },
-                { key: 'judge', label: "Candidate's Standing Access Password" },
-                { key: 'states', label: 'Lead Zone Access Password' },
-                { key: 'protection', label: 'Security Vault Access Password' },
-                { key: 'modify', label: 'Layout Studio Access Password' }
-            ];
-            let html = '';
-            keys.forEach(k => {
-                html += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px 10px; border-radius:8px;">
-                        <span style="font-size:0.85rem;">${k.label}</span>
-                        <input type="password" class="form-control" style="width:140px;" placeholder="Code..." value="${locks[k.key] || ''}" onchange="updateSubLock('${k.key}', this.value)">
+        
+        window.populateEsProgs = function() {
+            const cat = document.getElementById('es-cat-select').value;
+            const drop = document.getElementById('es-prog-select');
+            if(!drop) return;
+            const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
+            drop.innerHTML = '<option value="">All Programs</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        };
+        window.renderEntrySignTable = function() {
+            const fCat = document.getElementById('es-cat-select') ? document.getElementById('es-cat-select').value : '';
+            const fProg = document.getElementById('es-prog-select') ? document.getElementById('es-prog-select').value : '';
+            const tbody = document.getElementById('entry-sign-table-body');
+            const title = document.getElementById('es-print-title');
+            
+            if(!tbody) return;
+            
+            let printTitle = 'ENTRY SIGN';
+            if(fProg) {
+                const p = window.appState.programs.find(pr => pr.id === fProg);
+                if(p) printTitle += ' - ' + p.name;
+            } else if (fCat) {
+                printTitle += ' - ' + fCat;
+            }
+            if(title) title.innerText = printTitle;
+            let rows = '';
+            window.appState.registrations.forEach(r => {
+                const p = window.appState.programs.find(pr => pr.id === r.progId);
+                if(!p) return;
+                if(fCat && r.cat !== fCat) return;
+                if(fProg && r.progId !== fProg) return;
+                
+                r.participants.forEach(name => {
+                    const savedPt = window.appState.points.find(pt => pt.progId === r.progId && pt.team === r.team && pt.student === name);
+                    const codeLet = savedPt ? (savedPt.codeLetter || '') : '';
+                    rows += '<tr>' +
+                        '<td style="text-align:center; font-weight:bold;">' + codeLet + '</td>' +
+                        '<td><strong>' + name + '</strong>' + (!fProg ? '<br><small style="color:gray;">' + p.name + '</small>' : '') + '</td>' +
+                        '<td>' + r.team + '</td>' +
+                        '<td></td>' +
+                    '</tr>';
+                });
+            });
+            tbody.innerHTML = rows || '<tr><td colspan="4" style="text-align:center;">No entries found.</td></tr>';
+        };
+        
+        function renderResultPhaseFeeds() {
+            const statusBox = document.getElementById('team-status-poster-box');
+            if(statusBox) {
+                const list = (window.appState.teamStatusList || []).filter(item => item.published === true);
+                if(list.length > 0) {
+                    statusBox.innerHTML = list.map((item, index) => `
+                        <div class="masonry-item ${index === 0 ? 'team-status-featured' : 'team-status-regular'}" onclick="openMediaViewer('${item.url}', 'photo')">
+                            <img src="${item.url}" loading="${index === 0 ? 'eager' : 'lazy'}" decoding="async" class="feed-media-img">
+                            <div class="media-click-overlay">
+                                <span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:6px; color:#cbd5e1;">
+                                    <i class="fa-solid fa-image"></i> Click to Open
+                                </span>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    statusBox.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">No Team Status published.</p>';
+                }
+            }
+            filterResultPrograms();
+            renderPinterestUpdates('all');
+            const liveFeed = document.getElementById('livelink-feed');
+            if(liveFeed) {
+                liveFeed.innerHTML = window.appState.livelinks.map(l => `
+                    <div class="masonry-item">
+                        <img src="${l.thumb}" loading="lazy" decoding="async" class="feed-media-img">
+                        <h5 style="margin-top:6px; font-size:0.9rem;">${l.title}</h5>
+                        <a href="${l.url}" target="_blank" class="btn btn-sm btn-danger btn-block" style="margin-top:6px;"><i class="fa-solid fa-play"></i> Watch Stream</a>
                     </div>
-                `;
-            });
-            container.innerHTML = html;
-        }
-        window.updateSubLock = function(key, val) {
-            if(!window.appState.subLocks) window.appState.subLocks = { ...EMPTY_SUB_LOCKS };
-            window.appState.subLocks[key] = val.trim();
-            saveKey('subLocks', window.appState.subLocks);
-        }
-        window.verifyAndOpenMainCredShift = function() {
-            const u = document.getElementById('prot-old-main-u').value.trim();
-            const p = document.getElementById('prot-old-main-p').value.trim();
-            const creds = window.appState.mainCreds || {};
-            if(u === creds.user && p === creds.pass) {
-                document.getElementById('prot-new-main-block').style.display = 'block';
-            } else { alert("Verification failed!"); }
-        }
-        window.commitMainCredShift = function() {
-            const nu = document.getElementById('prot-new-main-u').value.trim();
-            const np = document.getElementById('prot-new-main-p').value.trim();
-            if(!nu || !np) return;
-            window.appState.mainCreds = { user: nu, pass: np };
-            saveKey('mainCreds', window.appState.mainCreds);
-            alert("Main login credentials changed!");
-            document.getElementById('prot-new-main-block').style.display = 'none';
-        }
-        function syncModifyConfigInputs() {
-            const vis = window.appState.visuals || {};
-            if(document.getElementById('mod-banner-text')) document.getElementById('mod-banner-text').value = vis.bannerText || '';
-            if(document.getElementById('mod-title-text')) document.getElementById('mod-title-text').value = vis.titleText || '';
-            if(document.getElementById('mod-header-align')) document.getElementById('mod-header-align').value = vis.headerAlign || 'center';
-            if(document.getElementById('mod-font-family')) document.getElementById('mod-font-family').value = vis.fontFamily || "'Poppins', sans-serif";
-        }
-        window.liveUpdateVisuals = function() {
-            if(!window.appState.visuals) window.appState.visuals = {};
-            const vis = window.appState.visuals;
-            vis.bannerText = document.getElementById('mod-banner-text').value;
-            vis.titleText = document.getElementById('mod-title-text').value;
-            vis.headerAlign = document.getElementById('mod-header-align').value;
-            vis.fontFamily = document.getElementById('mod-font-family').value;
-            applyVisualCustomizations();
-        }
-        window.saveVisualLayoutState = function() {
-            saveKey('visuals', window.appState.visuals);
-            alert("Appearance settings saved!");
-        }
-
-        /* TEAM PORTAL LOGIN & PARTICIPANTS ENTRY */
-        function syncTeamLoginPortalUI() {
-            const loginBlock = document.getElementById('team-login-block');
-            const portalBlock = document.getElementById('team-portal-block');
-            if(window.loggedTeamUser) {
-                if(loginBlock) loginBlock.style.display = 'none';
-                if(portalBlock) portalBlock.style.display = 'block';
-                document.getElementById('logged-team-name').innerText = window.loggedTeamUser;
-            } else {
-                if(loginBlock) loginBlock.style.display = 'block';
-                if(portalBlock) portalBlock.style.display = 'none';
+                `).join('') || '<p style="grid-column: 1/-1;">No Active Live Streams.</p>';
+            }
+            const hlFeed = document.getElementById('highlights-feed');
+            if(hlFeed) {
+                hlFeed.innerHTML = window.appState.highlights.map(h => `
+                    <div class="masonry-item">
+                        <img src="${h.thumb}" loading="lazy" decoding="async" class="feed-media-img">
+                        <h5 style="margin-top:6px; font-size:0.9rem;">${h.title}</h5>
+                        <a href="${h.url}" target="_blank" class="btn btn-sm btn-block" style="margin-top:6px;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open</a>
+                    </div>
+                `).join('') || '<p style="grid-column: 1/-1;">No Highlights Cataloged.</p>';
             }
         }
-        window.handleTeamLogin = function(e) {
-            e.preventDefault();
-            const u = document.getElementById('login-team-user').value.trim();
-            const p = document.getElementById('login-team-pass').value.trim();
-            const team = (window.appState.teams || []).find(t => t.user === u && t.pass === p);
-            if(team) {
-                window.loggedTeamUser = u;
-                syncTeamLoginPortalUI();
-            } else { alert("Invalid Team Login!"); }
-        }
-        window.logoutTeam = function() { window.loggedTeamUser = null; syncTeamLoginPortalUI(); }
-        window.loadCategoryPrograms = function() {
-            const cat = document.getElementById('reg-cat-select').value;
-            const container = document.getElementById('category-programs-container');
-            if(!cat) { container.innerHTML = ''; return; }
-            const matched = window.appState.programs.filter(p => p.cat === cat);
-            if(matched.length === 0) { container.innerHTML = '<p style="color:var(--text-sub);">No programs in this category.</p>'; return; }
-            
-            let html = '';
-            matched.forEach(p => {
-                const regs = window.appState.registrations.filter(r => r.progId === p.id && r.team === window.loggedTeamUser);
-                html += `
-                    <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:12px; margin-bottom:10px;">
-                        <strong>${p.name}</strong> <span style="font-size:0.8rem; color:var(--text-sub);">(Max Spots: ${p.limit})</span>
-                        <div style="margin-top:6px;">
-                            ${regs.map(r => `<span style="background:rgba(252,211,77,0.2); color:#fcd34d; padding:2px 8px; border-radius:6px; font-size:0.8rem; margin-right:4px;">${r.student}</span>`).join('')}
+        window.filterResultPrograms = function() {
+            const catEl = document.getElementById('res-search-cat');
+            const searchEl = document.getElementById('res-prog-search');
+            const container = document.getElementById('results-display-list');
+            if(!container) return;
+            const cat = catEl ? catEl.value : '';
+            const searchQ = searchEl ? searchEl.value.toLowerCase().trim() : '';
+            const matchedResults = window.appState.results.filter(r => r.published === true).filter(r => {
+                const p = window.appState.programs.find(pr => pr.id === r.progId);
+                if(!p) return false;
+                if(cat && p.cat !== cat) return false;
+                if(searchQ && !p.name.toLowerCase().includes(searchQ)) return false;
+                return true;
+            });
+            container.innerHTML = matchedResults.map(r => {
+                const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Program', cat: 'N/A' };
+                return `
+                    <div style="background:rgba(0,0,0,0.2); padding:14px; border:1px solid var(--border-color); margin-bottom:10px; border-radius:16px;">
+                        <h4>${p.name} <span style="font-size:0.75rem; color:var(--text-sub);">(${p.cat})</span> - <span style="color:#d4af37;">Result ${r.number || ''}</span></h4>
+                        <div style="margin-top:8px;">
+                            <button class="btn btn-sm btn-success" id="btn-toggle-res-${r.progId}" onclick="toggleInlineResultView('${r.progId}', '${r.poster}')">Result View</button>
+                            <div id="inline-res-box-${r.progId}" style="display:none; margin-top:10px; text-align:center;"></div>
+                            ${r.youtube ? `<div style="margin-top:6px;"><a href="${r.youtube}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-brands fa-youtube"></i> Watch Video</a></div>` : ''}
                         </div>
                     </div>
                 `;
-            });
-            container.innerHTML = html;
+            }).join('') || '<p style="text-align:center; color:var(--text-sub); margin-top:15px;">No published results matching filter.</p>';
         }
-
-        window.handlePartLogin = function(e) {
-            e.preventDefault();
-            const u = document.getElementById('part-user').value.trim();
-            const p = document.getElementById('part-pass').value.trim();
-            const team = (window.appState.teams || []).find(t => t.user === u && t.pass === p);
-            if(team) {
-                window.activePartTeam = u;
-                document.getElementById('part-login-block').style.display = 'none';
-                document.getElementById('part-manage-block').style.display = 'block';
-                document.getElementById('part-active-team').innerText = u;
-                renderTeamStudentsList();
-            } else { alert("Invalid Team Login!"); }
-        }
-        window.addTeamParticipant = function(e) {
-            e.preventDefault();
-            const cat = document.getElementById('part-cat').value;
-            const name = document.getElementById('part-name').value.trim();
-            if(!name || !window.activePartTeam) return;
-            if(!window.appState.students) window.appState.students = [];
-            window.appState.students.push({ id: 'st_' + Date.now(), team: window.activePartTeam, cat, name });
-            saveKey('students', window.appState.students);
-            document.getElementById('part-name').value = '';
-            renderTeamStudentsList();
-        }
-        function renderTeamStudentsList() {
-            const container = document.getElementById('team-students-list');
-            if(!container || !window.activePartTeam) return;
-            const list = (window.appState.students || []).filter(s => s.team === window.activePartTeam);
-            if(list.length === 0) { container.innerHTML = '<p style="color:var(--text-sub); font-size:0.85rem;">No students added yet.</p>'; return; }
-            let html = '';
-            list.forEach(s => {
-                html += `<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:6px 10px; border-radius:6px; margin-bottom:4px; font-size:0.85rem;"><span>${s.name} (${s.cat})</span><button class="btn btn-sm btn-danger" onclick="deleteStudent('${s.id}')">Delete</button></div>`;
-            });
-            container.innerHTML = html;
-        }
-        window.deleteStudent = function(id) {
-            window.appState.students = window.appState.students.filter(s => s.id !== id);
-            saveKey('students', window.appState.students);
-            renderTeamStudentsList();
-        }
-
-        /* SYSTEM RESET */
-        window.clearAllDataSystem = function() {
-            if(confirm("DANGER: Are you sure you want to clear all festival data from the system?")) {
-                const preservedLogo = { logoUrl: window.appState.logoUrl || '', logoPos: window.appState.logoPos || 'logo-top-left', logoSize: window.appState.logoSize || '60' };
-                window.appState = buildCleanState(preservedLogo);
-                saveData();
-                location.reload();
+        window.toggleInlineResultView = function(progId, posterData) {
+            const box = document.getElementById(`inline-res-box-${progId}`);
+            const btn = document.getElementById(`btn-toggle-res-${progId}`);
+            if(!box || !btn) return;
+            if(box.style.display === 'none') {
+                confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
+                box.innerHTML = `
+                    <img src="${posterData}" style="width:100%; border-radius:10px; cursor:pointer;" onclick="openMediaViewer('${posterData}', 'photo')">
+                    <div style="margin-top:8px; display:flex; justify-content:center; gap:8px;">
+                        <a href="${posterData}" download="Result_${progId}.png" class="btn btn-sm"><i class="fa-solid fa-download"></i> Download</a>
+                        <button class="btn btn-sm btn-warning" onclick="shareMediaDirectly('${posterData}', 'photo')"><i class="fa-solid fa-share-nodes"></i> Share</button>
+                    </div>
+                `;
+                box.style.display = 'block';
+                btn.innerText = "Hide Result";
+                btn.className = "btn btn-sm btn-danger";
+            } else {
+                box.style.display = 'none';
+                box.innerHTML = '';
+                btn.innerText = "Result View";
+                btn.className = "btn btn-sm btn-success";
             }
         }
+        window.renderPinterestUpdates = function(filterMode) {
+            const feed = document.getElementById('live-updates-feed');
+            if(!feed) return;
+            const targetUpdates = (window.appState.updates || []).filter(u => filterMode === 'all' || u.type === filterMode);
+            feed.innerHTML = targetUpdates.map(u => `
+                <div class="masonry-item" ${u.type === 'photo' ? `onclick="openMediaViewer('${u.url}', 'photo')"` : ''}>
+                    ${u.type === 'photo' 
+                        ? `<img src="${u.url}" loading="lazy">
+                           <div class="media-click-overlay"><span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:6px; color:#cbd5e1;"><i class="fa-solid fa-image"></i> Click to Open</span></div>` 
+                        : `<img src="${u.thumb}" loading="lazy">
+                           <a href="${u.url}" target="_blank" class="btn btn-sm btn-danger btn-block" style="margin-top:8px;"><i class="fa-solid fa-play"></i> Watch Video</a>`}
+                </div>
+            `).join('') || '<p style="grid-column: 1/-1;">No updates cataloged.</p>';
+        }
+        window.openMediaViewer = function(mediaUrl, type) {
+            const container = document.getElementById('media-viewer-container');
+            const dBtn = document.getElementById('btn-media-download');
+            const sBtn = document.getElementById('btn-media-share');
+            
+            if(type === 'photo') {
+                container.innerHTML = `<img src="${mediaUrl}" style="max-width:100%; max-height:60vh; border-radius:8px; object-fit:contain;">`;
+            } else {
+                container.innerHTML = `<video src="${mediaUrl}" controls autoplay playsinline style="max-width:100%; max-height:60vh; border-radius:8px;"></video>`;
+            }
+            dBtn.onclick = () => {
+                const a = document.createElement('a');
+                a.href = mediaUrl;
+                a.download = type === 'photo' ? `Bahja_Photo_${Date.now()}.jpg` : `Bahja_Video_${Date.now()}.mp4`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+            sBtn.onclick = () => {
+                shareMediaDirectly(mediaUrl, type);
+            };
+            document.getElementById('media-viewer-modal').style.display = 'flex';
+        }
+        window.closeMediaViewer = function() {
+            const container = document.getElementById('media-viewer-container');
+            container.innerHTML = '';
+            document.getElementById('media-viewer-modal').style.display = 'none';
+        }
+        window.shareMediaDirectly = async function(mediaUrl, type) {
+            try {
+                if (navigator.share) {
+                    const response = await fetch(mediaUrl);
+                    const blob = await response.blob();
+                    const ext = type === 'photo' ? 'jpg' : 'mp4';
+                    const file = new File([blob], `bahja_${Date.now()}.${ext}`, { type: blob.type });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            files: [file],
+                            title: 'BAHJA FEST 2026',
+                            text: `Check this out from BAHJA Fest! ${window.location.href}`
+                        });
+                        return;
+                    }
+                }
+                
+                if (navigator.share) {
+                    await navigator.share({
+                        title: 'BAHJA FEST 2026',
+                        text: `Check this out from BAHJA Fest! ${window.location.href}`,
+                        url: window.location.href
+                    });
+                } else {
+                    navigator.clipboard.writeText(`Check this out from BAHJA Fest! ${window.location.href}`);
+                    alert("Link copied to clipboard!");
+                }
+            } catch (err) {
+                console.log("Sharing cancelled or unsupported:", err);
+            }
+        }
+        applyGlobalWebsiteTheme(window.appState.theme || 'dark');
+        applyLogoView();
+        applyVisualCustomizations();
+        render3DotMenu();
     </script>
 </body>
 </html>
