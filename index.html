@@ -557,9 +557,11 @@
                     <input type="number" id="ej-timer-minutes" class="form-control" min="0" max="999" value="0" placeholder="Minutes">
                     <input type="number" id="ej-timer-seconds" class="form-control" min="0" max="59" value="0" placeholder="Seconds">
                 </div>
-                <div class="timer-controls" style="margin-bottom:8px;">
+                <div class="timer-controls" style="margin-bottom:8px; display:flex; gap:6px; flex-wrap:wrap;">
                     <button class="btn btn-primary btn-sm" onclick="setEjTimer()"><i class="fa-solid fa-clock"></i> Set Time</button>
+                    <button class="btn btn-info btn-sm" onclick="addEjTimerTime()"><i class="fa-solid fa-plus"></i> Add Extra Time</button>
                 </div>
+                <div style="font-size:0.72rem; color:var(--text-sub); margin-bottom:8px;">Set the Minutes + Seconds above. To extend a running/paused countdown, change the values and press <strong>Add Extra Time</strong>.</div>
                 <div class="timer-display" id="ej-timer-display">00:00:00:000</div>
                 <div class="timer-controls">
                     <button class="btn btn-success btn-sm" onclick="startEjTimer()"><i class="fa-solid fa-play"></i> Start</button>
@@ -1499,6 +1501,22 @@
                 if(md) md.classList.remove("show"); 
             }
         };
+        function bindLiveSearchInputs() {
+            const saved = document.getElementById('pt-saved-code-search');
+            const logs = document.getElementById('pt-logs-search');
+            if(saved && !saved.dataset.liveBound) {
+                saved.dataset.liveBound = '1';
+                saved.addEventListener('input', filterSavedCodeEntriesNow);
+                saved.addEventListener('keyup', filterSavedCodeEntriesNow);
+            }
+            if(logs && !logs.dataset.liveBound) {
+                logs.dataset.liveBound = '1';
+                logs.addEventListener('input', renderPtList);
+                logs.addEventListener('keyup', renderPtList);
+            }
+        }
+        setTimeout(bindLiveSearchInputs, 0);
+
         window.showPanel = function(panelId) {
             document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
             const p = document.getElementById(panelId);
@@ -1782,27 +1800,53 @@
             if(status) status.innerText = ejTimerCountdownMode ? `Countdown set: ${formatEjTimer(ejTimerDurationMs)}` : 'Stopwatch mode';
             updateEjTimerDisplay();
         }
-        function playEjAlarm() {
+        let ejAudioCtx = null;
+        function ensureEjAudio() {
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                if(!AudioCtx) return;
-                const ctx = new AudioCtx();
-                let t = ctx.currentTime;
-                [0, 0.32, 0.64].forEach((offset, i) => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.value = i % 2 ? 880 : 660;
-                    gain.gain.setValueAtTime(0.0001, t + offset);
-                    gain.gain.exponentialRampToValueAtTime(0.22, t + offset + 0.02);
-                    gain.gain.exponentialRampToValueAtTime(0.0001, t + offset + 0.24);
-                    osc.connect(gain); gain.connect(ctx.destination);
-                    osc.start(t + offset); osc.stop(t + offset + 0.25);
-                });
-                setTimeout(() => ctx.close().catch(()=>{}), 1300);
-            } catch(e) { console.warn('Timer alarm unavailable:', e); }
+                if(!AudioCtx) return null;
+                if(!ejAudioCtx) ejAudioCtx = new AudioCtx();
+                if(ejAudioCtx.state === 'suspended') ejAudioCtx.resume().catch(()=>{});
+                return ejAudioCtx;
+            } catch(e) { return null; }
+        }
+        function playEjAlarm() {
+            const ctx = ensureEjAudio();
+            if(!ctx) return;
+            const start = ctx.currentTime + 0.02;
+            const pattern = [0,0.28,0.56,0.84];
+            pattern.forEach((offset, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(i % 2 === 0 ? 880 : 660, start + offset);
+                gain.gain.setValueAtTime(0.0001, start + offset);
+                gain.gain.exponentialRampToValueAtTime(0.34, start + offset + 0.025);
+                gain.gain.exponentialRampToValueAtTime(0.0001, start + offset + 0.20);
+                osc.connect(gain); gain.connect(ctx.destination);
+                osc.start(start + offset); osc.stop(start + offset + 0.22);
+            });
+        }
+        window.addEjTimerTime = function() {
+            const mins = Math.max(0, parseInt(document.getElementById('ej-timer-minutes')?.value || 0, 10) || 0);
+            const secs = Math.min(59, Math.max(0, parseInt(document.getElementById('ej-timer-seconds')?.value || 0, 10) || 0));
+            const addMs = (mins * 60 + secs) * 1000;
+            if(addMs <= 0) return;
+            if(ejTimerCountdownMode) {
+                ejTimerRemainingMs += addMs;
+                ejTimerDurationMs += addMs;
+            } else {
+                ejTimerDurationMs = addMs;
+                ejTimerRemainingMs = addMs;
+                ejTimerCountdownMode = true;
+            }
+            const status = document.getElementById('ej-timer-status');
+            if(status) status.innerText = `Added ${formatEjTimer(addMs)} to timer`;
+            ensureEjAudio();
+            updateEjTimerDisplay();
         }
         window.startEjTimer = function() {
+            ensureEjAudio();
             if(ejTimerInterval) return;
             if(ejTimerCountdownMode && ejTimerRemainingMs <= 0) {
                 if(ejTimerDurationMs > 0) ejTimerRemainingMs = ejTimerDurationMs;
@@ -1932,6 +1976,9 @@
         }
 
         /* DISPLAY SAVED CODE FORMS IN CODE PORTAL */
+        function filterSavedCodeEntriesNow() {
+            renderCodeFormsList();
+        }
         function renderCodeFormsList() {
             const container = document.getElementById('box-code-forms-content');
             if(!container) return;
