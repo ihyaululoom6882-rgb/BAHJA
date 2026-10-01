@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/png" href="logo.png">
-  <meta name="google-site-verification" content="K0YX288iRLa7GMBEpmHSKSX3m4PstPfpNqivkCpqQsU" />
+    <link rel="icon" type="image/png" href="logo.png">
+    <meta name="google-site-verification" content="K0YX288iRLa7GMBEpmHSKSX3m4PstPfpNqivkCpqQsU" />
     <title>BAHJA - DAWA FEST</title>
+    
+    <!-- PWA Web App Manifest & Favicons -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="/logo192.png">
+    <link rel="apple-touch-icon" href="/logo192.png">
+    <meta name="theme-color" content="#000000">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Optimization -->
@@ -544,13 +551,11 @@
                 <span style="font-size:0.8rem; text-transform:uppercase; color:var(--text-sub); letter-spacing:1px;">Active Program Name</span>
                 <h2 id="ej-active-prog-title" style="color:#d4af37; font-size:1.5rem; margin-top:4px;">No Active Program Loaded</h2>
             </div>
-
             <!-- Program Topics Display -->
             <div class="form-group">
                 <label style="color:#d4af37; font-weight:bold;">Program Topic</label>
                 <div id="ej-topic-display-box" style="background:var(--input-bg); border:1px solid var(--border-color); border-radius:12px; padding:12px; min-height:80px; color:#f8fafc; font-size:1rem; white-space:pre-wrap; line-height:1.5;">Topic will appear here...</div>
             </div>
-
             <!-- Precision Timer Control -->
             <div class="form-group">
                 <label style="color:#d4af37; font-weight:bold;">Timer Control</label>
@@ -561,7 +566,6 @@
                     <button class="btn btn-danger btn-sm" onclick="resetEjTimer()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
                 </div>
             </div>
-
             <!-- Code Letter and Mark Entry Table -->
             <h4 style="margin-top:20px; margin-bottom:10px; color:#d4af37;">Participant Marks Marking</h4>
             <div class="table-responsive">
@@ -1116,6 +1120,14 @@
             <button class="btn btn-block" style="margin-top:10px; background:transparent; border:1px solid var(--border-color); color:var(--text-main);" onclick="closeMediaViewer()">Close</button>
         </div>
     </div>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js');
+      }
+    </script>
+
     <!-- ZERO-LATENCY INSTANT PRE-RENDER SCRIPT -->
     <script>
         (function() {
@@ -1552,7 +1564,6 @@
             
             const now = new Date();
             const timeDateStr = now.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-
             let printStamp = target.querySelector('.dynamic-print-stamp');
             if(!printStamp) {
                 printStamp = document.createElement('div');
@@ -1561,7 +1572,6 @@
                 target.insertBefore(printStamp, target.firstChild);
             }
             printStamp.innerHTML = `<span>BAHJA 2K26 OFFICIAL REPORT</span><span>PRINTED: ${timeDateStr}</span>`;
-
             const originalParent = target.parentNode;
             const originalNextSibling = target.nextSibling;
             const originalDisplay = target.style.display;
@@ -1597,7 +1607,6 @@
                 });
             });
         }
-
         /* JUDGE PORTAL ENTRY LOGIC & HIGH-PRECISION TIMER */
         function renderEjActiveProgram() {
             const activeProgId = window.appState.activeEjProgId;
@@ -1659,11 +1668,9 @@
             renderJudgeLeaderboard();
             renderStatesDashboard();
         }
-
         let ejTimerInterval = null;
         let ejStartTime = 0;
         let ejElapsedTime = 0;
-
         window.updateEjTimerDisplay = function() {
             let totalMs = ejElapsedTime;
             if (ejTimerInterval) {
@@ -1673,11 +1680,9 @@
             const mins = String(Math.floor((totalMs % 3600000) / 60000)).padStart(2, '0');
             const secs = String(Math.floor((totalMs % 60000) / 1000)).padStart(2, '0');
             const ms = String(totalMs % 1000).padStart(3, '0');
-
             const timerEl = document.getElementById('ej-timer-display');
             if(timerEl) timerEl.innerText = `${hrs}:${mins}:${secs}:${ms}`;
         }
-
         window.startEjTimer = function() {
             if (ejTimerInterval) return;
             ejStartTime = Date.now();
@@ -1685,7 +1690,6 @@
                 updateEjTimerDisplay();
             }, 30);
         }
-
         window.pauseEjTimer = function() {
             if (ejTimerInterval) {
                 ejElapsedTime += Date.now() - ejStartTime;
@@ -1694,7 +1698,6 @@
                 updateEjTimerDisplay();
             }
         }
-
         window.resetEjTimer = function() {
             if (ejTimerInterval) {
                 clearInterval(ejTimerInterval);
@@ -1704,7 +1707,6 @@
             ejStartTime = 0;
             updateEjTimerDisplay();
         }
-
         /* CODE PORTAL FUNCTIONS & SAVED FORM DISPLAY */
         window.populatePtProgsCopy = function() {
             const cat = document.getElementById('pt-cat-select-copy').value;
@@ -1778,24 +1780,20 @@
             renderCodeFormsList();
             renderEjActiveProgram();
         }
-
         /* DISPLAY SAVED CODE FORMS IN CODE PORTAL */
         function renderCodeFormsList() {
             const container = document.getElementById('box-code-forms-content');
             if(!container) return;
-
             const codedProgs = [...new Set(window.appState.points.filter(pt => pt.codeLetter && pt.codeLetter.trim() !== '').map(pt => pt.progId))];
             
             if(codedProgs.length === 0) {
                 container.innerHTML = '<p style="padding:10px 0; color:var(--text-sub);">No code forms saved yet.</p>';
                 return;
             }
-
             container.innerHTML = codedProgs.map(pid => {
                 const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown Program', cat: 'N/A', topic: '' };
                 const subPts = window.appState.points.filter(pt => pt.progId === pid && pt.codeLetter && pt.codeLetter.trim() !== '');
                 const isActive = window.appState.activeEjProgId === pid;
-
                 return `
                     <div style="background:rgba(0,0,0,0.25); border:1px solid ${isActive ? '#d4af37' : 'var(--border-color)'}; padding:12px; border-radius:12px; margin-bottom:10px;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -1813,7 +1811,6 @@
                 `;
             }).join('');
         }
-
         window.loadCodeFormToEdit = function(cat, progId) {
             document.getElementById('pt-cat-select-copy').value = cat;
             populatePtProgsCopy();
@@ -2089,7 +2086,6 @@
             saveKey('registrations', window.appState.registrations);
             alert("Registration updated.");
         }
-
         /* RECORD TERMINAL EVALUATION LOGS WITH PROGRAM + CATEGORY SEARCH */
         window.populatePtProgs = function() {
             const cat = document.getElementById('pt-cat-select').value;
@@ -2150,7 +2146,6 @@
             const containerContent = document.getElementById('box-pt-list-content');
             const searchInput = document.getElementById('pt-logs-search');
             const searchQ = searchInput ? searchInput.value.toLowerCase().trim() : '';
-
             let distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
             
             if(searchQ) {
@@ -2161,7 +2156,6 @@
                     return fullString.includes(searchQ);
                 });
             }
-
             if(distinctProgs.length === 0) {
                 if(containerContent) containerContent.innerHTML = '<p style="padding:8px 0; color:var(--text-sub);">No marks processed matching search query.</p>';
                 return; 
@@ -2272,7 +2266,6 @@
             document.getElementById('det-modal-content').innerHTML = content;
             document.getElementById('detail-modal-overlay').style.display = 'flex';
         }
-
         /* LEAD ZONE & TEAM BREAKDOWN */
         window.renderStatesDashboard = function() {
             const tbody = document.getElementById('states-table-body');
@@ -2308,7 +2301,6 @@
             document.getElementById('det-modal-content').innerHTML = content;
             document.getElementById('detail-modal-overlay').style.display = 'flex';
         }
-
         window.renderRankWinnersList = function() {
             const tbody = document.getElementById('rank-winners-body');
             if(!tbody) return;
@@ -2491,7 +2483,7 @@
                         <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:10px; background:rgba(255,255,255,0.03);">
                             <div style="min-width:0;">
                                 <div style="font-weight:800;">Result ${r.number || ''} — ${p.name}</div>
-                                <div style="font-size:0.75rem; color:var(--text-sub);">${p.cat || ''} • ${pub ? 'Published to public site' : 'Stored only — not visible publicly'}</div>
+                                <div style="font-size:0.75rem; color:var(--text-sub);">${p.cat || ''} · ${pub ? 'Published to public site' : 'Stored only — not visible publicly'}</div>
                             </div>
                             <label style="display:flex; align-items:center; gap:7px; white-space:nowrap; font-size:0.78rem; font-weight:800;">
                                 <input type="checkbox" ${pub ? 'checked' : ''} onchange="setResultPublished('${r.progId}', this.checked)" style="width:20px;height:20px;">
