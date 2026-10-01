@@ -1,9 +1,3 @@
-
-
-100%
-
-
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -794,8 +788,6 @@
 
                     <div id="category-programs-container" style="margin-top: 15px;"></div>
 
-                    <div id="public-programs-register" style="margin-top:18px;"></div>
-
                 </div>
 
             </div>
@@ -803,8 +795,6 @@
             <!-- RESULT PHASE -->
 
             <div id="home-phase-result" style="display: none;">
-
-                <div id="public-programs-result" style="margin-bottom:14px;"></div>
 
                 <div class="result-menu-box" id="result-pills-container">
 
@@ -1761,24 +1751,6 @@
 
         </div>
 
-        <!-- PUBLIC PROGRAM VIEWER -->
-
-        <div id="panel-public-program" class="view-panel card">
-
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-
-                <h3 id="public-program-title" style="color:#d4af37;">Program</h3>
-
-                <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
-
-            </div>
-
-            <div id="public-program-meta" style="background:rgba(212,175,55,0.08); border:1px solid #d4af37; padding:12px; border-radius:12px; margin-bottom:12px;"></div>
-
-            <div id="public-program-body"></div>
-
-        </div>
-
         <!-- PROTECTION SYSTEM PANEL (Security Vault) -->
 
         <div id="panel-protection" class="view-panel card">
@@ -1913,29 +1885,9 @@
 
                 <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:4px;">
 
-                    <h4 style="font-size:0.95rem; color:#d4af37; margin-bottom:4px;">Public Program Access — Register Phase</h4>
+                    <h4 style="font-size:0.95rem; color:#d4af37; margin-bottom:4px;">Main Login Menu — Public Access Control</h4>
 
-                    <div style="font-size:0.7rem; color:var(--text-sub); margin-bottom:8px;">Enable individual programs that visitors may open without Main Login while Register Phase is active.</div>
-
-                    <div id="layout-public-register-programs" style="display:flex; flex-direction:column; gap:6px;"></div>
-
-                </div>
-
-                <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:4px;">
-
-                    <h4 style="font-size:0.95rem; color:#d4af37; margin-bottom:4px;">Public Program Access — Result Phase</h4>
-
-                    <div style="font-size:0.7rem; color:var(--text-sub); margin-bottom:8px;">Enable individual programs that visitors may open without Main Login while Result Phase is active.</div>
-
-                    <div id="layout-public-result-programs" style="display:flex; flex-direction:column; gap:6px;"></div>
-
-                </div>
-
-                <div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:4px;">
-
-                    <h4 style="font-size:0.95rem; color:#d4af37; margin-bottom:4px;">Public Access — Main Login Panels</h4>
-
-                    <div style="font-size:0.7rem; color:var(--text-sub); margin-bottom:8px;">Each enabled panel appears in the visitor menu and can be opened without Main Login. Keep sensitive security/admin panels disabled unless you intentionally want them public.</div>
+                    <div style="font-size:0.7rem; color:var(--text-sub); margin-bottom:10px;">Select which Main Login menu panels can also be opened without Main Login. Register and Result access are controlled separately; tick both if the panel should be available in both phases.</div>
 
                     <div id="layout-public-panels" style="display:flex; flex-direction:column; gap:6px;"></div>
 
@@ -2411,19 +2363,25 @@
 
                     };
 
-                    cached.publicAccess = {
+                    cached.publicAccess = { panels:{}, ...(cached.publicAccess || {}) };
 
-                        registerPrograms:{}, resultPrograms:{}, panels:{settings:false,control_panel:false,publish:false,pointroom:false,entry_judge:false,judge:false,states:false,code_portal:false,entry_sign:false,protection:false,modify:false},
+                    cached.publicAccess.panels = {
 
-                        ...(cached.publicAccess || {})
+                        settings:{register:false,result:false},control_panel:{register:false,result:false},publish:{register:false,result:false},pointroom:{register:false,result:false},entry_judge:{register:false,result:false},judge:{register:false,result:false},states:{register:false,result:false},code_portal:{register:false,result:false},entry_sign:{register:false,result:false},protection:{register:false,result:false},modify:{register:false,result:false},
+
+                        ...(cached.publicAccess.panels || {})
 
                     };
 
-                    cached.publicAccess.registerPrograms = {...(cached.publicAccess.registerPrograms || {})};
+                    Object.keys(cached.publicAccess.panels).forEach(k => {
 
-                    cached.publicAccess.resultPrograms = {...(cached.publicAccess.resultPrograms || {})};
+                        const v = cached.publicAccess.panels[k];
 
-                    cached.publicAccess.panels = {settings:false,control_panel:false,publish:false,pointroom:false,entry_judge:false,judge:false,states:false,code_portal:false,entry_sign:false,protection:false,modify:false, ...(cached.publicAccess.panels || {})};
+                        if(typeof v === 'boolean') cached.publicAccess.panels[k] = {register:v,result:v};
+
+                        else cached.publicAccess.panels[k] = {register:v && v.register === true,result:v && v.result === true};
+
+                    });
 
                     if(!Array.isArray(cached.judgeSubmissions)) cached.judgeSubmissions = [];
 
@@ -2627,7 +2585,7 @@
 
                 visibilities: { 'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true },
 
-                publicAccess: { registerPrograms:{}, resultPrograms:{}, panels:{settings:false,control_panel:false,publish:false,pointroom:false,entry_judge:false,judge:false,states:false,code_portal:false,entry_sign:false,protection:false,modify:false} },
+                publicAccess: { panels:{settings:{register:false,result:false},control_panel:{register:false,result:false},publish:{register:false,result:false},pointroom:{register:false,result:false},entry_judge:{register:false,result:false},judge:{register:false,result:false},states:{register:false,result:false},code_portal:{register:false,result:false},entry_sign:{register:false,result:false},protection:{register:false,result:false},modify:{register:false,result:false}} },
 
                 visuals: { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center' },
 
@@ -2669,17 +2627,23 @@
 
             if(!Array.isArray(state.judgeSubmissions)) state.judgeSubmissions = [];
 
-            if(!state.publicAccess || typeof state.publicAccess !== 'object') state.publicAccess = { registerPrograms:{}, resultPrograms:{}, panels:{} };
-
-            if(!state.publicAccess.registerPrograms || typeof state.publicAccess.registerPrograms !== 'object') state.publicAccess.registerPrograms = {};
-
-            if(!state.publicAccess.resultPrograms || typeof state.publicAccess.resultPrograms !== 'object') state.publicAccess.resultPrograms = {};
+            if(!state.publicAccess || typeof state.publicAccess !== 'object') state.publicAccess = { panels:{} };
 
             if(!state.publicAccess.panels || typeof state.publicAccess.panels !== 'object') state.publicAccess.panels = {};
 
             const publicPanelKeys = ['settings','control_panel','publish','pointroom','entry_judge','judge','states','code_portal','entry_sign','protection','modify'];
 
-            publicPanelKeys.forEach(k => { if(typeof state.publicAccess.panels[k] !== 'boolean') state.publicAccess.panels[k] = false; });
+            publicPanelKeys.forEach(k => {
+
+                const old = state.publicAccess.panels[k];
+
+                if(typeof old === 'boolean') state.publicAccess.panels[k] = { register:old, result:old };
+
+                else if(!old || typeof old !== 'object') state.publicAccess.panels[k] = { register:false, result:false };
+
+                else state.publicAccess.panels[k] = { register:old.register === true, result:old.result === true };
+
+            });
 
             return state;
 
@@ -2805,9 +2769,7 @@
 
                 renderLayoutPublicAccessControls();
 
-                renderPublicProgramLaunchers();
-
-                populateReportProgDropdown();
+                    populateReportProgDropdown();
 
             });
 
@@ -3015,13 +2977,31 @@
 
         function ensurePublicAccessState() {
 
-            if(!window.appState.publicAccess) window.appState.publicAccess = {registerPrograms:{}, resultPrograms:{}, panels:{}};
+            if(!window.appState.publicAccess || typeof window.appState.publicAccess !== 'object') window.appState.publicAccess = {panels:{}};
 
-            if(!window.appState.publicAccess.registerPrograms) window.appState.publicAccess.registerPrograms = {};
+            if(!window.appState.publicAccess.panels || typeof window.appState.publicAccess.panels !== 'object') window.appState.publicAccess.panels = {};
 
-            if(!window.appState.publicAccess.resultPrograms) window.appState.publicAccess.resultPrograms = {};
+            PUBLIC_PANEL_SCHEMA.forEach(item => {
 
-            if(!window.appState.publicAccess.panels) window.appState.publicAccess.panels = {};
+                const old = window.appState.publicAccess.panels[item.key];
+
+                if(typeof old === 'boolean') window.appState.publicAccess.panels[item.key] = { register: old, result: old };
+
+                else if(!old || typeof old !== 'object') window.appState.publicAccess.panels[item.key] = { register:false, result:false };
+
+                else window.appState.publicAccess.panels[item.key] = { register: old.register === true, result: old.result === true };
+
+            });
+
+        }
+
+        function isPublicPanelAllowed(key, phase) {
+
+            ensurePublicAccessState();
+
+            const access = window.appState.publicAccess.panels[key];
+
+            return !!(access && access[phase === 'register' ? 'register' : 'result']);
 
         }
 
@@ -3029,29 +3009,27 @@
 
             ensurePublicAccessState();
 
-            const rp = {};
-
-            document.querySelectorAll('[data-public-register-prog]').forEach(el => { rp[el.getAttribute('data-public-register-prog')] = !!el.checked; });
-
-            const res = {};
-
-            document.querySelectorAll('[data-public-result-prog]').forEach(el => { res[el.getAttribute('data-public-result-prog')] = !!el.checked; });
-
             const panels = {};
 
-            document.querySelectorAll('[data-public-panel]').forEach(el => { panels[el.getAttribute('data-public-panel')] = !!el.checked; });
+            document.querySelectorAll('[data-public-panel-key]').forEach(row => {
 
-            window.appState.publicAccess.registerPrograms = rp;
+                const key = row.getAttribute('data-public-panel-key');
 
-            window.appState.publicAccess.resultPrograms = res;
+                const reg = row.querySelector('[data-public-register]');
+
+                const res = row.querySelector('[data-public-result]');
+
+                panels[key] = { register: !!(reg && reg.checked), result: !!(res && res.checked) };
+
+            });
 
             window.appState.publicAccess.panels = panels;
 
             saveKey('publicAccess', window.appState.publicAccess);
 
-            render3DotMenu(); renderHomePhase();
+            render3DotMenu();
 
-            alert('Public access settings saved.');
+            alert('Public Main Login access settings saved.');
 
         }
 
@@ -3059,80 +3037,29 @@
 
             ensurePublicAccessState();
 
-            const r = document.getElementById('layout-public-register-programs');
-
-            const res = document.getElementById('layout-public-result-programs');
-
             const p = document.getElementById('layout-public-panels');
 
-            const programs = [...(window.appState.programs || [])].sort((a,b)=>`${a.cat} ${a.name}`.localeCompare(`${b.cat} ${b.name}`));
+            if(!p) return;
 
-            const makeProg = (prog, attr, store) => `<label style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:7px 9px; border:1px solid var(--border-color); border-radius:8px; background:rgba(0,0,0,0.16); font-size:0.8rem;"><span><strong>${prog.name}</strong> <span style="color:var(--text-sub);">(${prog.cat})</span></span><input type="checkbox" ${store[prog.id] ? 'checked':''} ${attr}="${prog.id}" style="width:18px;height:18px;"></label>`;
+            p.innerHTML = PUBLIC_PANEL_SCHEMA.map(x => {
 
-            if(r) r.innerHTML = programs.length ? programs.map(x=>makeProg(x,'data-public-register-prog',window.appState.publicAccess.registerPrograms)).join('') : '<div style="color:var(--text-sub);font-size:0.75rem;">No programs configured.</div>';
+                const access = window.appState.publicAccess.panels[x.key] || {register:false,result:false};
 
-            if(res) res.innerHTML = programs.length ? programs.map(x=>makeProg(x,'data-public-result-prog',window.appState.publicAccess.resultPrograms)).join('') : '<div style="color:var(--text-sub);font-size:0.75rem;">No programs configured.</div>';
+                return `<div data-public-panel-key="${x.key}" style="display:grid; grid-template-columns:minmax(0,1fr) 82px 82px; align-items:center; gap:8px; padding:8px 9px; border:1px solid var(--border-color); border-radius:8px; background:rgba(0,0,0,0.16); font-size:0.8rem;">
 
-            if(p) p.innerHTML = PUBLIC_PANEL_SCHEMA.map(x => `<label style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:7px 9px; border:1px solid var(--border-color); border-radius:8px; background:rgba(0,0,0,0.16); font-size:0.8rem;"><span>${x.name}</span><input type="checkbox" ${window.appState.publicAccess.panels[x.key] ? 'checked':''} data-public-panel="${x.key}" style="width:18px;height:18px;"></label>`).join('') + `<button class="btn btn-success btn-sm" style="margin-top:4px;" onclick="savePublicAccessSettings()"><i class="fa-solid fa-unlock-keyhole"></i> Save Public Access</button>`;
+                    <span><strong>${x.name}</strong></span>
 
-        }
+                    <label style="display:flex;align-items:center;justify-content:center;gap:4px;font-size:0.68rem;color:var(--text-sub);">Register <input type="checkbox" data-public-register ${access.register ? 'checked':''} style="width:18px;height:18px;"></label>
 
-        function renderPublicProgramLaunchers() {
+                    <label style="display:flex;align-items:center;justify-content:center;gap:4px;font-size:0.68rem;color:var(--text-sub);">Result <input type="checkbox" data-public-result ${access.result ? 'checked':''} style="width:18px;height:18px;"></label>
 
-            ensurePublicAccessState();
+                </div>`;
 
-            const reg = document.getElementById('public-programs-register');
-
-            const res = document.getElementById('public-programs-result');
-
-            const make = (prog) => `<button class="btn btn-sm" style="display:block;width:100%;text-align:left;margin-top:5px;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.35);" onclick="openPublicProgram('${prog.id}')"><i class="fa-solid fa-arrow-up-right-from-square"></i> ${prog.name} <span style="opacity:.7;">(${prog.cat})</span></button>`;
-
-            const rp = (window.appState.programs||[]).filter(x=>window.appState.publicAccess.registerPrograms[x.id]).sort((a,b)=>a.name.localeCompare(b.name));
-
-            const rsp = (window.appState.programs||[]).filter(x=>window.appState.publicAccess.resultPrograms[x.id]).sort((a,b)=>a.name.localeCompare(b.name));
-
-            if(reg) reg.innerHTML = rp.length ? `<div style="font-size:.8rem;color:#d4af37;font-weight:bold;">PUBLIC PROGRAMS</div>${rp.map(make).join('')}` : '';
-
-            if(res) res.innerHTML = rsp.length ? `<div style="font-size:.8rem;color:#d4af37;font-weight:bold;">PUBLIC PROGRAMS</div>${rsp.map(make).join('')}` : '';
+            }).join('') + `<button class="btn btn-success btn-sm" style="margin-top:4px;" onclick="savePublicAccessSettings()"><i class="fa-solid fa-unlock-keyhole"></i> Save Public Access</button>`;
 
         }
 
-        window.openPublicProgram = function(progId) {
-
-            ensurePublicAccessState();
-
-            const isReg = window.appState.phase === 'register';
-
-            const allowed = isReg ? window.appState.publicAccess.registerPrograms[progId] : window.appState.publicAccess.resultPrograms[progId];
-
-            if(!allowed) { alert('This program is not enabled for public access in the current phase.'); return; }
-
-            const prog = (window.appState.programs||[]).find(p=>p.id===progId);
-
-            if(!prog) return;
-
-            document.getElementById('public-program-title').innerText = prog.name;
-
-            document.getElementById('public-program-meta').innerHTML = `<strong>Category:</strong> ${prog.cat || '—'} &nbsp; | &nbsp; <strong>Stage:</strong> ${prog.stage || '—'}`;
-
-            let body = `<div style="background:rgba(0,0,0,0.18);border:1px solid var(--border-color);padding:12px;border-radius:10px;"><strong style="color:#d4af37;">Topic</strong><div style="white-space:pre-wrap;margin-top:6px;">${prog.topic || 'No topic specified.'}</div></div>`;
-
-            if(!isReg) {
-
-                const rows = (window.appState.results||[]).filter(r=>r.progId===progId && r.published===true);
-
-                body += `<div style="margin-top:12px;background:rgba(0,0,0,0.18);border:1px solid var(--border-color);padding:12px;border-radius:10px;"><strong style="color:#d4af37;">Published Results</strong><div style="margin-top:8px;">${rows.length ? rows.map(r=>`<div style="padding:7px;border-bottom:1px solid var(--border-color);"><strong>${r.team || r.student || 'Entry'}</strong> — ${r.rank || r.position || ''} ${r.score != null ? `(${r.score})` : ''}</div>`).join('') : '<div style="color:var(--text-sub);">No published result for this program yet.</div>'}</div></div>`;
-
-            }
-
-            document.getElementById('public-program-body').innerHTML = body;
-
-            showPanel('panel-public-program');
-
-        }
-
-
-                /* DROPDOWN MENU CONFIGURATION (PUBLIC VS LOGGED IN) */
+        /* DROPDOWN MENU CONFIGURATION (PUBLIC VS LOGGED IN) */
 
         window.render3DotMenu = function() {
 
@@ -3146,25 +3073,19 @@
 
             if(!window.isMainLoggedIn) {
 
-                // VISITOR VIEW: ONLY HOME, MAIN LOGIN, JUDGE PORTAL
+                // VISITOR VIEW: only Main Login plus panels explicitly enabled for the current phase.
 
                 html += `<button onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> Main Login</button>`;
 
-                html += `<button onclick="interceptRoute('panel-entry-judge', 'entry_judge')"><i class="fa-solid fa-gavel"></i> Judge Portal</button>`;
-
                 ensurePublicAccessState();
+
+                const currentPhase = window.appState.phase === 'register' ? 'register' : 'result';
 
                 PUBLIC_PANEL_SCHEMA.forEach(item => {
 
-                    if(window.appState.publicAccess.panels[item.key]) html += `<button onclick="openPublicPanel('${item.panel}')"><i class="fa-solid fa-unlock"></i> ${item.name}</button>`;
+                    if(isPublicPanelAllowed(item.key, currentPhase)) html += `<button onclick="openPublicPanel('${item.panel}')"><i class="fa-solid fa-unlock"></i> ${item.name}</button>`;
 
                 });
-
-                if(window.appState.phase === 'register') {
-
-                    html += `<button onclick="showPanel('panel-participants-entry')"><i class="fa-solid fa-user-plus"></i> Participants Entry</button>`;
-
-                }
 
             } else {
 
@@ -3315,9 +3236,11 @@
 
             const item = PUBLIC_PANEL_SCHEMA.find(x => x.panel === panelId);
 
-            if(!item || !window.appState.publicAccess.panels[item.key]) { alert('This panel is not enabled for public access.'); return; }
+            const phase = window.appState.phase === 'register' ? 'register' : 'result';
 
-            document.getElementById("mainDropdown").classList.remove("show");
+            if(!item || !isPublicPanelAllowed(item.key, phase)) { alert('This panel is not enabled for public access in the current phase.'); return; }
+
+            document.getElementById('mainDropdown').classList.remove('show');
 
             showPanel(panelId);
 
@@ -4762,8 +4685,6 @@
                 renderResultPhaseFeeds();
 
             }
-
-            renderPublicProgramLaunchers();
 
         }
 
