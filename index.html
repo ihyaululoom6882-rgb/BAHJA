@@ -554,7 +554,13 @@
             <!-- Precision Timer Control -->
             <div class="form-group">
                 <label style="color:#d4af37; font-weight:bold;">Timer Control</label>
-                <div class="timer-display" id="ej-timer-display">00:00:00:000</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:end;">
+                    <div>
+                        <label style="font-size:0.78rem; color:var(--text-sub);">Set Time (Minutes)</label>
+                        <input type="number" id="ej-timer-minutes" class="form-control" min="1" max="600" value="5" step="1">
+                    </div>
+                    <div class="timer-display" id="ej-timer-display" style="margin:0;">00:05:00:000</div>
+                </div>
                 <div class="timer-controls">
                     <button class="btn btn-success btn-sm" onclick="startEjTimer()"><i class="fa-solid fa-play"></i> Start</button>
                     <button class="btn btn-warning btn-sm" onclick="pauseEjTimer()"><i class="fa-solid fa-pause"></i> Pause</button>
@@ -578,6 +584,12 @@
                 </table>
             </div>
             <button class="btn btn-success btn-block" style="margin-top:15px;" onclick="saveEjMarks()">Submit Judge Marks</button>
+            <div class="collapsible-header no-print" style="margin-top:15px;" onclick="toggleAccordion('ej-submitted-marks-box')">
+                <span>Submitted Judge Marks</span><i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div id="ej-submitted-marks-box" class="collapsible-box show">
+                <div id="ej-submitted-marks-list"></div>
+            </div>
         </div>
         <!-- SYSTEM SETTINGS -->
         <div id="panel-settings" class="view-panel card">
@@ -1207,7 +1219,7 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', quality));
+                        resolve(canvas.toDataURL(file.type === 'image/png' ? 'image/png' : 'image/jpeg', quality));
                     };
                     img.src = event.target.result;
                 };
@@ -1215,7 +1227,7 @@
             });
         }
         const SECURITY_SCHEMA_VERSION = 2;
-        const EMPTY_SUB_LOCKS = { settings:'', control_panel:'', judge:'', pointroom:'', states:'', protection:'', modify:'', entry_sign:'', entry_judge:'' };
+        const EMPTY_SUB_LOCKS = { settings:'', control_panel:'', publish:'', pointroom:'', entry_judge:'', judge:'', states:'', pointroom_copy:'', entry_sign:'', protection:'', modify:'' };
         function buildCleanState(preservedLogo) {
             const logo = preservedLogo || {};
             return {
@@ -1246,6 +1258,7 @@
             }
             if(!state.mainCreds || typeof state.mainCreds !== 'object') state.mainCreds = { user:'', pass:'' };
             if(!state.subLocks || typeof state.subLocks !== 'object') state.subLocks = { ...EMPTY_SUB_LOCKS };
+            Object.keys(EMPTY_SUB_LOCKS).forEach(k => { if(typeof state.subLocks[k] !== 'string') state.subLocks[k] = ''; });
             return state;
         }
         function normalizePublicationState(state) {
@@ -1302,6 +1315,7 @@
                 renderPtList();
                 renderCodeFormsList();
                 renderEjActiveProgram();
+                renderEjSubmittedMarks();
                 renderJudgeLeaderboard();
                 renderStatesDashboard();
                 renderRankWinnersList();
@@ -1415,12 +1429,12 @@
                 html += `
                     <button onclick="interceptRoute('panel-settings', 'settings')"><i class="fa-solid fa-gear"></i> Settings</button>
                     <button onclick="interceptRoute('panel-control-panel', 'control_panel')"><i class="fa-solid fa-sliders"></i> Control Deck</button>
-                    <button onclick="showPanel('panel-publish'); document.getElementById('mainDropdown').classList.remove('show'); renderPublishPanel();"><i class="fa-solid fa-cloud-arrow-up"></i> Launch Pad</button>
+                    <button onclick="interceptRoute('panel-publish', 'publish')"><i class="fa-solid fa-cloud-arrow-up"></i> Launch Pad</button>
                     <button onclick="interceptRoute('panel-pointroom', 'pointroom')"><i class="fa-solid fa-trophy"></i> Record Terminal</button>
                     <button onclick="interceptRoute('panel-entry-judge', 'entry_judge')"><i class="fa-solid fa-gavel"></i> Judge Portal</button>
                     <button onclick="interceptRoute('panel-judge', 'judge')"><i class="fa-solid fa-chart-simple"></i> Candidate's Standing</button>
                     <button onclick="interceptRoute('panel-states-control', 'states')"><i class="fa-solid fa-flag"></i> Lead Zone</button>
-                    <button onclick="interceptRoute('panel-pointroom-copy', 'pointroom')"><i class="fa-solid fa-copy"></i> Code Portal</button>
+                    <button onclick="interceptRoute('panel-pointroom-copy', 'pointroom_copy')"><i class="fa-solid fa-copy"></i> Code Portal</button>
                     <button onclick="interceptRoute('panel-entry-sign', 'entry_sign')"><i class="fa-solid fa-signature"></i> Sign Portal</button>
                     <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Security Vault</button>
                     <button onclick="interceptRoute('panel-modify', 'modify')"><i class="fa-solid fa-pen-to-square"></i> Layout Studio</button>
@@ -1637,7 +1651,17 @@
             });
             if(container) container.innerHTML = html;
         }
-        window.saveEjMarks = function() {
+        function renderEjSubmittedMarks() {
+            const box = document.getElementById('ej-submitted-marks-list');
+            if(!box) return;
+            const pid = window.appState.activeEjProgId;
+            if(!pid) { box.innerHTML = '<p style="color:var(--text-sub);">No active program.</p>'; return; }
+            const prog = window.appState.programs.find(p => p.id === pid) || {name:'Unknown Program',cat:''};
+            const pts = window.appState.points.filter(pt => pt.progId === pid && pt.codeLetter && pt.codeLetter.trim() !== '');
+            box.innerHTML = pts.length ? `<div style="font-size:0.8rem;color:var(--text-sub);margin-bottom:8px;"><strong>${prog.name}</strong> (${prog.cat})</div>` + pts.map(pt => `<div style="display:flex;justify-content:space-between;gap:10px;padding:8px 10px;margin-bottom:5px;background:rgba(0,0,0,0.2);border:1px solid var(--border-color);border-radius:8px;"><span><strong style="color:#d4af37;">${pt.codeLetter}</strong> — ${pt.student} (${pt.team})</span><strong>${pt.score || 0}</strong></div>`).join('') : '<p style="color:var(--text-sub);">No submitted marks yet.</p>';
+        }
+        '' '
+window.saveEjMarks = function() {
             const activeProgId = window.appState.activeEjProgId;
             if(!activeProgId) { alert("No active program to submit marks for!"); return; }
             
@@ -1657,52 +1681,89 @@
             renderPtList();
             renderJudgeLeaderboard();
             renderStatesDashboard();
+            renderEjSubmittedMarks();
         }
 
         let ejTimerInterval = null;
-        let ejStartTime = 0;
-        let ejElapsedTime = 0;
+        let ejTimerEndTime = 0;
+        let ejTimerRemaining = 0;
+        let ejTimerAlarmPlayed = false;
 
-        window.updateEjTimerDisplay = function() {
-            let totalMs = ejElapsedTime;
-            if (ejTimerInterval) {
-                totalMs += Date.now() - ejStartTime;
-            }
-            const hrs = String(Math.floor(totalMs / 3600000)).padStart(2, '0');
-            const mins = String(Math.floor((totalMs % 3600000) / 60000)).padStart(2, '0');
+        function getEjTimerDurationMs() {
+            const mins = Math.max(1, parseInt(document.getElementById('ej-timer-minutes')?.value || '5', 10));
+            return mins * 60 * 1000;
+        }
+        function formatEjTimer(totalMs) {
+            totalMs = Math.max(0, totalMs);
+            const mins = String(Math.floor(totalMs / 60000)).padStart(2, '0');
             const secs = String(Math.floor((totalMs % 60000) / 1000)).padStart(2, '0');
             const ms = String(totalMs % 1000).padStart(3, '0');
-
-            const timerEl = document.getElementById('ej-timer-display');
-            if(timerEl) timerEl.innerText = `${hrs}:${mins}:${secs}:${ms}`;
+            return `00:${mins}:${secs}:${ms}`;
         }
-
+        window.updateEjTimerDisplay = function() {
+            let remaining = ejTimerRemaining;
+            if (ejTimerInterval) remaining = Math.max(0, ejTimerEndTime - Date.now());
+            const timerEl = document.getElementById('ej-timer-display');
+            if(timerEl) timerEl.innerText = formatEjTimer(remaining);
+            if (remaining <= 0 && ejTimerInterval) {
+                clearInterval(ejTimerInterval);
+                ejTimerInterval = null;
+                ejTimerRemaining = 0;
+                playEjTimerAlarm();
+            }
+        }
+        function playEjTimerAlarm() {
+            if (ejTimerAlarmPlayed) return;
+            ejTimerAlarmPlayed = true;
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioCtx();
+                const now = ctx.currentTime;
+                [0, 0.28, 0.56].forEach(offset => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, now + offset);
+                    gain.gain.setValueAtTime(0.0001, now + offset);
+                    gain.gain.exponentialRampToValueAtTime(0.55, now + offset + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.22);
+                    osc.connect(gain); gain.connect(ctx.destination);
+                    osc.start(now + offset); osc.stop(now + offset + 0.24);
+                });
+                setTimeout(() => ctx.close().catch(()=>{}), 1200);
+            } catch(e) { console.warn('Timer alarm unavailable:', e); }
+            const timerEl = document.getElementById('ej-timer-display');
+            if(timerEl) timerEl.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.35)';
+            setTimeout(() => { if(timerEl) timerEl.style.boxShadow = ''; }, 2500);
+        }
         window.startEjTimer = function() {
             if (ejTimerInterval) return;
-            ejStartTime = Date.now();
-            ejTimerInterval = setInterval(() => {
-                updateEjTimerDisplay();
-            }, 30);
-        }
-
-        window.pauseEjTimer = function() {
-            if (ejTimerInterval) {
-                ejElapsedTime += Date.now() - ejStartTime;
-                clearInterval(ejTimerInterval);
-                ejTimerInterval = null;
-                updateEjTimerDisplay();
-            }
-        }
-
-        window.resetEjTimer = function() {
-            if (ejTimerInterval) {
-                clearInterval(ejTimerInterval);
-                ejTimerInterval = null;
-            }
-            ejElapsedTime = 0;
-            ejStartTime = 0;
+            if (ejTimerRemaining <= 0) ejTimerRemaining = getEjTimerDurationMs();
+            ejTimerAlarmPlayed = false;
+            ejTimerEndTime = Date.now() + ejTimerRemaining;
+            ejTimerInterval = setInterval(updateEjTimerDisplay, 30);
             updateEjTimerDisplay();
         }
+        window.pauseEjTimer = function() {
+            if (!ejTimerInterval) return;
+            ejTimerRemaining = Math.max(0, ejTimerEndTime - Date.now());
+            clearInterval(ejTimerInterval); ejTimerInterval = null;
+            updateEjTimerDisplay();
+        }
+        window.resetEjTimer = function() {
+            if (ejTimerInterval) { clearInterval(ejTimerInterval); ejTimerInterval = null; }
+            ejTimerRemaining = getEjTimerDurationMs();
+            ejTimerAlarmPlayed = false;
+            const timerEl = document.getElementById('ej-timer-display');
+            if(timerEl) timerEl.style.boxShadow = '';
+            updateEjTimerDisplay();
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const minEl = document.getElementById('ej-timer-minutes');
+            if(minEl) minEl.addEventListener('input', () => { if(!ejTimerInterval) { ejTimerRemaining = getEjTimerDurationMs(); updateEjTimerDisplay(); } });
+            ejTimerRemaining = 5 * 60 * 1000;
+            updateEjTimerDisplay();
+        });
 
         /* CODE PORTAL FUNCTIONS & SAVED FORM DISPLAY */
         window.populatePtProgsCopy = function() {
@@ -1786,12 +1847,22 @@
 
             let codedProgs = [...new Set(window.appState.points.filter(pt => pt.codeLetter && pt.codeLetter.trim() !== '').map(pt => pt.progId))];
 
+            codedProgs.sort((a,b) => {
+                const pa = window.appState.programs.find(p => p.id === a);
+                const pb = window.appState.programs.find(p => p.id === b);
+                return (pa?.name || '').localeCompare(pb?.name || '');
+            });
             if(searchQ) {
                 codedProgs = codedProgs.filter(pid => {
                     const prog = window.appState.programs.find(p => p.id === pid);
                     if(!prog) return false;
                     const fullString = `${prog.name} ${prog.cat}`.toLowerCase();
                     return fullString.includes(searchQ);
+                });
+                codedProgs.sort((a,b) => {
+                    const pa = window.appState.programs.find(p => p.id === a);
+                    const pb = window.appState.programs.find(p => p.id === b);
+                    return (pa?.name || '').localeCompare(pb?.name || '');
                 });
             }
 
@@ -1840,13 +1911,15 @@
             const schema = [
                 { key: 'settings', name: 'Settings Lock' },
                 { key: 'control_panel', name: 'Control Deck Lock' },
+                { key: 'publish', name: 'Launch Pad Lock' },
+                { key: 'pointroom', name: 'Record Terminal Lock' },
+                { key: 'entry_judge', name: 'Judge Portal Lock' },
                 { key: 'judge', name: "Candidate's Standing Lock" },
-                { key: 'pointroom', name: 'Record Terminal Input Lock' },
                 { key: 'states', name: 'Lead Zone Lock' },
-                { key: 'protection', name: 'Security Vault Lock' },
-                { key: 'modify', name: 'Layout Studio Lock' },
+                { key: 'pointroom_copy', name: 'Code Portal Lock' },
                 { key: 'entry_sign', name: 'Sign Portal Lock' },
-                { key: 'entry_judge', name: 'Judge Portal Lock' }
+                { key: 'protection', name: 'Security Vault Lock' },
+                { key: 'modify', name: 'Layout Studio Lock' }
             ];
             container.innerHTML = schema.map(s => {
                 const val = window.appState.subLocks[s.key] || '';
