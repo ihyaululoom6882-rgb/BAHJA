@@ -513,7 +513,7 @@ transition: all 0.3s ease;
 </div>
 <div id="box-pt-list" class="collapsible-box show">
 <div class="form-group no-print" style="margin-top:10px;">
-<input type="text" id="pt-logs-search" class="form-control" placeholder="Search Program, Category, Student, Team, Code or Score..." oninput="renderPtList()" autocomplete="off">
+<input type="text" id="pt-logs-search" class="form-control" placeholder="Search Program or Category..." oninput="renderPtList()" autocomplete="off">
 </div>
 <div id="box-pt-list-content"></div>
 </div>
@@ -539,10 +539,6 @@ transition: all 0.3s ease;
 </select>
 </div>
 <div class="form-group">
-<label>Search Program</label>
-<input type="text" id="pt-search-copy" class="form-control" placeholder="Type to search program..." oninput="populatePtProgsCopy()" autocomplete="off">
-</div>
-<div class="form-group">
 <label>Select Program</label>
 <select id="pt-prog-select-copy" class="form-control" onchange="loadPtParticipantsCopy()" required></select>
 </div>
@@ -558,7 +554,7 @@ transition: all 0.3s ease;
 <div class="collapsible-header no-print" onclick="toggleAccordion('box-code-forms-list')"><span>Saved Code Entries (Forms)</span> <i class="fa-solid fa-chevron-down"></i></div>
 <div id="box-code-forms-list" class="collapsible-box show">
 <div class="form-group no-print" style="margin-top:10px;">
-<input type="text" id="pt-saved-code-search" class="form-control" placeholder="Search Program, Category, Code Letter, Student or Team..." oninput="renderCodeFormsList()" autocomplete="off">
+<input type="text" id="pt-saved-code-search" class="form-control" placeholder="Search saved Program or Category..." oninput="renderCodeFormsList()" autocomplete="off">
 </div>
 <div id="box-code-forms-content"></div>
 </div>
@@ -1276,26 +1272,20 @@ document.getElementById('pt-stage-badge').innerText = '';
 
 window.populatePtProgsCopy = function() {
 const cat = document.getElementById('pt-cat-select-copy').value;
-const query = (document.getElementById('pt-search-copy')?.value || '').toLowerCase().trim();
 const drop = document.getElementById('pt-prog-select-copy');
+if(!drop) return;
 
-let matched = window.appState.programs || [];
+let matched = Array.isArray(window.appState.programs) ? [...window.appState.programs] : [];
 if(cat) matched = matched.filter(p => p.cat === cat);
-if(query) matched = matched.filter(p => p.name.toLowerCase().includes(query) || (p.cat && p.cat.toLowerCase().includes(query)));
 
-matched.sort((a,b)=>a.name.localeCompare(b.name));
-drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
+/* Code Portal: after choosing a category, show only that category's programs in A-Z order. */
+matched.sort((a,b) => String(a.name || '').localeCompare(String(b.name || ''), undefined, { sensitivity: 'base' }));
 
-if (query && matched.length === 1) {
-drop.value = matched[0].id;
-}
+drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
 
-if(drop.value) { loadPtParticipantsCopy(); }
-else {
 document.getElementById('pt-candidates-inputs-copy').innerHTML = '';
 document.getElementById('pt-stage-badge-copy').innerText = '';
 document.getElementById('pt-topic-copy').value = '';
-}
 }
 
 window.loadPtParticipants = function() {
@@ -1920,75 +1910,45 @@ const container = document.getElementById('box-code-forms-content');
 if(!container) return;
 
 const searchInput = document.getElementById('pt-saved-code-search');
-const rawQuery = searchInput ? searchInput.value : '';
-const query = rawQuery.toLowerCase().trim();
-
-const allPoints = Array.isArray(window.appState.points) ? window.appState.points : [];
+const query = String(searchInput?.value || '').toLowerCase().replace(/\s+/g, ' ').trim();
 const programs = Array.isArray(window.appState.programs) ? window.appState.programs : [];
+const allPoints = Array.isArray(window.appState.points) ? window.appState.points : [];
 
-const normalize = value => String(value ?? '')
-  .toLowerCase()
-  .replace(/\s+/g, ' ')
-  .trim();
+/* Code Portal Saved Code Entries search is intentionally limited to Program Name + Category.
+   Search the saved-program cards directly so typing immediately filters the visible list. */
+const visiblePrograms = programs
+  .filter(prog => {
+    if(!query) return true;
+    const name = String(prog.name || '').toLowerCase().replace(/\s+/g, ' ').trim();
+    const cat = String(prog.cat || '').toLowerCase().replace(/\s+/g, ' ').trim();
+    return name.includes(query) || cat.includes(query);
+  })
+  .sort((a,b) => String(a.name || '').localeCompare(String(b.name || ''), undefined, { sensitivity: 'base' }));
 
-/* Search the actual saved-code records shown in the list.
-   A program/category/student/team/code-letter search only returns matching entries. */
-const matchedPoints = allPoints.filter(pt => {
-  if(!pt.codeLetter || !String(pt.codeLetter).trim()) return false;
+const codedPrograms = visiblePrograms.map(prog => ({
+  prog,
+  points: allPoints.filter(pt => pt.progId === prog.id && String(pt.codeLetter || '').trim())
+})).filter(item => item.points.length > 0);
 
-  const prog = programs.find(p => p.id === pt.progId);
-  const programName = prog?.name || '';
-  const programCat = prog?.cat || pt.cat || '';
-  const topic = prog?.topic || '';
-
-  if(!query) return true;
-
-  const phraseFields = [
-    programName, programCat, pt.cat || '', topic,
-    pt.codeLetter || '', pt.student || '', pt.team || ''
-  ].map(normalize);
-
-  /* Exact phrase search, e.g. "E POSTER". */
-  if(phraseFields.some(field => field.includes(query))) return true;
-
-  /* Multiple search words can also match in any order. */
-  const terms = query.split(/\s+/).filter(Boolean);
-  const searchable = phraseFields.join(' ');
-  return terms.length > 0 && terms.every(term => searchable.includes(term));
-});
-
-const codedProgs = [...new Set(matchedPoints.map(pt => pt.progId))].sort((a,b) => {
-  const progA = programs.find(p => p.id === a);
-  const progB = programs.find(p => p.id === b);
-  return `${progA?.name || ''} ${progA?.cat || ''}`.localeCompare(
-    `${progB?.name || ''} ${progB?.cat || ''}`
-  );
-});
-
-if(codedProgs.length === 0) {
-  container.innerHTML = `<p style="padding:10px 0; color:var(--text-sub);">
-    No saved code entries found for "<strong>${rawQuery}</strong>".
-  </p>`;
+if(codedPrograms.length === 0) {
+  container.innerHTML = query
+    ? `<p style="padding:10px 0; color:var(--text-sub);">No saved code entries found for "<strong>${query}</strong>".</p>`
+    : '<p style="padding:10px 0; color:var(--text-sub);">No saved code entries found.</p>';
   return;
 }
 
-container.innerHTML = codedProgs.map(pid => {
-  const prog = programs.find(p => p.id === pid) || {
-    name:'Unknown Program', cat:'N/A', topic:''
-  };
-  const subPts = matchedPoints.filter(pt => pt.progId === pid);
-  const isActive = window.appState.activeEjProgId === pid;
-
+container.innerHTML = codedPrograms.map(({prog, points: subPts}) => {
+  const isActive = window.appState.activeEjProgId === prog.id;
   return `
   <div class="code-search-result"
-       data-search-result="${String(prog.name).replace(/"/g,'&quot;')}"
+       data-search-result="${String(prog.name || '').replace(/"/g,'&quot;')}"
        style="background:rgba(0,0,0,0.05); border:1px solid ${isActive ? '#d4af37' : 'var(--border-color)'}; padding:12px; border-radius:12px; margin-bottom:10px;">
     <div style="display:flex; justify-content:space-between; align-items:center;">
       <div>
         <strong style="font-size:1rem; color:#d4af37;">${prog.name} (${prog.cat})</strong>
         ${isActive ? '<span style="background:#d4af37; color:#000; font-size:0.7rem; padding:2px 6px; border-radius:4px; margin-left:8px; font-weight:bold;">ACTIVE IN JUDGE PORTAL</span>' : ''}
       </div>
-      <button class="btn btn-sm btn-primary" onclick="loadCodeFormToEdit('${prog.cat}', '${pid}')">
+      <button class="btn btn-sm btn-primary" onclick="loadCodeFormToEdit('${prog.cat}', '${prog.id}')">
         Edit / Send to Judge
       </button>
     </div>
