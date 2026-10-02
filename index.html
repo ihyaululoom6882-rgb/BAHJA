@@ -1920,17 +1920,34 @@ const container = document.getElementById('box-code-forms-content');
 if(!container) return;
 const searchInput = document.getElementById('pt-saved-code-search');
 const searchQ = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
 let codedProgs = [...new Set(window.appState.points.filter(pt => pt.codeLetter && pt.codeLetter.trim() !== '').map(pt => pt.progId))];
+
 if(searchQ) {
 codedProgs = codedProgs.filter(pid => {
 const prog = window.appState.programs.find(p => p.id === pid);
 return prog && `${prog.name} ${prog.cat}`.toLowerCase().includes(searchQ);
 });
+
+// Sort to show exact/high relevance matches first
+codedProgs.sort((a, b) => {
+const progA = window.appState.programs.find(p => p.id === a);
+const progB = window.appState.programs.find(p => p.id === b);
+const strA = progA ? `${progA.name} ${progA.cat}`.toLowerCase() : '';
+const strB = progB ? `${progB.name} ${progB.cat}`.toLowerCase() : '';
+const matchA = strA.startsWith(searchQ);
+const matchB = strB.startsWith(searchQ);
+if (matchA && !matchB) return -1;
+if (!matchA && matchB) return 1;
+return 0;
+});
 }
+
 if(codedProgs.length === 0) {
-container.innerHTML = '<p style="padding:10px 0; color:var(--text-sub);">No code forms saved yet.</p>';
+container.innerHTML = '<p style="padding:10px 0; color:var(--text-sub);">No code forms saved matching search query.</p>';
 return;
 }
+
 container.innerHTML = codedProgs.map(pid => {
 const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown Program', cat: 'N/A', topic: '' };
 const subPts = window.appState.points.filter(pt => pt.progId === pid && pt.codeLetter && pt.codeLetter.trim() !== '');
@@ -2271,18 +2288,35 @@ function renderPtList() {
 const containerContent = document.getElementById('box-pt-list-content');
 const searchInput = document.getElementById('pt-logs-search');
 const searchQ = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
 let distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
+
 if(searchQ) {
 distinctProgs = distinctProgs.filter(pid => {
 const prog = window.appState.programs.find(p => p.id === pid);
 if(!prog) return false;
 return `${prog.cat} ${prog.name}`.toLowerCase().includes(searchQ);
 });
+
+// Sort matched programs to the top
+distinctProgs.sort((a, b) => {
+const progA = window.appState.programs.find(p => p.id === a);
+const progB = window.appState.programs.find(p => p.id === b);
+const strA = progA ? `${progA.name} ${progA.cat}`.toLowerCase() : '';
+const strB = progB ? `${progB.name} ${progB.cat}`.toLowerCase() : '';
+const matchA = strA.startsWith(searchQ);
+const matchB = strB.startsWith(searchQ);
+if (matchA && !matchB) return -1;
+if (!matchA && matchB) return 1;
+return 0;
+});
 }
+
 if(distinctProgs.length === 0) {
 if(containerContent) containerContent.innerHTML = '<p style="padding:8px 0; color:var(--text-sub);">No marks processed matching search query.</p>';
 return; 
 }
+
 const htmlContent = distinctProgs.map(pid => {
 const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
 const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
