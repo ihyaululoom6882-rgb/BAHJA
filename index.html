@@ -513,7 +513,7 @@ transition: all 0.3s ease;
 </div>
 <div id="box-pt-list" class="collapsible-box show">
 <div class="form-group no-print" style="margin-top:10px;">
-<input type="text" id="pt-logs-search" class="form-control" placeholder="Search Program or Category..." oninput="renderPtList()">
+<input type="text" id="pt-logs-search" class="form-control" placeholder="Search Program, Category, Student or Team..." oninput="renderPtList()">
 </div>
 <div id="box-pt-list-content"></div>
 </div>
@@ -558,7 +558,7 @@ transition: all 0.3s ease;
 <div class="collapsible-header no-print" onclick="toggleAccordion('box-code-forms-list')"><span>Saved Code Entries (Forms)</span> <i class="fa-solid fa-chevron-down"></i></div>
 <div id="box-code-forms-list" class="collapsible-box show">
 <div class="form-group no-print" style="margin-top:10px;">
-<input type="text" id="pt-saved-code-search" class="form-control" placeholder="Search saved Program or Category..." oninput="renderCodeFormsList()" autocomplete="off">
+<input type="text" id="pt-saved-code-search" class="form-control" placeholder="Search Program, Category, Code or Student..." oninput="renderCodeFormsList()" autocomplete="off">
 </div>
 <div id="box-code-forms-content"></div>
 </div>
@@ -1926,10 +1926,16 @@ let codedProgs = [...new Set(window.appState.points.filter(pt => pt.codeLetter &
 if(searchQ) {
 codedProgs = codedProgs.filter(pid => {
 const prog = window.appState.programs.find(p => p.id === pid);
-return prog && `${prog.name} ${prog.cat}`.toLowerCase().includes(searchQ);
+const pts = window.appState.points.filter(pt => pt.progId === pid && pt.codeLetter && pt.codeLetter.trim() !== '');
+const progMatch = prog && `${prog.name} ${prog.cat}`.toLowerCase().includes(searchQ);
+const detailMatch = pts.some(pt => 
+(pt.student && pt.student.toLowerCase().includes(searchQ)) || 
+(pt.team && pt.team.toLowerCase().includes(searchQ)) ||
+(pt.codeLetter && pt.codeLetter.toLowerCase().includes(searchQ))
+);
+return progMatch || detailMatch;
 });
 
-// Sort to show exact/high relevance matches first
 codedProgs.sort((a, b) => {
 const progA = window.appState.programs.find(p => p.id === a);
 const progB = window.appState.programs.find(p => p.id === b);
@@ -2294,11 +2300,15 @@ let distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
 if(searchQ) {
 distinctProgs = distinctProgs.filter(pid => {
 const prog = window.appState.programs.find(p => p.id === pid);
-if(!prog) return false;
-return `${prog.cat} ${prog.name}`.toLowerCase().includes(searchQ);
+const pts = window.appState.points.filter(pt => pt.progId === pid);
+const progMatch = prog && `${prog.cat} ${prog.name}`.toLowerCase().includes(searchQ);
+const detailMatch = pts.some(pt => 
+(pt.student && pt.student.toLowerCase().includes(searchQ)) || 
+(pt.team && pt.team.toLowerCase().includes(searchQ))
+);
+return progMatch || detailMatch;
 });
 
-// Sort matched programs to the top
 distinctProgs.sort((a, b) => {
 const progA = window.appState.programs.find(p => p.id === a);
 const progB = window.appState.programs.find(p => p.id === b);
