@@ -498,7 +498,7 @@ transition: all 0.3s ease;
 </div>
 <div class="form-group">
 <label>Search Program</label>
-<input type="text" id="pt-search" class="form-control" placeholder="Search program..." oninput="populatePtProgs()" autocomplete="off">
+<input type="text" id="pt-search" class="form-control" placeholder="Search program name or category..." oninput="populatePtProgs()" autocomplete="off">
 </div>
 <div class="form-group">
 <label>Select Program</label>
@@ -738,10 +738,13 @@ transition: all 0.3s ease;
 </div>
 <div id="mod-box-footer" class="collapsible-box show" style="padding:10px 0;">
 <div class="form-group"><label>Footer Text Content</label><input type="text" id="mod-ft-text" class="form-control" value="© 2026 BAHJA Media . All rights reserved." oninput="liveUpdateFooterVisuals()"></div>
+<div class="form-group">
+<label><input type="checkbox" id="mod-ft-transparent" onchange="liveUpdateFooterVisuals()"> Remove / Transparent Background</label>
+</div>
 <div class="form-group"><label>Footer Background Color</label><input type="color" id="mod-ft-bg" class="form-control" value="#111315" onchange="liveUpdateFooterVisuals()" style="height:40px;"></div>
 <div class="form-group"><label>Footer Text Color</label><input type="color" id="mod-ft-text-color" class="form-control" value="#94a3b8" onchange="liveUpdateFooterVisuals()" style="height:40px;"></div>
 <div class="form-group">
-<label>Footer Opacity: <span id="ft-opacity-val">100</span>%</label>
+<label>Footer / Text Opacity: <span id="ft-opacity-val">100</span>%</label>
 <input type="range" min="10" max="100" value="100" id="mod-ft-opacity" class="form-control" oninput="liveUpdateFooterVisuals()">
 </div>
 <div class="form-group">
@@ -958,7 +961,7 @@ cached.subLocks = { settings:'', control_panel:'', publish:'', pointroom:'', ent
 cached.publicAccess = { panels:{}, ...(cached.publicAccess || {}) };
 cached.publicAccess.panels = { settings:{register:false,result:false},control_panel:{register:false,result:false},publish:{register:false,result:false},pointroom:{register:false,result:false},entry_judge:{register:false,result:false},judge:{register:false,result:false},states:{register:false,result:false},code_portal:{register:false,result:false},entry_sign:{register:false,result:false},protection:{register:false,result:false},modify:{register:false,result:false}, ...(cached.publicAccess.panels || {}) };
 if(!Array.isArray(cached.judgeSubmissions)) cached.judgeSubmissions = [];
-if(!cached.footer) cached.footer = { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textColor:'#94a3b8', opacity:100, fontSize:0.85 };
+if(!cached.footer) cached.footer = { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textColor:'#94a3b8', opacity:100, fontSize:0.85, transparentBg: false };
 localStorage.setItem('bahja_full_state', JSON.stringify(cached));
 window.appState = cached;
 }
@@ -1054,7 +1057,7 @@ securitySchemaVersion: SECURITY_SCHEMA_VERSION,
 visibilities: { 'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true },
 publicAccess: { panels:{settings:{register:false,result:false},control_panel:{register:false,result:false},publish:{register:false,result:false},pointroom:{register:false,result:false},entry_judge:{register:false,result:false},judge:{register:false,result:false},states:{register:false,result:false},code_portal:{register:false,result:false},entry_sign:{register:false,result:false},protection:{register:false,result:false},modify:{register:false,result:false}} },
 visuals: { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center' },
-footer: { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textColor:'#94a3b8', opacity:100, fontSize:0.85 },
+footer: { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textColor:'#94a3b8', opacity:100, fontSize:0.85, transparentBg: false },
 teams: [], programs: [], registrations: [], results: [], updates: [], livelinks: [], highlights: [], students: [], points: [], judgeSubmissions: []
 };
 }
@@ -1076,7 +1079,7 @@ if(!state.subLocks || typeof state.subLocks !== 'object') state.subLocks = { ...
 Object.keys(EMPTY_SUB_LOCKS).forEach(k => { if(typeof state.subLocks[k] !== 'string') state.subLocks[k] = EMPTY_SUB_LOCKS[k]; });
 if(!Array.isArray(state.judgeSubmissions)) state.judgeSubmissions = [];
 if(!state.footer || typeof state.footer !== 'object') {
-state.footer = { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textColor:'#94a3b8', opacity:100, fontSize:0.85 };
+state.footer = { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textColor:'#94a3b8', opacity:100, fontSize:0.85, transparentBg: false };
 }
 return state;
 }
@@ -1206,9 +1209,17 @@ if(fEl) {
 const defaultBg = isDark ? '#111315' : '#ffffff';
 const defaultTxt = isDark ? '#94a3b8' : '#475569';
 const hex = ft.bg || defaultBg;
-const opacityHex = Math.round(((ft.opacity !== undefined ? ft.opacity : 100) / 100) * 255).toString(16).padStart(2, '0');
-fEl.style.backgroundColor = hex.startsWith('#') && hex.length === 7 ? hex + opacityHex : hex;
+const opVal = (ft.opacity !== undefined ? ft.opacity : 100) / 100;
+
+if (ft.transparentBg) {
+fEl.style.backgroundColor = 'transparent';
+fEl.style.borderTop = 'none';
+} else {
+fEl.style.backgroundColor = hex;
+fEl.style.borderTop = '1px solid var(--border-color)';
+}
 fEl.style.color = ft.textColor || defaultTxt;
+fEl.style.opacity = opVal;
 fEl.style.fontSize = `${ft.fontSize || 0.85}rem`;
 }
 }
@@ -1219,20 +1230,28 @@ const bg = document.getElementById('mod-ft-bg')?.value;
 const textColor = document.getElementById('mod-ft-text-color')?.value;
 const opacity = document.getElementById('mod-ft-opacity')?.value;
 const fontSize = document.getElementById('mod-ft-size')?.value;
+const isTransparent = document.getElementById('mod-ft-transparent')?.checked;
 
 if(document.getElementById('ft-opacity-val')) document.getElementById('ft-opacity-val').innerText = opacity;
 if(document.getElementById('ft-size-val')) document.getElementById('ft-size-val').innerText = fontSize;
 
 const fEl = document.getElementById('site-footer-element');
 if(fEl) {
-const opacityHex = Math.round((opacity / 100) * 255).toString(16).padStart(2, '0');
-fEl.style.backgroundColor = bg + opacityHex;
+if(isTransparent) {
+fEl.style.backgroundColor = 'transparent';
+fEl.style.borderTop = 'none';
+} else {
+fEl.style.backgroundColor = bg;
+fEl.style.borderTop = '1px solid var(--border-color)';
+}
 fEl.style.color = textColor;
+fEl.style.opacity = (opacity / 100);
 fEl.style.fontSize = `${fontSize}rem`;
 }
 if(document.getElementById('ft-display-text')) document.getElementById('ft-display-text').innerText = text;
 }
 
+/* REALTIME FIXED PROGRAM POPULATION & SEPARATE SEARCH FILTER FOR RECORD TERMINAL & CODE PORTAL */
 window.populatePtProgs = function() {
 const cat = document.getElementById('pt-cat-select').value;
 const query = (document.getElementById('pt-search')?.value || '').toLowerCase().trim();
@@ -1244,6 +1263,10 @@ if(query) matched = matched.filter(p => p.name.toLowerCase().includes(query) || 
 
 matched.sort((a,b)=>a.name.localeCompare(b.name));
 drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
+
+if (query && matched.length === 1) {
+drop.value = matched[0].id;
+}
 
 if(drop.value) { loadPtParticipants(); } 
 else { 
@@ -1263,6 +1286,10 @@ if(query) matched = matched.filter(p => p.name.toLowerCase().includes(query) || 
 
 matched.sort((a,b)=>a.name.localeCompare(b.name));
 drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
+
+if (query && matched.length === 1) {
+drop.value = matched[0].id;
+}
 
 if(drop.value) { loadPtParticipantsCopy(); }
 else {
@@ -1586,7 +1613,7 @@ if(p !== cp) { alert('Passwords do not match.'); return; }
 window.appState.mainCreds = { user:u, pass:p };
 window.appState.securitySchemaVersion = SECURITY_SCHEMA_VERSION;
 saveKey('mainCreds', window.appState.mainCreds);
-saveKey('securitySchemaVersion', SECURITY_SCHEMA_VERSION);
+saveKey('securitySchemaVersion', SECURITY_SCHEMA_VERSION;
 alert('Admin login created. You can now sign in.');
 document.getElementById('first-admin-setup').style.display = 'none';
 document.getElementById('main-user-input').value = u;
@@ -1761,6 +1788,29 @@ let ejTimerRemainingMs = 0;
 let ejTimerCountdownMode = false;
 let ejTimerLastTick = 0;
 
+function playLoudAlarmSound() {
+try {
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const playBeep = (freq, startTime, duration) => {
+const osc = audioCtx.createOscillator();
+const gain = audioCtx.createGain();
+osc.type = 'sawtooth';
+osc.frequency.setValueAtTime(freq, startTime);
+gain.gain.setValueAtTime(0.8, startTime);
+gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+osc.connect(gain);
+gain.connect(audioCtx.destination);
+osc.start(startTime);
+osc.stop(startTime + duration);
+};
+const now = audioCtx.currentTime;
+for (let i = 0; i < 4; i++) {
+playBeep(880, now + (i * 0.25), 0.15);
+playBeep(1200, now + (i * 0.25) + 0.1, 0.12);
+}
+} catch(e) { console.error("Audio Alarm Error:", e); }
+}
+
 function formatEjTimer(ms) {
 ms = Math.max(0, Math.round(ms));
 const hrs = String(Math.floor(ms / 3600000)).padStart(2, '0');
@@ -1833,6 +1883,7 @@ clearInterval(ejTimerInterval); ejTimerInterval = null;
 const status = document.getElementById('ej-timer-status');
 if(status) status.innerText = '⏰ Time finished';
 updateEjTimerDisplay();
+playLoudAlarmSound();
 } else updateEjTimerDisplay();
 }, 30);
 } else {
@@ -1964,6 +2015,7 @@ if(document.getElementById('mod-ft-bg')) document.getElementById('mod-ft-bg').va
 if(document.getElementById('mod-ft-text-color')) document.getElementById('mod-ft-text-color').value = ft.textColor || (isDark ? '#94a3b8' : '#475569');
 if(document.getElementById('mod-ft-opacity')) document.getElementById('mod-ft-opacity').value = ft.opacity !== undefined ? ft.opacity : 100;
 if(document.getElementById('mod-ft-size')) document.getElementById('mod-ft-size').value = ft.fontSize || 0.85;
+if(document.getElementById('mod-ft-transparent')) document.getElementById('mod-ft-transparent').checked = ft.transparentBg === true;
 }
 
 window.liveUpdateVisuals = function() {
@@ -2009,7 +2061,8 @@ text: document.getElementById('mod-ft-text').value,
 bg: document.getElementById('mod-ft-bg').value,
 textColor: document.getElementById('mod-ft-text-color').value,
 opacity: parseInt(document.getElementById('mod-ft-opacity').value) || 100,
-fontSize: parseFloat(document.getElementById('mod-ft-size').value) || 0.85
+fontSize: parseFloat(document.getElementById('mod-ft-size').value) || 0.85,
+transparentBg: document.getElementById('mod-ft-transparent').checked
 };
 
 saveKey('visuals', window.appState.visuals);
