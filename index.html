@@ -26,6 +26,9 @@
 --input-bg: rgba(0, 0, 0, 0.4);
 --btn-gold: linear-gradient(180deg, #e6c875 0%, #d4af37 50%, #aa820a 100%);
 --btn-gold-text: #1e1e1e;
+--footer-bg: rgba(10, 25, 47, 0.95);
+--footer-text: #e2e8f0;
+--footer-font-size: 0.85rem;
 }
 :root[data-theme="light"] {
 --bg-mesh: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%);
@@ -38,16 +41,24 @@
 --input-bg: #ffffff;
 --btn-gold: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
 --btn-gold-text: #ffffff;
+--footer-bg: rgba(15, 23, 42, 0.95);
+--footer-text: #e2e8f0;
+--footer-font-size: 0.85rem;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--main-font, 'Poppins', sans-serif); }
 body { 
 background: var(--bg-mesh); 
 background-attachment: fixed;
 color: var(--text-main); 
-padding-bottom: 50px; 
+padding-bottom: 0px; 
 min-height: 100vh;
 position: relative; 
 transition: background 0.3s ease, color 0.3s ease;
+display: flex;
+flex-direction: column;
+}
+.main-wrapper {
+flex: 1;
 }
 @media (max-width: 899px) {
 body { background-attachment: scroll; }
@@ -60,6 +71,7 @@ backdrop-filter: none;
 display: none; 
 object-fit: contain;
 transition: all 0.3s ease;
+cursor: pointer;
 }
 @media(max-width: 899px) {
 .corner-logo {
@@ -294,6 +306,78 @@ gap: 10px;
 justify-content: center;
 margin-bottom: 15px;
 }
+
+/* CUSTOM BLUE FOOTER SECTION */
+.site-footer {
+background-color: var(--footer-bg);
+color: var(--footer-text);
+font-size: var(--footer-font-size);
+padding: 40px 20px 20px 20px;
+margin-top: 40px;
+border-top: 1px solid rgba(255,255,255,0.1);
+}
+.footer-container {
+max-width: 1100px;
+margin: 0 auto;
+display: grid;
+grid-template-columns: 2fr 1fr;
+gap: 30px;
+}
+@media(max-width: 768px) {
+.footer-container {
+grid-template-columns: 1fr;
+gap: 20px;
+}
+}
+.footer-brand {
+display: flex;
+align-items: flex-start;
+gap: 15px;
+margin-bottom: 15px;
+}
+.footer-brand img {
+height: 45px;
+object-fit: contain;
+}
+.footer-brand h3 {
+font-size: 1.3rem;
+font-weight: 800;
+color: #ffffff;
+}
+.footer-desc {
+color: #94a3b8;
+line-height: 1.6;
+max-width: 500px;
+margin-top: 10px;
+}
+.footer-contact h4 {
+font-size: 1.1rem;
+color: #ffffff;
+margin-bottom: 15px;
+font-weight: 700;
+}
+.footer-contact-item {
+display: flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 10px;
+color: #cbd5e1;
+}
+.footer-contact-item i {
+color: #38bdf8;
+font-size: 1rem;
+width: 20px;
+}
+.footer-bottom {
+max-width: 1100px;
+margin: 30px auto 0 auto;
+padding-top: 20px;
+border-top: 1px solid rgba(255,255,255,0.08);
+text-align: left;
+color: #64748b;
+font-size: 0.8rem;
+}
+
 @media print {
 @page {
 size: A4 portrait;
@@ -314,7 +398,7 @@ width: 210mm !important; min-width: 210mm !important; max-width: 210mm !importan
 margin: 0 !important; padding: 10mm !important; box-sizing: border-box !important; border: 0 !important;
 border-radius: 0 !important; box-shadow: none !important; background: #fff !important; color: #000 !important; overflow: visible !important;
 }
-.no-print { display: none !important; visibility: hidden !important; }
+.no-print, .site-footer { display: none !important; visibility: hidden !important; }
 .bahja-sheet-header {
 display: flex !important; justify-content: space-between !important; align-items: center !important;
 width: 100% !important; border-bottom: 2px solid #000 !important; padding: 3mm 0 2mm !important; margin: 0 0 4mm !important;
@@ -339,8 +423,9 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </style>
 </head>
 <body data-theme="dark">
-<!-- Dynamic Positioned Logo -->
-<img id="corner-logo-view" class="corner-logo logo-top-left" src="" alt="Logo">
+<div class="main-wrapper">
+<!-- Dynamic Positioned Logo with Home Click Navigation -->
+<img id="corner-logo-view" class="corner-logo logo-top-left" src="" alt="Logo" onclick="navHome()">
 <div class="header-title" id="editable-header-area">
 <p id="txt-welcome-banner">WELCOME TO BAHJA FEST</p>
 <h1 id="txt-main-title">BAHJA 2026</h1>
@@ -523,6 +608,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <div id="team-students-list" style="margin-top:15px;"></div>
 </div>
 </div>
+
 <!-- ENTRY JUDGE PANEL (Judge Portal) -->
 <div id="panel-entry-judge" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -539,7 +625,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <label style="color:#d4af37; font-weight:bold;">Program Topic</label>
 <div id="ej-topic-display-box" style="background:var(--input-bg); border:1px solid var(--border-color); border-radius:12px; padding:12px; min-height:80px; color:#f8fafc; font-size:1rem; white-space:pre-wrap; line-height:1.5;">Topic will appear here...</div>
 </div>
-<!-- Precision Timer Control -->
+<!-- Timer Control (Volume and Checkpoint options removed) -->
 <div class="form-group">
 <label style="color:#d4af37; font-weight:bold;">Timer Control</label>
 <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
@@ -550,24 +636,6 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <button class="btn btn-primary btn-sm" onclick="setEjTimer()"><i class="fa-solid fa-clock"></i> Set Time</button>
 <button class="btn btn-info btn-sm" onclick="addEjTimerTime()"><i class="fa-solid fa-plus"></i> Add Extra Time</button>
 </div>
-<div style="display:grid; grid-template-columns:minmax(0,1fr) 130px; gap:8px; align-items:stretch; margin-bottom:8px;">
-<div style="background:rgba(0,0,0,0.18); border:1px solid var(--border-color); border-radius:10px; padding:8px;">
-<label style="font-size:0.72rem; color:#d4af37; font-weight:bold;">Alarm Checkpoints</label>
-<input type="text" id="ej-alarm-checkpoints" class="form-control" placeholder="MM:SS, MM:SS (example: 05:00, 01:00, 00:30)" style="margin:4px 0 4px;">
-<div style="font-size:0.68rem; color:var(--text-sub);">Alarm will sound when the countdown reaches each remaining time. Use comma-separated MM:SS values. 00:00 is the final alarm.</div>
-</div>
-<div style="background:rgba(0,0,0,0.18); border:1px solid var(--border-color); border-radius:10px; padding:8px; display:flex; flex-direction:column; justify-content:center;">
-<label style="font-size:0.72rem; color:#d4af37; font-weight:bold;">Alarm Volume</label>
-<div style="display:flex; align-items:center; gap:6px; margin-top:5px;">
-<i class="fa-solid fa-volume-low" style="font-size:0.7rem;"></i>
-<input type="range" id="ej-alarm-volume" min="0" max="100" value="90" step="1" oninput="setEjAlarmVolume(this.value)" style="width:100%;">
-<i class="fa-solid fa-volume-high" style="font-size:0.7rem;"></i>
-</div>
-<div id="ej-alarm-volume-value" style="text-align:center; font-size:0.68rem; color:var(--text-sub); margin-top:2px;">90%</div>
-<button class="btn btn-warning btn-sm" onclick="testEjAlarm()" style="margin-top:6px; padding:4px 7px; font-size:0.68rem;"><i class="fa-solid fa-bell"></i> Test</button>
-</div>
-</div>
-<div style="font-size:0.72rem; color:var(--text-sub); margin-bottom:8px;">Set the Minutes + Seconds above. To extend a running/paused countdown, change the values and press <strong>Add Extra Time</strong>.</div>
 <div class="timer-display" id="ej-timer-display">00:00:00:000</div>
 <div class="timer-controls">
 <button class="btn btn-success btn-sm" onclick="startEjTimer()"><i class="fa-solid fa-play"></i> Start</button>
@@ -594,13 +662,19 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <button class="btn btn-success btn-block" style="margin-top:15px;" onclick="saveEjMarks()">Submit Judge Marks</button>
 <div style="margin-top:16px; background:rgba(0,0,0,0.18); border:1px solid var(--border-color); padding:12px; border-radius:12px;">
 <h4 style="color:#d4af37; margin-bottom:8px;">Submitted Judge Marks</h4>
+<!-- Strict Code Letter + Mark Listing Only -->
 <div id="ej-submitted-list" style="display:flex; flex-direction:column; gap:8px;"></div>
 </div>
 </div>
-<!-- SYSTEM SETTINGS -->
+
+<!-- SYSTEM SETTINGS (Compact & Collapsible) -->
 <div id="panel-settings" class="view-panel card">
 <h3 style="color: #d4af37; margin-bottom: 15px;">Settings</h3>
 <form onsubmit="applyPhaseSettings(event)">
+<div class="collapsible-header" onclick="toggleAccordion('set-box-phase')">
+<span>Festival Phase & System Theme</span> <i class="fa-solid fa-chevron-down"></i>
+</div>
+<div id="set-box-phase" class="collapsible-box show" style="padding:10px 0;">
 <div class="form-group">
 <label>Active Festival Phase</label>
 <div style="display:flex; gap: 15px; align-items:center;">
@@ -615,8 +689,14 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <option value="light">White / Light Theme</option>
 </select>
 </div>
+</div>
+
+<div class="collapsible-header" onclick="toggleAccordion('set-box-logo')">
+<span>Logo & Header Placement Settings</span> <i class="fa-solid fa-chevron-down"></i>
+</div>
+<div id="set-box-logo" class="collapsible-box show" style="padding:10px 0;">
 <div class="form-group">
-<label>Upload Logo</label>
+<label>Upload Logo File</label>
 <input type="file" id="sys-logo-input" class="form-control" accept="image/*">
 </div>
 <div class="form-group">
@@ -633,7 +713,9 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <label>Logo Size Height (px): <span id="logo-size-val">60</span>px</label>
 <input type="range" min="30" max="120" value="60" id="sys-logo-size" class="form-control" oninput="updateLogoStylesLocally()">
 </div>
-<button type="submit" class="btn btn-block">Save System Configurations</button>
+</div>
+
+<button type="submit" class="btn btn-block btn-success" style="margin-top:15px;"><i class="fa-solid fa-floppy-disk"></i> Save System Configurations</button>
 </form>
 <div id="logo-manage-box" style="margin-top:12px; display:none;">
 <button class="btn btn-danger btn-sm btn-block" onclick="deleteSysLogo()">Delete Current Logo</button>
@@ -641,6 +723,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
 <button class="btn btn-danger btn-block" onclick="clearAllDataSystem()">Clear All System Data</button>
 </div>
+
 <!-- POINTROOM PORTAL (Record Terminal) -->
 <div id="panel-pointroom" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -675,7 +758,6 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <span>Point Evaluation Logs</span> <i class="fa-solid fa-chevron-down"></i>
 </div>
 <div id="box-pt-list" class="collapsible-box show">
-<!-- Program with Category Filter Search Bar -->
 <div class="form-group no-print" style="margin-top:10px;">
 <input type="text" id="pt-logs-search" class="form-control" placeholder="Search Program or Category (e.g. LOWER ZONE Speech)..." oninput="renderPtList()">
 </div>
@@ -683,6 +765,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 <div id="pt-print-area" class="print-target" style="display:none;"></div>
 </div>
+
 <!-- POINTROOM COPY (Code Portal) -->
 <div id="panel-pointroom-copy" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -726,6 +809,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <div id="box-code-forms-content"></div>
 </div>
 </div>
+
 <!-- JUDGE PORTAL (Candidate's Standing) -->
 <div id="panel-judge" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -751,6 +835,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 </div>
 </div>
+
 <!-- STATES CONTROL (Lead Zone) -->
 <div id="panel-states-control" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -791,6 +876,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </table>
 </div>
 </div>
+
 <!-- ENTRY SIGN (Sign Portal) -->
 <div id="panel-entry-sign" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -829,6 +915,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 </div>
 </div>
+
 <!-- PUBLISH PANEL (Launch Pad) -->
 <div id="panel-publish" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -858,6 +945,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 </div>
 </div>
+
 <!-- PROTECTION SYSTEM PANEL (Security Vault) -->
 <div id="panel-protection" class="view-panel card">
 <h3>Security Vault</h3>
@@ -881,10 +969,16 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <div id="sub-panel-pass-managers-container" style="margin-top:8px; display:flex; flex-direction:column; gap:10px;"></div>
 </div>
 </div>
-<!-- MODIFY APPEARANCE (Layout Studio) -->
+
+<!-- MODIFY APPEARANCE (Layout Studio with Collapsibles & Footer Configs) -->
 <div id="panel-modify" class="view-panel card">
 <h3>Layout Studio</h3>
 <div style="margin-top:12px; display:flex; flex-direction:column; gap:12px;">
+
+<div class="collapsible-header" onclick="toggleAccordion('mod-box-header')">
+<span>1. Header & Title Styling</span> <i class="fa-solid fa-chevron-down"></i>
+</div>
+<div id="mod-box-header" class="collapsible-box show" style="padding:10px 0;">
 <div class="form-group">
 <label>Welcome Banner Text</label>
 <input type="text" id="mod-banner-text" class="form-control" oninput="liveUpdateVisuals()">
@@ -924,14 +1018,64 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <input type="checkbox" id="mod-sync-light"> Sync changes to White / Light Mode simultaneously
 </label>
 </div>
-<div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:4px;">
-<h4 style="font-size:0.95rem; color:#d4af37; margin-bottom:4px;">Main Login Menu — Public Access Control</h4>
-<div style="font-size:0.7rem; color:var(--text-sub); margin-bottom:10px;">Select which Main Login menu panels can also be opened without Main Login. Register and Result access are controlled separately; tick both if the panel should be available in both phases.</div>
+</div>
+
+<div class="collapsible-header" onclick="toggleAccordion('mod-box-footer')">
+<span>2. Footer Section Customization (Blue Bar)</span> <i class="fa-solid fa-chevron-down"></i>
+</div>
+<div id="mod-box-footer" class="collapsible-box show" style="padding:10px 0;">
+<div class="form-group">
+<label>Footer Title Text</label>
+<input type="text" id="mod-ft-title" class="form-control" placeholder="SSF India" oninput="liveUpdateFooterVisuals()">
+</div>
+<div class="form-group">
+<label>Footer Description</label>
+<textarea id="mod-ft-desc" class="form-control" rows="2" placeholder="Organization description..." oninput="liveUpdateFooterVisuals()"></textarea>
+</div>
+<div class="form-group">
+<label>Contact Address</label>
+<input type="text" id="mod-ft-address" class="form-control" placeholder="Nizamuddin West, New Delhi" oninput="liveUpdateFooterVisuals()">
+</div>
+<div class="form-group">
+<label>Contact Email</label>
+<input type="email" id="mod-ft-email" class="form-control" placeholder="mail@nationalssf.org" oninput="liveUpdateFooterVisuals()">
+</div>
+<div class="form-group">
+<label>Contact Phone</label>
+<input type="text" id="mod-ft-phone" class="form-control" placeholder="+91 9986136655" oninput="liveUpdateFooterVisuals()">
+</div>
+<div class="form-group">
+<label>Footer Background Color</label>
+<input type="color" id="mod-ft-bg" class="form-control" value="#0a192f" onchange="liveUpdateFooterVisuals()" style="height:40px;">
+</div>
+<div class="form-group">
+<label>Footer Text Color</label>
+<input type="color" id="mod-ft-text-color" class="form-control" value="#e2e8f0" onchange="liveUpdateFooterVisuals()" style="height:40px;">
+</div>
+<div class="form-group">
+<label>Footer Background Opacity: <span id="ft-opacity-val">95</span>%</label>
+<input type="range" min="10" max="100" value="95" id="mod-ft-opacity" class="form-control" oninput="liveUpdateFooterVisuals()">
+</div>
+<div class="form-group">
+<label>Footer Text Size (rem): <span id="ft-size-val">0.85</span>rem</label>
+<input type="range" min="0.7" max="1.2" step="0.05" value="0.85" id="mod-ft-size" class="form-control" oninput="liveUpdateFooterVisuals()">
+</div>
+</div>
+
+<div class="collapsible-header" onclick="toggleAccordion('mod-box-public')">
+<span>3. Public Access Controls</span> <i class="fa-solid fa-chevron-down"></i>
+</div>
+<div id="mod-box-public" class="collapsible-box" style="padding:10px 0;">
+<div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px;">
+<div style="font-size:0.7rem; color:var(--text-sub); margin-bottom:10px;">Select which Main Login menu panels can also be opened without Main Login.</div>
 <div id="layout-public-panels" style="display:flex; flex-direction:column; gap:6px;"></div>
 </div>
-<button class="btn btn-success" onclick="saveVisualLayoutState()">Save Appearance Layout</button>
+</div>
+
+<button class="btn btn-success btn-block" style="margin-top:10px;" onclick="saveVisualLayoutState()"><i class="fa-solid fa-floppy-disk"></i> Save Appearance Layout</button>
 </div>
 </div>
+
 <!-- CONTROL PANEL (Control Deck) -->
 <div id="panel-control-panel" class="view-panel card">
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -1088,6 +1232,41 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 </div>
 </div>
+</div>
+
+<!-- SITE BLUE FOOTER -->
+<footer class="site-footer" id="site-footer-element">
+<div class="footer-container">
+<div>
+<div class="footer-brand">
+<img id="footer-logo-img" src="" alt="Logo" style="display:none;">
+<h3 id="ft-display-title">SSF India</h3>
+</div>
+<p class="footer-desc" id="ft-display-desc">
+A students organisation for the nation, focused on moral values, social commitment, and educational empowerment.
+</p>
+</div>
+<div class="footer-contact">
+<h4>Contact Us</h4>
+<div class="footer-contact-item">
+<i class="fa-solid fa-location-dot"></i>
+<span id="ft-display-address">SSF National Committee<br>Nizamuddin West, New Delhi</span>
+</div>
+<div class="footer-contact-item">
+<i class="fa-solid fa-envelope"></i>
+<span id="ft-display-email">mail@nationalssf.org</span>
+</div>
+<div class="footer-contact-item">
+<i class="fa-solid fa-phone"></i>
+<span id="ft-display-phone">+91 9986136655</span>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2026 SSF India. All rights reserved.</p>
+</div>
+</footer>
+
 <!-- MAIN LOGIN MODAL -->
 <div id="modal-overlay" class="modal-overlay">
 <div id="modal-login" class="modal-box" style="text-align: center;">
@@ -1115,6 +1294,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 </div>
 </div>
+
 <!-- GATEKEEPER PASS MODAL -->
 <div id="gatekeeper-modal-overlay" class="modal-overlay">
 <div class="modal-box">
@@ -1127,6 +1307,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <button class="btn btn-block" style="margin-top:6px; background:transparent; border:1px solid var(--border-color); color:var(--text-main);" onclick="closeGatekeeper()">Cancel</button>
 </div>
 </div>
+
 <!-- DETAILS MODAL -->
 <div id="detail-modal-overlay" class="modal-overlay" onclick="this.style.display='none'">
 <div class="modal-box" onclick="event.stopPropagation()">
@@ -1135,6 +1316,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <button class="btn btn-block" style="margin-top:10px;" onclick="document.getElementById('detail-modal-overlay').style.display='none'">Close</button>
 </div>
 </div>
+
 <!-- FULL MEDIA VIEW MODAL -->
 <div id="media-viewer-modal" class="modal-overlay" onclick="closeMediaViewer()">
 <div class="modal-box" onclick="event.stopPropagation()" style="max-width:550px; text-align:center;">
@@ -1146,7 +1328,8 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <button class="btn btn-block" style="margin-top:10px; background:transparent; border:1px solid var(--border-color); color:var(--text-main);" onclick="closeMediaViewer()">Close</button>
 </div>
 </div>
-<!-- ZERO-LATENCY INSTANT PRE-RENDER SCRIPT -->
+
+<!-- PRE-RENDER INITIALIZER -->
 <script>
 (function() {
 try {
@@ -1155,24 +1338,12 @@ document.documentElement.setAttribute('data-theme', savedTheme);
 const cachedState = localStorage.getItem('bahja_full_state');
 if (cachedState) {
 const cached = JSON.parse(cachedState);
-if (cached.securitySchemaVersion !== 2) {
-cached.securitySchemaVersion = 2;
-}
-cached.subLocks = {
-settings:'', control_panel:'', publish:'', pointroom:'', entry_judge:'', judge:'', states:'', code_portal:'', entry_sign:'', protection:'', modify:'',
-...(cached.subLocks || {})
-};
+if (cached.securitySchemaVersion !== 2) cached.securitySchemaVersion = 2;
+cached.subLocks = { settings:'', control_panel:'', publish:'', pointroom:'', entry_judge:'', judge:'', states:'', code_portal:'', entry_sign:'', protection:'', modify:'', ...(cached.subLocks || {}) };
 cached.publicAccess = { panels:{}, ...(cached.publicAccess || {}) };
-cached.publicAccess.panels = {
-settings:{register:false,result:false},control_panel:{register:false,result:false},publish:{register:false,result:false},pointroom:{register:false,result:false},entry_judge:{register:false,result:false},judge:{register:false,result:false},states:{register:false,result:false},code_portal:{register:false,result:false},entry_sign:{register:false,result:false},protection:{register:false,result:false},modify:{register:false,result:false},
-...(cached.publicAccess.panels || {})
-};
-Object.keys(cached.publicAccess.panels).forEach(k => {
-const v = cached.publicAccess.panels[k];
-if(typeof v === 'boolean') cached.publicAccess.panels[k] = {register:v,result:v};
-else cached.publicAccess.panels[k] = {register:v && v.register === true,result:v && v.result === true};
-});
+cached.publicAccess.panels = { settings:{register:false,result:false},control_panel:{register:false,result:false},publish:{register:false,result:false},pointroom:{register:false,result:false},entry_judge:{register:false,result:false},judge:{register:false,result:false},states:{register:false,result:false},code_portal:{register:false,result:false},entry_sign:{register:false,result:false},protection:{register:false,result:false},modify:{register:false,result:false}, ...(cached.publicAccess.panels || {}) };
 if(!Array.isArray(cached.judgeSubmissions)) cached.judgeSubmissions = [];
+if(!cached.footer) cached.footer = { title:'SSF India', desc:'A students organisation for the nation, focused on moral values, social commitment, and educational empowerment.', address:'SSF National Committee\nNizamuddin West, New Delhi', email:'mail@nationalssf.org', phone:'+91 9986136655', bg:'#0a192f', textColor:'#e2e8f0', opacity:95, fontSize:0.85 };
 localStorage.setItem('bahja_full_state', JSON.stringify(cached));
 window.appState = cached;
 }
@@ -1188,12 +1359,10 @@ const mTitle = document.getElementById('txt-main-title');
 if (bTxt) {
 bTxt.innerText = vis.bannerText || 'WELCOME TO BAHJA FEST';
 bTxt.style.color = isDark ? (vis.bannerColorDark || '#cbd5e1') : (vis.bannerColorLight || '#475569');
-bTxt.style.fontSize = (vis.bannerSize || '1.1') + 'rem';
 }
 if (mTitle) {
 mTitle.innerText = vis.titleText || 'BAHJA 2026';
 mTitle.style.color = isDark ? (vis.titleColorDark || '#ffffff') : (vis.titleColorLight || '#0f172a');
-mTitle.style.fontSize = (vis.titleSize || '2.8') + 'rem';
 }
 const logoEl = document.getElementById('corner-logo-view');
 if (window.appState.logoUrl && logoEl) {
@@ -1206,6 +1375,7 @@ logoEl.style.display = 'block';
 });
 })();
 </script>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -1221,6 +1391,7 @@ measurementId: "G-SX6NX5K314"
 };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
 function compressImage(file, maxWidth = 800, quality = 0.6) {
 return new Promise((resolve) => {
 if (!file.type.startsWith('image/')) {
@@ -1257,8 +1428,10 @@ img.src = event.target.result;
 reader.readAsDataURL(file);
 });
 }
+
 const SECURITY_SCHEMA_VERSION = 2;
 const EMPTY_SUB_LOCKS = { settings:'', control_panel:'', publish:'', pointroom:'', entry_judge:'', judge:'', states:'', code_portal:'', entry_sign:'', protection:'', modify:'' };
+
 function buildCleanState(preservedLogo) {
 const logo = preservedLogo || {};
 return {
@@ -1273,9 +1446,11 @@ securitySchemaVersion: SECURITY_SCHEMA_VERSION,
 visibilities: { 'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true },
 publicAccess: { panels:{settings:{register:false,result:false},control_panel:{register:false,result:false},publish:{register:false,result:false},pointroom:{register:false,result:false},entry_judge:{register:false,result:false},judge:{register:false,result:false},states:{register:false,result:false},code_portal:{register:false,result:false},entry_sign:{register:false,result:false},protection:{register:false,result:false},modify:{register:false,result:false}} },
 visuals: { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center' },
+footer: { title:'SSF India', desc:'A students organisation for the nation, focused on moral values, social commitment, and educational empowerment.', address:'SSF National Committee\nNizamuddin West, New Delhi', email:'mail@nationalssf.org', phone:'+91 9986136655', bg:'#0a192f', textColor:'#e2e8f0', opacity:95, fontSize:0.85 },
 teams: [], programs: [], registrations: [], results: [], updates: [], livelinks: [], highlights: [], students: [], points: [], judgeSubmissions: []
 };
 }
+
 function sanitizeSecurityState(state) {
 if(!state || typeof state !== 'object') return state;
 if(state.securitySchemaVersion !== SECURITY_SCHEMA_VERSION) {
@@ -1292,62 +1467,26 @@ if(!state.mainCreds || typeof state.mainCreds !== 'object') state.mainCreds = { 
 if(!state.subLocks || typeof state.subLocks !== 'object') state.subLocks = { ...EMPTY_SUB_LOCKS };
 Object.keys(EMPTY_SUB_LOCKS).forEach(k => { if(typeof state.subLocks[k] !== 'string') state.subLocks[k] = EMPTY_SUB_LOCKS[k]; });
 if(!Array.isArray(state.judgeSubmissions)) state.judgeSubmissions = [];
-if(!state.publicAccess || typeof state.publicAccess !== 'object') state.publicAccess = { panels:{} };
-if(!state.publicAccess.panels || typeof state.publicAccess.panels !== 'object') state.publicAccess.panels = {};
-const publicPanelKeys = ['settings','control_panel','publish','pointroom','entry_judge','judge','states','code_portal','entry_sign','protection','modify'];
-publicPanelKeys.forEach(k => {
-const old = state.publicAccess.panels[k];
-if(typeof old === 'boolean') state.publicAccess.panels[k] = { register:old, result:old };
-else if(!old || typeof old !== 'object') state.publicAccess.panels[k] = { register:false, result:false };
-else state.publicAccess.panels[k] = { register:old.register === true, result:old.result === true };
-});
+if(!state.footer || typeof state.footer !== 'object') {
+state.footer = { title:'SSF India', desc:'A students organisation for the nation, focused on moral values, social commitment, and educational empowerment.', address:'SSF National Committee\nNizamuddin West, New Delhi', email:'mail@nationalssf.org', phone:'+91 9986136655', bg:'#0a192f', textColor:'#e2e8f0', opacity:95, fontSize:0.85 };
+}
 return state;
 }
-function normalizePublicationState(state) {
-if(!state || typeof state !== 'object') return state;
-if(!Array.isArray(state.results)) state.results = [];
-if(!Array.isArray(state.teamStatusList)) state.teamStatusList = [];
-state.results = state.results.map(r => ({ ...r, published: r.published === true }));
-state.teamStatusList = state.teamStatusList.map(item => ({ ...item, published: item.published === true }));
-return state;
-}
-if (!window.appState) {
-window.appState = buildCleanState();
-} else {
-window.appState = sanitizeSecurityState(window.appState);
-}
-window.appState = normalizePublicationState(window.appState);
-window.loggedTeamUser = null;
-window.activePartTeam = null;
-window.isMainLoggedIn = false;
-window.gatekeeperTargetPanel = null;
+
+if (!window.appState) { window.appState = buildCleanState(); } else { window.appState = sanitizeSecurityState(window.appState); }
+window.loggedTeamUser = null; window.activePartTeam = null; window.isMainLoggedIn = false; window.gatekeeperTargetPanel = null;
 const dbRef = ref(db, 'bahja_fest_data');
 let renderScheduled = false;
-let lastRenderSignature = '';
+
 function scheduleAppRender(force = false) {
 if (renderScheduled && !force) return;
 renderScheduled = true;
 requestAnimationFrame(() => {
 renderScheduled = false;
-const signature = [
-window.appState.phase,
-window.appState.theme,
-window.appState.activeEjProgId || '',
-window.appState.teamStatusList?.length || 0,
-window.appState.results?.length || 0,
-window.appState.updates?.length || 0,
-window.appState.livelinks?.length || 0,
-window.appState.highlights?.length || 0,
-window.appState.points?.length || 0,
-window.appState.teams?.length || 0,
-window.appState.programs?.length || 0,
-window.appState.registrations?.length || 0
-].join('|');
-if (!force && signature === lastRenderSignature) return;
-lastRenderSignature = signature;
 applyGlobalWebsiteTheme(window.appState.theme || 'dark');
 applyLogoView();
 applyVisualCustomizations();
+applyFooterVisuals();
 render3DotMenu();
 if(!history.state || history.state.panel === 'panel-home') renderHomePhase();
 else renderResultPhaseFeeds();
@@ -1365,62 +1504,53 @@ renderLayoutPublicAccessControls();
 populateReportProgDropdown();
 });
 }
+
 onValue(dbRef, (snapshot) => {
 const data = snapshot.val();
 if (data) {
 window.appState = { ...window.appState, ...data };
-const wasOldSecuritySchema = window.appState.securitySchemaVersion !== SECURITY_SCHEMA_VERSION;
 window.appState = sanitizeSecurityState(window.appState);
-window.appState = normalizePublicationState(window.appState);
-if (wasOldSecuritySchema) {
-try { set(dbRef, window.appState); } catch(e) { console.warn('Security migration save failed:', e); }
-}
-if((!window.appState.teamStatusList || window.appState.teamStatusList.length === 0) && window.appState.teamStatusUrl) {
-window.appState.teamStatusList = [{ id: 'ts_legacy', url: window.appState.teamStatusUrl }];
-}
 try {
 localStorage.setItem('bahja_full_state', JSON.stringify(window.appState));
 localStorage.setItem('bahja_current_phase', window.appState.phase);
 localStorage.setItem('bahja_theme', window.appState.theme);
-} catch(e) { console.warn("Storage quota exceeded."); }
+} catch(e) {}
 }
 scheduleAppRender();
 });
+
 window.saveKey = function(key, value) {
-const updateObj = {};
-updateObj[key] = value;
-update(dbRef, updateObj);
+const updateObj = {}; updateObj[key] = value; update(dbRef, updateObj);
 }
 window.saveData = function() {
 try { localStorage.setItem('bahja_full_state', JSON.stringify(window.appState)); } catch(e){}
 set(dbRef, window.appState);
 }
-window.updateGlobalWebsiteTheme = function(themeName) {
-window.appState.theme = themeName;
-try{ localStorage.setItem('bahja_theme', themeName); }catch(e){}
-applyGlobalWebsiteTheme(themeName);
-applyVisualCustomizations();
-saveKey('theme', themeName);
-}
+
 function applyGlobalWebsiteTheme(themeName) {
 document.documentElement.setAttribute('data-theme', themeName);
 const themeSel = document.getElementById('sys-theme-select');
 if(themeSel) themeSel.value = themeName;
 }
+
 function applyLogoView() {
 const el = document.getElementById('corner-logo-view');
+const ftLogo = document.getElementById('footer-logo-img');
 const manageBox = document.getElementById('logo-manage-box');
 if(window.appState.logoUrl) {
 el.src = window.appState.logoUrl; 
 el.className = `corner-logo ${window.appState.logoPos || 'logo-top-left'}`;
 el.style.height = `${window.appState.logoSize || 60}px`;
 el.style.display = 'block';
+if(ftLogo) { ftLogo.src = window.appState.logoUrl; ftLogo.style.display = 'block'; }
 if(manageBox) manageBox.style.display = 'block';
 } else {
 el.style.display = 'none';
+if(ftLogo) ftLogo.style.display = 'none';
 if(manageBox) manageBox.style.display = 'none';
 }
 }
+
 window.updateLogoStylesLocally = function() {
 const pos = document.getElementById('sys-logo-pos').value;
 const size = document.getElementById('sys-logo-size').value;
@@ -1429,12 +1559,14 @@ const el = document.getElementById('corner-logo-view');
 el.className = `corner-logo ${pos}`;
 el.style.height = `${size}px`;
 }
+
 window.deleteSysLogo = function() {
 window.appState.logoUrl = ''; 
 saveKey('logoUrl', '');
 applyLogoView();
-alert("Logo purged.");
+alert("Logo removed.");
 }
+
 function applyVisualCustomizations() {
 const vis = window.appState.visuals || {};
 const isDark = (window.appState.theme || 'dark') === 'dark';
@@ -1445,12 +1577,62 @@ if(vis.headerAlign) document.documentElement.style.setProperty('--header-align',
 if(bTxt && mTitle) {
 bTxt.innerText = vis.bannerText || 'WELCOME TO BAHJA FEST';
 bTxt.style.color = isDark ? (vis.bannerColorDark || '#cbd5e1') : (vis.bannerColorLight || '#475569');
-bTxt.style.fontSize = (vis.bannerSize || '1.1') + 'rem';
 mTitle.innerText = vis.titleText || 'BAHJA 2026';
 mTitle.style.color = isDark ? (vis.titleColorDark || '#ffffff') : (vis.titleColorLight || '#0f172a');
-mTitle.style.fontSize = (vis.titleSize || '2.8') + 'rem';
 }
 }
+
+function applyFooterVisuals() {
+const ft = window.appState.footer || {};
+const fEl = document.getElementById('site-footer-element');
+const titleEl = document.getElementById('ft-display-title');
+const descEl = document.getElementById('ft-display-desc');
+const addrEl = document.getElementById('ft-display-address');
+const emailEl = document.getElementById('ft-display-email');
+const phoneEl = document.getElementById('ft-display-phone');
+if(titleEl) titleEl.innerText = ft.title || 'SSF India';
+if(descEl) descEl.innerText = ft.desc || '';
+if(addrEl) addrEl.innerText = ft.address || '';
+if(emailEl) emailEl.innerText = ft.email || '';
+if(phoneEl) phoneEl.innerText = ft.phone || '';
+
+if(fEl) {
+const hex = ft.bg || '#0a192f';
+const opacityHex = Math.round(((ft.opacity || 95) / 100) * 255).toString(16).padStart(2, '0');
+fEl.style.backgroundColor = hex + opacityHex;
+fEl.style.color = ft.textColor || '#e2e8f0';
+fEl.style.fontSize = `${ft.fontSize || 0.85}rem`;
+}
+}
+
+window.liveUpdateFooterVisuals = function() {
+const title = document.getElementById('mod-ft-title')?.value;
+const desc = document.getElementById('mod-ft-desc')?.value;
+const address = document.getElementById('mod-ft-address')?.value;
+const email = document.getElementById('mod-ft-email')?.value;
+const phone = document.getElementById('mod-ft-phone')?.value;
+const bg = document.getElementById('mod-ft-bg')?.value;
+const textColor = document.getElementById('mod-ft-text-color')?.value;
+const opacity = document.getElementById('mod-ft-opacity')?.value;
+const fontSize = document.getElementById('mod-ft-size')?.value;
+
+if(document.getElementById('ft-opacity-val')) document.getElementById('ft-opacity-val').innerText = opacity;
+if(document.getElementById('ft-size-val')) document.getElementById('ft-size-val').innerText = fontSize;
+
+const fEl = document.getElementById('site-footer-element');
+if(fEl) {
+const opacityHex = Math.round((opacity / 100) * 255).toString(16).padStart(2, '0');
+fEl.style.backgroundColor = bg + opacityHex;
+fEl.style.color = textColor;
+fEl.style.fontSize = `${fontSize}rem`;
+}
+if(document.getElementById('ft-display-title')) document.getElementById('ft-display-title').innerText = title;
+if(document.getElementById('ft-display-desc')) document.getElementById('ft-display-desc').innerText = desc;
+if(document.getElementById('ft-display-address')) document.getElementById('ft-display-address').innerText = address;
+if(document.getElementById('ft-display-email')) document.getElementById('ft-display-email').innerText = email;
+if(document.getElementById('ft-display-phone')) document.getElementById('ft-display-phone').innerText = phone;
+}
+
 const PUBLIC_PANEL_SCHEMA = [
 { key:'settings', panel:'panel-settings', name:'Settings' },
 { key:'control_panel', panel:'panel-control-panel', name:'Control Deck' },
@@ -1464,6 +1646,7 @@ const PUBLIC_PANEL_SCHEMA = [
 { key:'protection', panel:'panel-protection', name:'Security Vault' },
 { key:'modify', panel:'panel-modify', name:'Layout Studio' }
 ];
+
 function ensurePublicAccessState() {
 if(!window.appState.publicAccess || typeof window.appState.publicAccess !== 'object') window.appState.publicAccess = {panels:{}};
 if(!window.appState.publicAccess.panels || typeof window.appState.publicAccess.panels !== 'object') window.appState.publicAccess.panels = {};
@@ -1474,11 +1657,13 @@ else if(!old || typeof old !== 'object') window.appState.publicAccess.panels[ite
 else window.appState.publicAccess.panels[item.key] = { register: old.register === true, result: old.result === true };
 });
 }
+
 function isPublicPanelAllowed(key, phase) {
 ensurePublicAccessState();
 const access = window.appState.publicAccess.panels[key];
 return !!(access && access[phase === 'register' ? 'register' : 'result']);
 }
+
 window.savePublicAccessSettings = function() {
 ensurePublicAccessState();
 const panels = {};
@@ -1493,6 +1678,7 @@ saveKey('publicAccess', window.appState.publicAccess);
 render3DotMenu();
 alert('Public Main Login access settings saved.');
 }
+
 function renderLayoutPublicAccessControls() {
 ensurePublicAccessState();
 const p = document.getElementById('layout-public-panels');
@@ -1506,13 +1692,12 @@ return `<div data-public-panel-key="${x.key}" style="display:grid; grid-template
 </div>`;
 }).join('') + `<button class="btn btn-success btn-sm" style="margin-top:4px;" onclick="savePublicAccessSettings()"><i class="fa-solid fa-unlock-keyhole"></i> Save Public Access</button>`;
 }
-/* DROPDOWN MENU CONFIGURATION (PUBLIC VS LOGGED IN) */
+
 window.render3DotMenu = function() {
 const menuContainer = document.getElementById('mainDropdown');
 if(!menuContainer) return;
 let html = `<button onclick="navHome()"><i class="fa-solid fa-house"></i> Home</button>`;
 if(!window.isMainLoggedIn) {
-// VISITOR VIEW
 html += `<button onclick="openLoginModal()"><i class="fa-solid fa-right-to-bracket"></i> Main Login</button>`;
 ensurePublicAccessState();
 const currentPhase = window.appState.phase === 'register' ? 'register' : 'result';
@@ -1523,7 +1708,6 @@ if(currentPhase === 'register') {
 html += `<button onclick="showPanel('panel-participants-entry'); document.getElementById('mainDropdown').classList.remove('show');"><i class="fa-solid fa-user-plus"></i> Participants Entry</button>`;
 }
 } else {
-// LOGGED IN ADMIN MENU
 html += `
 <button onclick="interceptRoute('panel-settings', 'settings')"><i class="fa-solid fa-gear"></i> Settings</button>
 <button onclick="interceptRoute('panel-control-panel', 'control_panel')"><i class="fa-solid fa-sliders"></i> Control Deck</button>
@@ -1541,6 +1725,7 @@ html += `
 }
 menuContainer.innerHTML = html;
 }
+
 window.interceptRoute = function(panelId, key) {
 document.getElementById("mainDropdown").classList.remove("show");
 if(!key || !window.appState.subLocks[key]) {
@@ -1552,6 +1737,7 @@ document.getElementById('gk-pass-field').value = '';
 document.getElementById('gk-title').innerText = `Access Security Code Required`;
 document.getElementById('gatekeeper-modal-overlay').style.display = 'flex';
 }
+
 window.commitGatekeeperVerification = function() {
 const fieldVal = document.getElementById('gk-pass-field').value;
 const targetKey = window.gatekeeperTargetPanel.lockKey;
@@ -1562,6 +1748,7 @@ showPanel(window.gatekeeperTargetPanel.id);
 alert("Incorrect Security Code.");
 }
 }
+
 window.closeGatekeeper = function() { document.getElementById('gatekeeper-modal-overlay').style.display = 'none'; }
 window.toggleLaunchSection = function(bodyId, headerEl) {
 const body = document.getElementById(bodyId);
@@ -1571,6 +1758,7 @@ body.style.display = opening ? 'block' : 'none';
 const icon = headerEl ? headerEl.querySelector('i') : null;
 if(icon) icon.className = opening ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down';
 }
+
 window.toggleDropdown = function() { document.getElementById("mainDropdown").classList.toggle("show"); }
 window.onclick = (e) => { 
 if (!e.target.closest('.menu-btn-container')) {
@@ -1578,21 +1766,7 @@ const md = document.getElementById("mainDropdown");
 if(md) md.classList.remove("show"); 
 }
 };
-function bindLiveSearchInputs() {
-const saved = document.getElementById('pt-saved-code-search');
-const logs = document.getElementById('pt-logs-search');
-if(saved && !saved.dataset.liveBound) {
-saved.dataset.liveBound = '1';
-saved.addEventListener('input', filterSavedCodeEntriesNow);
-saved.addEventListener('keyup', filterSavedCodeEntriesNow);
-}
-if(logs && !logs.dataset.liveBound) {
-logs.dataset.liveBound = '1';
-logs.addEventListener('input', renderPtList);
-logs.addEventListener('keyup', renderPtList);
-}
-}
-setTimeout(bindLiveSearchInputs, 0);
+
 window.openPublicPanel = function(panelId) {
 ensurePublicAccessState();
 const item = PUBLIC_PANEL_SCHEMA.find(x => x.panel === panelId);
@@ -1601,6 +1775,7 @@ if(!item || !isPublicPanelAllowed(item.key, phase)) { alert('This panel is not e
 document.getElementById('mainDropdown').classList.remove('show');
 showPanel(panelId);
 }
+
 window.showPanel = function(panelId) {
 document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
 const p = document.getElementById(panelId);
@@ -1614,11 +1789,13 @@ if(panelId === 'panel-pointroom-copy') renderCodeFormsList();
 }
 }
 }
+
 window.openSection = function(secId) { showPanel(secId); }
 window.navHome = function() { 
 renderHomePhase(); 
 showPanel('panel-home'); 
 }
+
 window.addEventListener('popstate', function(event) {
 if(event.state && event.state.panel && event.state.panel !== 'panel-home') {
 document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
@@ -1632,15 +1809,18 @@ document.getElementById('panel-home').classList.add('active-panel');
 });
 history.replaceState({ panel: 'panel-home' }, "", window.location.pathname);
 scheduleAppRender(true);
+
 window.toggleAccordion = function(boxId) {
 const el = document.getElementById(boxId); 
 if(el) el.classList.toggle('show');
 }
+
 window.openLoginModal = function() {
 document.getElementById('modal-overlay').style.display = 'flex';
 syncMainLoginSetupUI();
 }
 window.closeModal = function() { document.getElementById('modal-overlay').style.display = 'none'; }
+
 function syncMainLoginSetupUI() {
 const hasCreds = !!(window.appState.mainCreds && window.appState.mainCreds.user && window.appState.mainCreds.pass);
 const setupBtn = document.getElementById('first-admin-setup-btn');
@@ -1648,10 +1828,12 @@ const loginBtn = document.getElementById('main-login-submit');
 if(setupBtn) setupBtn.style.display = hasCreds ? 'none' : 'block';
 if(loginBtn) loginBtn.innerText = hasCreds ? 'Sign In' : 'Sign In (Credentials Not Set)';
 }
+
 window.openFirstAdminSetup = function() {
 document.getElementById('first-admin-setup').style.display = 'block';
 document.getElementById('first-admin-user').focus();
 }
+
 window.saveFirstAdminSetup = function() {
 const u = document.getElementById('first-admin-user').value.trim();
 const p = document.getElementById('first-admin-pass').value;
@@ -1668,6 +1850,7 @@ document.getElementById('main-user-input').value = u;
 document.getElementById('main-pass-input').value = '';
 syncMainLoginSetupUI();
 }
+
 window.handleMainLogin = function(e) {
 e.preventDefault();
 const u = document.getElementById('main-user-input').value.trim();
@@ -1684,8 +1867,9 @@ closeModal(); render3DotMenu();
 showPanel('panel-control-panel');
 } else { alert("Invalid Credentials!"); }
 }
+
 window.logoutMain = function() { window.isMainLoggedIn = false; render3DotMenu(); navHome(); }
-/* DYNAMIC PRINTING TIME & DATE LOGIC */
+
 window.triggerCustomPrint = function(targetId) {
 const target = document.getElementById(targetId);
 if(!target) return;
@@ -1702,9 +1886,7 @@ printStamp.innerHTML = `<span>BAHJA 2K26 OFFICIAL REPORT</span><span>PRINTED: ${
 const originalParent = target.parentNode;
 const originalNextSibling = target.nextSibling;
 const originalDisplay = target.style.display;
-document.querySelectorAll('.print-target').forEach(p => {
-if(p !== target) p.style.display = 'none';
-});
+document.querySelectorAll('.print-target').forEach(p => { if(p !== target) p.style.display = 'none'; });
 target.style.display = 'block';
 target.classList.add('active-print-target');
 document.body.classList.add('printing');
@@ -1721,9 +1903,7 @@ originalParent.insertBefore(target, originalNextSibling);
 } else {
 originalParent.appendChild(target);
 }
-document.querySelectorAll('.print-target').forEach(p => {
-if(p !== target) p.style.removeProperty('display');
-});
+document.querySelectorAll('.print-target').forEach(p => { if(p !== target) p.style.removeProperty('display'); });
 window.removeEventListener('afterprint', restoreAfterPrint);
 };
 window.addEventListener('afterprint', restoreAfterPrint);
@@ -1734,7 +1914,8 @@ setTimeout(restoreAfterPrint, 1500);
 });
 });
 }
-/* JUDGE PORTAL ENTRY LOGIC & HIGH-PRECISION TIMER */
+
+/* JUDGE PORTAL MARKS ENTRY (No Student / Team names visible in list) */
 function renderEjActiveProgram() {
 const activeProgId = window.appState.activeEjProgId;
 renderEjSubmittedMarks();
@@ -1772,6 +1953,7 @@ html += `
 });
 if(container) container.innerHTML = html;
 }
+
 window.saveEjMarks = function() {
 const activeProgId = window.appState.activeEjProgId;
 if(!activeProgId) { alert("No active program to submit marks for!"); return; }
@@ -1781,17 +1963,13 @@ const team = f.getAttribute('data-team');
 const student = f.getAttribute('data-student');
 const score = parseFloat(f.value) || 0;
 const existingPt = window.appState.points.find(pt => pt.progId === activeProgId && pt.team === team && pt.student === student);
-if(existingPt) {
-existingPt.score = score;
-}
+if(existingPt) existingPt.score = score;
 });
 saveKey('points', window.appState.points);
 if(!Array.isArray(window.appState.judgeSubmissions)) window.appState.judgeSubmissions = [];
 const activeProg = window.appState.programs.find(p => p.id === activeProgId);
 const submittedMarks = Array.from(scoreFields).map(f => ({
 codeLetter: f.getAttribute('data-code') || '',
-team: f.getAttribute('data-team') || '',
-student: f.getAttribute('data-student') || '',
 score: parseFloat(f.value) || 0
 }));
 window.appState.judgeSubmissions.unshift({
@@ -1804,12 +1982,13 @@ marks: submittedMarks
 });
 window.appState.judgeSubmissions = window.appState.judgeSubmissions.slice(0, 50);
 saveKey('judgeSubmissions', window.appState.judgeSubmissions);
-alert("Judge marks auto-updated in system and Record Terminal!");
+alert("Judge marks auto-updated!");
 renderPtList();
 renderJudgeLeaderboard();
 renderStatesDashboard();
 renderEjSubmittedMarks();
 }
+
 function renderEjSubmittedMarks() {
 const box = document.getElementById('ej-submitted-list');
 if(!box) return;
@@ -1827,10 +2006,11 @@ return `<div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-co
 <strong style="color:#d4af37;">${s.programName} (${s.category})</strong>
 <span style="font-size:0.72rem; color:var(--text-sub);">${stamp}</span>
 </div>
-<div style="font-size:0.8rem; color:var(--text-main);">${(s.marks || []).map(m => `<span style="display:inline-block; margin:2px 8px 2px 0;">${m.codeLetter}: <strong>${m.score}</strong> <span style="color:var(--text-sub);">(${m.student} - ${m.team})</span></span>`).join('')}</div>
+<div style="font-size:0.85rem; color:var(--text-main);">${(s.marks || []).map(m => `<span style="display:inline-block; margin:2px 10px 2px 0;">Code <strong style="color:#d4af37;">${m.codeLetter}</strong> : <strong>${m.score} Marks</strong></span>`).join('')}</div>
 </div>`;
 }).join('');
 }
+
 let ejTimerInterval = null;
 let ejStartTime = 0;
 let ejElapsedTime = 0;
@@ -1838,9 +2018,7 @@ let ejTimerDurationMs = 0;
 let ejTimerRemainingMs = 0;
 let ejTimerCountdownMode = false;
 let ejTimerLastTick = 0;
-let ejAlarmVolume = 0.90;
-let ejAlarmCheckpoints = [];
-let ejTriggeredAlarmKeys = new Set();
+
 function formatEjTimer(ms) {
 ms = Math.max(0, Math.round(ms));
 const hrs = String(Math.floor(ms / 3600000)).padStart(2, '0');
@@ -1849,35 +2027,7 @@ const secs = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0');
 const rem = String(ms % 1000).padStart(3, '0');
 return `${hrs}:${mins}:${secs}:${rem}`;
 }
-function parseEjAlarmCheckpoints() {
-const input = document.getElementById('ej-alarm-checkpoints');
-const raw = input ? input.value : '';
-const vals = raw.split(',').map(v => v.trim()).filter(Boolean).map(v => {
-const parts = v.split(':');
-if(parts.length !== 2) return null;
-const m = parseInt(parts[0],10), sec = parseInt(parts[1],10);
-if(!Number.isFinite(m) || !Number.isFinite(sec) || m < 0 || sec < 0 || sec > 59) return null;
-return (m * 60 + sec) * 1000;
-}).filter(v => v !== null);
-return [...new Set(vals)].sort((a,b)=>b-a);
-}
-function syncEjAlarmSettings() {
-const v = document.getElementById('ej-alarm-volume');
-if(v) v.value = Math.round(ejAlarmVolume * 100);
-const txt = document.getElementById('ej-alarm-volume-value');
-if(txt) txt.innerText = `${Math.round(ejAlarmVolume * 100)}%`;
-const cp = document.getElementById('ej-alarm-checkpoints');
-if(cp && ejAlarmCheckpoints.length) cp.value = ejAlarmCheckpoints.map(ms => {
-const total = Math.floor(ms/1000); const m = Math.floor(total/60); const sec = total%60;
-return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-}).join(', ');
-}
-window.setEjAlarmVolume = function(value) {
-const n = Math.max(0, Math.min(100, parseInt(value,10) || 0));
-ejAlarmVolume = n / 100;
-const txt = document.getElementById('ej-alarm-volume-value');
-if(txt) txt.innerText = `${n}%`;
-}
+
 window.updateEjTimerDisplay = function() {
 let totalMs;
 if(ejTimerCountdownMode) {
@@ -1890,6 +2040,7 @@ if(ejTimerInterval) totalMs += Date.now() - ejStartTime;
 const timerEl = document.getElementById('ej-timer-display');
 if(timerEl) timerEl.innerText = formatEjTimer(totalMs);
 }
+
 window.setEjTimer = function() {
 const mins = Math.max(0, parseInt(document.getElementById('ej-timer-minutes')?.value || 0, 10) || 0);
 const secs = Math.min(59, Math.max(0, parseInt(document.getElementById('ej-timer-seconds')?.value || 0, 10) || 0));
@@ -1898,57 +2049,11 @@ ejTimerDurationMs = (mins * 60 + secs) * 1000;
 ejTimerRemainingMs = ejTimerDurationMs;
 ejTimerCountdownMode = ejTimerDurationMs > 0;
 ejStartTime = 0; ejElapsedTime = 0; ejTimerLastTick = 0;
-ejAlarmCheckpoints = parseEjAlarmCheckpoints();
-ejTriggeredAlarmKeys = new Set();
 const status = document.getElementById('ej-timer-status');
-if(status) status.innerText = ejTimerCountdownMode ? `Countdown set: ${formatEjTimer(ejTimerDurationMs)} | ${ejAlarmCheckpoints.length} alarm checkpoints` : 'Stopwatch mode';
-ensureEjAudio();
+if(status) status.innerText = ejTimerCountdownMode ? `Countdown set: ${formatEjTimer(ejTimerDurationMs)}` : 'Stopwatch mode';
 updateEjTimerDisplay();
 }
-let ejAudioCtx = null;
-function ensureEjAudio() {
-try {
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-if(!AudioCtx) return null;
-if(!ejAudioCtx) ejAudioCtx = new AudioCtx();
-if(ejAudioCtx.state === 'suspended') ejAudioCtx.resume().catch(()=>{});
-return ejAudioCtx;
-} catch(e) { return null; }
-}
-function playEjAlarm(isFinal=false) {
-const ctx = ensureEjAudio();
-if(!ctx || ejAlarmVolume <= 0) return;
-const start = ctx.currentTime + 0.02;
-const count = isFinal ? 9 : 6;
-const gap = isFinal ? 0.22 : 0.19;
-for(let i=0;i<count;i++) {
-const offset = i * gap;
-const osc = ctx.createOscillator();
-const gain = ctx.createGain();
-osc.type = i % 2 === 0 ? 'square' : 'sine';
-osc.frequency.setValueAtTime(isFinal ? (i%2===0 ? 1040 : 760) : (i%2===0 ? 940 : 700), start + offset);
-gain.gain.setValueAtTime(0.0001, start + offset);
-gain.gain.exponentialRampToValueAtTime(Math.max(0.03, 0.42 * ejAlarmVolume), start + offset + 0.025);
-gain.gain.exponentialRampToValueAtTime(0.0001, start + offset + (isFinal ? 0.16 : 0.13));
-osc.connect(gain); gain.connect(ctx.destination);
-osc.start(start + offset); osc.stop(start + offset + 0.18);
-}
-}
-window.testEjAlarm = function() { ensureEjAudio(); playEjAlarm(false); }
-function checkEjAlarmCheckpoints(previousMs, currentMs) {
-if(!ejTimerCountdownMode) return;
-ejAlarmCheckpoints.forEach(cp => {
-if(previousMs > cp && currentMs <= cp) {
-const key = String(cp);
-if(!ejTriggeredAlarmKeys.has(key)) {
-ejTriggeredAlarmKeys.add(key);
-playEjAlarm(cp === 0);
-const status = document.getElementById('ej-timer-status');
-if(status) status.innerText = cp === 0 ? '⏰ Time finished — alarm played' : `🔔 Alarm at ${formatEjTimer(cp)}`;
-}
-}
-});
-}
+
 window.addEjTimerTime = function() {
 const mins = Math.max(0, parseInt(document.getElementById('ej-timer-minutes')?.value || 0, 10) || 0);
 const secs = Math.min(59, Math.max(0, parseInt(document.getElementById('ej-timer-seconds')?.value || 0, 10) || 0));
@@ -1962,15 +2067,12 @@ ejTimerDurationMs = addMs;
 ejTimerRemainingMs = addMs;
 ejTimerCountdownMode = true;
 }
-ejAlarmCheckpoints = parseEjAlarmCheckpoints();
-ejTriggeredAlarmKeys = new Set();
 const status = document.getElementById('ej-timer-status');
 if(status) status.innerText = `Added ${formatEjTimer(addMs)} to timer`;
-ensureEjAudio();
 updateEjTimerDisplay();
 }
+
 window.startEjTimer = function() {
-ensureEjAudio();
 if(ejTimerInterval) return;
 if(ejTimerCountdownMode && ejTimerRemainingMs <= 0) {
 if(ejTimerDurationMs > 0) ejTimerRemainingMs = ejTimerDurationMs;
@@ -1981,16 +2083,13 @@ ejTimerLastTick = Date.now();
 ejTimerInterval = setInterval(() => {
 const now = Date.now();
 const elapsed = now - ejTimerLastTick;
-const previous = ejTimerRemainingMs;
 ejTimerLastTick = now;
 ejTimerRemainingMs -= elapsed;
-if(ejTimerRemainingMs <= 0) ejTimerRemainingMs = 0;
-checkEjAlarmCheckpoints(previous, ejTimerRemainingMs);
 if(ejTimerRemainingMs <= 0) {
+ejTimerRemainingMs = 0;
 clearInterval(ejTimerInterval); ejTimerInterval = null;
 const status = document.getElementById('ej-timer-status');
-if(status && !ejTriggeredAlarmKeys.has('0')) status.innerText = '⏰ Time finished — alarm played';
-if(!ejTriggeredAlarmKeys.has('0')) { ejTriggeredAlarmKeys.add('0'); playEjAlarm(true); }
+if(status) status.innerText = '⏰ Time finished';
 updateEjTimerDisplay();
 } else updateEjTimerDisplay();
 }, 30);
@@ -1999,6 +2098,7 @@ ejStartTime = Date.now();
 ejTimerInterval = setInterval(updateEjTimerDisplay, 30);
 }
 }
+
 window.pauseEjTimer = function() {
 if(!ejTimerInterval) return;
 if(ejTimerCountdownMode) {
@@ -2011,18 +2111,18 @@ updateEjTimerDisplay();
 const status = document.getElementById('ej-timer-status');
 if(status) status.innerText = 'Paused';
 }
+
 window.resetEjTimer = function() {
 if(ejTimerInterval) clearInterval(ejTimerInterval);
 ejTimerInterval = null;
 ejElapsedTime = 0; ejStartTime = 0;
 ejTimerRemainingMs = ejTimerCountdownMode ? ejTimerDurationMs : 0;
 ejTimerLastTick = 0;
-ejTriggeredAlarmKeys = new Set();
-ejAlarmCheckpoints = parseEjAlarmCheckpoints();
 const status = document.getElementById('ej-timer-status');
 if(status) status.innerText = ejTimerCountdownMode ? 'Timer reset to set time' : 'Reset';
 updateEjTimerDisplay();
 }
+
 /* CODE PORTAL FUNCTIONS & SAVED FORM DISPLAY */
 window.populatePtProgsCopy = function() {
 const cat = document.getElementById('pt-cat-select-copy').value;
@@ -2036,6 +2136,7 @@ document.getElementById('pt-candidates-inputs-copy').innerHTML = '';
 document.getElementById('pt-stage-badge-copy').innerText = '';
 document.getElementById('pt-topic-copy').value = '';
 }
+
 window.loadPtParticipantsCopy = function() {
 const progId = document.getElementById('pt-prog-select-copy').value;
 const targetProg = window.appState.programs.find(p => p.id === progId);
@@ -2063,6 +2164,7 @@ html += `
 });
 container.innerHTML = html;
 }
+
 window.savePointroomCopyEntry = function(e) {
 e.preventDefault();
 const progId = document.getElementById('pt-prog-select-copy').value;
@@ -2091,10 +2193,7 @@ loadPtParticipantsCopy();
 renderCodeFormsList();
 renderEjActiveProgram();
 }
-/* DISPLAY SAVED CODE FORMS IN CODE PORTAL */
-function filterSavedCodeEntriesNow() {
-renderCodeFormsList();
-}
+
 function renderCodeFormsList() {
 const container = document.getElementById('box-code-forms-content');
 if(!container) return;
@@ -2108,9 +2207,7 @@ return prog && `${prog.name} ${prog.cat}`.toLowerCase().includes(searchQ);
 });
 }
 if(codedProgs.length === 0) {
-container.innerHTML = searchQ
-? '<p style="padding:10px 0; color:var(--text-sub);">No saved code entries matching this search.</p>'
-: '<p style="padding:10px 0; color:var(--text-sub);">No code forms saved yet.</p>';
+container.innerHTML = '<p style="padding:10px 0; color:var(--text-sub);">No code forms saved yet.</p>';
 return;
 }
 container.innerHTML = codedProgs.map(pid => {
@@ -2134,6 +2231,7 @@ ${subPts.map(s => `<span style="display:inline-block; margin-right:12px; margin-
 `;
 }).join('');
 }
+
 window.loadCodeFormToEdit = function(cat, progId) {
 document.getElementById('pt-cat-select-copy').value = cat;
 populatePtProgsCopy();
@@ -2141,7 +2239,7 @@ document.getElementById('pt-prog-select-copy').value = progId;
 loadPtParticipantsCopy();
 window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-/* PROTECTION & SECURITY VAULT SETTINGS */
+
 function syncProtectionFields() {
 const container = document.getElementById('sub-panel-pass-managers-container');
 if(!container) return;
@@ -2171,13 +2269,16 @@ return `
 `;
 }).join('');
 }
+
 window.updateSubLockKey = function(key) {
 window.appState.subLocks[key] = document.getElementById(`pass-field-input-${key}`).value.trim();
 saveKey('subLocks', window.appState.subLocks);
 alert("Lock Code Saved.");
 }
+
 function syncModifyConfigInputs() {
 const vis = window.appState.visuals;
+const ft = window.appState.footer || {};
 const isDark = (window.appState.theme || 'dark') === 'dark';
 if(!document.getElementById('mod-banner-text')) return;
 document.getElementById('mod-banner-text').value = vis.bannerText || '';
@@ -2186,7 +2287,18 @@ document.getElementById('mod-banner-color').value = isDark ? (vis.bannerColorDar
 document.getElementById('mod-title-color').value = isDark ? (vis.titleColorDark || '#ffffff') : (vis.titleColorLight || '#0f172a');
 if(document.getElementById('mod-font-family')) document.getElementById('mod-font-family').value = vis.fontFamily || "'Poppins', sans-serif";
 if(document.getElementById('mod-header-align')) document.getElementById('mod-header-align').value = vis.headerAlign || 'center';
+
+if(document.getElementById('mod-ft-title')) document.getElementById('mod-ft-title').value = ft.title || '';
+if(document.getElementById('mod-ft-desc')) document.getElementById('mod-ft-desc').value = ft.desc || '';
+if(document.getElementById('mod-ft-address')) document.getElementById('mod-ft-address').value = ft.address || '';
+if(document.getElementById('mod-ft-email')) document.getElementById('mod-ft-email').value = ft.email || '';
+if(document.getElementById('mod-ft-phone')) document.getElementById('mod-ft-phone').value = ft.phone || '';
+if(document.getElementById('mod-ft-bg')) document.getElementById('mod-ft-bg').value = ft.bg || '#0a192f';
+if(document.getElementById('mod-ft-text-color')) document.getElementById('mod-ft-text-color').value = ft.textColor || '#e2e8f0';
+if(document.getElementById('mod-ft-opacity')) document.getElementById('mod-ft-opacity').value = ft.opacity || 95;
+if(document.getElementById('mod-ft-size')) document.getElementById('mod-ft-size').value = ft.fontSize || 0.85;
 }
+
 window.liveUpdateVisuals = function() {
 const bTxt = document.getElementById('txt-welcome-banner');
 const mTitle = document.getElementById('txt-main-title');
@@ -2207,6 +2319,7 @@ mTitle.innerText = mt.value;
 mTitle.style.color = tc.value;
 }
 }
+
 window.saveVisualLayoutState = function() {
 const isDark = (window.appState.theme || 'dark') === 'dark';
 const syncLight = document.getElementById('mod-sync-light').checked;
@@ -2216,6 +2329,7 @@ window.appState.visuals.bannerText = document.getElementById('mod-banner-text').
 window.appState.visuals.titleText = document.getElementById('mod-title-text').value;
 window.appState.visuals.fontFamily = document.getElementById('mod-font-family').value;
 window.appState.visuals.headerAlign = document.getElementById('mod-header-align').value;
+
 if(isDark) {
 window.appState.visuals.bannerColorDark = bColor;
 window.appState.visuals.titleColorDark = tColor;
@@ -2227,20 +2341,39 @@ window.appState.visuals.titleColorLight = tColor;
 window.appState.visuals.bannerColorLight = bColor;
 window.appState.visuals.titleColorLight = tColor;
 }
+
+window.appState.footer = {
+title: document.getElementById('mod-ft-title').value,
+desc: document.getElementById('mod-ft-desc').value,
+address: document.getElementById('mod-ft-address').value,
+email: document.getElementById('mod-ft-email').value,
+phone: document.getElementById('mod-ft-phone').value,
+bg: document.getElementById('mod-ft-bg').value,
+textColor: document.getElementById('mod-ft-text-color').value,
+opacity: parseInt(document.getElementById('mod-ft-opacity').value) || 95,
+fontSize: parseFloat(document.getElementById('mod-ft-size').value) || 0.85
+};
+
 saveKey('visuals', window.appState.visuals);
+saveKey('footer', window.appState.footer);
 applyVisualCustomizations();
-alert("Visual Layout Saved."); 
+applyFooterVisuals();
+alert("Visual & Footer Layout Saved."); 
 navHome();
 }
+
 window.saveMaxLimitMaster = function() {
 window.appState.maxProgLimit = parseInt(document.getElementById('m-max-limit-input').value) || 3;
 saveKey('maxProgLimit', window.appState.maxProgLimit);
 alert("Limit saved.");
 }
+
 window.togglePhaseControl = function(selectedPhase) {
 document.getElementById('phase-reg-radio').checked = selectedPhase === 'register';
 document.getElementById('phase-res-radio').checked = selectedPhase === 'result';
 }
+
+/* SETTINGS SUBMIT WITH LOGO COMPRESSION & INSTANT RENDER */
 window.applyPhaseSettings = async function(e) {
 e.preventDefault();
 const selectedPhase = document.querySelector('input[name="phase-toggle"]:checked').value;
@@ -2248,15 +2381,18 @@ window.appState.phase = selectedPhase;
 localStorage.setItem('bahja_current_phase', selectedPhase);
 window.appState.logoPos = document.getElementById('sys-logo-pos').value;
 window.appState.logoSize = document.getElementById('sys-logo-size').value;
+
 const logoF = document.getElementById('sys-logo-input').files[0];
 if(logoF) {
 window.appState.logoUrl = await compressImage(logoF, 500, 0.8);
 }
+
 saveData(); 
 applyLogoView();
-alert("Settings saved."); 
+alert("System Configurations saved and logo applied!"); 
 navHome();
 }
+
 window.clearAllDataSystem = function() {
 if(!confirm("Clear all system data?")) return;
 const preservedLogo = {
@@ -2280,6 +2416,7 @@ render3DotMenu();
 navHome();
 alert("System data cleared.");
 }
+
 window.renderHomePhase = function() {
 const regEl = document.getElementById('home-phase-register');
 const resEl = document.getElementById('home-phase-result');
@@ -2301,6 +2438,7 @@ applySectionVisibilityUI();
 renderResultPhaseFeeds();
 }
 }
+
 function applySectionVisibilityUI() {
 const v = window.appState.visibilities || {};
 for(let key in v) {
@@ -2308,6 +2446,7 @@ const btn = document.getElementById(`pill-sec-${key}`);
 if(btn) btn.style.display = v[key] ? 'flex' : 'none';
 }
 }
+
 window.updateSectionVisibilities = function() {
 window.appState.visibilities = {
 'team-states': document.getElementById('toggle-vis-team-states').checked,
@@ -2319,6 +2458,7 @@ window.appState.visibilities = {
 saveKey('visibilities', window.appState.visibilities);
 applySectionVisibilityUI();
 }
+
 window.handlePartLogin = function(e) {
 e.preventDefault();
 const u = document.getElementById('part-user').value.trim();
@@ -2332,6 +2472,7 @@ document.getElementById('part-active-team').innerText = u;
 renderTeamStudentsList();
 } else alert("Invalid Credentials!");
 }
+
 window.addTeamParticipant = function(e) {
 e.preventDefault();
 const cat = document.getElementById('part-cat').value;
@@ -2341,6 +2482,7 @@ saveKey('students', window.appState.students);
 document.getElementById('part-name').value = ''; 
 renderTeamStudentsList();
 }
+
 window.renderTeamStudentsList = function() {
 const filtered = window.appState.students.filter(s => s.team === window.activePartTeam);
 document.getElementById('team-students-list').innerHTML = filtered.map(s => `
@@ -2350,11 +2492,13 @@ document.getElementById('team-students-list').innerHTML = filtered.map(s => `
 </div>
 `).join('') || '<p>No students recorded.</p>';
 }
+
 window.deleteStudent = function(id) {
 window.appState.students = window.appState.students.filter(s => s.id !== id); 
 saveKey('students', window.appState.students);
 renderTeamStudentsList();
 }
+
 window.handleTeamLogin = function(e) {
 e.preventDefault();
 const u = document.getElementById('login-team-user').value.trim();
@@ -2362,7 +2506,9 @@ const p = document.getElementById('login-team-pass').value.trim();
 const found = window.appState.teams.find(t => t.user === u && t.pass === p);
 if(found) { window.loggedTeamUser = u; renderHomePhase(); } else alert("Invalid Credentials");
 }
+
 window.logoutTeam = function() { window.loggedTeamUser = null; renderHomePhase(); }
+
 window.loadCategoryPrograms = function() {
 const cat = document.getElementById('reg-cat-select').value;
 const container = document.getElementById('category-programs-container');
@@ -2392,6 +2538,7 @@ return `
 `;
 }).join('');
 }
+
 window.saveRegistrationItem = function(progId, cat) {
 if(!window.appState.portalOpen) { alert("Registration Locked!"); return; }
 const fields = document.querySelectorAll(`.prog-input-${progId}`);
@@ -2411,7 +2558,6 @@ saveKey('registrations', window.appState.registrations);
 alert("Registration updated.");
 }
 
-/* RECORD TERMINAL EVALUATION LOGS WITH PROGRAM + CATEGORY SEARCH */
 window.populatePtProgs = function() {
 const cat = document.getElementById('pt-cat-select').value;
 const query = (document.getElementById('pt-search')?.value || '').toLowerCase().trim();
@@ -2423,6 +2569,7 @@ drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(
 document.getElementById('pt-candidates-inputs').innerHTML = '';
 document.getElementById('pt-stage-badge').innerText = '';
 }
+
 window.loadPtParticipants = function() {
 const progId = document.getElementById('pt-prog-select').value;
 const targetProg = window.appState.programs.find(p => p.id === progId);
@@ -2447,6 +2594,7 @@ html += `
 });
 container.innerHTML = html;
 }
+
 window.savePointroomEntry = function(e) {
 e.preventDefault();
 const progId = document.getElementById('pt-prog-select').value;
@@ -2468,6 +2616,7 @@ alert("Points recorded.");
 loadPtParticipants(); 
 renderPtList();
 }
+
 function renderPtList() {
 const containerContent = document.getElementById('box-pt-list-content');
 const searchInput = document.getElementById('pt-logs-search');
@@ -2477,8 +2626,7 @@ if(searchQ) {
 distinctProgs = distinctProgs.filter(pid => {
 const prog = window.appState.programs.find(p => p.id === pid);
 if(!prog) return false;
-const fullString = `${prog.cat} ${prog.name}`.toLowerCase();
-return fullString.includes(searchQ);
+return `${prog.cat} ${prog.name}`.toLowerCase().includes(searchQ);
 });
 }
 if(distinctProgs.length === 0) {
@@ -2505,6 +2653,7 @@ ${subPts.map(s => `${s.student} (${s.team}): <strong>${s.score}</strong>`).join(
 }).join('');
 if(containerContent) containerContent.innerHTML = htmlContent;
 }
+
 window.printIndividualPointRecord = function(progId) {
 const prog = window.appState.programs.find(p => p.id === progId) || { name: 'Program', cat: 'N/A' };
 const subPts = window.appState.points.filter(pt => pt.progId === progId).sort((a,b)=>b.score - a.score);
@@ -2522,6 +2671,7 @@ ${subPts.map((s, idx) => `<tr><td>${idx+1}</td><td>${s.student}</td><td>${s.team
 `;
 triggerCustomPrint('pt-print-area');
 }
+
 window.printAllPointRecords = function() {
 const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
 const target = document.getElementById('pt-print-area');
@@ -2544,6 +2694,7 @@ html += `
 target.innerHTML = html;
 triggerCustomPrint('pt-print-area');
 }
+
 window.deletePtGroup = function(progId) {
 if(confirm("Delete records?")) {
 window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
@@ -2551,7 +2702,7 @@ saveKey('points', window.appState.points);
 renderPtList();
 }
 }
-/* CANDIDATE'S STANDING BREAKDOWN */
+
 window.renderJudgeLeaderboard = function() {
 const tbody = document.getElementById('judge-leaderboard-body');
 if(!tbody) return;
@@ -2576,6 +2727,7 @@ tbody.innerHTML = sorted.map(s => `
 </tr>
 `).join('') || '<tr><td colspan="4">No scores accumulated.</td></tr>';
 }
+
 window.viewCandidateBreakdown = function(sName, team) {
 const studentPts = window.appState.points.filter(pt => pt.student === sName && pt.team === team);
 let content = '<table style="width:100%; border-collapse:collapse;"><thead><tr><th>Program</th><th>Score</th></tr></thead><tbody>';
@@ -2590,7 +2742,7 @@ document.getElementById('det-modal-title').innerText = `${sName} (${team}) - Pro
 document.getElementById('det-modal-content').innerHTML = content;
 document.getElementById('detail-modal-overlay').style.display = 'flex';
 }
-/* LEAD ZONE & TEAM BREAKDOWN */
+
 window.renderStatesDashboard = function() {
 const tbody = document.getElementById('states-table-body');
 if(!tbody) return;
@@ -2611,6 +2763,7 @@ if(teamDrop && teamDrop.children.length === 1) {
 teamDrop.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
 }
 }
+
 window.viewTeamBreakdown = function(tName) {
 const teamPts = window.appState.points.filter(pt => pt.team === tName);
 let content = '<table style="width:100%; border-collapse:collapse;"><thead><tr><th>Student</th><th>Program</th><th>Score</th></tr></thead><tbody>';
@@ -2625,6 +2778,7 @@ document.getElementById('det-modal-title').innerText = `Team Breakdown - ${tName
 document.getElementById('det-modal-content').innerHTML = content;
 document.getElementById('detail-modal-overlay').style.display = 'flex';
 }
+
 window.renderRankWinnersList = function() {
 const tbody = document.getElementById('rank-winners-body');
 if(!tbody) return;
@@ -2676,11 +2830,13 @@ tbody.innerHTML = allRows.map(row => `
 </tr>
 `).join('') || '<tr><td colspan="6">No winners matching position criteria.</td></tr>';
 }
+
 window.toggleRegLock = function() { 
 window.appState.portalOpen = !window.appState.portalOpen; 
 saveKey('portalOpen', window.appState.portalOpen); 
 syncControlPanelViews();
 }
+
 window.addTeamMaster = function(e) {
 e.preventDefault();
 window.appState.teams.push({ user: document.getElementById('m-team-user').value.trim(), pass: document.getElementById('m-team-pass').value.trim() });
@@ -2688,11 +2844,13 @@ saveKey('teams', window.appState.teams);
 syncControlPanelViews();
 e.target.reset();
 }
+
 window.deleteTeamMaster = function(idx) { 
 window.appState.teams.splice(idx, 1); 
 saveKey('teams', window.appState.teams);
 syncControlPanelViews();
 }
+
 window.addProgramMaster = function(e) {
 e.preventDefault();
 window.appState.programs.push({
@@ -2707,11 +2865,13 @@ saveKey('programs', window.appState.programs);
 syncControlPanelViews();
 e.target.reset();
 }
+
 window.deleteProgramMaster = function(id) { 
 window.appState.programs = window.appState.programs.filter(p => p.id !== id); 
 saveKey('programs', window.appState.programs);
 syncControlPanelViews();
 }
+
 window.uploadTeamStatusPoster = async function(e) {
 e.preventDefault();
 const btn = document.getElementById('btn-up-status');
@@ -2733,6 +2893,7 @@ btn.disabled = false;
 e.target.reset();
 }
 }
+
 window.deleteStatusItem = function(id) {
 if(!window.appState.teamStatusList) return;
 window.appState.teamStatusList = window.appState.teamStatusList.filter(item => item.id !== id);
@@ -2742,12 +2903,14 @@ saveKey('teamStatusUrl', window.appState.teamStatusUrl);
 syncControlPanelViews();
 renderResultPhaseFeeds();
 }
+
 window.populateResProgDropdown = function() {
 const cat = document.getElementById('res-upload-cat').value;
 const drop = document.getElementById('res-upload-prog');
 const matched = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
 drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
 }
+
 window.uploadProgramResult = async function(e) {
 e.preventDefault();
 const btn = document.getElementById('btn-up-res');
@@ -2768,6 +2931,7 @@ btn.innerText = "Upload Result (Save Only)";
 btn.disabled = false;
 }
 }
+
 window.setResultPublished = function(progId, shouldPublish) {
 const item = (window.appState.results || []).find(r => r.progId === progId);
 if(!item) return;
@@ -2777,6 +2941,7 @@ renderPublishPanel();
 filterResultPrograms();
 syncControlPanelViews();
 }
+
 window.setStatusPublished = function(id, shouldPublish) {
 const item = (window.appState.teamStatusList || []).find(r => r.id === id);
 if(!item) return;
@@ -2786,6 +2951,7 @@ renderPublishPanel();
 renderResultPhaseFeeds();
 syncControlPanelViews();
 }
+
 window.renderPublishPanel = function() {
 const resBox = document.getElementById('publish-results-list');
 if(resBox) {
@@ -2825,12 +2991,14 @@ return `
 }).join('') : '<div style="color:var(--text-sub); text-align:center; padding:12px;">No uploaded posters yet.</div>';
 }
 }
+
 window.deleteResultMaster = function(progId) { 
 window.appState.results = window.appState.results.filter(r => r.progId !== progId); 
 saveKey('results', window.appState.results);
 syncControlPanelViews();
 filterResultPrograms();
 }
+
 window.toggleUpdateVideoUrl = function() {
 const type = document.getElementById('up-type').value;
 const linkInput = document.getElementById('up-video-link');
@@ -2845,6 +3013,7 @@ linkInput.required = false;
 lblFile.innerText = "Choose Photo";
 }
 }
+
 window.uploadUpdateFeed = async function(e) {
 e.preventDefault();
 const btn = document.getElementById('btn-up-feed');
@@ -2870,18 +3039,19 @@ btn.disabled = false;
 e.target.reset();
 window.toggleUpdateVideoUrl();
 } catch(err) {
-console.error("Upload error: ", err);
 btn.innerText = "Upload & Publish";
 btn.disabled = false;
-alert("Failed to upload media. Please try again.");
+alert("Failed to upload media.");
 }
 }
+
 window.deleteUpdateMaster = function(id) { 
 window.appState.updates = window.appState.updates.filter(u => u.id !== id); 
 saveKey('updates', window.appState.updates);
 syncControlPanelViews();
 renderPinterestUpdates('all');
 }
+
 window.uploadStreamLinks = async function(e) {
 e.preventDefault();
 const btn = document.getElementById('btn-up-stream');
@@ -2910,6 +3080,7 @@ e.target.reset();
 alert("Stream Added Instantly.");
 }
 }
+
 window.deleteStreamMaster = function(id, mode) {
 if(mode === 'live') {
 window.appState.livelinks = window.appState.livelinks.filter(l => l.id !== id);
@@ -2921,6 +3092,7 @@ saveKey('highlights', window.appState.highlights);
 syncControlPanelViews();
 renderResultPhaseFeeds();
 }
+
 function populateReportProgDropdown() {
 const cat = document.getElementById('rep-cat').value;
 const drop = document.getElementById('rep-prog');
@@ -2928,6 +3100,7 @@ if(!drop) return;
 const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
 drop.innerHTML = '<option value="">All Programs (A-Z)</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
 }
+
 function syncControlPanelViews() {
 const btn = document.getElementById('lock-reg-btn');
 if(btn) {
@@ -3005,6 +3178,7 @@ rTeam.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.
 }
 renderReportTable();
 }
+
 window.renderReportTable = function() {
 const fTeam = document.getElementById('rep-team') ? document.getElementById('rep-team').value : '';
 const fCat = document.getElementById('rep-cat') ? document.getElementById('rep-cat').value : '';
@@ -3033,6 +3207,7 @@ rows += `<tr>
 });
 tbody.innerHTML = rows || '<tr><td colspan="5" style="text-align:center;">No entries found.</td></tr>';
 }
+
 window.populateEsProgs = function() {
 const cat = document.getElementById('es-cat-select').value;
 const drop = document.getElementById('es-prog-select');
@@ -3040,6 +3215,7 @@ if(!drop) return;
 const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
 drop.innerHTML = '<option value="">All Programs</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
 };
+
 window.renderEntrySignTable = function() {
 const fCat = document.getElementById('es-cat-select') ? document.getElementById('es-cat-select').value : '';
 const fProg = document.getElementById('es-prog-select') ? document.getElementById('es-prog-select').value : '';
@@ -3073,6 +3249,7 @@ rows += '<tr>' +
 });
 tbody.innerHTML = rows || '<tr><td colspan="4" style="text-align:center;">No entries found.</td></tr>';
 };
+
 function renderResultPhaseFeeds() {
 const statusBox = document.getElementById('team-status-poster-box');
 if(statusBox) {
@@ -3116,7 +3293,7 @@ hlFeed.innerHTML = window.appState.highlights.map(h => `
 }
 }
 
-/* ENHANCED RESULT FILTERING SUPPORTING SEARCH BY PROGRAM NAME AND RESULT NUMBER */
+/* ACCURATE SEARCH BY RESULT NUMBER OR PROGRAM NAME */
 window.filterResultPrograms = function() {
 const catEl = document.getElementById('res-search-cat');
 const searchEl = document.getElementById('res-prog-search');
@@ -3125,7 +3302,6 @@ if(!container) return;
 const cat = catEl ? catEl.value : '';
 const searchQ = searchEl ? searchEl.value.toLowerCase().trim() : '';
 
-// Sort results by result number numerically
 const sortedResults = [...(window.appState.results || [])].sort((a,b) => Number(a.number || 999999) - Number(b.number || 999999));
 
 const matchedResults = sortedResults.filter(r => r.published === true).filter(r => {
@@ -3178,6 +3354,7 @@ btn.innerText = "Result View";
 btn.className = "btn btn-sm btn-success";
 }
 }
+
 window.renderPinterestUpdates = function(filterMode) {
 const feed = document.getElementById('live-updates-feed');
 if(!feed) return;
@@ -3192,6 +3369,7 @@ ${u.type === 'photo'
 </div>
 `).join('') || '<p style="grid-column: 1/-1;">No updates cataloged.</p>';
 }
+
 window.openMediaViewer = function(mediaUrl, type) {
 const container = document.getElementById('media-viewer-container');
 const dBtn = document.getElementById('btn-media-download');
@@ -3214,11 +3392,13 @@ shareMediaDirectly(mediaUrl, type);
 };
 document.getElementById('media-viewer-modal').style.display = 'flex';
 }
+
 window.closeMediaViewer = function() {
 const container = document.getElementById('media-viewer-container');
 container.innerHTML = '';
 document.getElementById('media-viewer-modal').style.display = 'none';
 }
+
 window.shareMediaDirectly = async function(mediaUrl, type) {
 try {
 if (navigator.share) {
@@ -3249,9 +3429,11 @@ alert("Link copied to clipboard!");
 console.log("Sharing cancelled or unsupported:", err);
 }
 }
+
 applyGlobalWebsiteTheme(window.appState.theme || 'dark');
 applyLogoView();
 applyVisualCustomizations();
+applyFooterVisuals();
 render3DotMenu();
 </script>
 </body>
