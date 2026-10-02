@@ -513,17 +513,7 @@ transition: all 0.3s ease;
 </div>
 <div id="box-pt-list" class="collapsible-box show">
 <div class="form-group no-print" style="margin-top:10px;">
-<div style="display:grid; grid-template-columns:1fr 2fr; gap:8px;">
-<select id="pt-logs-cat" class="form-control" onchange="renderPtList()">
-<option value="">All Categories</option>
-<option value="GENERAL">GENERAL</option>
-<option value="LOWER ZONE">LOWER ZONE</option>
-<option value="MIDDLE ZONE">MIDDLE ZONE</option>
-<option value="HIGHER ZONE">HIGHER ZONE</option>
-<option value="SUPER ZONE">SUPER ZONE</option>
-</select>
-<input type="text" id="pt-logs-search" class="form-control" placeholder="Search Program, Category, Student or Team..." oninput="renderPtList()" autocomplete="off">
-</div>
+<input type="text" id="pt-logs-search" class="form-control" placeholder="Search Program, Category, Student, Team or Score..." oninput="renderPtList()" autocomplete="off">
 </div>
 <div id="box-pt-list-content"></div>
 </div>
@@ -568,17 +558,7 @@ transition: all 0.3s ease;
 <div class="collapsible-header no-print" onclick="toggleAccordion('box-code-forms-list')"><span>Saved Code Entries (Forms)</span> <i class="fa-solid fa-chevron-down"></i></div>
 <div id="box-code-forms-list" class="collapsible-box show">
 <div class="form-group no-print" style="margin-top:10px;">
-<div style="display:grid; grid-template-columns:1fr 2fr; gap:8px;">
-<select id="pt-saved-code-cat" class="form-control" onchange="renderCodeFormsList()">
-<option value="">All Categories</option>
-<option value="GENERAL">GENERAL</option>
-<option value="LOWER ZONE">LOWER ZONE</option>
-<option value="MIDDLE ZONE">MIDDLE ZONE</option>
-<option value="HIGHER ZONE">HIGHER ZONE</option>
-<option value="SUPER ZONE">SUPER ZONE</option>
-</select>
 <input type="text" id="pt-saved-code-search" class="form-control" placeholder="Search Program, Category, Code Letter, Student or Team..." oninput="renderCodeFormsList()" autocomplete="off">
-</div>
 </div>
 <div id="box-code-forms-content"></div>
 </div>
@@ -1939,22 +1919,24 @@ function renderCodeFormsList() {
 const container = document.getElementById('box-code-forms-content');
 if(!container) return;
 const searchInput = document.getElementById('pt-saved-code-search');
-const catInput = document.getElementById('pt-saved-code-cat');
 const searchQ = searchInput ? searchInput.value.toLowerCase().trim() : '';
-const catQ = catInput ? catInput.value.toLowerCase().trim() : '';
+const terms = searchQ ? searchQ.split(/\s+/).filter(Boolean) : [];
 
-/* Search every saved code-letter record directly: Program, Category, Code Letter, Student and Team. */
+/* Search the actual saved-code list entries. Each visible code/student/team entry
+   is matched independently, so unrelated entries in the same program are hidden. */
 const matchedPoints = (window.appState.points || []).filter(pt => {
 if(!pt.codeLetter || !pt.codeLetter.trim()) return false;
 const prog = (window.appState.programs || []).find(p => p.id === pt.progId);
 const programName = prog ? (prog.name || '') : '';
 const programCat = (prog ? prog.cat : pt.cat) || '';
-const searchable = [
-programName, programCat, pt.cat || '', pt.codeLetter || '', pt.student || '', pt.team || ''
-].join(' ').toLowerCase();
-const categoryMatch = !catQ || programCat.toLowerCase() === catQ || (pt.cat || '').toLowerCase() === catQ;
-const textMatch = !searchQ || searchable.includes(searchQ);
-return categoryMatch && textMatch;
+const topic = prog ? (prog.topic || '') : '';
+const fields = [programName, programCat, pt.cat || '', topic, pt.student || '', pt.team || ''].map(v => String(v).toLowerCase());
+const searchable = fields.join(' ');
+return terms.length === 0 || terms.every(term => {
+const t = term.toLowerCase();
+if(/^[a-z]$/.test(t)) return (pt.codeLetter || '').toLowerCase() === t || fields.some(v => v.split(/\s+/).includes(t));
+return searchable.includes(t);
+});
 });
 
 const codedProgs = [...new Set(matchedPoints.map(pt => pt.progId))].sort((a,b) => {
@@ -1964,7 +1946,7 @@ return `${progA?.name || ''} ${progA?.cat || ''}`.localeCompare(`${progB?.name |
 });
 
 if(codedProgs.length === 0) {
-container.innerHTML = '<p style="padding:10px 0; color:var(--text-sub);">No saved code entries found matching the selected search.</p>';
+container.innerHTML = '<p style="padding:10px 0; color:var(--text-sub);">No saved code entries found matching your search.</p>';
 return;
 }
 
@@ -1989,7 +1971,6 @@ ${subPts.map(s => `<span style="display:inline-block; margin-right:12px; margin-
 `;
 }).join('');
 }
-
 window.loadCodeFormToEdit = function(cat, progId) {
 document.getElementById('pt-cat-select-copy').value = cat;
 populatePtProgsCopy();
@@ -2308,21 +2289,22 @@ function renderPtList() {
 const containerContent = document.getElementById('box-pt-list-content');
 if(!containerContent) return;
 const searchInput = document.getElementById('pt-logs-search');
-const catInput = document.getElementById('pt-logs-cat');
 const searchQ = searchInput ? searchInput.value.toLowerCase().trim() : '';
-const catQ = catInput ? catInput.value.toLowerCase().trim() : '';
+const terms = searchQ ? searchQ.split(/\s+/).filter(Boolean) : [];
 
-/* Search every saved point record directly so matching records are never hidden by group filtering. */
+/* Search the actual records shown in the list. Every search term must be present
+   in the same record, so searching a student/team/code/score never shows unrelated entries. */
 const matchedPoints = (window.appState.points || []).filter(pt => {
 const prog = (window.appState.programs || []).find(p => p.id === pt.progId);
 const programName = prog ? (prog.name || '') : '';
 const programCat = (prog ? prog.cat : pt.cat) || '';
-const searchable = [
-programName, programCat, pt.cat || '', pt.student || '', pt.team || '', pt.score ?? ''
-].join(' ').toLowerCase();
-const categoryMatch = !catQ || programCat.toLowerCase() === catQ || (pt.cat || '').toLowerCase() === catQ;
-const textMatch = !searchQ || searchable.includes(searchQ);
-return categoryMatch && textMatch;
+const fields = [programName, programCat, pt.cat || '', pt.student || '', pt.team || '', String(pt.score ?? '')].map(v => String(v).toLowerCase());
+const searchable = fields.join(' ');
+return terms.length === 0 || terms.every(term => {
+const t = term.toLowerCase();
+if(/^[a-z]$/.test(t)) return (pt.codeLetter || '').toLowerCase() === t || fields.some(v => v.split(/\s+/).includes(t));
+return searchable.includes(t);
+});
 });
 
 const distinctProgs = [...new Set(matchedPoints.map(p => p.progId))].sort((a,b) => {
@@ -2332,7 +2314,7 @@ return `${progA?.name || ''} ${progA?.cat || ''}`.localeCompare(`${progB?.name |
 });
 
 if(distinctProgs.length === 0) {
-containerContent.innerHTML = '<p style="padding:8px 0; color:var(--text-sub);">No point records found matching the selected search.</p>';
+containerContent.innerHTML = '<p style="padding:8px 0; color:var(--text-sub);">No point records found matching your search.</p>';
 return;
 }
 
@@ -2349,13 +2331,12 @@ return `
 </div>
 </div>
 <div style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;">
-${subPts.map(s => `${s.student} (${s.team}): <strong>${s.score}</strong>`).join(' | ')}
+${subPts.map(s => `${s.student} (${s.team}): <strong>${s.score}</strong>${s.codeLetter ? ` <span style="color:#d4af37;">[Code ${s.codeLetter}]</span>` : ''}`).join(' | ')}
 </div>
 </div>
 `;
 }).join('');
 }
-
 window.printIndividualPointRecord = function(progId) {
 const prog = window.appState.programs.find(p => p.id === progId) || { name: 'Program', cat: 'N/A' };
 const subPts = window.appState.points.filter(pt => pt.progId === progId).sort((a,b)=>b.score - a.score);
