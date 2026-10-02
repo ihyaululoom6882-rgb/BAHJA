@@ -513,7 +513,7 @@ transition: all 0.3s ease;
 </div>
 <div id="box-pt-list" class="collapsible-box show">
 <div class="form-group no-print" style="margin-top:10px;">
-<input type="text" id="pt-logs-search" class="form-control" placeholder="Search Program, Category, Student, Team or Score..." oninput="renderPtList()" autocomplete="off">
+<input type="text" id="pt-logs-search" class="form-control" placeholder="Search Program, Category, Student, Team, Code or Score..." oninput="renderPtList()" autocomplete="off">
 </div>
 <div id="box-pt-list-content"></div>
 </div>
@@ -1918,59 +1918,93 @@ updateEjTimerDisplay();
 function renderCodeFormsList() {
 const container = document.getElementById('box-code-forms-content');
 if(!container) return;
-const searchInput = document.getElementById('pt-saved-code-search');
-const searchQ = searchInput ? searchInput.value.toLowerCase().trim() : '';
-const terms = searchQ ? searchQ.split(/\s+/).filter(Boolean) : [];
 
-/* Search the actual saved-code list entries. Each visible code/student/team entry
-   is matched independently, so unrelated entries in the same program are hidden. */
-const matchedPoints = (window.appState.points || []).filter(pt => {
-if(!pt.codeLetter || !pt.codeLetter.trim()) return false;
-const prog = (window.appState.programs || []).find(p => p.id === pt.progId);
-const programName = prog ? (prog.name || '') : '';
-const programCat = (prog ? prog.cat : pt.cat) || '';
-const topic = prog ? (prog.topic || '') : '';
-const fields = [programName, programCat, pt.cat || '', topic, pt.student || '', pt.team || ''].map(v => String(v).toLowerCase());
-const searchable = fields.join(' ');
-return terms.length === 0 || terms.every(term => {
-const t = term.toLowerCase();
-if(/^[a-z]$/.test(t)) return (pt.codeLetter || '').toLowerCase() === t || fields.some(v => v.split(/\s+/).includes(t));
-return searchable.includes(t);
-});
+const searchInput = document.getElementById('pt-saved-code-search');
+const rawQuery = searchInput ? searchInput.value : '';
+const query = rawQuery.toLowerCase().trim();
+
+const allPoints = Array.isArray(window.appState.points) ? window.appState.points : [];
+const programs = Array.isArray(window.appState.programs) ? window.appState.programs : [];
+
+const normalize = value => String(value ?? '')
+  .toLowerCase()
+  .replace(/\s+/g, ' ')
+  .trim();
+
+/* Search the actual saved-code records shown in the list.
+   A program/category/student/team/code-letter search only returns matching entries. */
+const matchedPoints = allPoints.filter(pt => {
+  if(!pt.codeLetter || !String(pt.codeLetter).trim()) return false;
+
+  const prog = programs.find(p => p.id === pt.progId);
+  const programName = prog?.name || '';
+  const programCat = prog?.cat || pt.cat || '';
+  const topic = prog?.topic || '';
+
+  if(!query) return true;
+
+  const phraseFields = [
+    programName, programCat, pt.cat || '', topic,
+    pt.codeLetter || '', pt.student || '', pt.team || ''
+  ].map(normalize);
+
+  /* Exact phrase search, e.g. "E POSTER". */
+  if(phraseFields.some(field => field.includes(query))) return true;
+
+  /* Multiple search words can also match in any order. */
+  const terms = query.split(/\s+/).filter(Boolean);
+  const searchable = phraseFields.join(' ');
+  return terms.length > 0 && terms.every(term => searchable.includes(term));
 });
 
 const codedProgs = [...new Set(matchedPoints.map(pt => pt.progId))].sort((a,b) => {
-const progA = (window.appState.programs || []).find(p => p.id === a);
-const progB = (window.appState.programs || []).find(p => p.id === b);
-return `${progA?.name || ''} ${progA?.cat || ''}`.localeCompare(`${progB?.name || ''} ${progB?.cat || ''}`);
+  const progA = programs.find(p => p.id === a);
+  const progB = programs.find(p => p.id === b);
+  return `${progA?.name || ''} ${progA?.cat || ''}`.localeCompare(
+    `${progB?.name || ''} ${progB?.cat || ''}`
+  );
 });
 
 if(codedProgs.length === 0) {
-container.innerHTML = '<p style="padding:10px 0; color:var(--text-sub);">No saved code entries found matching your search.</p>';
-return;
+  container.innerHTML = `<p style="padding:10px 0; color:var(--text-sub);">
+    No saved code entries found for "<strong>${rawQuery}</strong>".
+  </p>`;
+  return;
 }
 
 container.innerHTML = codedProgs.map(pid => {
-const prog = (window.appState.programs || []).find(p => p.id === pid) || { name:'Unknown Program', cat:'N/A', topic:'' };
-const subPts = matchedPoints.filter(pt => pt.progId === pid);
-const isActive = window.appState.activeEjProgId === pid;
-return `
-<div style="background:rgba(0,0,0,0.05); border:1px solid ${isActive ? '#d4af37' : 'var(--border-color)'}; padding:12px; border-radius:12px; margin-bottom:10px;">
-<div style="display:flex; justify-content:space-between; align-items:center;">
-<div>
-<strong style="font-size:1rem; color:#d4af37;">${prog.name} (${prog.cat})</strong>
-${isActive ? '<span style="background:#d4af37; color:#000; font-size:0.7rem; padding:2px 6px; border-radius:4px; margin-left:8px; font-weight:bold;">ACTIVE IN JUDGE PORTAL</span>' : ''}
-</div>
-<button class="btn btn-sm btn-primary" onclick="loadCodeFormToEdit('${prog.cat}', '${pid}')">Edit / Send to Judge</button>
-</div>
-${prog.topic ? `<div style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;"><strong>Topic:</strong> ${prog.topic}</div>` : ''}
-<div style="margin-top:8px; font-size:0.85rem; background:rgba(0,0,0,0.05); padding:8px; border-radius:8px;">
-${subPts.map(s => `<span style="display:inline-block; margin-right:12px; margin-bottom:4px;">Code: <strong style="color:#d4af37;">${s.codeLetter}</strong> (${s.student} - ${s.team})</span>`).join('')}
-</div>
-</div>
-`;
+  const prog = programs.find(p => p.id === pid) || {
+    name:'Unknown Program', cat:'N/A', topic:''
+  };
+  const subPts = matchedPoints.filter(pt => pt.progId === pid);
+  const isActive = window.appState.activeEjProgId === pid;
+
+  return `
+  <div class="code-search-result"
+       data-search-result="${String(prog.name).replace(/"/g,'&quot;')}"
+       style="background:rgba(0,0,0,0.05); border:1px solid ${isActive ? '#d4af37' : 'var(--border-color)'}; padding:12px; border-radius:12px; margin-bottom:10px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <strong style="font-size:1rem; color:#d4af37;">${prog.name} (${prog.cat})</strong>
+        ${isActive ? '<span style="background:#d4af37; color:#000; font-size:0.7rem; padding:2px 6px; border-radius:4px; margin-left:8px; font-weight:bold;">ACTIVE IN JUDGE PORTAL</span>' : ''}
+      </div>
+      <button class="btn btn-sm btn-primary" onclick="loadCodeFormToEdit('${prog.cat}', '${pid}')">
+        Edit / Send to Judge
+      </button>
+    </div>
+    ${prog.topic ? `<div style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;"><strong>Topic:</strong> ${prog.topic}</div>` : ''}
+    <div style="margin-top:8px; font-size:0.85rem; background:rgba(0,0,0,0.05); padding:8px; border-radius:8px;">
+      ${subPts.map(s => `
+        <span class="code-record-row" style="display:inline-block; margin-right:12px; margin-bottom:4px;">
+          Code: <strong style="color:#d4af37;">${s.codeLetter}</strong> (${s.student} - ${s.team})
+        </span>
+      `).join('')}
+    </div>
+  </div>
+  `;
 }).join('');
 }
+
 window.loadCodeFormToEdit = function(cat, progId) {
 document.getElementById('pt-cat-select-copy').value = cat;
 populatePtProgsCopy();
@@ -2288,55 +2322,92 @@ alert("Registration updated.");
 function renderPtList() {
 const containerContent = document.getElementById('box-pt-list-content');
 if(!containerContent) return;
-const searchInput = document.getElementById('pt-logs-search');
-const searchQ = searchInput ? searchInput.value.toLowerCase().trim() : '';
-const terms = searchQ ? searchQ.split(/\s+/).filter(Boolean) : [];
 
-/* Search the actual records shown in the list. Every search term must be present
-   in the same record, so searching a student/team/code/score never shows unrelated entries. */
-const matchedPoints = (window.appState.points || []).filter(pt => {
-const prog = (window.appState.programs || []).find(p => p.id === pt.progId);
-const programName = prog ? (prog.name || '') : '';
-const programCat = (prog ? prog.cat : pt.cat) || '';
-const fields = [programName, programCat, pt.cat || '', pt.student || '', pt.team || '', String(pt.score ?? '')].map(v => String(v).toLowerCase());
-const searchable = fields.join(' ');
-return terms.length === 0 || terms.every(term => {
-const t = term.toLowerCase();
-if(/^[a-z]$/.test(t)) return (pt.codeLetter || '').toLowerCase() === t || fields.some(v => v.split(/\s+/).includes(t));
-return searchable.includes(t);
-});
+const searchInput = document.getElementById('pt-logs-search');
+const rawQuery = searchInput ? searchInput.value : '';
+const query = rawQuery.toLowerCase().trim();
+
+/* IMPORTANT:
+   Search the exact list records that are displayed below.
+   If the query matches a program name/category, only that program is shown.
+   If it matches a student/team/code/score, only the matching records are shown.
+*/
+const allPoints = Array.isArray(window.appState.points) ? window.appState.points : [];
+const programs = Array.isArray(window.appState.programs) ? window.appState.programs : [];
+
+const normalize = value => String(value ?? '')
+  .toLowerCase()
+  .replace(/\s+/g, ' ')
+  .trim();
+
+const matchedPoints = allPoints.filter(pt => {
+  const prog = programs.find(p => p.id === pt.progId);
+  const programName = prog?.name || '';
+  const programCat = prog?.cat || pt.cat || '';
+  const code = pt.codeLetter || '';
+
+  if(!query) return true;
+
+  /* Whole phrase match first: "E POSTER" must find the E POSTER program. */
+  const phraseFields = [
+    programName, programCat, pt.cat || '',
+    pt.student || '', pt.team || '', code, pt.score ?? ''
+  ].map(normalize);
+
+  if(phraseFields.some(field => field.includes(query))) return true;
+
+  /* Also support multiple words typed in any order. */
+  const terms = query.split(/\s+/).filter(Boolean);
+  const searchable = phraseFields.join(' ');
+  return terms.length > 0 && terms.every(term => searchable.includes(term));
 });
 
 const distinctProgs = [...new Set(matchedPoints.map(p => p.progId))].sort((a,b) => {
-const progA = (window.appState.programs || []).find(p => p.id === a);
-const progB = (window.appState.programs || []).find(p => p.id === b);
-return `${progA?.name || ''} ${progA?.cat || ''}`.localeCompare(`${progB?.name || ''} ${progB?.cat || ''}`);
+  const progA = programs.find(p => p.id === a);
+  const progB = programs.find(p => p.id === b);
+  return `${progA?.name || ''} ${progA?.cat || ''}`.localeCompare(
+    `${progB?.name || ''} ${progB?.cat || ''}`
+  );
 });
 
 if(distinctProgs.length === 0) {
-containerContent.innerHTML = '<p style="padding:8px 0; color:var(--text-sub);">No point records found matching your search.</p>';
-return;
+  containerContent.innerHTML = `<p style="padding:8px 0; color:var(--text-sub);">
+    No point records found for "<strong>${rawQuery}</strong>".
+  </p>`;
+  return;
 }
 
 containerContent.innerHTML = distinctProgs.map(pid => {
-const prog = (window.appState.programs || []).find(p => p.id === pid) || { name:'Unknown', cat:'N/A' };
-const subPts = matchedPoints.filter(pt => pt.progId === pid).sort((a,b)=>(Number(b.score)||0)-(Number(a.score)||0));
-return `
-<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:10px; border-radius:8px; margin-bottom:6px;">
-<div style="display:flex; justify-content:space-between; align-items:center;">
-<strong>${prog.name} <span style="color:#d4af37;">(${prog.cat})</span></strong>
-<div>
-<button class="btn btn-warning btn-sm no-print" onclick="printIndividualPointRecord('${pid}')"><i class="fa-solid fa-print"></i> Print</button>
-<button class="btn btn-danger btn-sm no-print" onclick="deletePtGroup('${pid}')">Delete</button>
-</div>
-</div>
-<div style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;">
-${subPts.map(s => `${s.student} (${s.team}): <strong>${s.score}</strong>${s.codeLetter ? ` <span style="color:#d4af37;">[Code ${s.codeLetter}]</span>` : ''}`).join(' | ')}
-</div>
-</div>
-`;
+  const prog = programs.find(p => p.id === pid) || { name:'Unknown', cat:'N/A' };
+  const subPts = matchedPoints
+    .filter(pt => pt.progId === pid)
+    .sort((a,b) => (Number(b.score)||0) - (Number(a.score)||0));
+
+  return `
+  <div class="pt-search-result" data-search-result="${String(prog.name).replace(/"/g,'&quot;')}"
+       style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:10px; border-radius:8px; margin-bottom:6px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <strong>${prog.name} <span style="color:#d4af37;">(${prog.cat})</span></strong>
+      <div>
+        <button class="btn btn-warning btn-sm no-print" onclick="printIndividualPointRecord('${pid}')">
+          <i class="fa-solid fa-print"></i> Print
+        </button>
+        <button class="btn btn-danger btn-sm no-print" onclick="deletePtGroup('${pid}')">Delete</button>
+      </div>
+    </div>
+    <div style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;">
+      ${subPts.map(s => `
+        <span class="pt-record-row" style="display:inline-block; margin-right:12px; margin-bottom:4px;">
+          ${s.student} (${s.team}): <strong>${s.score}</strong>
+          ${s.codeLetter ? ` <span style="color:#d4af37;">[Code ${s.codeLetter}]</span>` : ''}
+        </span>
+      `).join('')}
+    </div>
+  </div>
+  `;
 }).join('');
 }
+
 window.printIndividualPointRecord = function(progId) {
 const prog = window.appState.programs.find(p => p.id === progId) || { name: 'Program', cat: 'N/A' };
 const subPts = window.appState.points.filter(pt => pt.progId === progId).sort((a,b)=>b.score - a.score);
