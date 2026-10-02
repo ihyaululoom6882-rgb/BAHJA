@@ -5,11 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-site-verification" content="K0YX288iRLa7GMBEpmHSKSX3m4PstPfpNqivkCpqQsU" />
 <title>BAHJA - DAWA FEST</title>
-<!-- Favicon Logo Code -->
 <link rel="icon" type="image/png" href="logo.png">
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- Google Fonts Optimization -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Montserrat:wght@400;700;900&family=Open+Sans:wght@400;700&family=Poppins:wght@400;600;800&family=Roboto:wght@400;700&display=swap">
@@ -26,23 +23,23 @@
 --input-bg: rgba(0, 0, 0, 0.4);
 --btn-gold: linear-gradient(180deg, #e6c875 0%, #d4af37 50%, #aa820a 100%);
 --btn-gold-text: #1e1e1e;
---footer-bg: rgba(10, 25, 47, 0.95);
---footer-text: #e2e8f0;
+--footer-bg: #111315;
+--footer-text: #94a3b8;
 --footer-font-size: 0.85rem;
 }
 :root[data-theme="light"] {
---bg-mesh: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%);
---glass-card-bg: rgba(255, 255, 255, 0.9);
---glass-card-border: rgba(0, 0, 0, 0.1);
---glass-modal-bg: rgba(28, 30, 34, 0.98);
+--bg-mesh: #f8fafc;
+--glass-card-bg: #ffffff;
+--glass-card-border: #cbd5e1;
+--glass-modal-bg: #ffffff;
 --text-main: #0f172a;
 --text-sub: #475569;
---border-color: rgba(0, 0, 0, 0.15);
---input-bg: #ffffff;
+--border-color: #cbd5e1;
+--input-bg: #f1f5f9;
 --btn-gold: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
 --btn-gold-text: #ffffff;
---footer-bg: rgba(15, 23, 42, 0.95);
---footer-text: #e2e8f0;
+--footer-bg: #ffffff;
+--footer-text: #475569;
 --footer-font-size: 0.85rem;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--main-font, 'Poppins', sans-serif); }
@@ -57,41 +54,18 @@ transition: background 0.3s ease, color 0.3s ease;
 display: flex;
 flex-direction: column;
 }
-.main-wrapper {
-flex: 1;
-}
+.main-wrapper { flex: 1; }
 @media (max-width: 899px) {
 body { background-attachment: scroll; }
-.card, .dots-btn, .dropdown-menu {
--webkit-backdrop-filter: none;
-backdrop-filter: none;
+.card, .dots-btn, .dropdown-menu { -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
-}
-.corner-logo { 
-display: none; 
-object-fit: contain;
-transition: all 0.3s ease;
-cursor: pointer;
-}
+.corner-logo { display: none; object-fit: contain; transition: all 0.3s ease; cursor: pointer; }
 @media(max-width: 899px) {
-.corner-logo {
-position: relative !important;
-top: 0 !important;
-left: 0 !important;
-right: 0 !important;
-bottom: 0 !important;
-transform: none !important;
-margin: 25px auto 10px auto !important;
-}
-.header-title {
-padding: 10px 20px 15px 20px !important;
-}
+.corner-logo { position: relative !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; transform: none !important; margin: 25px auto 10px auto !important; }
+.header-title { padding: 10px 20px 15px 20px !important; }
 }
 @media(min-width: 900px) {
-.corner-logo {
-position: fixed;
-z-index: 99;
-}
+.corner-logo { position: fixed; z-index: 99; }
 .logo-top-left { top: 15px; left: 15px; }
 .logo-top-right { top: 15px; right: 75px; }
 .logo-bottom-left { bottom: 15px; left: 15px; }
@@ -128,18 +102,16 @@ width: 100%; padding: 13px 18px; border: none; background: none;
 text-align: left; cursor: pointer; font-size: 0.9rem; color: var(--text-main); 
 display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-color); font-weight: 600; 
 }
-.dropdown-menu button:hover { background-color: rgba(255,255,255,0.1); }
+.dropdown-menu button:hover { background-color: rgba(0,0,0,0.05); }
 .container { max-width: 460px; margin: 10px auto; padding: 0 12px; }
-@media(min-width: 900px) {
-.container { max-width: 950px; }
-}
+@media(min-width: 900px) { .container { max-width: 950px; } }
 .card { 
 background: var(--glass-card-bg); 
 backdrop-filter: blur(16px);
 -webkit-backdrop-filter: blur(16px);
 border-radius: 24px; 
 padding: 24px 20px; 
-box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); 
+box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08); 
 margin-bottom: 20px; 
 border: 1px solid var(--glass-card-border); 
 }
@@ -169,7 +141,7 @@ font-weight: 800; font-size: 0.95rem; display: inline-block; text-align: center;
 display: flex; align-items: center; justify-content: space-between; 
 border: none; padding: 16px 20px; border-radius: 50px; cursor: pointer; 
 transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; 
-box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 .pill-menu-btn:active { transform: scale(0.98); }
 .pill-left-content { display: flex; align-items: center; gap: 14px; }
@@ -187,93 +159,33 @@ font-size: 1.2rem; background: rgba(255,255,255,0.85);
 .pill-pink { background-color: #fdf0ed; } .pill-pink .pill-icon-circle { color: #be123c; }
 .pill-blue { background-color: #e0f2fe; } .pill-blue .pill-icon-circle { color: #0369a1; }
 .pill-purple { background-color: #f3e8ff; } .pill-purple .pill-icon-circle { color: #7e22ce; }
-.team-status-grid {
-display: grid;
-grid-template-columns: repeat(3, minmax(0, 1fr));
-gap: 14px;
-margin-top: 15px;
-}
-.team-status-grid .masonry-item {
-break-inside: auto;
-margin-bottom: 0;
-min-width: 0;
-content-visibility: auto;
-contain-intrinsic-size: 240px;
-}
-.team-status-grid .team-status-featured {
-grid-column: 1 / -1;
-}
-.team-status-grid .team-status-featured img {
-width: 100%;
-max-height: 75vh;
-object-fit: contain;
-background: rgba(0,0,0,0.08);
-}
-.team-status-grid .team-status-regular img {
-width: 100%;
-height: auto;
-object-fit: cover;
-}
-@media (max-width: 520px) {
-.team-status-grid {
-gap: 8px;
-}
-}
-.feed-media-img {
-display: block;
-width: 100%;
-height: auto;
-content-visibility: auto;
-contain-intrinsic-size: 260px;
-}
-.pinterest-masonry { 
-column-count: 2; 
-column-gap: 12px; 
-margin-top: 15px; 
-}
-@media (min-width: 900px) {
-.pinterest-masonry { column-count: 4; column-gap: 16px; }
-}
+.team-status-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 15px; }
+.team-status-grid .masonry-item { break-inside: auto; margin-bottom: 0; min-width: 0; content-visibility: auto; contain-intrinsic-size: 240px; }
+.team-status-grid .team-status-featured { grid-column: 1 / -1; }
+.team-status-grid .team-status-featured img { width: 100%; max-height: 75vh; object-fit: contain; background: rgba(0,0,0,0.08); }
+.team-status-grid .team-status-regular img { width: 100%; height: auto; object-fit: cover; }
+@media (max-width: 520px) { .team-status-grid { gap: 8px; } }
+.feed-media-img { display: block; width: 100%; height: auto; content-visibility: auto; contain-intrinsic-size: 260px; }
+.pinterest-masonry { column-count: 2; column-gap: 12px; margin-top: 15px; }
+@media (min-width: 900px) { .pinterest-masonry { column-count: 4; column-gap: 16px; } }
 .masonry-item { 
-break-inside: avoid; 
-margin-bottom: 12px; 
-background: rgba(0,0,0,0.25); 
-border-radius: 14px; 
-padding: 8px; 
-border: 1px solid var(--border-color);
-cursor: pointer;
-transition: transform 0.2s, box-shadow 0.2s;
-position: relative;
+break-inside: avoid; margin-bottom: 12px; background: rgba(0,0,0,0.05); border-radius: 14px; padding: 8px; border: 1px solid var(--border-color); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative;
 }
-.masonry-item:hover {
-transform: translateY(-2px);
-box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-}
-.masonry-item img, .masonry-item video {
-width: 100%;
-height: auto;
-border-radius: 10px;
-display: block;
-object-fit: cover;
-}
-.media-click-overlay {
-display: flex;
-justify-content: flex-end;
-gap: 6px;
-margin-top: 6px;
-}
+.masonry-item:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+.masonry-item img, .masonry-item video { width: 100%; height: auto; border-radius: 10px; display: block; object-fit: cover; }
+.media-click-overlay { display: flex; justify-content: flex-end; gap: 6px; margin-top: 6px; }
 .collapsible-header { 
-background: rgba(255, 255, 255, 0.08); padding: 12px 16px; border-radius: 12px; 
+background: rgba(0, 0, 0, 0.05); padding: 12px 16px; border-radius: 12px; 
 font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; 
 align-items: center; margin-top: 12px; border: 1px solid var(--border-color); font-size: 0.9rem;
 }
 .table-responsive { width: 100%; overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; margin-top: 10px; }
 th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; color: var(--text-main); }
-th { background-color: rgba(255, 255, 255, 0.05); font-weight: 700; color: var(--text-sub); }
+th { background-color: rgba(0, 0, 0, 0.03); font-weight: 700; color: var(--text-sub); }
 .modal-overlay { 
 display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 2000; 
+background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); z-index: 2000; 
 justify-content: center; align-items: center; padding: 15px;
 }
 .modal-box { 
@@ -281,150 +193,32 @@ background: var(--glass-modal-bg);
 backdrop-filter: blur(25px);
 border: 1px solid var(--glass-card-border);
 width: 100%; max-width: 440px; padding: 20px; 
-border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); 
-max-height: 90vh;
-display: flex;
-flex-direction: column;
+border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); 
+max-height: 90vh; display: flex; flex-direction: column;
 }
 .collapsible-box { display: none; margin-top: 10px; }
 .collapsible-box.show { display: block; }
 .timer-display {
-font-size: 1.8rem;
-font-weight: 800;
-text-align: center;
-font-family: monospace;
-background: rgba(0, 0, 0, 0.3);
-padding: 10px;
-border-radius: 12px;
-margin: 10px 0;
-color: #d4af37;
-border: 1px solid var(--border-color);
+font-size: 1.8rem; font-weight: 800; text-align: center; font-family: monospace;
+background: rgba(0, 0, 0, 0.1); padding: 10px; border-radius: 12px; margin: 10px 0; color: #d4af37; border: 1px solid var(--border-color);
 }
-.timer-controls {
-display: flex;
-gap: 10px;
-justify-content: center;
-margin-bottom: 15px;
-}
+.timer-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
 
-/* CUSTOM BLUE FOOTER SECTION */
+/* MINIMAL CENTERED FOOTER */
 .site-footer {
 background-color: var(--footer-bg);
 color: var(--footer-text);
 font-size: var(--footer-font-size);
-padding: 40px 20px 20px 20px;
-margin-top: 40px;
-border-top: 1px solid rgba(255,255,255,0.1);
-}
-.footer-container {
-max-width: 1100px;
-margin: 0 auto;
-display: grid;
-grid-template-columns: 2fr 1fr;
-gap: 30px;
-}
-@media(max-width: 768px) {
-.footer-container {
-grid-template-columns: 1fr;
-gap: 20px;
-}
-}
-.footer-brand {
-display: flex;
-align-items: flex-start;
-gap: 15px;
-margin-bottom: 15px;
-}
-.footer-brand img {
-height: 45px;
-object-fit: contain;
-}
-.footer-brand h3 {
-font-size: 1.3rem;
-font-weight: 800;
-color: #ffffff;
-}
-.footer-desc {
-color: #94a3b8;
-line-height: 1.6;
-max-width: 500px;
-margin-top: 10px;
-}
-.footer-contact h4 {
-font-size: 1.1rem;
-color: #ffffff;
-margin-bottom: 15px;
-font-weight: 700;
-}
-.footer-contact-item {
-display: flex;
-align-items: center;
-gap: 10px;
-margin-bottom: 10px;
-color: #cbd5e1;
-}
-.footer-contact-item i {
-color: #38bdf8;
-font-size: 1rem;
-width: 20px;
-}
-.footer-bottom {
-max-width: 1100px;
-margin: 30px auto 0 auto;
-padding-top: 20px;
-border-top: 1px solid rgba(255,255,255,0.08);
-text-align: left;
-color: #64748b;
-font-size: 0.8rem;
-}
-
-@media print {
-@page {
-size: A4 portrait;
-margin: 0 !important;
-}
-html, body {
-width: 210mm !important; min-width: 210mm !important; max-width: 210mm !important; min-height: 297mm !important;
-margin: 0 !important; padding: 0 !important; background: #fff !important; color: #000 !important; overflow: visible !important;
-}
-body * { visibility: hidden !important; }
-body.printing .print-target:not(.active-print-target),
-body.printing .print-target:not(.active-print-target) * { display: none !important; visibility: hidden !important; }
-body.printing .print-target.active-print-target,
-body.printing .print-target.active-print-target * { visibility: visible !important; }
-body.printing .print-target.active-print-target {
-display: block !important; position: absolute !important; left: 0 !important; top: 0 !important;
-width: 210mm !important; min-width: 210mm !important; max-width: 210mm !important; min-height: 297mm !important;
-margin: 0 !important; padding: 10mm !important; box-sizing: border-box !important; border: 0 !important;
-border-radius: 0 !important; box-shadow: none !important; background: #fff !important; color: #000 !important; overflow: visible !important;
-}
-.no-print, .site-footer { display: none !important; visibility: hidden !important; }
-.bahja-sheet-header {
-display: flex !important; justify-content: space-between !important; align-items: center !important;
-width: 100% !important; border-bottom: 2px solid #000 !important; padding: 3mm 0 2mm !important; margin: 0 0 4mm !important;
-color: #000 !important; background: #fff !important;
-}
-.bahja-sheet-header h2 {
-margin: 0 !important; font-size: 18px !important; line-height: 1.2 !important;
-font-weight: 900 !important; letter-spacing: 1px !important; text-align: center !important; color: #000 !important; white-space: nowrap !important;
-}
-.bahja-sheet-table, .print-target table {
-width: 100% !important; border-collapse: collapse !important; border-spacing: 0 !important; table-layout: fixed !important;
-margin: 0 !important; border: 1.5px solid #000 !important; color: #000 !important; background: #fff !important;
-}
-.bahja-sheet-table th, .bahja-sheet-table td, .print-target table th, .print-target table td {
-border: 1px solid #000 !important; padding: 4px 6px !important; font-size: 11.5px !important;
-line-height: 1.25 !important; font-family: Arial, Helvetica, sans-serif !important; color: #000 !important;
-background: #fff !important; vertical-align: middle !important; text-align: left !important;
-}
-.bahja-sheet-table th, .print-target table th { font-weight: 900 !important; text-transform: uppercase !important; background: #f1f1f1 !important; text-align: center !important; }
-.bahja-sheet-table td:first-child, .bahja-sheet-table th:first-child { text-align: center !important; }
+padding: 20px;
+margin-top: auto;
+text-align: center;
+border-top: 1px solid var(--border-color);
+transition: all 0.3s ease;
 }
 </style>
 </head>
 <body data-theme="dark">
 <div class="main-wrapper">
-<!-- Dynamic Positioned Logo with Home Click Navigation -->
 <img id="corner-logo-view" class="corner-logo logo-top-left" src="" alt="Logo" onclick="navHome()">
 <div class="header-title" id="editable-header-area">
 <p id="txt-welcome-banner">WELCOME TO BAHJA FEST</p>
@@ -437,24 +231,17 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <div class="container">
 <!-- HOME PANEL -->
 <div id="panel-home" class="view-panel active-panel card">
-<!-- REGISTER PHASE -->
 <div id="home-phase-register" style="display: none;">
 <div id="team-login-block" style="text-align: center; max-width: 400px; margin: 0 auto;">
 <h3 style="color: #d4af37; margin-bottom: 15px;">Team Leader Login</h3>
 <form onsubmit="handleTeamLogin(event)">
-<div class="form-group" style="text-align: left;">
-<label>Team Username</label>
-<input type="text" id="login-team-user" class="form-control" required>
-</div>
-<div class="form-group" style="text-align: left;">
-<label>Password</label>
-<input type="password" id="login-team-pass" class="form-control" required>
-</div>
+<div class="form-group" style="text-align: left;"><label>Team Username</label><input type="text" id="login-team-user" class="form-control" required></div>
+<div class="form-group" style="text-align: left;"><label>Password</label><input type="password" id="login-team-pass" class="form-control" required></div>
 <button type="submit" class="btn btn-block">Sign In</button>
 </form>
 </div>
 <div id="team-portal-block" style="display: none;">
-<div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.08); padding: 12px 15px; border-radius: 12px; margin-bottom: 15px;">
+<div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.05); padding: 12px 15px; border-radius: 12px; margin-bottom: 15px;">
 <span>Team: <strong id="logged-team-name" style="color: #d4af37;"></strong></span>
 <button class="btn btn-danger btn-sm" onclick="logoutTeam()">Logout</button>
 </div>
@@ -473,69 +260,38 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <div id="category-programs-container" style="margin-top: 15px;"></div>
 </div>
 </div>
-<!-- RESULT PHASE -->
 <div id="home-phase-result" style="display: none;">
 <div class="result-menu-box" id="result-pills-container">
 <button class="pill-menu-btn pill-green" id="pill-sec-team-states" onclick="openSection('section-team-states')">
-<div class="pill-left-content">
-<div class="pill-icon-circle"><i class="fa-solid fa-flag"></i></div>
-<div class="pill-text-wrapper">
-<div class="pill-title">TEAM STATUS</div>
-<div class="pill-desc">Current standings and scores</div>
-</div>
-</div>
+<div class="pill-left-content"><div class="pill-icon-circle"><i class="fa-solid fa-flag"></i></div><div class="pill-text-wrapper"><div class="pill-title">TEAM STATUS</div><div class="pill-desc">Current standings and scores</div></div></div>
 <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
 </button>
 <button class="pill-menu-btn pill-yellow" id="pill-sec-results-view" onclick="openSection('section-results-view')">
-<div class="pill-left-content">
-<div class="pill-icon-circle"><i class="fa-solid fa-trophy"></i></div>
-<div class="pill-text-wrapper">
-<div class="pill-title">RESULT</div>
-<div class="pill-desc">Published rounds & winners</div>
-</div>
-</div>
+<div class="pill-left-content"><div class="pill-icon-circle"><i class="fa-solid fa-trophy"></i></div><div class="pill-text-wrapper"><div class="pill-title">RESULT</div><div class="pill-desc">Published rounds & winners</div></div></div>
 <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
 </button>
 <button class="pill-menu-btn pill-pink" id="pill-sec-updates" onclick="openSection('section-updates')">
-<div class="pill-left-content">
-<div class="pill-icon-circle"><i class="fa-solid fa-bolt"></i></div>
-<div class="pill-text-wrapper">
-<div class="pill-title">UPDATES</div>
-<div class="pill-desc">Recent photos & videos</div>
-</div>
-</div>
+<div class="pill-left-content"><div class="pill-icon-circle"><i class="fa-solid fa-bolt"></i></div><div class="pill-text-wrapper"><div class="pill-title">UPDATES</div><div class="pill-desc">Recent photos & videos</div></div></div>
 <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
 </button>
 <button class="pill-menu-btn pill-blue" id="pill-sec-livelink" onclick="openSection('section-livelink')">
-<div class="pill-left-content">
-<div class="pill-icon-circle"><i class="fa-solid fa-video"></i></div>
-<div class="pill-text-wrapper">
-<div class="pill-title">LIVE STREAMING</div>
-<div class="pill-desc">Watch venue stage live</div>
-</div>
-</div>
+<div class="pill-left-content"><div class="pill-icon-circle"><i class="fa-solid fa-video"></i></div><div class="pill-text-wrapper"><div class="pill-title">LIVE STREAMING</div><div class="pill-desc">Watch venue stage live</div></div></div>
 <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
 </button>
 <button class="pill-menu-btn pill-purple" id="pill-sec-highlights" onclick="openSection('section-highlights')">
-<div class="pill-left-content">
-<div class="pill-icon-circle"><i class="fa-solid fa-star"></i></div>
-<div class="pill-text-wrapper">
-<div class="pill-title">HIGHLIGHTS</div>
-<div class="pill-desc">Festival moments & clips</div>
-</div>
-</div>
+<div class="pill-left-content"><div class="pill-icon-circle"><i class="fa-solid fa-star"></i></div><div class="pill-text-wrapper"><div class="pill-title">HIGHLIGHTS</div><div class="pill-desc">Festival moments & clips</div></div></div>
 <div class="pill-arrow"><i class="fa-solid fa-chevron-right"></i></div>
 </button>
 </div>
 </div>
 </div>
-<!-- TEAM STATUS SECTION -->
+
 <div id="section-team-states" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Team Status</h3>
 <div id="team-status-poster-box" class="team-status-grid"></div>
 </div>
-<!-- RESULTS VIEW SECTION -->
+
 <div id="section-results-view" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Program Results</h3>
@@ -552,7 +308,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 <div id="results-display-list"></div>
 </div>
-<!-- UPDATES & GALLERY -->
+
 <div id="section-updates" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Updates & Gallery</h3>
@@ -563,19 +319,19 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 <div id="live-updates-feed" class="pinterest-masonry"></div>
 </div>
-<!-- LIVE STREAM -->
+
 <div id="section-livelink" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Live Streams</h3>
 <div id="livelink-feed" class="pinterest-masonry"></div>
 </div>
-<!-- HIGHLIGHTS -->
+
 <div id="section-highlights" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Highlights</h3>
 <div id="highlights-feed" class="pinterest-masonry"></div>
 </div>
-<!-- PARTICIPANTS ENTRY DIRECTORY -->
+
 <div id="panel-participants-entry" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-top: 12px;">Add Team Participants</h3>
@@ -599,33 +355,27 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <option value="GENERAL">GENERAL</option>
 </select>
 </div>
-<div class="form-group">
-<label>Participant Name</label>
-<input type="text" id="part-name" class="form-control" required>
-</div>
+<div class="form-group"><label>Participant Name</label><input type="text" id="part-name" class="form-control" required></div>
 <button type="submit" class="btn btn-success btn-block">Add Student</button>
 </form>
 <div id="team-students-list" style="margin-top:15px;"></div>
 </div>
 </div>
 
-<!-- ENTRY JUDGE PANEL (Judge Portal) -->
+<!-- ENTRY JUDGE PANEL -->
 <div id="panel-entry-judge" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
 <h3 style="color:#d4af37;">Judge Portal</h3>
 <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
 </div>
-<!-- Program Name Header Display -->
 <div style="background:rgba(212,175,55,0.1); border:1px solid #d4af37; padding:12px; border-radius:12px; margin-bottom:15px; text-align:center;">
 <span style="font-size:0.8rem; text-transform:uppercase; color:var(--text-sub); letter-spacing:1px;">Active Program Name</span>
 <h2 id="ej-active-prog-title" style="color:#d4af37; font-size:1.5rem; margin-top:4px;">No Active Program Loaded</h2>
 </div>
-<!-- Program Topics Display -->
 <div class="form-group">
 <label style="color:#d4af37; font-weight:bold;">Program Topic</label>
-<div id="ej-topic-display-box" style="background:var(--input-bg); border:1px solid var(--border-color); border-radius:12px; padding:12px; min-height:80px; color:#f8fafc; font-size:1rem; white-space:pre-wrap; line-height:1.5;">Topic will appear here...</div>
+<div id="ej-topic-display-box" style="background:var(--input-bg); border:1px solid var(--border-color); border-radius:12px; padding:12px; min-height:80px; font-size:1rem; white-space:pre-wrap; line-height:1.5;">Topic will appear here...</div>
 </div>
-<!-- Timer Control (Volume and Checkpoint options removed) -->
 <div class="form-group">
 <label style="color:#d4af37; font-weight:bold;">Timer Control</label>
 <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
@@ -644,30 +394,21 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 <div id="ej-timer-status" style="text-align:center; font-size:0.75rem; color:var(--text-sub); min-height:18px;"></div>
 </div>
-<!-- Code Letter and Mark Entry Table -->
 <h4 style="margin-top:20px; margin-bottom:10px; color:#d4af37;">Participant Marks Marking</h4>
 <div class="table-responsive">
 <table class="bahja-sheet-table">
-<thead>
-<tr>
-<th style="width:40%;">Code Letter</th>
-<th style="width:60%;">Mark</th>
-</tr>
-</thead>
-<tbody id="ej-candidates-inputs">
-<tr><td colspan="2" style="text-align:center;">Select or configure a program in Code Portal to view.</td></tr>
-</tbody>
+<thead><tr><th style="width:40%;">Code Letter</th><th style="width:60%;">Mark</th></tr></thead>
+<tbody id="ej-candidates-inputs"><tr><td colspan="2" style="text-align:center;">Select or configure a program in Code Portal to view.</td></tr></tbody>
 </table>
 </div>
 <button class="btn btn-success btn-block" style="margin-top:15px;" onclick="saveEjMarks()">Submit Judge Marks</button>
-<div style="margin-top:16px; background:rgba(0,0,0,0.18); border:1px solid var(--border-color); padding:12px; border-radius:12px;">
+<div style="margin-top:16px; background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:12px; border-radius:12px;">
 <h4 style="color:#d4af37; margin-bottom:8px;">Submitted Judge Marks</h4>
-<!-- Strict Code Letter + Mark Listing Only -->
 <div id="ej-submitted-list" style="display:flex; flex-direction:column; gap:8px;"></div>
 </div>
 </div>
 
-<!-- SYSTEM SETTINGS (Compact & Collapsible) -->
+<!-- SETTINGS PANEL -->
 <div id="panel-settings" class="view-panel card">
 <h3 style="color: #d4af37; margin-bottom: 15px;">Settings</h3>
 <form onsubmit="applyPhaseSettings(event)">
@@ -692,7 +433,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 
 <div class="collapsible-header" onclick="toggleAccordion('set-box-logo')">
-<span>Logo & Header Placement Settings</span> <i class="fa-solid fa-chevron-down"></i>
+<span>Logo Placement Settings</span> <i class="fa-solid fa-chevron-down"></i>
 </div>
 <div id="set-box-logo" class="collapsible-box show" style="padding:10px 0;">
 <div class="form-group">
@@ -724,7 +465,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <button class="btn btn-danger btn-block" onclick="clearAllDataSystem()">Clear All System Data</button>
 </div>
 
-<!-- POINTROOM PORTAL (Record Terminal) -->
+<!-- POINTROOM PORTAL -->
 <div id="panel-pointroom" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
 <h3>Record Terminal</h3>
@@ -759,14 +500,14 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 <div id="box-pt-list" class="collapsible-box show">
 <div class="form-group no-print" style="margin-top:10px;">
-<input type="text" id="pt-logs-search" class="form-control" placeholder="Search Program or Category (e.g. LOWER ZONE Speech)..." oninput="renderPtList()">
+<input type="text" id="pt-logs-search" class="form-control" placeholder="Search Program or Category..." oninput="renderPtList()">
 </div>
 <div id="box-pt-list-content"></div>
 </div>
 <div id="pt-print-area" class="print-target" style="display:none;"></div>
 </div>
 
-<!-- POINTROOM COPY (Code Portal) -->
+<!-- CODE PORTAL -->
 <div id="panel-pointroom-copy" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
 <h3>Code Portal</h3>
@@ -786,7 +527,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 <div class="form-group">
 <label>Search Program</label>
-<input type="text" id="pt-search-copy" class="form-control" placeholder="Type to search program..." oninput="populatePtProgsCopy()">
+<input type="text" id="pt-search-copy" class="form-control" placeholder="Type to search program..." oninput="populatePtProgsCopy()" autocomplete="off">
 </div>
 <div class="form-group">
 <label>Select Program</label>
@@ -810,7 +551,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 </div>
 
-<!-- JUDGE PORTAL (Candidate's Standing) -->
+<!-- CANDIDATE STANDING -->
 <div id="panel-judge" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
 <h3>Candidate's Standing</h3>
@@ -827,16 +568,14 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 <div class="table-responsive">
 <table class="bahja-sheet-table">
-<thead>
-<tr><th>Student Name</th><th>Team</th><th>Cat</th><th>Points</th></tr>
-</thead>
+<thead><tr><th>Student Name</th><th>Team</th><th>Cat</th><th>Points</th></tr></thead>
 <tbody id="judge-leaderboard-body"></tbody>
 </table>
 </div>
 </div>
 </div>
 
-<!-- STATES CONTROL (Lead Zone) -->
+<!-- LEAD ZONE -->
 <div id="panel-states-control" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
 <h3>Lead Zone</h3>
@@ -845,9 +584,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <div id="states-print-container" class="print-target">
 <div class="table-responsive" style="margin-top:12px;">
 <table class="bahja-sheet-table a5-team-standings">
-<thead>
-<tr><th>Team Username</th><th>Aggregated Points</th></tr>
-</thead>
+<thead><tr><th>Team Username</th><th>Aggregated Points</th></tr></thead>
 <tbody id="states-table-body"></tbody>
 </table>
 </div>
@@ -869,15 +606,13 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 <div id="rank-print-container" class="print-target">
 <table class="bahja-sheet-table" style="margin-top:10px;">
-<thead>
-<tr><th>#</th><th>Student Name</th><th>Team</th><th>Program</th><th>Score</th><th>Position</th></tr>
-</thead>
+<thead><tr><th>#</th><th>Student Name</th><th>Team</th><th>Program</th><th>Score</th><th>Position</th></tr></thead>
 <tbody id="rank-winners-body"></tbody>
 </table>
 </div>
 </div>
 
-<!-- ENTRY SIGN (Sign Portal) -->
+<!-- SIGN PORTAL -->
 <div id="panel-entry-sign" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
 <h3>Sign Portal</h3>
@@ -897,38 +632,26 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </select>
 </div>
 <div id="entry-sign-print-container" class="print-target">
-<div class="bahja-sheet-header" id="es-print-header">
-<h2 id="es-print-title">ENTRY SIGN</h2>
-</div>
+<div class="bahja-sheet-header" id="es-print-header"><h2 id="es-print-title">ENTRY SIGN</h2></div>
 <div class="table-responsive" style="margin-top:12px;">
 <table class="bahja-sheet-table">
-<thead>
-<tr>
-<th style="width:15%;">Code Letter</th>
-<th style="width:35%;">Name</th>
-<th style="width:25%;">Team</th>
-<th style="width:25%;">Sign</th>
-</tr>
-</thead>
+<thead><tr><th style="width:15%;">Code Letter</th><th style="width:35%;">Name</th><th style="width:25%;">Team</th><th style="width:25%;">Sign</th></tr></thead>
 <tbody id="entry-sign-table-body"></tbody>
 </table>
 </div>
 </div>
 </div>
 
-<!-- PUBLISH PANEL (Launch Pad) -->
+<!-- LAUNCH PAD -->
 <div id="panel-publish" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
 <div>
 <h3 style="color:#d4af37; margin-bottom:4px;">Launch Pad</h3>
-<p style="color:var(--text-sub); font-size:0.82rem;">Upload first. Publish only after the result is announced on stage.</p>
+<p style="color:var(--text-sub); font-size:0.82rem;">Upload first. Publish only after result announcement.</p>
 </div>
 <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
 </div>
-<div style="background:rgba(212,175,55,0.08); border:1px solid rgba(212,175,55,0.28); padding:10px 12px; border-radius:12px; margin-bottom:14px; font-size:0.82rem;">
-<strong>Important:</strong> Items marked <span style="color:#f59e0b; font-weight:800;">❌ Not Published</span> are stored in the system but are hidden from the public website. They become visible only when switched to <span style="color:#10b981; font-weight:800;">✅ Published</span>.
-</div>
-<div style="background:rgba(0,0,0,0.16); border:1px solid var(--border-color); border-radius:12px; margin-bottom:10px; overflow:hidden;">
+<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); border-radius:12px; margin-bottom:10px; overflow:hidden;">
 <div class="collapsible-header" style="margin-top:0; border:0; border-radius:0;" onclick="toggleLaunchSection('launch-results-body', this)">
 <span>Program Results</span><i class="fa-solid fa-chevron-down"></i>
 </div>
@@ -936,7 +659,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <div id="publish-results-list" style="display:flex; flex-direction:column; gap:8px;"></div>
 </div>
 </div>
-<div style="background:rgba(0,0,0,0.16); border:1px solid var(--border-color); border-radius:12px; overflow:hidden;">
+<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); border-radius:12px; overflow:hidden;">
 <div class="collapsible-header" style="margin-top:0; border:0; border-radius:0;" onclick="toggleLaunchSection('launch-status-body', this)">
 <span>Result / Team Status Posters</span><i class="fa-solid fa-chevron-down"></i>
 </div>
@@ -946,10 +669,10 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 </div>
 
-<!-- PROTECTION SYSTEM PANEL (Security Vault) -->
+<!-- SECURITY VAULT -->
 <div id="panel-protection" class="view-panel card">
 <h3>Security Vault</h3>
-<div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:12px;">
+<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:12px;">
 <h4 style="font-size:0.95rem; color:#d4af37;">Change Main Login Credentials</h4>
 <div class="form-group" style="margin-top:8px;">
 <input type="text" id="prot-old-main-u" class="form-control" placeholder="Current Username" style="margin-bottom:6px;">
@@ -964,13 +687,13 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 </div>
 </div>
-<div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:15px;">
+<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-top:15px;">
 <h4 style="font-size:0.95rem; color:#d4af37;">Modify Sub-Panel Access Passwords</h4>
 <div id="sub-panel-pass-managers-container" style="margin-top:8px; display:flex; flex-direction:column; gap:10px;"></div>
 </div>
 </div>
 
-<!-- MODIFY APPEARANCE (Layout Studio with Collapsibles & Footer Configs) -->
+<!-- LAYOUT STUDIO -->
 <div id="panel-modify" class="view-panel card">
 <h3>Layout Studio</h3>
 <div style="margin-top:12px; display:flex; flex-direction:column; gap:12px;">
@@ -979,86 +702,38 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <span>1. Header & Title Styling</span> <i class="fa-solid fa-chevron-down"></i>
 </div>
 <div id="mod-box-header" class="collapsible-box show" style="padding:10px 0;">
-<div class="form-group">
-<label>Welcome Banner Text</label>
-<input type="text" id="mod-banner-text" class="form-control" oninput="liveUpdateVisuals()">
-</div>
-<div class="form-group">
-<label>Main Title Text</label>
-<input type="text" id="mod-title-text" class="form-control" oninput="liveUpdateVisuals()">
-</div>
+<div class="form-group"><label>Welcome Banner Text</label><input type="text" id="mod-banner-text" class="form-control" oninput="liveUpdateVisuals()"></div>
+<div class="form-group"><label>Main Title Text</label><input type="text" id="mod-title-text" class="form-control" oninput="liveUpdateVisuals()"></div>
 <div class="form-group">
 <label>Header Text Alignment</label>
 <select id="mod-header-align" class="form-control" onchange="liveUpdateVisuals()">
-<option value="center">Center Alignment</option>
-<option value="left">Left Alignment</option>
-<option value="right">Right Alignment</option>
+<option value="center">Center Alignment</option><option value="left">Left Alignment</option><option value="right">Right Alignment</option>
 </select>
 </div>
 <div class="form-group">
 <label>Font Typography</label>
 <select id="mod-font-family" class="form-control" onchange="liveUpdateVisuals()">
-<option value="'Poppins', sans-serif">Poppins</option>
-<option value="'Inter', sans-serif">Inter</option>
-<option value="'Montserrat', sans-serif">Montserrat</option>
-<option value="'Roboto', sans-serif">Roboto</option>
-<option value="'Open Sans', sans-serif">Open Sans</option>
+<option value="'Poppins', sans-serif">Poppins</option><option value="'Inter', sans-serif">Inter</option><option value="'Montserrat', sans-serif">Montserrat</option><option value="'Roboto', sans-serif">Roboto</option><option value="'Open Sans', sans-serif">Open Sans</option>
 </select>
 </div>
-<div class="form-group">
-<label>Banner Color (Current Theme)</label>
-<input type="color" id="mod-banner-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;">
-</div>
-<div class="form-group">
-<label>Title Color (Current Theme)</label>
-<input type="color" id="mod-title-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;">
-</div>
-<div class="form-group">
-<label style="display:flex; align-items:center; gap:8px;">
-<input type="checkbox" id="mod-sync-light"> Sync changes to White / Light Mode simultaneously
-</label>
-</div>
+<div class="form-group"><label>Banner Color</label><input type="color" id="mod-banner-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;"></div>
+<div class="form-group"><label>Title Color</label><input type="color" id="mod-title-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;"></div>
 </div>
 
 <div class="collapsible-header" onclick="toggleAccordion('mod-box-footer')">
-<span>2. Footer Section Customization (Blue Bar)</span> <i class="fa-solid fa-chevron-down"></i>
+<span>2. Footer Styling Controls</span> <i class="fa-solid fa-chevron-down"></i>
 </div>
 <div id="mod-box-footer" class="collapsible-box show" style="padding:10px 0;">
+<div class="form-group"><label>Footer Text Content</label><input type="text" id="mod-ft-text" class="form-control" value="© 2026 BAHJA Media . All rights reserved." oninput="liveUpdateFooterVisuals()"></div>
+<div class="form-group"><label>Footer Background Color</label><input type="color" id="mod-ft-bg" class="form-control" value="#111315" onchange="liveUpdateFooterVisuals()" style="height:40px;"></div>
+<div class="form-group"><label>Footer Text Color</label><input type="color" id="mod-ft-text-color" class="form-control" value="#94a3b8" onchange="liveUpdateFooterVisuals()" style="height:40px;"></div>
 <div class="form-group">
-<label>Footer Title Text</label>
-<input type="text" id="mod-ft-title" class="form-control" placeholder="SSF India" oninput="liveUpdateFooterVisuals()">
+<label>Footer Opacity: <span id="ft-opacity-val">100</span>%</label>
+<input type="range" min="10" max="100" value="100" id="mod-ft-opacity" class="form-control" oninput="liveUpdateFooterVisuals()">
 </div>
 <div class="form-group">
-<label>Footer Description</label>
-<textarea id="mod-ft-desc" class="form-control" rows="2" placeholder="Organization description..." oninput="liveUpdateFooterVisuals()"></textarea>
-</div>
-<div class="form-group">
-<label>Contact Address</label>
-<input type="text" id="mod-ft-address" class="form-control" placeholder="Nizamuddin West, New Delhi" oninput="liveUpdateFooterVisuals()">
-</div>
-<div class="form-group">
-<label>Contact Email</label>
-<input type="email" id="mod-ft-email" class="form-control" placeholder="mail@nationalssf.org" oninput="liveUpdateFooterVisuals()">
-</div>
-<div class="form-group">
-<label>Contact Phone</label>
-<input type="text" id="mod-ft-phone" class="form-control" placeholder="+91 9986136655" oninput="liveUpdateFooterVisuals()">
-</div>
-<div class="form-group">
-<label>Footer Background Color</label>
-<input type="color" id="mod-ft-bg" class="form-control" value="#0a192f" onchange="liveUpdateFooterVisuals()" style="height:40px;">
-</div>
-<div class="form-group">
-<label>Footer Text Color</label>
-<input type="color" id="mod-ft-text-color" class="form-control" value="#e2e8f0" onchange="liveUpdateFooterVisuals()" style="height:40px;">
-</div>
-<div class="form-group">
-<label>Footer Background Opacity: <span id="ft-opacity-val">95</span>%</label>
-<input type="range" min="10" max="100" value="95" id="mod-ft-opacity" class="form-control" oninput="liveUpdateFooterVisuals()">
-</div>
-<div class="form-group">
-<label>Footer Text Size (rem): <span id="ft-size-val">0.85</span>rem</label>
-<input type="range" min="0.7" max="1.2" step="0.05" value="0.85" id="mod-ft-size" class="form-control" oninput="liveUpdateFooterVisuals()">
+<label>Footer Font Size (rem): <span id="ft-size-val">0.85</span>rem</label>
+<input type="range" min="0.6" max="1.3" step="0.05" value="0.85" id="mod-ft-size" class="form-control" oninput="liveUpdateFooterVisuals()">
 </div>
 </div>
 
@@ -1066,7 +741,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <span>3. Public Access Controls</span> <i class="fa-solid fa-chevron-down"></i>
 </div>
 <div id="mod-box-public" class="collapsible-box" style="padding:10px 0;">
-<div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px;">
+<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:12px; border-radius:12px;">
 <div style="font-size:0.7rem; color:var(--text-sub); margin-bottom:10px;">Select which Main Login menu panels can also be opened without Main Login.</div>
 <div id="layout-public-panels" style="display:flex; flex-direction:column; gap:6px;"></div>
 </div>
@@ -1076,7 +751,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 </div>
 
-<!-- CONTROL PANEL (Control Deck) -->
+<!-- CONTROL DECK -->
 <div id="panel-control-panel" class="view-panel card">
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
 <h3>Control Deck</h3>
@@ -1085,12 +760,12 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <div class="collapsible-header" onclick="toggleAccordion('box-reg-control')">
 <span>1. REGISTRATION CONTROL</span> <i class="fa-solid fa-chevron-down"></i>
 </div>
-<div id="box-reg-control" class="collapsible-box show" style="padding:12px; background:rgba(0,0,0,0.2); border-radius:12px;">
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:12px;">
+<div id="box-reg-control" class="collapsible-box show" style="padding:12px; background:rgba(0,0,0,0.05); border-radius:12px;">
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:12px;">
 <span>Registration Lock:</span>
 <button id="lock-reg-btn" class="btn btn-sm" onclick="toggleRegLock()"></button>
 </div>
-<div class="form-group" style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; border:1px solid var(--border-color);">
+<div class="form-group" style="background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; border:1px solid var(--border-color);">
 <label>Max Non-General Items Per Student</label>
 <input type="number" id="m-max-limit-input" class="form-control" value="3">
 <button class="btn btn-sm btn-primary" style="margin-top:5px;" onclick="saveMaxLimitMaster()">Set Limit</button>
@@ -1109,16 +784,9 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <form onsubmit="addProgramMaster(event)" style="display:flex; flex-direction:column; gap:6px;">
 <input type="text" id="m-prog-name" class="form-control" placeholder="Program Name" required>
 <select id="m-prog-cat" class="form-control">
-<option value="GENERAL">GENERAL</option>
-<option value="LOWER ZONE">LOWER ZONE</option>
-<option value="MIDDLE ZONE">MIDDLE ZONE</option>
-<option value="HIGHER ZONE">HIGHER ZONE</option>
-<option value="SUPER ZONE">SUPER ZONE</option>
+<option value="GENERAL">GENERAL</option><option value="LOWER ZONE">LOWER ZONE</option><option value="MIDDLE ZONE">MIDDLE ZONE</option><option value="HIGHER ZONE">HIGHER ZONE</option><option value="SUPER ZONE">SUPER ZONE</option>
 </select>
-<select id="m-prog-stage" class="form-control">
-<option value="ON STAGE">ON STAGE</option>
-<option value="OFF STAGE">OFF STAGE</option>
-</select>
+<select id="m-prog-stage" class="form-control"><option value="ON STAGE">ON STAGE</option><option value="OFF STAGE">OFF STAGE</option></select>
 <input type="number" id="m-prog-limit" class="form-control" placeholder="Max Spots" required>
 <button type="submit" class="btn btn-sm btn-block">Add Program</button>
 </form>
@@ -1132,12 +800,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <div class="no-print" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; margin-top:8px; margin-bottom:8px;">
 <select id="rep-team" class="form-control" onchange="renderReportTable()"><option value="">All Teams</option></select>
 <select id="rep-cat" class="form-control" onchange="populateReportProgDropdown(); renderReportTable();">
-<option value="">All Categories</option>
-<option value="GENERAL">GENERAL</option>
-<option value="LOWER ZONE">LOWER ZONE</option>
-<option value="MIDDLE ZONE">MIDDLE ZONE</option>
-<option value="HIGHER ZONE">HIGHER ZONE</option>
-<option value="SUPER ZONE">SUPER ZONE</option>
+<option value="">All Categories</option><option value="GENERAL">GENERAL</option><option value="LOWER ZONE">LOWER ZONE</option><option value="MIDDLE ZONE">MIDDLE ZONE</option><option value="HIGHER ZONE">HIGHER ZONE</option><option value="SUPER ZONE">SUPER ZONE</option>
 </select>
 <select id="rep-prog" class="form-control" onchange="renderReportTable()"><option value="">All Programs (A-Z)</option></select>
 </div>
@@ -1145,19 +808,9 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <input type="text" id="rep-prog-search" class="form-control" placeholder="Type to search program..." oninput="renderReportTable()">
 </div>
 <div id="print-exact-report-area" class="print-target">
-<div class="bahja-sheet-header">
-<h2>BAHJA 2K26</h2>
-</div>
+<div class="bahja-sheet-header"><h2>BAHJA 2K26</h2></div>
 <table class="bahja-sheet-table" id="report-resizable-table">
-<thead>
-<tr>
-<th style="width:35px;">#</th>
-<th>PARTICIPANT</th>
-<th>TEAM</th>
-<th>CATEGORY</th>
-<th>PROGRAM</th>
-</tr>
-</thead>
+<thead><tr><th style="width:35px;">#</th><th>PARTICIPANT</th><th>TEAM</th><th>CATEGORY</th><th>PROGRAM</th></tr></thead>
 <tbody id="report-table-body"></tbody>
 </table>
 </div>
@@ -1166,9 +819,9 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <div class="collapsible-header" onclick="toggleAccordion('box-res-control')">
 <span>2. RESULT & MEDIA PUBLISHER</span> <i class="fa-solid fa-chevron-down"></i>
 </div>
-<div id="box-res-control" class="collapsible-box" style="padding:12px; background:rgba(0,0,0,0.2); border-radius:12px;">
-<div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin-bottom:12px;">
-<h5 style="color:#d4af37; margin-bottom:6px;">Section Visibility Toggles (Result Phase)</h5>
+<div id="box-res-control" class="collapsible-box" style="padding:12px; background:rgba(0,0,0,0.05); border-radius:12px;">
+<div style="background:rgba(0,0,0,0.05); padding:10px; border-radius:10px; margin-bottom:12px;">
+<h5 style="color:#d4af37; margin-bottom:6px;">Section Visibility Toggles</h5>
 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; font-size:0.85rem;">
 <label><input type="checkbox" id="toggle-vis-team-states" onchange="updateSectionVisibilities()"> Team Status</label>
 <label><input type="checkbox" id="toggle-vis-results-view" onchange="updateSectionVisibilities()"> Result</label>
@@ -1177,15 +830,15 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <label><input type="checkbox" id="toggle-vis-highlights" onchange="updateSectionVisibilities()"> Highlights</label>
 </div>
 </div>
-<div class="collapsible-header" onclick="toggleAccordion('sub-status-box')"><span>Upload Team Status Posters (Publish Separately)</span> <i class="fa-solid fa-chevron-down"></i></div>
+<div class="collapsible-header" onclick="toggleAccordion('sub-status-box')"><span>Upload Team Status Posters</span> <i class="fa-solid fa-chevron-down"></i></div>
 <div id="sub-status-box" class="collapsible-box">
 <form onsubmit="uploadTeamStatusPoster(event)">
 <input type="file" id="status-file" class="form-control" accept="image/*" required>
-<button type="submit" id="btn-up-status" class="btn btn-sm btn-success btn-block" style="margin-top:5px;">Upload Status Poster (Save Only)</button>
+<button type="submit" id="btn-up-status" class="btn btn-sm btn-success btn-block" style="margin-top:5px;">Upload Status Poster</button>
 </form>
 <div id="master-status-preview" style="margin-top:10px; display:flex; flex-direction:column; gap:6px;"></div>
 </div>
-<div class="collapsible-header" onclick="toggleAccordion('sub-res-box')"><span>Upload Program Result (Publish Separately)</span> <i class="fa-solid fa-chevron-down"></i></div>
+<div class="collapsible-header" onclick="toggleAccordion('sub-res-box')"><span>Upload Program Result</span> <i class="fa-solid fa-chevron-down"></i></div>
 <div id="sub-res-box" class="collapsible-box">
 <form onsubmit="uploadProgramResult(event)" style="display:flex; flex-direction:column; gap:6px;">
 <select id="res-upload-cat" class="form-control" onchange="populateResProgDropdown()"><option value="">-- Choose Category --</option><option value="GENERAL">GENERAL</option><option value="LOWER ZONE">LOWER ZONE</option><option value="MIDDLE ZONE">MIDDLE ZONE</option><option value="HIGHER ZONE">HIGHER ZONE</option><option value="SUPER ZONE">SUPER ZONE</option></select>
@@ -1193,27 +846,18 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <input type="number" id="res-custom-number" class="form-control" placeholder="Result Sequence Number (e.g. 1, 2, 3...)" required>
 <input type="file" id="res-file" class="form-control" accept="image/*" required>
 <input type="url" id="res-yt-url" class="form-control" placeholder="YouTube Link (Optional)">
-<button type="submit" id="btn-up-res" class="btn btn-sm btn-success btn-block">Upload Result (Save Only)</button>
+<button type="submit" id="btn-up-res" class="btn btn-sm btn-success btn-block">Upload Result</button>
 </form>
 <div id="master-results-list" style="margin-top:10px;"></div>
 </div>
-<div class="collapsible-header" onclick="toggleAccordion('sub-up-box')"><span>Upload Updates (Photos & Videos)</span> <i class="fa-solid fa-chevron-down"></i></div>
+<div class="collapsible-header" onclick="toggleAccordion('sub-up-box')"><span>Upload Updates</span> <i class="fa-solid fa-chevron-down"></i></div>
 <div id="sub-up-box" class="collapsible-box">
 <form onsubmit="uploadUpdateFeed(event)" style="display:flex; flex-direction:column; gap:8px;">
-<div class="form-group" style="margin-bottom:6px;">
-<label>Media Format</label>
-<select id="up-type" class="form-control" onchange="toggleUpdateVideoUrl()">
-<option value="photo">Photo Post</option>
-<option value="video">Video Post (Link + Thumbnail)</option>
-</select>
+<div class="form-group" style="margin-bottom:6px;"><label>Media Format</label>
+<select id="up-type" class="form-control" onchange="toggleUpdateVideoUrl()"><option value="photo">Photo Post</option><option value="video">Video Post</option></select>
 </div>
-<div class="form-group" style="margin-bottom:6px;">
-<label id="lbl-up-file">Choose Photo / Thumbnail Image</label>
-<input type="file" id="up-file" class="form-control" accept="image/*" required>
-</div>
-<div class="form-group" style="margin-bottom:6px;">
-<input type="url" id="up-video-link" class="form-control" placeholder="Paste YouTube/Drive Link Here" style="display:none;">
-</div>
+<div class="form-group" style="margin-bottom:6px;"><label id="lbl-up-file">Choose Photo</label><input type="file" id="up-file" class="form-control" accept="image/*" required></div>
+<div class="form-group" style="margin-bottom:6px;"><input type="url" id="up-video-link" class="form-control" placeholder="Paste YouTube/Drive Link" style="display:none;"></div>
 <button type="submit" id="btn-up-feed" class="btn btn-sm btn-success btn-block">Upload & Publish</button>
 </form>
 <div id="master-updates-list" style="margin-top:10px;"></div>
@@ -1222,7 +866,7 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 <div id="sub-st-box" class="collapsible-box">
 <form onsubmit="uploadStreamLinks(event)" style="display:flex; flex-direction:column; gap:6px;">
 <input type="text" id="st-title" class="form-control" placeholder="Title" required>
-<input type="url" id="st-url" class="form-control" placeholder="Stream / Video Link" required>
+<input type="url" id="st-url" class="form-control" placeholder="Stream Link" required>
 <input type="file" id="st-thumb" class="form-control" accept="image/*" required>
 <select id="st-mode" class="form-control"><option value="live">LIVE STREAMING</option><option value="highlight">HIGHLIGHTS</option></select>
 <button type="submit" id="btn-up-stream" class="btn btn-sm btn-success btn-block">Add Stream</button>
@@ -1234,59 +878,24 @@ background: #fff !important; vertical-align: middle !important; text-align: left
 </div>
 </div>
 
-<!-- SITE BLUE FOOTER -->
+<!-- CENTERED SIMPLE FOOTER -->
 <footer class="site-footer" id="site-footer-element">
-<div class="footer-container">
-<div>
-<div class="footer-brand">
-<img id="footer-logo-img" src="" alt="Logo" style="display:none;">
-<h3 id="ft-display-title">SSF India</h3>
-</div>
-<p class="footer-desc" id="ft-display-desc">
-A students organisation for the nation, focused on moral values, social commitment, and educational empowerment.
-</p>
-</div>
-<div class="footer-contact">
-<h4>Contact Us</h4>
-<div class="footer-contact-item">
-<i class="fa-solid fa-location-dot"></i>
-<span id="ft-display-address">SSF National Committee<br>Nizamuddin West, New Delhi</span>
-</div>
-<div class="footer-contact-item">
-<i class="fa-solid fa-envelope"></i>
-<span id="ft-display-email">mail@nationalssf.org</span>
-</div>
-<div class="footer-contact-item">
-<i class="fa-solid fa-phone"></i>
-<span id="ft-display-phone">+91 9986136655</span>
-</div>
-</div>
-</div>
-<div class="footer-bottom">
-<p>© 2026 SSF India. All rights reserved.</p>
-</div>
+<p id="ft-display-text">&copy; 2026 BAHJA Media . All rights reserved.</p>
 </footer>
 
-<!-- MAIN LOGIN MODAL -->
+<!-- MODALS -->
 <div id="modal-overlay" class="modal-overlay">
 <div id="modal-login" class="modal-box" style="text-align: center;">
 <h2 style="margin-bottom:20px; color:var(--text-main); font-weight:700;">Welcome</h2>
 <form onsubmit="handleMainLogin(event)">
-<div class="form-group" style="text-align: left;">
-<label>Username</label>
-<input type="text" id="main-user-input" class="form-control" required style="border-radius:20px;">
-</div>
-<div class="form-group" style="text-align: left;">
-<label>Password</label>
-<input type="password" id="main-pass-input" class="form-control" required style="border-radius:20px;">
-</div>
+<div class="form-group" style="text-align: left;"><label>Username</label><input type="text" id="main-user-input" class="form-control" required style="border-radius:20px;"></div>
+<div class="form-group" style="text-align: left;"><label>Password</label><input type="password" id="main-pass-input" class="form-control" required style="border-radius:20px;"></div>
 <button type="submit" id="main-login-submit" class="btn btn-block" style="border-radius:20px; margin-top:10px;">Sign In</button>
 <button type="button" id="first-admin-setup-btn" class="btn btn-warning btn-block" style="display:none; margin-top:8px; border-radius:20px;" onclick="openFirstAdminSetup()">Create New Admin Login</button>
 <button type="button" class="btn btn-danger btn-block" style="margin-top:8px; border-radius:20px; background:transparent; border:1px solid #ef4444;" onclick="closeModal()">Cancel</button>
 </form>
 <div id="first-admin-setup" style="display:none; margin-top:14px; border-top:1px solid var(--border-color); padding-top:14px; text-align:left;">
 <h4 style="color:#d4af37; margin-bottom:8px;">Initial Admin Setup</h4>
-<p style="font-size:0.8rem; color:var(--text-sub); margin-bottom:10px;">No admin credentials are stored in the HTML. Create the new login here.</p>
 <input type="text" id="first-admin-user" class="form-control" placeholder="New Username" style="margin-bottom:6px;">
 <input type="password" id="first-admin-pass" class="form-control" placeholder="New Password" style="margin-bottom:6px;">
 <input type="password" id="first-admin-pass-confirm" class="form-control" placeholder="Confirm Password" style="margin-bottom:8px;">
@@ -1295,20 +904,15 @@ A students organisation for the nation, focused on moral values, social commitme
 </div>
 </div>
 
-<!-- GATEKEEPER PASS MODAL -->
 <div id="gatekeeper-modal-overlay" class="modal-overlay">
 <div class="modal-box">
 <h3 id="gk-title" style="color:#ef4444; margin-bottom:10px; font-size:1.1rem;">Security Lock Required</h3>
-<div class="form-group">
-<label>Access Code</label>
-<input type="password" id="gk-pass-field" class="form-control" placeholder="••••••••">
-</div>
+<div class="form-group"><label>Access Code</label><input type="password" id="gk-pass-field" class="form-control" placeholder="••••••••"></div>
 <button class="btn btn-block btn-danger" onclick="commitGatekeeperVerification()">Unlock Access</button>
 <button class="btn btn-block" style="margin-top:6px; background:transparent; border:1px solid var(--border-color); color:var(--text-main);" onclick="closeGatekeeper()">Cancel</button>
 </div>
 </div>
 
-<!-- DETAILS MODAL -->
 <div id="detail-modal-overlay" class="modal-overlay" onclick="this.style.display='none'">
 <div class="modal-box" onclick="event.stopPropagation()">
 <h3 id="det-modal-title" style="color:#d4af37; margin-bottom:10px; font-size:1.1rem;"></h3>
@@ -1317,7 +921,6 @@ A students organisation for the nation, focused on moral values, social commitme
 </div>
 </div>
 
-<!-- FULL MEDIA VIEW MODAL -->
 <div id="media-viewer-modal" class="modal-overlay" onclick="closeMediaViewer()">
 <div class="modal-box" onclick="event.stopPropagation()" style="max-width:550px; text-align:center;">
 <div id="media-viewer-container" style="max-height:60vh; overflow:hidden; border-radius:12px; margin-bottom:15px; display:flex; justify-content:center; align-items:center; background:#000;"></div>
@@ -1329,7 +932,6 @@ A students organisation for the nation, focused on moral values, social commitme
 </div>
 </div>
 
-<!-- PRE-RENDER INITIALIZER -->
 <script>
 (function() {
 try {
@@ -1343,11 +945,11 @@ cached.subLocks = { settings:'', control_panel:'', publish:'', pointroom:'', ent
 cached.publicAccess = { panels:{}, ...(cached.publicAccess || {}) };
 cached.publicAccess.panels = { settings:{register:false,result:false},control_panel:{register:false,result:false},publish:{register:false,result:false},pointroom:{register:false,result:false},entry_judge:{register:false,result:false},judge:{register:false,result:false},states:{register:false,result:false},code_portal:{register:false,result:false},entry_sign:{register:false,result:false},protection:{register:false,result:false},modify:{register:false,result:false}, ...(cached.publicAccess.panels || {}) };
 if(!Array.isArray(cached.judgeSubmissions)) cached.judgeSubmissions = [];
-if(!cached.footer) cached.footer = { title:'SSF India', desc:'A students organisation for the nation, focused on moral values, social commitment, and educational empowerment.', address:'SSF National Committee\nNizamuddin West, New Delhi', email:'mail@nationalssf.org', phone:'+91 9986136655', bg:'#0a192f', textColor:'#e2e8f0', opacity:95, fontSize:0.85 };
+if(!cached.footer) cached.footer = { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textColor:'#94a3b8', opacity:100, fontSize:0.85 };
 localStorage.setItem('bahja_full_state', JSON.stringify(cached));
 window.appState = cached;
 }
-} catch(e) { console.error("Cache pre-render error: ", e); }
+} catch(e) { console.error("Cache error: ", e); }
 window.addEventListener('DOMContentLoaded', () => {
 if (window.appState && window.appState.visuals) {
 const vis = window.appState.visuals;
@@ -1400,12 +1002,6 @@ reader.onload = (e) => resolve(e.target.result);
 reader.readAsDataURL(file);
 return;
 }
-if (file.type === 'image/png') {
-const reader = new FileReader();
-reader.onload = (e) => resolve(e.target.result);
-reader.readAsDataURL(file);
-return;
-}
 const reader = new FileReader();
 reader.onload = (event) => {
 const img = new Image();
@@ -1436,8 +1032,7 @@ function buildCleanState(preservedLogo) {
 const logo = preservedLogo || {};
 return {
 phase: 'result', portalOpen: true, theme: 'dark',
-activeEjProgId: '',
-logoUrl: logo.logoUrl || '', splashUrl: '',
+activeEjProgId: '', logoUrl: logo.logoUrl || '', splashUrl: '',
 logoPos: logo.logoPos || 'logo-top-left', logoSize: logo.logoSize || '60',
 teamStatusUrl: '', teamStatusList: [], maxProgLimit: 3,
 mainCreds: { user: '', pass: '' },
@@ -1446,7 +1041,7 @@ securitySchemaVersion: SECURITY_SCHEMA_VERSION,
 visibilities: { 'team-states':true, 'results-view':true, 'updates':true, 'livelink':true, 'highlights':true },
 publicAccess: { panels:{settings:{register:false,result:false},control_panel:{register:false,result:false},publish:{register:false,result:false},pointroom:{register:false,result:false},entry_judge:{register:false,result:false},judge:{register:false,result:false},states:{register:false,result:false},code_portal:{register:false,result:false},entry_sign:{register:false,result:false},protection:{register:false,result:false},modify:{register:false,result:false}} },
 visuals: { bannerText:'WELCOME TO BAHJA FEST', titleText:'BAHJA 2026', bannerColorDark:'#cbd5e1', titleColorDark:'#ffffff', bannerColorLight:'#475569', titleColorLight:'#0f172a', bannerSize:'1.1', titleSize:'2.8', fontFamily:"'Poppins', sans-serif", headerAlign:'center' },
-footer: { title:'SSF India', desc:'A students organisation for the nation, focused on moral values, social commitment, and educational empowerment.', address:'SSF National Committee\nNizamuddin West, New Delhi', email:'mail@nationalssf.org', phone:'+91 9986136655', bg:'#0a192f', textColor:'#e2e8f0', opacity:95, fontSize:0.85 },
+footer: { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textColor:'#94a3b8', opacity:100, fontSize:0.85 },
 teams: [], programs: [], registrations: [], results: [], updates: [], livelinks: [], highlights: [], students: [], points: [], judgeSubmissions: []
 };
 }
@@ -1468,7 +1063,7 @@ if(!state.subLocks || typeof state.subLocks !== 'object') state.subLocks = { ...
 Object.keys(EMPTY_SUB_LOCKS).forEach(k => { if(typeof state.subLocks[k] !== 'string') state.subLocks[k] = EMPTY_SUB_LOCKS[k]; });
 if(!Array.isArray(state.judgeSubmissions)) state.judgeSubmissions = [];
 if(!state.footer || typeof state.footer !== 'object') {
-state.footer = { title:'SSF India', desc:'A students organisation for the nation, focused on moral values, social commitment, and educational empowerment.', address:'SSF National Committee\nNizamuddin West, New Delhi', email:'mail@nationalssf.org', phone:'+91 9986136655', bg:'#0a192f', textColor:'#e2e8f0', opacity:95, fontSize:0.85 };
+state.footer = { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textColor:'#94a3b8', opacity:100, fontSize:0.85 };
 }
 return state;
 }
@@ -1519,12 +1114,19 @@ localStorage.setItem('bahja_theme', window.appState.theme);
 scheduleAppRender();
 });
 
-window.saveKey = function(key, value) {
-const updateObj = {}; updateObj[key] = value; update(dbRef, updateObj);
-}
+window.saveKey = function(key, value) { const updateObj = {}; updateObj[key] = value; update(dbRef, updateObj); }
 window.saveData = function() {
 try { localStorage.setItem('bahja_full_state', JSON.stringify(window.appState)); } catch(e){}
 set(dbRef, window.appState);
+}
+
+window.updateGlobalWebsiteTheme = function(themeName) {
+window.appState.theme = themeName;
+localStorage.setItem('bahja_theme', themeName);
+saveKey('theme', themeName);
+applyGlobalWebsiteTheme(themeName);
+applyVisualCustomizations();
+applyFooterVisuals();
 }
 
 function applyGlobalWebsiteTheme(themeName) {
@@ -1535,18 +1137,15 @@ if(themeSel) themeSel.value = themeName;
 
 function applyLogoView() {
 const el = document.getElementById('corner-logo-view');
-const ftLogo = document.getElementById('footer-logo-img');
 const manageBox = document.getElementById('logo-manage-box');
 if(window.appState.logoUrl) {
 el.src = window.appState.logoUrl; 
 el.className = `corner-logo ${window.appState.logoPos || 'logo-top-left'}`;
 el.style.height = `${window.appState.logoSize || 60}px`;
 el.style.display = 'block';
-if(ftLogo) { ftLogo.src = window.appState.logoUrl; ftLogo.style.display = 'block'; }
 if(manageBox) manageBox.style.display = 'block';
 } else {
 el.style.display = 'none';
-if(ftLogo) ftLogo.style.display = 'none';
 if(manageBox) manageBox.style.display = 'none';
 }
 }
@@ -1584,33 +1183,25 @@ mTitle.style.color = isDark ? (vis.titleColorDark || '#ffffff') : (vis.titleColo
 
 function applyFooterVisuals() {
 const ft = window.appState.footer || {};
+const isDark = (window.appState.theme || 'dark') === 'dark';
 const fEl = document.getElementById('site-footer-element');
-const titleEl = document.getElementById('ft-display-title');
-const descEl = document.getElementById('ft-display-desc');
-const addrEl = document.getElementById('ft-display-address');
-const emailEl = document.getElementById('ft-display-email');
-const phoneEl = document.getElementById('ft-display-phone');
-if(titleEl) titleEl.innerText = ft.title || 'SSF India';
-if(descEl) descEl.innerText = ft.desc || '';
-if(addrEl) addrEl.innerText = ft.address || '';
-if(emailEl) emailEl.innerText = ft.email || '';
-if(phoneEl) phoneEl.innerText = ft.phone || '';
+const txtEl = document.getElementById('ft-display-text');
+
+if(txtEl) txtEl.innerText = ft.text || '© 2026 BAHJA Media . All rights reserved.';
 
 if(fEl) {
-const hex = ft.bg || '#0a192f';
-const opacityHex = Math.round(((ft.opacity || 95) / 100) * 255).toString(16).padStart(2, '0');
-fEl.style.backgroundColor = hex + opacityHex;
-fEl.style.color = ft.textColor || '#e2e8f0';
+const defaultBg = isDark ? '#111315' : '#ffffff';
+const defaultTxt = isDark ? '#94a3b8' : '#475569';
+const hex = ft.bg || defaultBg;
+const opacityHex = Math.round(((ft.opacity !== undefined ? ft.opacity : 100) / 100) * 255).toString(16).padStart(2, '0');
+fEl.style.backgroundColor = hex.startsWith('#') && hex.length === 7 ? hex + opacityHex : hex;
+fEl.style.color = ft.textColor || defaultTxt;
 fEl.style.fontSize = `${ft.fontSize || 0.85}rem`;
 }
 }
 
 window.liveUpdateFooterVisuals = function() {
-const title = document.getElementById('mod-ft-title')?.value;
-const desc = document.getElementById('mod-ft-desc')?.value;
-const address = document.getElementById('mod-ft-address')?.value;
-const email = document.getElementById('mod-ft-email')?.value;
-const phone = document.getElementById('mod-ft-phone')?.value;
+const text = document.getElementById('mod-ft-text')?.value;
 const bg = document.getElementById('mod-ft-bg')?.value;
 const textColor = document.getElementById('mod-ft-text-color')?.value;
 const opacity = document.getElementById('mod-ft-opacity')?.value;
@@ -1626,11 +1217,151 @@ fEl.style.backgroundColor = bg + opacityHex;
 fEl.style.color = textColor;
 fEl.style.fontSize = `${fontSize}rem`;
 }
-if(document.getElementById('ft-display-title')) document.getElementById('ft-display-title').innerText = title;
-if(document.getElementById('ft-display-desc')) document.getElementById('ft-display-desc').innerText = desc;
-if(document.getElementById('ft-display-address')) document.getElementById('ft-display-address').innerText = address;
-if(document.getElementById('ft-display-email')) document.getElementById('ft-display-email').innerText = email;
-if(document.getElementById('ft-display-phone')) document.getElementById('ft-display-phone').innerText = phone;
+if(document.getElementById('ft-display-text')) document.getElementById('ft-display-text').innerText = text;
+}
+
+/* REALTIME FIXED PROGRAM POPULATION FOR RECORD TERMINAL & CODE PORTAL */
+window.populatePtProgs = function() {
+const cat = document.getElementById('pt-cat-select').value;
+const query = (document.getElementById('pt-search')?.value || '').toLowerCase().trim();
+const drop = document.getElementById('pt-prog-select');
+
+let matched = window.appState.programs || [];
+if(cat) matched = matched.filter(p => p.cat === cat);
+if(query) matched = matched.filter(p => p.name.toLowerCase().includes(query) || (p.cat && p.cat.toLowerCase().includes(query)));
+
+matched.sort((a,b)=>a.name.localeCompare(b.name));
+drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
+
+if(drop.value) { loadPtParticipants(); } 
+else { 
+document.getElementById('pt-candidates-inputs').innerHTML = ''; 
+document.getElementById('pt-stage-badge').innerText = ''; 
+}
+}
+
+window.populatePtProgsCopy = function() {
+const cat = document.getElementById('pt-cat-select-copy').value;
+const query = (document.getElementById('pt-search-copy')?.value || '').toLowerCase().trim();
+const drop = document.getElementById('pt-prog-select-copy');
+
+let matched = window.appState.programs || [];
+if(cat) matched = matched.filter(p => p.cat === cat);
+if(query) matched = matched.filter(p => p.name.toLowerCase().includes(query) || (p.cat && p.cat.toLowerCase().includes(query)));
+
+matched.sort((a,b)=>a.name.localeCompare(b.name));
+drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
+
+if(drop.value) { loadPtParticipantsCopy(); }
+else {
+document.getElementById('pt-candidates-inputs-copy').innerHTML = '';
+document.getElementById('pt-stage-badge-copy').innerText = '';
+document.getElementById('pt-topic-copy').value = '';
+}
+}
+
+window.loadPtParticipants = function() {
+const progId = document.getElementById('pt-prog-select').value;
+const targetProg = window.appState.programs.find(p => p.id === progId);
+const container = document.getElementById('pt-candidates-inputs');
+if(!targetProg) { container.innerHTML = ''; return; }
+document.getElementById('pt-stage-badge').innerText = `Stage: ${targetProg.stage}`;
+const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
+if(matchedRegs.length === 0) {
+container.innerHTML = '<p style="color:#ef4444;">No registered candidates found.</p>'; return;
+}
+let html = '';
+matchedRegs.forEach(r => {
+r.participants.forEach(pName => {
+const savedPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === pName) || { score: 0 };
+html += `
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
+<span><strong>${pName}</strong> (${r.team})</span>
+<input type="number" min="0" class="form-control pt-score-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.score}" style="width:80px; padding:6px;">
+</div>
+`;
+});
+});
+container.innerHTML = html;
+}
+
+window.loadPtParticipantsCopy = function() {
+const progId = document.getElementById('pt-prog-select-copy').value;
+const targetProg = window.appState.programs.find(p => p.id === progId);
+const container = document.getElementById('pt-candidates-inputs-copy');
+if(!targetProg) { container.innerHTML = ''; return; }
+document.getElementById('pt-stage-badge-copy').innerText = `Stage: ${targetProg.stage}`;
+document.getElementById('pt-topic-copy').value = targetProg.topic || '';
+const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
+if(matchedRegs.length === 0) {
+container.innerHTML = '<p style="color:#ef4444;">No registered candidates found.</p>'; return;
+}
+let html = '';
+matchedRegs.forEach(r => {
+r.participants.forEach(pName => {
+const savedPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === pName) || { codeLetter: '' };
+html += `
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
+<span><strong>${pName}</strong> (${r.team})</span>
+<div style="display:flex; gap:6px; align-items:center;">
+<input type="text" class="form-control pt-code-field-copy" data-team="${r.team}" data-student="${pName}" value="${savedPt.codeLetter || ''}" placeholder="Code" style="width:100px; padding:6px; text-transform:uppercase;">
+</div>
+</div>
+`;
+});
+});
+container.innerHTML = html;
+}
+
+window.savePointroomEntry = function(e) {
+e.preventDefault();
+const progId = document.getElementById('pt-prog-select').value;
+const cat = document.getElementById('pt-cat-select').value;
+if(!progId || !cat) return;
+document.querySelectorAll('.pt-score-field').forEach(f => {
+const score = parseFloat(f.value) || 0;
+const team = f.getAttribute('data-team');
+const student = f.getAttribute('data-student');
+let existingPt = window.appState.points.find(pt => pt.progId === progId && pt.team === team && pt.student === student);
+if(existingPt) {
+existingPt.score = score;
+} else {
+window.appState.points.push({ progId, cat, team, student, score });
+}
+});
+saveKey('points', window.appState.points);
+alert("Points recorded.");
+loadPtParticipants(); 
+renderPtList();
+}
+
+window.savePointroomCopyEntry = function(e) {
+e.preventDefault();
+const progId = document.getElementById('pt-prog-select-copy').value;
+const cat = document.getElementById('pt-cat-select-copy').value;
+const topic = document.getElementById('pt-topic-copy').value.trim();
+if(!progId || !cat) return;
+const targetProg = window.appState.programs.find(p => p.id === progId);
+if(targetProg) targetProg.topic = topic;
+window.appState.activeEjProgId = progId; 
+saveKey('programs', window.appState.programs);
+saveKey('activeEjProgId', window.appState.activeEjProgId);
+document.querySelectorAll('.pt-code-field-copy').forEach(f => {
+const team = f.getAttribute('data-team');
+const student = f.getAttribute('data-student');
+const codeLetter = f.value.toUpperCase().trim();
+let existingPt = window.appState.points.find(pt => pt.progId === progId && pt.team === team && pt.student === student);
+if(existingPt) {
+existingPt.codeLetter = codeLetter;
+} else {
+window.appState.points.push({ progId, cat, team, student, score: 0, codeLetter });
+}
+});
+saveKey('points', window.appState.points);
+alert("Code Letters & Topic updated! Active program sent to Judge Portal.");
+loadPtParticipantsCopy();
+renderCodeFormsList();
+renderEjActiveProgram();
 }
 
 const PUBLIC_PANEL_SCHEMA = [
@@ -1685,7 +1416,7 @@ const p = document.getElementById('layout-public-panels');
 if(!p) return;
 p.innerHTML = PUBLIC_PANEL_SCHEMA.map(x => {
 const access = window.appState.publicAccess.panels[x.key] || {register:false,result:false};
-return `<div data-public-panel-key="${x.key}" style="display:grid; grid-template-columns:minmax(0,1fr) 82px 82px; align-items:center; gap:8px; padding:8px 9px; border:1px solid var(--border-color); border-radius:8px; background:rgba(0,0,0,0.16); font-size:0.8rem;">
+return `<div data-public-panel-key="${x.key}" style="display:grid; grid-template-columns:minmax(0,1fr) 82px 82px; align-items:center; gap:8px; padding:8px 9px; border:1px solid var(--border-color); border-radius:8px; background:rgba(0,0,0,0.05); font-size:0.8rem;">
 <span><strong>${x.name}</strong></span>
 <label style="display:flex;align-items:center;justify-content:center;gap:4px;font-size:0.68rem;color:var(--text-sub);">Register <input type="checkbox" data-public-register ${access.register ? 'checked':''} style="width:18px;height:18px;"></label>
 <label style="display:flex;align-items:center;justify-content:center;gap:4px;font-size:0.68rem;color:var(--text-sub);">Result <input type="checkbox" data-public-result ${access.result ? 'checked':''} style="width:18px;height:18px;"></label>
@@ -1915,7 +1646,6 @@ setTimeout(restoreAfterPrint, 1500);
 });
 }
 
-/* JUDGE PORTAL MARKS ENTRY (No Student / Team names visible in list) */
 function renderEjActiveProgram() {
 const activeProgId = window.appState.activeEjProgId;
 renderEjSubmittedMarks();
@@ -2001,7 +1731,7 @@ return;
 box.innerHTML = list.map(s => {
 const when = new Date(s.submittedAt);
 const stamp = isNaN(when.getTime()) ? '' : when.toLocaleString();
-return `<div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:9px; padding:9px;">
+return `<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); border-radius:9px; padding:9px;">
 <div style="display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:5px;">
 <strong style="color:#d4af37;">${s.programName} (${s.category})</strong>
 <span style="font-size:0.72rem; color:var(--text-sub);">${stamp}</span>
@@ -2123,77 +1853,6 @@ if(status) status.innerText = ejTimerCountdownMode ? 'Timer reset to set time' :
 updateEjTimerDisplay();
 }
 
-/* CODE PORTAL FUNCTIONS & SAVED FORM DISPLAY */
-window.populatePtProgsCopy = function() {
-const cat = document.getElementById('pt-cat-select-copy').value;
-const query = document.getElementById('pt-search-copy').value.toLowerCase().trim();
-const drop = document.getElementById('pt-prog-select-copy');
-let matched = window.appState.programs.filter(p => p.cat === cat);
-if(query) matched = matched.filter(p => p.name.toLowerCase().includes(query));
-matched.sort((a,b)=>a.name.localeCompare(b.name));
-drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-document.getElementById('pt-candidates-inputs-copy').innerHTML = '';
-document.getElementById('pt-stage-badge-copy').innerText = '';
-document.getElementById('pt-topic-copy').value = '';
-}
-
-window.loadPtParticipantsCopy = function() {
-const progId = document.getElementById('pt-prog-select-copy').value;
-const targetProg = window.appState.programs.find(p => p.id === progId);
-const container = document.getElementById('pt-candidates-inputs-copy');
-if(!targetProg) { container.innerHTML = ''; return; }
-document.getElementById('pt-stage-badge-copy').innerText = `Stage: ${targetProg.stage}`;
-document.getElementById('pt-topic-copy').value = targetProg.topic || '';
-const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
-if(matchedRegs.length === 0) {
-container.innerHTML = '<p style="color:#ef4444;">No registered candidates found.</p>'; return;
-}
-let html = '';
-matchedRegs.forEach(r => {
-r.participants.forEach(pName => {
-const savedPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === pName) || { codeLetter: '' };
-html += `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
-<span><strong>${pName}</strong> (${r.team})</span>
-<div style="display:flex; gap:6px; align-items:center;">
-<input type="text" class="form-control pt-code-field-copy" data-team="${r.team}" data-student="${pName}" value="${savedPt.codeLetter || ''}" placeholder="Code" style="width:100px; padding:6px; text-transform:uppercase;">
-</div>
-</div>
-`;
-});
-});
-container.innerHTML = html;
-}
-
-window.savePointroomCopyEntry = function(e) {
-e.preventDefault();
-const progId = document.getElementById('pt-prog-select-copy').value;
-const cat = document.getElementById('pt-cat-select-copy').value;
-const topic = document.getElementById('pt-topic-copy').value.trim();
-if(!progId || !cat) return;
-const targetProg = window.appState.programs.find(p => p.id === progId);
-if(targetProg) targetProg.topic = topic;
-window.appState.activeEjProgId = progId; 
-saveKey('programs', window.appState.programs);
-saveKey('activeEjProgId', window.appState.activeEjProgId);
-document.querySelectorAll('.pt-code-field-copy').forEach(f => {
-const team = f.getAttribute('data-team');
-const student = f.getAttribute('data-student');
-const codeLetter = f.value.toUpperCase().trim();
-let existingPt = window.appState.points.find(pt => pt.progId === progId && pt.team === team && pt.student === student);
-if(existingPt) {
-existingPt.codeLetter = codeLetter;
-} else {
-window.appState.points.push({ progId, cat, team, student, score: 0, codeLetter });
-}
-});
-saveKey('points', window.appState.points);
-alert("Code Letters & Topic updated! Active program sent to Judge Portal.");
-loadPtParticipantsCopy();
-renderCodeFormsList();
-renderEjActiveProgram();
-}
-
 function renderCodeFormsList() {
 const container = document.getElementById('box-code-forms-content');
 if(!container) return;
@@ -2215,7 +1874,7 @@ const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknow
 const subPts = window.appState.points.filter(pt => pt.progId === pid && pt.codeLetter && pt.codeLetter.trim() !== '');
 const isActive = window.appState.activeEjProgId === pid;
 return `
-<div style="background:rgba(0,0,0,0.25); border:1px solid ${isActive ? '#d4af37' : 'var(--border-color)'}; padding:12px; border-radius:12px; margin-bottom:10px;">
+<div style="background:rgba(0,0,0,0.05); border:1px solid ${isActive ? '#d4af37' : 'var(--border-color)'}; padding:12px; border-radius:12px; margin-bottom:10px;">
 <div style="display:flex; justify-content:space-between; align-items:center;">
 <div>
 <strong style="font-size:1rem; color:#d4af37;">${prog.name} (${prog.cat})</strong>
@@ -2224,7 +1883,7 @@ ${isActive ? '<span style="background:#d4af37; color:#000; font-size:0.7rem; pad
 <button class="btn btn-sm btn-primary" onclick="loadCodeFormToEdit('${prog.cat}', '${pid}')">Edit / Send to Judge</button>
 </div>
 ${prog.topic ? `<div style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;"><strong>Topic:</strong> ${prog.topic}</div>` : ''}
-<div style="margin-top:8px; font-size:0.85rem; background:rgba(0,0,0,0.2); padding:8px; border-radius:8px;">
+<div style="margin-top:8px; font-size:0.85rem; background:rgba(0,0,0,0.05); padding:8px; border-radius:8px;">
 ${subPts.map(s => `<span style="display:inline-block; margin-right:12px; margin-bottom:4px;">Code: <strong style="color:#d4af37;">${s.codeLetter}</strong> (${s.student} - ${s.team})</span>`).join('')}
 </div>
 </div>
@@ -2259,7 +1918,7 @@ const schema = [
 container.innerHTML = schema.map(s => {
 const val = window.appState.subLocks[s.key] || '';
 return `
-<div style="background:rgba(0,0,0,0.2); padding:10px; border:1px solid var(--border-color); border-radius:8px;">
+<div style="background:rgba(0,0,0,0.05); padding:10px; border:1px solid var(--border-color); border-radius:8px;">
 <label style="font-weight:bold; font-size:0.8rem;">${s.name}</label>
 <div style="display:flex; gap:6px; margin-top:4px;">
 <input type="text" id="pass-field-input-${s.key}" class="form-control" value="${val}" style="margin-bottom:0; font-size:0.85rem;">
@@ -2288,14 +1947,10 @@ document.getElementById('mod-title-color').value = isDark ? (vis.titleColorDark 
 if(document.getElementById('mod-font-family')) document.getElementById('mod-font-family').value = vis.fontFamily || "'Poppins', sans-serif";
 if(document.getElementById('mod-header-align')) document.getElementById('mod-header-align').value = vis.headerAlign || 'center';
 
-if(document.getElementById('mod-ft-title')) document.getElementById('mod-ft-title').value = ft.title || '';
-if(document.getElementById('mod-ft-desc')) document.getElementById('mod-ft-desc').value = ft.desc || '';
-if(document.getElementById('mod-ft-address')) document.getElementById('mod-ft-address').value = ft.address || '';
-if(document.getElementById('mod-ft-email')) document.getElementById('mod-ft-email').value = ft.email || '';
-if(document.getElementById('mod-ft-phone')) document.getElementById('mod-ft-phone').value = ft.phone || '';
-if(document.getElementById('mod-ft-bg')) document.getElementById('mod-ft-bg').value = ft.bg || '#0a192f';
-if(document.getElementById('mod-ft-text-color')) document.getElementById('mod-ft-text-color').value = ft.textColor || '#e2e8f0';
-if(document.getElementById('mod-ft-opacity')) document.getElementById('mod-ft-opacity').value = ft.opacity || 95;
+if(document.getElementById('mod-ft-text')) document.getElementById('mod-ft-text').value = ft.text || '© 2026 BAHJA Media . All rights reserved.';
+if(document.getElementById('mod-ft-bg')) document.getElementById('mod-ft-bg').value = ft.bg || (isDark ? '#111315' : '#ffffff');
+if(document.getElementById('mod-ft-text-color')) document.getElementById('mod-ft-text-color').value = ft.textColor || (isDark ? '#94a3b8' : '#475569');
+if(document.getElementById('mod-ft-opacity')) document.getElementById('mod-ft-opacity').value = ft.opacity !== undefined ? ft.opacity : 100;
 if(document.getElementById('mod-ft-size')) document.getElementById('mod-ft-size').value = ft.fontSize || 0.85;
 }
 
@@ -2322,7 +1977,6 @@ mTitle.style.color = tc.value;
 
 window.saveVisualLayoutState = function() {
 const isDark = (window.appState.theme || 'dark') === 'dark';
-const syncLight = document.getElementById('mod-sync-light').checked;
 const bColor = document.getElementById('mod-banner-color').value;
 const tColor = document.getElementById('mod-title-color').value;
 window.appState.visuals.bannerText = document.getElementById('mod-banner-text').value;
@@ -2333,24 +1987,16 @@ window.appState.visuals.headerAlign = document.getElementById('mod-header-align'
 if(isDark) {
 window.appState.visuals.bannerColorDark = bColor;
 window.appState.visuals.titleColorDark = tColor;
-if(syncLight) {
-window.appState.visuals.bannerColorLight = bColor;
-window.appState.visuals.titleColorLight = tColor;
-}
 } else {
 window.appState.visuals.bannerColorLight = bColor;
 window.appState.visuals.titleColorLight = tColor;
 }
 
 window.appState.footer = {
-title: document.getElementById('mod-ft-title').value,
-desc: document.getElementById('mod-ft-desc').value,
-address: document.getElementById('mod-ft-address').value,
-email: document.getElementById('mod-ft-email').value,
-phone: document.getElementById('mod-ft-phone').value,
+text: document.getElementById('mod-ft-text').value,
 bg: document.getElementById('mod-ft-bg').value,
 textColor: document.getElementById('mod-ft-text-color').value,
-opacity: parseInt(document.getElementById('mod-ft-opacity').value) || 95,
+opacity: parseInt(document.getElementById('mod-ft-opacity').value) || 100,
 fontSize: parseFloat(document.getElementById('mod-ft-size').value) || 0.85
 };
 
@@ -2373,7 +2019,6 @@ document.getElementById('phase-reg-radio').checked = selectedPhase === 'register
 document.getElementById('phase-res-radio').checked = selectedPhase === 'result';
 }
 
-/* SETTINGS SUBMIT WITH LOGO COMPRESSION & INSTANT RENDER */
 window.applyPhaseSettings = async function(e) {
 e.preventDefault();
 const selectedPhase = document.querySelector('input[name="phase-toggle"]:checked').value;
@@ -2389,7 +2034,7 @@ window.appState.logoUrl = await compressImage(logoF, 500, 0.8);
 
 saveData(); 
 applyLogoView();
-alert("System Configurations saved and logo applied!"); 
+alert("System Configurations saved!"); 
 navHome();
 }
 
@@ -2486,7 +2131,7 @@ renderTeamStudentsList();
 window.renderTeamStudentsList = function() {
 const filtered = window.appState.students.filter(s => s.team === window.activePartTeam);
 document.getElementById('team-students-list').innerHTML = filtered.map(s => `
-<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:rgba(0,0,0,0.2); margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
+<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:rgba(0,0,0,0.05); margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
 <span><strong>${s.name}</strong> (${s.cat})</span>
 <button class="btn btn-danger btn-sm" onclick="deleteStudent('${s.id}')">Delete</button>
 </div>
@@ -2530,7 +2175,7 @@ ${allowedStudents.map(st => `<option value="${st.name}" ${reg.participants[i] ==
 }
 }
 return `
-<div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-bottom:10px;">
+<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-bottom:10px;">
 <strong>${p.name} (${p.stage})</strong>
 <div>${selectors}</div>
 <button class="btn btn-success btn-sm btn-block" style="margin-top:8px;" onclick="saveRegistrationItem('${p.id}', '${cat}')">Submit Entry</button>
@@ -2558,65 +2203,6 @@ saveKey('registrations', window.appState.registrations);
 alert("Registration updated.");
 }
 
-window.populatePtProgs = function() {
-const cat = document.getElementById('pt-cat-select').value;
-const query = (document.getElementById('pt-search')?.value || '').toLowerCase().trim();
-const drop = document.getElementById('pt-prog-select');
-let matched = window.appState.programs.filter(p => !cat || p.cat === cat);
-if(query) matched = matched.filter(p => `${p.name} ${p.cat}`.toLowerCase().includes(query));
-matched.sort((a,b)=>a.name.localeCompare(b.name));
-drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
-document.getElementById('pt-candidates-inputs').innerHTML = '';
-document.getElementById('pt-stage-badge').innerText = '';
-}
-
-window.loadPtParticipants = function() {
-const progId = document.getElementById('pt-prog-select').value;
-const targetProg = window.appState.programs.find(p => p.id === progId);
-const container = document.getElementById('pt-candidates-inputs');
-if(!targetProg) { container.innerHTML = ''; return; }
-document.getElementById('pt-stage-badge').innerText = `Stage: ${targetProg.stage}`;
-const matchedRegs = window.appState.registrations.filter(r => r.progId === progId);
-if(matchedRegs.length === 0) {
-container.innerHTML = '<p style="color:#ef4444;">No registered candidates found.</p>'; return;
-}
-let html = '';
-matchedRegs.forEach(r => {
-r.participants.forEach(pName => {
-const savedPt = window.appState.points.find(pt => pt.progId === progId && pt.team === r.team && pt.student === pName) || { score: 0 };
-html += `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
-<span><strong>${pName}</strong> (${r.team})</span>
-<input type="number" min="0" class="form-control pt-score-field" data-team="${r.team}" data-student="${pName}" value="${savedPt.score}" style="width:80px; padding:6px;">
-</div>
-`;
-});
-});
-container.innerHTML = html;
-}
-
-window.savePointroomEntry = function(e) {
-e.preventDefault();
-const progId = document.getElementById('pt-prog-select').value;
-const cat = document.getElementById('pt-cat-select').value;
-if(!progId || !cat) return;
-document.querySelectorAll('.pt-score-field').forEach(f => {
-const score = parseFloat(f.value) || 0;
-const team = f.getAttribute('data-team');
-const student = f.getAttribute('data-student');
-let existingPt = window.appState.points.find(pt => pt.progId === progId && pt.team === team && pt.student === student);
-if(existingPt) {
-existingPt.score = score;
-} else {
-window.appState.points.push({ progId, cat, team, student, score });
-}
-});
-saveKey('points', window.appState.points);
-alert("Points recorded.");
-loadPtParticipants(); 
-renderPtList();
-}
-
 function renderPtList() {
 const containerContent = document.getElementById('box-pt-list-content');
 const searchInput = document.getElementById('pt-logs-search');
@@ -2637,7 +2223,7 @@ const htmlContent = distinctProgs.map(pid => {
 const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
 const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
 return `
-<div style="background:rgba(0,0,0,0.2); border:1px solid var(--border-color); padding:10px; border-radius:8px; margin-bottom:6px;">
+<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:10px; border-radius:8px; margin-bottom:6px;">
 <div style="display:flex; justify-content:space-between; align-items:center;">
 <strong>${prog.name} <span style="color:#d4af37;">(${prog.cat})</span></strong>
 <div>
@@ -2675,11 +2261,7 @@ triggerCustomPrint('pt-print-area');
 window.printAllPointRecords = function() {
 const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
 const target = document.getElementById('pt-print-area');
-let html = `
-<div class="bahja-sheet-header">
-<h2>BAHJA 2K26 - ALL POINT EVALUATION LOGS</h2>
-</div>
-`;
+let html = `<div class="bahja-sheet-header"><h2>BAHJA 2K26 - ALL POINT EVALUATION LOGS</h2></div>`;
 distinctProgs.forEach(pid => {
 const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
 const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
@@ -2792,32 +2374,15 @@ distinctProgs.forEach(pid => {
 const prog = window.appState.programs.find(p => p.id === pid) || { name: 'N/A' };
 const subPts = window.appState.points
 .filter(pt => pt.progId === pid)
-.sort((a,b) => {
-const scoreDiff = Number(b.score || 0) - Number(a.score || 0);
-if(scoreDiff !== 0) return scoreDiff;
-return String(a.student || '').localeCompare(String(b.student || ''));
-});
+.sort((a,b) => Number(b.score || 0) - Number(a.score || 0));
 subPts.forEach((pt, idx) => {
 const rank = idx + 1;
 if(fTeam && pt.team !== fTeam) return;
 if(fPos !== 'all' && rank !== parseInt(fPos, 10)) return;
-allRows.push({
-rank,
-student: pt.student || '',
-team: pt.team || '',
-program: prog.name || 'N/A',
-score: Number(pt.score || 0)
+allRows.push({ rank, student: pt.student || '', team: pt.team || '', program: prog.name || 'N/A', score: Number(pt.score || 0) });
 });
 });
-});
-allRows.sort((a,b) => {
-if(a.rank !== b.rank) return a.rank - b.rank;
-const programCmp = a.program.localeCompare(b.program);
-if(programCmp !== 0) return programCmp;
-const teamCmp = a.team.localeCompare(b.team);
-if(teamCmp !== 0) return teamCmp;
-return a.student.localeCompare(b.student);
-});
+allRows.sort((a,b) => a.rank - b.rank);
 let count = 1;
 tbody.innerHTML = allRows.map(row => `
 <tr>
@@ -2927,7 +2492,7 @@ window.appState.results.push({ progId, number: customNum, poster: compressed, yo
 filterResultPrograms();
 syncControlPanelViews();
 saveKey('results', window.appState.results);
-btn.innerText = "Upload Result (Save Only)";
+btn.innerText = "Upload Result";
 btn.disabled = false;
 }
 }
@@ -2960,10 +2525,10 @@ resBox.innerHTML = results.length ? results.map(r => {
 const p = window.appState.programs.find(pr => pr.id === r.progId) || { name:'Unknown Program', cat:'' };
 const pub = r.published === true;
 return `
-<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:10px; background:rgba(255,255,255,0.03);">
+<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:10px; background:rgba(0,0,0,0.03);">
 <div style="min-width:0;">
 <div style="font-weight:800;">Result ${r.number || ''} — ${p.name}</div>
-<div style="font-size:0.75rem; color:var(--text-sub);">${p.cat || ''} · ${pub ? 'Published to public site' : 'Stored only — not visible publicly'}</div>
+<div style="font-size:0.75rem; color:var(--text-sub);">${p.cat || ''} · ${pub ? 'Published to public site' : 'Stored only'}</div>
 </div>
 <label style="display:flex; align-items:center; gap:7px; white-space:nowrap; font-size:0.78rem; font-weight:800;">
 <input type="checkbox" ${pub ? 'checked' : ''} onchange="setResultPublished('${r.progId}', this.checked)" style="width:20px;height:20px;">
@@ -2978,10 +2543,10 @@ const items = window.appState.teamStatusList || [];
 stBox.innerHTML = items.length ? items.map((item,idx) => {
 const pub = item.published === true;
 return `
-<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:10px; background:rgba(255,255,255,0.03);">
+<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:10px; background:rgba(0,0,0,0.03);">
 <div style="display:flex; align-items:center; gap:10px; min-width:0;">
 <img src="${item.url}" style="width:56px;height:40px;border-radius:6px;object-fit:cover;">
-<div><div style="font-weight:800;">Result Poster #${idx+1}</div><div style="font-size:0.75rem;color:var(--text-sub);">${pub ? 'Visible publicly' : 'Stored only — hidden from public site'}</div></div>
+<div><div style="font-weight:800;">Result Poster #${idx+1}</div><div style="font-size:0.75rem;color:var(--text-sub);">${pub ? 'Visible publicly' : 'Stored only'}</div></div>
 </div>
 <label style="display:flex; align-items:center; gap:7px; white-space:nowrap; font-size:0.78rem; font-weight:800;">
 <input type="checkbox" ${pub ? 'checked' : ''} onchange="setStatusPublished('${item.id}', this.checked)" style="width:20px;height:20px;">
@@ -3004,13 +2569,9 @@ const type = document.getElementById('up-type').value;
 const linkInput = document.getElementById('up-video-link');
 const lblFile = document.getElementById('lbl-up-file');
 if(type === 'video') {
-linkInput.style.display = 'block';
-linkInput.required = true;
-lblFile.innerText = "Choose Video Thumbnail Image";
+linkInput.style.display = 'block'; linkInput.required = true; lblFile.innerText = "Choose Video Thumbnail Image";
 } else {
-linkInput.style.display = 'none';
-linkInput.required = false;
-lblFile.innerText = "Choose Photo";
+linkInput.style.display = 'none'; linkInput.required = false; lblFile.innerText = "Choose Photo";
 }
 }
 
@@ -3021,8 +2582,7 @@ const type = document.getElementById('up-type').value;
 const f = document.getElementById('up-file').files[0];
 const vLink = document.getElementById('up-video-link').value.trim();
 if(!f) return;
-btn.innerText = "Uploading...";
-btn.disabled = true;
+btn.innerText = "Uploading..."; btn.disabled = true;
 try {
 const compressedImage = await compressImage(f, 800, 0.6);
 if(!window.appState.updates) window.appState.updates = [];
@@ -3034,14 +2594,11 @@ window.appState.updates.unshift({ id:'up_'+Date.now(), type: 'video', url: vLink
 renderPinterestUpdates('all');
 syncControlPanelViews();
 saveKey('updates', window.appState.updates);
-btn.innerText = "Upload & Publish";
-btn.disabled = false;
+btn.innerText = "Upload & Publish"; btn.disabled = false;
 e.target.reset();
 window.toggleUpdateVideoUrl();
 } catch(err) {
-btn.innerText = "Upload & Publish";
-btn.disabled = false;
-alert("Failed to upload media.");
+btn.innerText = "Upload & Publish"; btn.disabled = false; alert("Failed to upload media.");
 }
 }
 
@@ -3060,34 +2617,24 @@ const url = document.getElementById('st-url').value.trim();
 const mode = document.getElementById('st-mode').value;
 const thumbFile = document.getElementById('st-thumb').files[0];
 if(thumbFile) {
-btn.innerText = "Adding...";
-btn.disabled = true;
+btn.innerText = "Adding..."; btn.disabled = true;
 const thumbData = await compressImage(thumbFile, 600, 0.6);
 const obj = { id: 'st_'+Date.now(), title, url, thumb: thumbData, mode };
 if(mode === 'live') {
-window.appState.livelinks.push(obj);
-renderResultPhaseFeeds();
-saveKey('livelinks', window.appState.livelinks);
+window.appState.livelinks.push(obj); renderResultPhaseFeeds(); saveKey('livelinks', window.appState.livelinks);
 } else {
-window.appState.highlights.push(obj);
-renderResultPhaseFeeds();
-saveKey('highlights', window.appState.highlights);
+window.appState.highlights.push(obj); renderResultPhaseFeeds(); saveKey('highlights', window.appState.highlights);
 }
 syncControlPanelViews();
-btn.innerText = "Add Stream";
-btn.disabled = false;
-e.target.reset();
-alert("Stream Added Instantly.");
+btn.innerText = "Add Stream"; btn.disabled = false; e.target.reset(); alert("Stream Added.");
 }
 }
 
 window.deleteStreamMaster = function(id, mode) {
 if(mode === 'live') {
-window.appState.livelinks = window.appState.livelinks.filter(l => l.id !== id);
-saveKey('livelinks', window.appState.livelinks);
+window.appState.livelinks = window.appState.livelinks.filter(l => l.id !== id); saveKey('livelinks', window.appState.livelinks);
 } else {
-window.appState.highlights = window.appState.highlights.filter(h => h.id !== id);
-saveKey('highlights', window.appState.highlights);
+window.appState.highlights = window.appState.highlights.filter(h => h.id !== id); saveKey('highlights', window.appState.highlights);
 }
 syncControlPanelViews();
 renderResultPhaseFeeds();
@@ -3118,7 +2665,7 @@ if(el) el.checked = !!v[key];
 const mTeams = document.getElementById('master-teams-list');
 if(mTeams) {
 mTeams.innerHTML = window.appState.teams.map((t, idx) => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
 <span>${t.user}</span> <button class="btn btn-danger btn-sm" onclick="deleteTeamMaster(${idx})">x</button>
 </div>
 `).join('');
@@ -3126,7 +2673,7 @@ mTeams.innerHTML = window.appState.teams.map((t, idx) => `
 const mProgs = document.getElementById('master-progs-list');
 if(mProgs) {
 mProgs.innerHTML = window.appState.programs.sort((a,b)=>a.name.localeCompare(b.name)).map(p => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
 <span><strong>${p.name}</strong> (${p.cat})</span> <button class="btn btn-danger btn-sm" onclick="deleteProgramMaster('${p.id}')">x</button>
 </div>
 `).join('');
@@ -3135,7 +2682,7 @@ const mStatus = document.getElementById('master-status-preview');
 if(mStatus) {
 const list = window.appState.teamStatusList || [];
 mStatus.innerHTML = list.map((item, idx) => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; border-radius:6px; font-size:0.85rem;">
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; border-radius:6px; font-size:0.85rem;">
 <img src="${item.url}" style="height:40px; border-radius:4px; object-fit:contain;">
 <span>Poster #${idx+1} — ${item.published === true ? '✅ Published' : '❌ Not Published'}</span>
 <button class="btn btn-danger btn-sm" onclick="deleteStatusItem('${item.id}')">Delete</button>
@@ -3147,7 +2694,7 @@ if(mRes) {
 mRes.innerHTML = window.appState.results.map(r => {
 const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Unknown' };
 return `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
 <span>Result ${r.number || ''}: ${p.name} — ${r.published === true ? '✅ Published' : '❌ Not Published'}</span> <button class="btn btn-danger btn-sm" onclick="deleteResultMaster('${r.progId}')">x</button>
 </div>
 `;
@@ -3156,7 +2703,7 @@ return `
 const mUpdates = document.getElementById('master-updates-list');
 if(mUpdates) {
 mUpdates.innerHTML = (window.appState.updates || []).map(u => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
 <span>Update (${u.type})</span> <button class="btn btn-danger btn-sm" onclick="deleteUpdateMaster('${u.id}')">x</button>
 </div>
 `).join('');
@@ -3167,7 +2714,7 @@ mStreams.innerHTML = [
 ...window.appState.livelinks.map(l => ({ ...l, mode:'live' })),
 ...window.appState.highlights.map(h => ({ ...h, mode:'highlight' }))
 ].map(s => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
 <span>${s.mode.toUpperCase()}: ${s.title}</span> <button class="btn btn-danger btn-sm" onclick="deleteStreamMaster('${s.id}', '${s.mode}')">x</button>
 </div>
 `).join('');
@@ -3293,7 +2840,6 @@ hlFeed.innerHTML = window.appState.highlights.map(h => `
 }
 }
 
-/* ACCURATE SEARCH BY RESULT NUMBER OR PROGRAM NAME */
 window.filterResultPrograms = function() {
 const catEl = document.getElementById('res-search-cat');
 const searchEl = document.getElementById('res-prog-search');
@@ -3319,7 +2865,7 @@ return true;
 container.innerHTML = matchedResults.map(r => {
 const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Program', cat: 'N/A' };
 return `
-<div style="background:rgba(0,0,0,0.2); padding:14px; border:1px solid var(--border-color); margin-bottom:10px; border-radius:16px;">
+<div style="background:rgba(0,0,0,0.05); padding:14px; border:1px solid var(--border-color); margin-bottom:10px; border-radius:16px;">
 <h4>${p.name} <span style="font-size:0.75rem; color:var(--text-sub);">(${p.cat})</span> - <span style="color:#d4af37;">Result ${r.number || ''}</span></h4>
 <div style="margin-top:8px;">
 <button class="btn btn-sm btn-success" id="btn-toggle-res-${r.progId}" onclick="toggleInlineResultView('${r.progId}', '${r.poster}')">Result View</button>
