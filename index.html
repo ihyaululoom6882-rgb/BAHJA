@@ -368,7 +368,7 @@ transition: all 0.3s ease;
 <option value="GENERAL">GENERAL</option>
 </select>
 </div>
-<div class="form-group"><label>Participant Name</label><input type="text" id="part-name" class="form-control" required></div>
+<div class="form-group"><label>Participant Name</label><input type="text" id="part-name" class="form-control" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()" required></div>
 <button type="submit" class="btn btn-success btn-block">Add Student</button>
 </form>
 <div id="team-students-list" style="margin-top:15px;"></div>
@@ -1251,7 +1251,6 @@ fEl.style.fontSize = `${fontSize}rem`;
 if(document.getElementById('ft-display-text')) document.getElementById('ft-display-text').innerText = text;
 }
 
-/* REALTIME FIXED PROGRAM POPULATION & SEPARATE SEARCH FILTER FOR RECORD TERMINAL & CODE PORTAL */
 window.populatePtProgs = function() {
 const cat = document.getElementById('pt-cat-select').value;
 const query = (document.getElementById('pt-search')?.value || '').toLowerCase().trim();
@@ -1613,7 +1612,7 @@ if(p !== cp) { alert('Passwords do not match.'); return; }
 window.appState.mainCreds = { user:u, pass:p };
 window.appState.securitySchemaVersion = SECURITY_SCHEMA_VERSION;
 saveKey('mainCreds', window.appState.mainCreds);
-saveKey('securitySchemaVersion', SECURITY_SCHEMA_VERSION;
+saveKey('securitySchemaVersion', SECURITY_SCHEMA_VERSION);
 alert('Admin login created. You can now sign in.');
 document.getElementById('first-admin-setup').style.display = 'none';
 document.getElementById('main-user-input').value = u;
@@ -2186,7 +2185,7 @@ renderTeamStudentsList();
 window.addTeamParticipant = function(e) {
 e.preventDefault();
 const cat = document.getElementById('part-cat').value;
-const name = document.getElementById('part-name').value.trim();
+const name = document.getElementById('part-name').value.trim().toUpperCase();
 window.appState.students.push({ id:'st_'+Date.now(), name, cat, team: window.activePartTeam });
 saveKey('students', window.appState.students);
 document.getElementById('part-name').value = ''; 
@@ -2231,7 +2230,7 @@ const reg = window.appState.registrations.find(r => r.team === window.loggedTeam
 let selectors = '';
 for(let i=0; i < p.limit; i++) {
 if(cat === 'GENERAL') {
-selectors += `<input type="text" class="form-control prog-input-${p.id}" value="${reg.participants[i] || ''}" placeholder="Enter Name Manually" style="margin-top:5px;">`;
+selectors += `<input type="text" class="form-control prog-input-${p.id}" value="${reg.participants[i] || ''}" placeholder="Enter Name Manually" style="margin-top:5px; text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">`;
 } else {
 selectors += `<select class="form-control prog-input-${p.id}" style="margin-top:5px;">
 <option value="">-- Choose Student --</option>
@@ -2252,7 +2251,7 @@ return `
 window.saveRegistrationItem = function(progId, cat) {
 if(!window.appState.portalOpen) { alert("Registration Locked!"); return; }
 const fields = document.querySelectorAll(`.prog-input-${progId}`);
-const names = Array.from(fields).map(f => f.value.trim()).filter(n => n !== '');
+const names = Array.from(fields).map(f => f.value.trim().toUpperCase()).filter(n => n !== '');
 if(cat !== 'GENERAL') {
 for (let sName of names) {
 const matchCount = window.appState.registrations.filter(r => r.team === window.loggedTeamUser && r.cat !== 'GENERAL' && r.progId !== progId && r.participants.includes(sName)).length;
