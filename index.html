@@ -1093,13 +1093,29 @@ populateReportProgDropdown();
 onValue(dbRef, (snapshot) => {
 const data = snapshot.val();
 if (data) {
-window.appState = { ...window.appState, ...data };
+// FIX: Firebase drops empty arrays, so merging over existing local state keeps old deleted data.
+// We must build a clean base state first, then overlay Firebase data.
+const preservedLogo = {
+logoUrl: data.logoUrl !== undefined ? data.logoUrl : (window.appState.logoUrl || ''),
+logoPos: data.logoPos || window.appState.logoPos || 'logo-top-left',
+logoSize: data.logoSize || window.appState.logoSize || '60'
+};
+const freshState = buildCleanState(preservedLogo);
+window.appState = { ...freshState, ...data };
 window.appState = sanitizeSecurityState(window.appState);
 try {
 localStorage.setItem('bahja_full_state', JSON.stringify(window.appState));
 localStorage.setItem('bahja_current_phase', window.appState.phase);
 localStorage.setItem('bahja_theme', window.appState.theme);
 } catch(e) {}
+} else {
+const preservedLogo = {
+logoUrl: window.appState.logoUrl || '',
+logoPos: window.appState.logoPos || 'logo-top-left',
+logoSize: window.appState.logoSize || '60'
+};
+window.appState = buildCleanState(preservedLogo);
+try { localStorage.removeItem('bahja_full_state'); } catch(e) {}
 }
 scheduleAppRender();
 });
