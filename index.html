@@ -4,20 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-site-verification" content="K0YX288iRLa7GMBEpmHSKSX3m4PstPfpNqivkCpqQsU" />
-
 <!-- SEO Meta Tags -->
 <title>Bahija Fest | Official Fest Control & Registration Portal</title>
 <meta name="description" content="Official portal for Bahija Fest. Register for competitions, view event schedules, check scores, and track fest updates.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://ihyaululoom6882-rgb.github.io/BAHJA/v">
-
 <!-- Open Graph / Social Media Meta Tags -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Bahija Fest | Official Fest Control & Registration Portal">
 <meta property="og:description" content="Official portal for Bahija Fest. Register for competitions, view event schedules, check scores, and track fest updates.">
 <meta property="og:url" content="https://ihyaululoom6882-rgb.github.io/BAHJA/v">
 <meta property="og:image" content="https://ihyaululoom6882-rgb.github.io/BAHJA/v/logo.png">
-
 <link rel="icon" type="image/png" sizes="144x144" href="logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -215,14 +212,11 @@ max-height: 90vh; display: flex; flex-direction: column;
 font-size: 1.8rem; font-weight: 800; text-align: center; font-family: monospace;
 background: rgba(0, 0, 0, 0.1); padding: 10px; border-radius: 12px; margin: 10px 0; color: #d4af37; border: 1px solid var(--border-color);
 }
-
 .timer-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
 .judge-mark-entry { display:flex; align-items:center; gap:6px; width:100%; }
 .judge-mark-entry .ej-score-field { flex:1; min-width:0; }
 .judge-mark-eye { width:42px; min-width:42px; height:42px; border:1px solid var(--border-color); border-radius:10px; background:var(--input-bg); color:var(--text-sub); cursor:pointer; display:flex; align-items:center; justify-content:center; }
 .judge-mark-eye:hover { color:#d4af37; border-color:#d4af37; }
-
-
 /* MINIMAL CENTERED FOOTER */
 .site-footer {
 background-color: var(--footer-bg);
@@ -304,13 +298,11 @@ transition: all 0.3s ease;
 </div>
 </div>
 </div>
-
 <div id="section-team-states" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Team Status</h3>
 <div id="team-status-poster-box" class="team-status-grid"></div>
 </div>
-
 <div id="section-results-view" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Program Results</h3>
@@ -327,7 +319,6 @@ transition: all 0.3s ease;
 </div>
 <div id="results-display-list"></div>
 </div>
-
 <div id="section-updates" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Updates & Gallery</h3>
@@ -338,19 +329,16 @@ transition: all 0.3s ease;
 </div>
 <div id="live-updates-feed" class="pinterest-masonry"></div>
 </div>
-
 <div id="section-livelink" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Live Streams</h3>
 <div id="livelink-feed" class="pinterest-masonry"></div>
 </div>
-
 <div id="section-highlights" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Highlights</h3>
 <div id="highlights-feed" class="pinterest-masonry"></div>
 </div>
-
 <div id="panel-participants-entry" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-top: 12px;">Add Team Participants</h3>
@@ -380,7 +368,6 @@ transition: all 0.3s ease;
 <div id="team-students-list" style="margin-top:15px;"></div>
 </div>
 </div>
-
 <!-- ENTRY JUDGE PANEL -->
 <div id="panel-entry-judge" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -426,7 +413,6 @@ transition: all 0.3s ease;
 <div id="ej-submitted-list" style="display:none;"></div>
 </div>
 </div>
-
 <!-- SETTINGS PANEL -->
 <div id="panel-settings" class="view-panel card">
 <h3 style="color: #d4af37; margin-bottom: 15px;">Settings</h3>
@@ -450,7 +436,6 @@ transition: all 0.3s ease;
 </select>
 </div>
 </div>
-
 <div class="collapsible-header" onclick="toggleAccordion('set-box-logo')">
 <span>Logo Placement Settings</span> <i class="fa-solid fa-chevron-down"></i>
 </div>
@@ -474,7 +459,6 @@ transition: all 0.3s ease;
 <input type="range" min="30" max="120" value="60" id="sys-logo-size" class="form-control" oninput="updateLogoStylesLocally()">
 </div>
 </div>
-
 <button type="submit" class="btn btn-block btn-success" style="margin-top:15px;"><i class="fa-solid fa-floppy-disk"></i> Save System Configurations</button>
 </form>
 <div id="logo-manage-box" style="margin-top:12px; display:none;">
@@ -483,7 +467,6 @@ transition: all 0.3s ease;
 <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
 <button class="btn btn-danger btn-block" onclick="clearAllDataSystem()">Clear All System Data</button>
 </div>
-
 <!-- POINTROOM PORTAL -->
 <div id="panel-pointroom" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -525,7 +508,6 @@ transition: all 0.3s ease;
 </div>
 <div id="pt-print-area" class="print-target" style="display:none;"></div>
 </div>
-
 <!-- CODE PORTAL -->
 <div id="panel-pointroom-copy" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -569,7 +551,6 @@ transition: all 0.3s ease;
 <div id="box-code-forms-content"></div>
 </div>
 </div>
-
 <!-- CANDIDATE STANDING -->
 <div id="panel-judge" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -593,7 +574,6 @@ transition: all 0.3s ease;
 </div>
 </div>
 </div>
-
 <!-- LEAD ZONE -->
 <div id="panel-states-control" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -630,7 +610,6 @@ transition: all 0.3s ease;
 </table>
 </div>
 </div>
-
 <!-- SIGN PORTAL -->
 <div id="panel-entry-sign" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -660,7 +639,6 @@ transition: all 0.3s ease;
 </div>
 </div>
 </div>
-
 <!-- LAUNCH PAD -->
 <div id="panel-publish" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -687,7 +665,6 @@ transition: all 0.3s ease;
 </div>
 </div>
 </div>
-
 <!-- SECURITY VAULT -->
 <div id="panel-protection" class="view-panel card">
 <h3>Security Vault</h3>
@@ -711,12 +688,10 @@ transition: all 0.3s ease;
 <div id="sub-panel-pass-managers-container" style="margin-top:8px; display:flex; flex-direction:column; gap:10px;"></div>
 </div>
 </div>
-
 <!-- LAYOUT STUDIO -->
 <div id="panel-modify" class="view-panel card">
 <h3>Layout Studio</h3>
 <div style="margin-top:12px; display:flex; flex-direction:column; gap:12px;">
-
 <div class="collapsible-header" onclick="toggleAccordion('mod-box-header')">
 <span>1. Header & Title Styling</span> <i class="fa-solid fa-chevron-down"></i>
 </div>
@@ -738,12 +713,11 @@ transition: all 0.3s ease;
 <div class="form-group"><label>Banner Color</label><input type="color" id="mod-banner-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;"></div>
 <div class="form-group"><label>Title Color</label><input type="color" id="mod-title-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;"></div>
 </div>
-
 <div class="collapsible-header" onclick="toggleAccordion('mod-box-footer')">
 <span>2. Footer Styling Controls</span> <i class="fa-solid fa-chevron-down"></i>
 </div>
 <div id="mod-box-footer" class="collapsible-box show" style="padding:10px 0;">
-<div class="form-group"><label>Footer Text Content</label><input type="text" id="mod-ft-text" class="form-control" value="© 2026 BAHJA Media . All rights reserved." oninput="liveUpdateFooterVisuals()"></div>
+<!-- Footer text modification removed -->
 <div class="form-group">
 <label><input type="checkbox" id="mod-ft-transparent" onchange="liveUpdateFooterVisuals()"> Remove / Transparent Background</label>
 </div>
@@ -758,7 +732,6 @@ transition: all 0.3s ease;
 <input type="range" min="0.6" max="1.3" step="0.05" value="0.85" id="mod-ft-size" class="form-control" oninput="liveUpdateFooterVisuals()">
 </div>
 </div>
-
 <div class="collapsible-header" onclick="toggleAccordion('mod-box-public')">
 <span>3. Public Access Controls</span> <i class="fa-solid fa-chevron-down"></i>
 </div>
@@ -768,11 +741,9 @@ transition: all 0.3s ease;
 <div id="layout-public-panels" style="display:flex; flex-direction:column; gap:6px;"></div>
 </div>
 </div>
-
 <button class="btn btn-success btn-block" style="margin-top:10px;" onclick="saveVisualLayoutState()"><i class="fa-solid fa-floppy-disk"></i> Save Appearance Layout</button>
 </div>
 </div>
-
 <!-- CONTROL DECK -->
 <div id="panel-control-panel" class="view-panel card">
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -899,12 +870,10 @@ transition: all 0.3s ease;
 </div>
 </div>
 </div>
-
 <!-- CENTERED SIMPLE FOOTER -->
 <footer class="site-footer" id="site-footer-element">
 <p id="ft-display-text">&copy; 2026 BAHJA Media . All rights reserved.</p>
 </footer>
-
 <!-- MODALS -->
 <div id="modal-overlay" class="modal-overlay">
 <div id="modal-login" class="modal-box" style="text-align: center;">
@@ -925,7 +894,6 @@ transition: all 0.3s ease;
 </div>
 </div>
 </div>
-
 <div id="gatekeeper-modal-overlay" class="modal-overlay">
 <div class="modal-box">
 <h3 id="gk-title" style="color:#ef4444; margin-bottom:10px; font-size:1.1rem;">Security Lock Required</h3>
@@ -934,7 +902,6 @@ transition: all 0.3s ease;
 <button class="btn btn-block" style="margin-top:6px; background:transparent; border:1px solid var(--border-color); color:var(--text-main);" onclick="closeGatekeeper()">Cancel</button>
 </div>
 </div>
-
 <div id="detail-modal-overlay" class="modal-overlay" onclick="this.style.display='none'">
 <div class="modal-box" onclick="event.stopPropagation()">
 <h3 id="det-modal-title" style="color:#d4af37; margin-bottom:10px; font-size:1.1rem;"></h3>
@@ -942,7 +909,6 @@ transition: all 0.3s ease;
 <button class="btn btn-block" style="margin-top:10px;" onclick="document.getElementById('detail-modal-overlay').style.display='none'">Close</button>
 </div>
 </div>
-
 <div id="media-viewer-modal" class="modal-overlay" onclick="closeMediaViewer()">
 <div class="modal-box" onclick="event.stopPropagation()" style="max-width:550px; text-align:center;">
 <div id="media-viewer-container" style="max-height:60vh; overflow:hidden; border-radius:12px; margin-bottom:15px; display:flex; justify-content:center; align-items:center; background:#000;"></div>
@@ -953,7 +919,6 @@ transition: all 0.3s ease;
 <button class="btn btn-block" style="margin-top:10px; background:transparent; border:1px solid var(--border-color); color:var(--text-main);" onclick="closeMediaViewer()">Close</button>
 </div>
 </div>
-
 <script>
 (function() {
 try {
@@ -978,7 +943,6 @@ const ptLogsSearch = document.getElementById('pt-logs-search');
 if(ptLogsSearch) ptLogsSearch.addEventListener('input', () => renderPtList());
 const ptSavedCodeSearch = document.getElementById('pt-saved-code-search');
 if(ptSavedCodeSearch) ptSavedCodeSearch.addEventListener('input', () => renderCodeFormsList());
-
 if (window.appState && window.appState.visuals) {
 const vis = window.appState.visuals;
 if (vis.fontFamily) document.documentElement.style.setProperty('--main-font', vis.fontFamily);
@@ -1005,7 +969,6 @@ logoEl.style.display = 'block';
 });
 })();
 </script>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -1021,7 +984,6 @@ measurementId: "G-SX6NX5K314"
 };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
 function compressImage(file, maxWidth = 800, quality = 0.6) {
 return new Promise((resolve) => {
 if (!file.type.startsWith('image/')) {
@@ -1052,10 +1014,8 @@ img.src = event.target.result;
 reader.readAsDataURL(file);
 });
 }
-
 const SECURITY_SCHEMA_VERSION = 2;
 const EMPTY_SUB_LOCKS = { settings:'', control_panel:'', publish:'', pointroom:'', entry_judge:'', judge:'', states:'', code_portal:'', entry_sign:'', protection:'', modify:'' };
-
 function buildCleanState(preservedLogo) {
 const logo = preservedLogo || {};
 return {
@@ -1073,7 +1033,6 @@ footer: { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textC
 teams: [], programs: [], registrations: [], results: [], updates: [], livelinks: [], highlights: [], students: [], points: [], judgeSubmissions: []
 };
 }
-
 function sanitizeSecurityState(state) {
 if(!state || typeof state !== 'object') return state;
 if(state.securitySchemaVersion !== SECURITY_SCHEMA_VERSION) {
@@ -1095,12 +1054,10 @@ state.footer = { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315'
 }
 return state;
 }
-
 if (!window.appState) { window.appState = buildCleanState(); } else { window.appState = sanitizeSecurityState(window.appState); }
 window.loggedTeamUser = null; window.activePartTeam = null; window.isMainLoggedIn = false; window.gatekeeperTargetPanel = null;
 const dbRef = ref(db, 'bahja_fest_data');
 let renderScheduled = false;
-
 function scheduleAppRender(force = false) {
 if (renderScheduled && !force) return;
 renderScheduled = true;
@@ -1127,7 +1084,6 @@ renderLayoutPublicAccessControls();
 populateReportProgDropdown();
 });
 }
-
 onValue(dbRef, (snapshot) => {
 const data = snapshot.val();
 if (data) {
@@ -1141,13 +1097,11 @@ localStorage.setItem('bahja_theme', window.appState.theme);
 }
 scheduleAppRender();
 });
-
 window.saveKey = function(key, value) { const updateObj = {}; updateObj[key] = value; update(dbRef, updateObj); }
 window.saveData = function() {
 try { localStorage.setItem('bahja_full_state', JSON.stringify(window.appState)); } catch(e){}
 set(dbRef, window.appState);
 }
-
 window.updateGlobalWebsiteTheme = function(themeName) {
 window.appState.theme = themeName;
 localStorage.setItem('bahja_theme', themeName);
@@ -1156,13 +1110,11 @@ applyGlobalWebsiteTheme(themeName);
 applyVisualCustomizations();
 applyFooterVisuals();
 }
-
 function applyGlobalWebsiteTheme(themeName) {
 document.documentElement.setAttribute('data-theme', themeName);
 const themeSel = document.getElementById('sys-theme-select');
 if(themeSel) themeSel.value = themeName;
 }
-
 function applyLogoView() {
 const el = document.getElementById('corner-logo-view');
 const manageBox = document.getElementById('logo-manage-box');
@@ -1177,7 +1129,6 @@ el.style.display = 'none';
 if(manageBox) manageBox.style.display = 'none';
 }
 }
-
 window.updateLogoStylesLocally = function() {
 const pos = document.getElementById('sys-logo-pos').value;
 const size = document.getElementById('sys-logo-size').value;
@@ -1186,14 +1137,12 @@ const el = document.getElementById('corner-logo-view');
 el.className = `corner-logo ${pos}`;
 el.style.height = `${size}px`;
 }
-
 window.deleteSysLogo = function() {
 window.appState.logoUrl = ''; 
 saveKey('logoUrl', '');
 applyLogoView();
 alert("Logo removed.");
 }
-
 function applyVisualCustomizations() {
 const vis = window.appState.visuals || {};
 const isDark = (window.appState.theme || 'dark') === 'dark';
@@ -1208,21 +1157,17 @@ mTitle.innerText = vis.titleText || 'BAHJA 2026';
 mTitle.style.color = isDark ? (vis.titleColorDark || '#ffffff') : (vis.titleColorLight || '#0f172a');
 }
 }
-
 function applyFooterVisuals() {
 const ft = window.appState.footer || {};
 const isDark = (window.appState.theme || 'dark') === 'dark';
 const fEl = document.getElementById('site-footer-element');
 const txtEl = document.getElementById('ft-display-text');
-
-if(txtEl) txtEl.innerText = ft.text || '© 2026 BAHJA Media . All rights reserved.';
-
+if(txtEl) txtEl.innerText = '© 2026 BAHJA Media . All rights reserved.';
 if(fEl) {
 const defaultBg = isDark ? '#111315' : '#ffffff';
 const defaultTxt = isDark ? '#94a3b8' : '#475569';
 const hex = ft.bg || defaultBg;
 const opVal = (ft.opacity !== undefined ? ft.opacity : 100) / 100;
-
 if (ft.transparentBg) {
 fEl.style.backgroundColor = 'transparent';
 fEl.style.borderTop = 'none';
@@ -1235,18 +1180,15 @@ fEl.style.opacity = opVal;
 fEl.style.fontSize = `${ft.fontSize || 0.85}rem`;
 }
 }
-
 window.liveUpdateFooterVisuals = function() {
-const text = document.getElementById('mod-ft-text')?.value;
+// Footer text hardcoded
 const bg = document.getElementById('mod-ft-bg')?.value;
 const textColor = document.getElementById('mod-ft-text-color')?.value;
 const opacity = document.getElementById('mod-ft-opacity')?.value;
 const fontSize = document.getElementById('mod-ft-size')?.value;
 const isTransparent = document.getElementById('mod-ft-transparent')?.checked;
-
 if(document.getElementById('ft-opacity-val')) document.getElementById('ft-opacity-val').innerText = opacity;
 if(document.getElementById('ft-size-val')) document.getElementById('ft-size-val').innerText = fontSize;
-
 const fEl = document.getElementById('site-footer-element');
 if(fEl) {
 if(isTransparent) {
@@ -1260,48 +1202,38 @@ fEl.style.color = textColor;
 fEl.style.opacity = (opacity / 100);
 fEl.style.fontSize = `${fontSize}rem`;
 }
-if(document.getElementById('ft-display-text')) document.getElementById('ft-display-text').innerText = text;
+if(document.getElementById('ft-display-text')) document.getElementById('ft-display-text').innerText = '© 2026 BAHJA Media . All rights reserved.';
 }
-
 window.populatePtProgs = function() {
 const cat = document.getElementById('pt-cat-select').value;
 const query = (document.getElementById('pt-search')?.value || '').toLowerCase().trim();
 const drop = document.getElementById('pt-prog-select');
-
 let matched = window.appState.programs || [];
 if(cat) matched = matched.filter(p => p.cat === cat);
 if(query) matched = matched.filter(p => p.name.toLowerCase().includes(query) || (p.cat && p.cat.toLowerCase().includes(query)));
-
 matched.sort((a,b)=>a.name.localeCompare(b.name));
 drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
-
 if (query && matched.length === 1) {
 drop.value = matched[0].id;
 }
-
 if(drop.value) { loadPtParticipants(); } 
 else { 
 document.getElementById('pt-candidates-inputs').innerHTML = ''; 
 document.getElementById('pt-stage-badge').innerText = ''; 
 }
 }
-
 window.populatePtProgsCopy = function() {
 const cat = document.getElementById('pt-cat-select-copy').value;
 const query = (document.getElementById('pt-search-copy')?.value || '').toLowerCase().trim();
 const drop = document.getElementById('pt-prog-select-copy');
-
 let matched = window.appState.programs || [];
 if(cat) matched = matched.filter(p => p.cat === cat);
 if(query) matched = matched.filter(p => p.name.toLowerCase().includes(query) || (p.cat && p.cat.toLowerCase().includes(query)));
-
 matched.sort((a,b)=>a.name.localeCompare(b.name));
 drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
-
 if (query && matched.length === 1) {
 drop.value = matched[0].id;
 }
-
 if(drop.value) { loadPtParticipantsCopy(); }
 else {
 document.getElementById('pt-candidates-inputs-copy').innerHTML = '';
@@ -1309,7 +1241,6 @@ document.getElementById('pt-stage-badge-copy').innerText = '';
 document.getElementById('pt-topic-copy').value = '';
 }
 }
-
 window.loadPtParticipants = function() {
 const progId = document.getElementById('pt-prog-select').value;
 const targetProg = window.appState.programs.find(p => p.id === progId);
@@ -1334,7 +1265,6 @@ html += `
 });
 container.innerHTML = html;
 }
-
 window.loadPtParticipantsCopy = function() {
 const progId = document.getElementById('pt-prog-select-copy').value;
 const targetProg = window.appState.programs.find(p => p.id === progId);
@@ -1362,7 +1292,6 @@ html += `
 });
 container.innerHTML = html;
 }
-
 window.savePointroomEntry = function(e) {
 e.preventDefault();
 const progId = document.getElementById('pt-prog-select').value;
@@ -1386,7 +1315,6 @@ renderPtList();
 const ptLogSearch = document.getElementById('pt-logs-search');
 if(ptLogSearch) renderPtList();
 }
-
 window.savePointroomCopyEntry = function(e) {
 e.preventDefault();
 const progId = document.getElementById('pt-prog-select-copy').value;
@@ -1417,7 +1345,6 @@ const ptSavedCodeSearch = document.getElementById('pt-saved-code-search');
 if(ptSavedCodeSearch) renderCodeFormsList();
 renderEjActiveProgram();
 }
-
 const PUBLIC_PANEL_SCHEMA = [
 { key:'settings', panel:'panel-settings', name:'Settings' },
 { key:'control_panel', panel:'panel-control-panel', name:'Control Deck' },
@@ -1431,7 +1358,6 @@ const PUBLIC_PANEL_SCHEMA = [
 { key:'protection', panel:'panel-protection', name:'Security Vault' },
 { key:'modify', panel:'panel-modify', name:'Layout Studio' }
 ];
-
 function ensurePublicAccessState() {
 if(!window.appState.publicAccess || typeof window.appState.publicAccess !== 'object') window.appState.publicAccess = {panels:{}};
 if(!window.appState.publicAccess.panels || typeof window.appState.publicAccess.panels !== 'object') window.appState.publicAccess.panels = {};
@@ -1442,13 +1368,11 @@ else if(!old || typeof old !== 'object') window.appState.publicAccess.panels[ite
 else window.appState.publicAccess.panels[item.key] = { register: old.register === true, result: old.result === true };
 });
 }
-
 function isPublicPanelAllowed(key, phase) {
 ensurePublicAccessState();
 const access = window.appState.publicAccess.panels[key];
 return !!(access && access[phase === 'register' ? 'register' : 'result']);
 }
-
 window.savePublicAccessSettings = function() {
 ensurePublicAccessState();
 const panels = {};
@@ -1463,7 +1387,6 @@ saveKey('publicAccess', window.appState.publicAccess);
 render3DotMenu();
 alert('Public Main Login access settings saved.');
 }
-
 function renderLayoutPublicAccessControls() {
 ensurePublicAccessState();
 const p = document.getElementById('layout-public-panels');
@@ -1477,7 +1400,6 @@ return `<div data-public-panel-key="${x.key}" style="display:grid; grid-template
 </div>`;
 }).join('') + `<button class="btn btn-success btn-sm" style="margin-top:4px;" onclick="savePublicAccessSettings()"><i class="fa-solid fa-unlock-keyhole"></i> Save Public Access</button>`;
 }
-
 window.render3DotMenu = function() {
 const menuContainer = document.getElementById('mainDropdown');
 if(!menuContainer) return;
@@ -1510,7 +1432,6 @@ html += `
 }
 menuContainer.innerHTML = html;
 }
-
 window.interceptRoute = function(panelId, key) {
 document.getElementById("mainDropdown").classList.remove("show");
 if(!key || !window.appState.subLocks[key]) {
@@ -1522,7 +1443,6 @@ document.getElementById('gk-pass-field').value = '';
 document.getElementById('gk-title').innerText = `Access Security Code Required`;
 document.getElementById('gatekeeper-modal-overlay').style.display = 'flex';
 }
-
 window.commitGatekeeperVerification = function() {
 const fieldVal = document.getElementById('gk-pass-field').value;
 const targetKey = window.gatekeeperTargetPanel.lockKey;
@@ -1533,7 +1453,6 @@ showPanel(window.gatekeeperTargetPanel.id);
 alert("Incorrect Security Code.");
 }
 }
-
 window.closeGatekeeper = function() { document.getElementById('gatekeeper-modal-overlay').style.display = 'none'; }
 window.toggleLaunchSection = function(bodyId, headerEl) {
 const body = document.getElementById(bodyId);
@@ -1543,7 +1462,6 @@ body.style.display = opening ? 'block' : 'none';
 const icon = headerEl ? headerEl.querySelector('i') : null;
 if(icon) icon.className = opening ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down';
 }
-
 window.toggleDropdown = function() { document.getElementById("mainDropdown").classList.toggle("show"); }
 window.onclick = (e) => { 
 if (!e.target.closest('.menu-btn-container')) {
@@ -1551,7 +1469,6 @@ const md = document.getElementById("mainDropdown");
 if(md) md.classList.remove("show"); 
 }
 };
-
 window.openPublicPanel = function(panelId) {
 ensurePublicAccessState();
 const item = PUBLIC_PANEL_SCHEMA.find(x => x.panel === panelId);
@@ -1560,7 +1477,6 @@ if(!item || !isPublicPanelAllowed(item.key, phase)) { alert('This panel is not e
 document.getElementById('mainDropdown').classList.remove('show');
 showPanel(panelId);
 }
-
 window.showPanel = function(panelId) {
 document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
 const p = document.getElementById(panelId);
@@ -1574,13 +1490,11 @@ if(panelId === 'panel-pointroom-copy') renderCodeFormsList();
 }
 }
 }
-
 window.openSection = function(secId) { showPanel(secId); }
 window.navHome = function() { 
 renderHomePhase(); 
 showPanel('panel-home'); 
 }
-
 window.addEventListener('popstate', function(event) {
 if(event.state && event.state.panel && event.state.panel !== 'panel-home') {
 document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
@@ -1594,18 +1508,15 @@ document.getElementById('panel-home').classList.add('active-panel');
 });
 history.replaceState({ panel: 'panel-home' }, "", window.location.pathname);
 scheduleAppRender(true);
-
 window.toggleAccordion = function(boxId) {
 const el = document.getElementById(boxId); 
 if(el) el.classList.toggle('show');
 }
-
 window.openLoginModal = function() {
 document.getElementById('modal-overlay').style.display = 'flex';
 syncMainLoginSetupUI();
 }
 window.closeModal = function() { document.getElementById('modal-overlay').style.display = 'none'; }
-
 function syncMainLoginSetupUI() {
 const hasCreds = !!(window.appState.mainCreds && window.appState.mainCreds.user && window.appState.mainCreds.pass);
 const setupBtn = document.getElementById('first-admin-setup-btn');
@@ -1613,12 +1524,10 @@ const loginBtn = document.getElementById('main-login-submit');
 if(setupBtn) setupBtn.style.display = hasCreds ? 'none' : 'block';
 if(loginBtn) loginBtn.innerText = hasCreds ? 'Sign In' : 'Sign In (Credentials Not Set)';
 }
-
 window.openFirstAdminSetup = function() {
 document.getElementById('first-admin-setup').style.display = 'block';
 document.getElementById('first-admin-user').focus();
 }
-
 window.saveFirstAdminSetup = function() {
 const u = document.getElementById('first-admin-user').value.trim();
 const p = document.getElementById('first-admin-pass').value;
@@ -1635,7 +1544,6 @@ document.getElementById('main-user-input').value = u;
 document.getElementById('main-pass-input').value = '';
 syncMainLoginSetupUI();
 }
-
 window.handleMainLogin = function(e) {
 e.preventDefault();
 const u = document.getElementById('main-user-input').value.trim();
@@ -1652,9 +1560,7 @@ closeModal(); render3DotMenu();
 showPanel('panel-control-panel');
 } else { alert("Invalid Credentials!"); }
 }
-
 window.logoutMain = function() { window.isMainLoggedIn = false; render3DotMenu(); navHome(); }
-
 window.triggerCustomPrint = function(targetId) {
 const target = document.getElementById(targetId);
 if(!target) return;
@@ -1699,7 +1605,6 @@ setTimeout(restoreAfterPrint, 1500);
 });
 });
 }
-
 function renderEjActiveProgram() {
 const activeProgId = window.appState.activeEjProgId;
 renderEjSubmittedMarks();
@@ -1742,8 +1647,6 @@ html += `
 });
 if(container) container.innerHTML = html;
 }
-
-
 window.toggleJudgeMarkVisibility = function(button) {
 const wrap = button ? button.closest('.judge-mark-entry') : null;
 const input = wrap ? wrap.querySelector('.ej-score-field') : null;
@@ -1757,13 +1660,11 @@ input.type = 'password';
 if(icon) icon.className = 'fa-solid fa-eye';
 }
 };
-
 window.saveEjMarks = function() {
 const activeProgId = window.appState.activeEjProgId;
 if(!activeProgId) { alert("No active program to submit marks for!"); return; }
 const scoreFields = document.querySelectorAll('.ej-score-field');
 if(!scoreFields.length) { alert("No marks found to submit."); return; }
-
 scoreFields.forEach(f => {
 const team = f.getAttribute('data-team');
 const student = f.getAttribute('data-student');
@@ -1783,14 +1684,12 @@ codeLetter: f.getAttribute('data-code') || ''
 }
 });
 saveKey('points', window.appState.points);
-
 if(!Array.isArray(window.appState.judgeSubmissions)) window.appState.judgeSubmissions = [];
 const activeProg = window.appState.programs.find(p => p.id === activeProgId);
 const submittedMarks = Array.from(scoreFields).map(f => ({
 codeLetter: f.getAttribute('data-code') || '',
 score: parseFloat(f.value) || 0
 }));
-
 // One saved submission per program: first submit creates it; later submits update it.
 const existingSubmissionIndex = window.appState.judgeSubmissions.findIndex(s => s.progId === activeProgId);
 const isChange = existingSubmissionIndex !== -1;
@@ -1802,7 +1701,6 @@ category: activeProg ? activeProg.cat : '',
 submittedAt: new Date().toISOString(),
 marks: submittedMarks
 };
-
 if(isChange) {
 window.appState.judgeSubmissions[existingSubmissionIndex] = submissionData;
 } else {
@@ -1810,17 +1708,14 @@ window.appState.judgeSubmissions.unshift(submissionData);
 }
 window.appState.judgeSubmissions = window.appState.judgeSubmissions.slice(0, 50);
 saveKey('judgeSubmissions', window.appState.judgeSubmissions);
-
 // Do not show submitted-mark history below the Judge Portal.
 const submittedBox = document.getElementById('ej-submitted-list');
 if(submittedBox) submittedBox.innerHTML = '';
-
 alert(isChange ? "Changes submitted successfully!" : "Marks submitted successfully!");
 renderPtList();
 renderJudgeLeaderboard();
 renderStatesDashboard();
 }
-
 function renderEjSubmittedMarks() {
 const box = document.getElementById('ej-submitted-list');
 if(!box) return;
@@ -1842,7 +1737,6 @@ return `<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-c
 </div>`;
 }).join('');
 }
-
 let ejTimerInterval = null;
 let ejStartTime = 0;
 let ejElapsedTime = 0;
@@ -1850,7 +1744,6 @@ let ejTimerDurationMs = 0;
 let ejTimerRemainingMs = 0;
 let ejTimerCountdownMode = false;
 let ejTimerLastTick = 0;
-
 function playLoudAlarmSound() {
 try {
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1873,7 +1766,6 @@ playBeep(1200, now + (i * 0.25) + 0.1, 0.12);
 }
 } catch(e) { console.error("Audio Alarm Error:", e); }
 }
-
 function formatEjTimer(ms) {
 ms = Math.max(0, Math.round(ms));
 const hrs = String(Math.floor(ms / 3600000)).padStart(2, '0');
@@ -1882,7 +1774,6 @@ const secs = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0');
 const rem = String(ms % 1000).padStart(3, '0');
 return `${hrs}:${mins}:${secs}:${rem}`;
 }
-
 window.updateEjTimerDisplay = function() {
 let totalMs;
 if(ejTimerCountdownMode) {
@@ -1895,7 +1786,6 @@ if(ejTimerInterval) totalMs += Date.now() - ejStartTime;
 const timerEl = document.getElementById('ej-timer-display');
 if(timerEl) timerEl.innerText = formatEjTimer(totalMs);
 }
-
 window.setEjTimer = function() {
 const mins = Math.max(0, parseInt(document.getElementById('ej-timer-minutes')?.value || 0, 10) || 0);
 const secs = Math.min(59, Math.max(0, parseInt(document.getElementById('ej-timer-seconds')?.value || 0, 10) || 0));
@@ -1908,7 +1798,6 @@ const status = document.getElementById('ej-timer-status');
 if(status) status.innerText = ejTimerCountdownMode ? `Countdown set: ${formatEjTimer(ejTimerDurationMs)}` : 'Stopwatch mode';
 updateEjTimerDisplay();
 }
-
 window.addEjTimerTime = function() {
 const mins = Math.max(0, parseInt(document.getElementById('ej-timer-minutes')?.value || 0, 10) || 0);
 const secs = Math.min(59, Math.max(0, parseInt(document.getElementById('ej-timer-seconds')?.value || 0, 10) || 0));
@@ -1926,7 +1815,6 @@ const status = document.getElementById('ej-timer-status');
 if(status) status.innerText = `Added ${formatEjTimer(addMs)} to timer`;
 updateEjTimerDisplay();
 }
-
 window.startEjTimer = function() {
 if(ejTimerInterval) return;
 if(ejTimerCountdownMode && ejTimerRemainingMs <= 0) {
@@ -1954,7 +1842,6 @@ ejStartTime = Date.now();
 ejTimerInterval = setInterval(updateEjTimerDisplay, 30);
 }
 }
-
 window.pauseEjTimer = function() {
 if(!ejTimerInterval) return;
 if(ejTimerCountdownMode) {
@@ -1967,7 +1854,6 @@ updateEjTimerDisplay();
 const status = document.getElementById('ej-timer-status');
 if(status) status.innerText = 'Paused';
 }
-
 window.resetEjTimer = function() {
 if(ejTimerInterval) clearInterval(ejTimerInterval);
 ejTimerInterval = null;
@@ -1978,17 +1864,14 @@ const status = document.getElementById('ej-timer-status');
 if(status) status.innerText = ejTimerCountdownMode ? 'Timer reset to set time' : 'Reset';
 updateEjTimerDisplay();
 }
-
 function renderCodeFormsList() {
 const container = document.getElementById('box-code-forms-content');
 if(!container) return;
 const searchInput = document.getElementById('pt-saved-code-search');
 const searchQ = searchInput ? searchInput.value.toLowerCase().trim() : '';
-
 let codedProgs = [...new Set((window.appState.points || [])
 .filter(pt => pt.codeLetter && pt.codeLetter.trim() !== '')
 .map(pt => pt.progId))];
-
 if(searchQ) {
 codedProgs = codedProgs.filter(pid => {
 const prog = (window.appState.programs || []).find(p => p.id === pid);
@@ -2001,7 +1884,6 @@ const detailText = pts.map(pt =>
 ).join(' ').toLowerCase();
 return `${progText} ${detailText}`.includes(searchQ);
 });
-
 codedProgs.sort((a,b) => {
 const pa = (window.appState.programs || []).find(p => p.id === a);
 const pb = (window.appState.programs || []).find(p => p.id === b);
@@ -2020,12 +1902,10 @@ const pb = (window.appState.programs || []).find(p => p.id === b);
 return `${pa?.name || ''}`.localeCompare(`${pb?.name || ''}`);
 });
 }
-
 if(codedProgs.length === 0) {
 container.innerHTML = '<p style="padding:10px 0; color:var(--text-sub);">No code forms saved matching search query.</p>';
 return;
 }
-
 container.innerHTML = codedProgs.map(pid => {
 const prog = (window.appState.programs || []).find(p => p.id === pid) || { name:'Unknown Program', cat:'N/A', topic:'' };
 const subPts = (window.appState.points || []).filter(pt => pt.progId === pid && pt.codeLetter && pt.codeLetter.trim() !== '');
@@ -2047,7 +1927,6 @@ ${subPts.map(s => `<span style="display:inline-block; margin-right:12px; margin-
 `;
 }).join('');
 }
-
 window.loadCodeFormToEdit = function(cat, progId) {
 document.getElementById('pt-cat-select-copy').value = cat;
 populatePtProgsCopy();
@@ -2055,7 +1934,6 @@ document.getElementById('pt-prog-select-copy').value = progId;
 loadPtParticipantsCopy();
 window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
 function syncProtectionFields() {
 const container = document.getElementById('sub-panel-pass-managers-container');
 if(!container) return;
@@ -2085,13 +1963,11 @@ return `
 `;
 }).join('');
 }
-
 window.updateSubLockKey = function(key) {
 window.appState.subLocks[key] = document.getElementById(`pass-field-input-${key}`).value.trim();
 saveKey('subLocks', window.appState.subLocks);
 alert("Lock Code Saved.");
 }
-
 function syncModifyConfigInputs() {
 const vis = window.appState.visuals;
 const ft = window.appState.footer || {};
@@ -2103,15 +1979,12 @@ document.getElementById('mod-banner-color').value = isDark ? (vis.bannerColorDar
 document.getElementById('mod-title-color').value = isDark ? (vis.titleColorDark || '#ffffff') : (vis.titleColorLight || '#0f172a');
 if(document.getElementById('mod-font-family')) document.getElementById('mod-font-family').value = vis.fontFamily || "'Poppins', sans-serif";
 if(document.getElementById('mod-header-align')) document.getElementById('mod-header-align').value = vis.headerAlign || 'center';
-
-if(document.getElementById('mod-ft-text')) document.getElementById('mod-ft-text').value = ft.text || '© 2026 BAHJA Media . All rights reserved.';
 if(document.getElementById('mod-ft-bg')) document.getElementById('mod-ft-bg').value = ft.bg || (isDark ? '#111315' : '#ffffff');
 if(document.getElementById('mod-ft-text-color')) document.getElementById('mod-ft-text-color').value = ft.textColor || (isDark ? '#94a3b8' : '#475569');
 if(document.getElementById('mod-ft-opacity')) document.getElementById('mod-ft-opacity').value = ft.opacity !== undefined ? ft.opacity : 100;
 if(document.getElementById('mod-ft-size')) document.getElementById('mod-ft-size').value = ft.fontSize || 0.85;
 if(document.getElementById('mod-ft-transparent')) document.getElementById('mod-ft-transparent').checked = ft.transparentBg === true;
 }
-
 window.liveUpdateVisuals = function() {
 const bTxt = document.getElementById('txt-welcome-banner');
 const mTitle = document.getElementById('txt-main-title');
@@ -2132,7 +2005,6 @@ mTitle.innerText = mt.value;
 mTitle.style.color = tc.value;
 }
 }
-
 window.saveVisualLayoutState = function() {
 const isDark = (window.appState.theme || 'dark') === 'dark';
 const bColor = document.getElementById('mod-banner-color').value;
@@ -2141,7 +2013,6 @@ window.appState.visuals.bannerText = document.getElementById('mod-banner-text').
 window.appState.visuals.titleText = document.getElementById('mod-title-text').value;
 window.appState.visuals.fontFamily = document.getElementById('mod-font-family').value;
 window.appState.visuals.headerAlign = document.getElementById('mod-header-align').value;
-
 if(isDark) {
 window.appState.visuals.bannerColorDark = bColor;
 window.appState.visuals.titleColorDark = tColor;
@@ -2149,16 +2020,14 @@ window.appState.visuals.titleColorDark = tColor;
 window.appState.visuals.bannerColorLight = bColor;
 window.appState.visuals.titleColorLight = tColor;
 }
-
 window.appState.footer = {
-text: document.getElementById('mod-ft-text').value,
+text: '© 2026 BAHJA Media . All rights reserved.',
 bg: document.getElementById('mod-ft-bg').value,
 textColor: document.getElementById('mod-ft-text-color').value,
 opacity: parseInt(document.getElementById('mod-ft-opacity').value) || 100,
 fontSize: parseFloat(document.getElementById('mod-ft-size').value) || 0.85,
 transparentBg: document.getElementById('mod-ft-transparent').checked
 };
-
 saveKey('visuals', window.appState.visuals);
 saveKey('footer', window.appState.footer);
 applyVisualCustomizations();
@@ -2166,18 +2035,15 @@ applyFooterVisuals();
 alert("Visual & Footer Layout Saved."); 
 navHome();
 }
-
 window.saveMaxLimitMaster = function() {
 window.appState.maxProgLimit = parseInt(document.getElementById('m-max-limit-input').value) || 3;
 saveKey('maxProgLimit', window.appState.maxProgLimit);
 alert("Limit saved.");
 }
-
 window.togglePhaseControl = function(selectedPhase) {
 document.getElementById('phase-reg-radio').checked = selectedPhase === 'register';
 document.getElementById('phase-res-radio').checked = selectedPhase === 'result';
 }
-
 window.applyPhaseSettings = async function(e) {
 e.preventDefault();
 const selectedPhase = document.querySelector('input[name="phase-toggle"]:checked').value;
@@ -2185,18 +2051,15 @@ window.appState.phase = selectedPhase;
 localStorage.setItem('bahja_current_phase', selectedPhase);
 window.appState.logoPos = document.getElementById('sys-logo-pos').value;
 window.appState.logoSize = document.getElementById('sys-logo-size').value;
-
 const logoF = document.getElementById('sys-logo-input').files[0];
 if(logoF) {
 window.appState.logoUrl = await compressImage(logoF, 500, 0.8);
 }
-
 saveData(); 
 applyLogoView();
 alert("System Configurations saved!"); 
 navHome();
 }
-
 window.clearAllDataSystem = function() {
 if(!confirm("Clear all system data?")) return;
 const preservedLogo = {
@@ -2220,7 +2083,6 @@ render3DotMenu();
 navHome();
 alert("System data cleared.");
 }
-
 window.renderHomePhase = function() {
 const regEl = document.getElementById('home-phase-register');
 const resEl = document.getElementById('home-phase-result');
@@ -2242,7 +2104,6 @@ applySectionVisibilityUI();
 renderResultPhaseFeeds();
 }
 }
-
 function applySectionVisibilityUI() {
 const v = window.appState.visibilities || {};
 for(let key in v) {
@@ -2250,7 +2111,6 @@ const btn = document.getElementById(`pill-sec-${key}`);
 if(btn) btn.style.display = v[key] ? 'flex' : 'none';
 }
 }
-
 window.updateSectionVisibilities = function() {
 window.appState.visibilities = {
 'team-states': document.getElementById('toggle-vis-team-states').checked,
@@ -2262,7 +2122,6 @@ window.appState.visibilities = {
 saveKey('visibilities', window.appState.visibilities);
 applySectionVisibilityUI();
 }
-
 window.handlePartLogin = function(e) {
 e.preventDefault();
 const u = document.getElementById('part-user').value.trim();
@@ -2276,7 +2135,6 @@ document.getElementById('part-active-team').innerText = u;
 renderTeamStudentsList();
 } else alert("Invalid Credentials!");
 }
-
 window.addTeamParticipant = function(e) {
 e.preventDefault();
 const cat = document.getElementById('part-cat').value;
@@ -2286,7 +2144,6 @@ saveKey('students', window.appState.students);
 document.getElementById('part-name').value = ''; 
 renderTeamStudentsList();
 }
-
 window.renderTeamStudentsList = function() {
 const filtered = window.appState.students.filter(s => s.team === window.activePartTeam);
 document.getElementById('team-students-list').innerHTML = filtered.map(s => `
@@ -2296,13 +2153,11 @@ document.getElementById('team-students-list').innerHTML = filtered.map(s => `
 </div>
 `).join('') || '<p>No students recorded.</p>';
 }
-
 window.deleteStudent = function(id) {
 window.appState.students = window.appState.students.filter(s => s.id !== id); 
 saveKey('students', window.appState.students);
 renderTeamStudentsList();
 }
-
 window.handleTeamLogin = function(e) {
 e.preventDefault();
 const u = document.getElementById('login-team-user').value.trim();
@@ -2310,9 +2165,7 @@ const p = document.getElementById('login-team-pass').value.trim();
 const found = window.appState.teams.find(t => t.user === u && t.pass === p);
 if(found) { window.loggedTeamUser = u; renderHomePhase(); } else alert("Invalid Credentials");
 }
-
 window.logoutTeam = function() { window.loggedTeamUser = null; renderHomePhase(); }
-
 window.loadCategoryPrograms = function() {
 const cat = document.getElementById('reg-cat-select').value;
 const container = document.getElementById('category-programs-container');
@@ -2342,7 +2195,6 @@ return `
 `;
 }).join('');
 }
-
 window.saveRegistrationItem = function(progId, cat) {
 if(!window.appState.portalOpen) { alert("Registration Locked!"); return; }
 const fields = document.querySelectorAll(`.prog-input-${progId}`);
@@ -2361,15 +2213,12 @@ if(names.length > 0) window.appState.registrations.push({ team: window.loggedTea
 saveKey('registrations', window.appState.registrations);
 alert("Registration updated.");
 }
-
 function renderPtList() {
 const containerContent = document.getElementById('box-pt-list-content');
 if(!containerContent) return;
 const searchInput = document.getElementById('pt-logs-search');
 const searchQ = searchInput ? searchInput.value.toLowerCase().trim() : '';
-
 let distinctProgs = [...new Set((window.appState.points || []).map(p => p.progId))];
-
 if(searchQ) {
 distinctProgs = distinctProgs.filter(pid => {
 const prog = (window.appState.programs || []).find(p => p.id === pid);
@@ -2380,7 +2229,6 @@ const detailText = pts.map(pt =>
 ).join(' ').toLowerCase();
 return `${progText} ${detailText}`.includes(searchQ);
 });
-
 distinctProgs.sort((a, b) => {
 const progA = (window.appState.programs || []).find(p => p.id === a);
 const progB = (window.appState.programs || []).find(p => p.id === b);
@@ -2399,12 +2247,10 @@ const pb = (window.appState.programs || []).find(p => p.id === b);
 return `${pa?.name || ''}`.localeCompare(`${pb?.name || ''}`);
 });
 }
-
 if(distinctProgs.length === 0) {
 containerContent.innerHTML = '<p style="padding:8px 0; color:var(--text-sub);">No marks processed matching search query.</p>';
 return;
 }
-
 const htmlContent = distinctProgs.map(pid => {
 const prog = (window.appState.programs || []).find(p => p.id === pid) || { name:'Unknown', cat:'N/A' };
 const subPts = (window.appState.points || []).filter(pt => pt.progId === pid).sort((a,b)=>(Number(b.score)||0)-(Number(a.score)||0));
@@ -2425,7 +2271,6 @@ ${subPts.map(s => `${s.student} (${s.team}): <strong>${s.score}</strong>`).join(
 }).join('');
 containerContent.innerHTML = htmlContent;
 }
-
 window.printIndividualPointRecord = function(progId) {
 const prog = window.appState.programs.find(p => p.id === progId) || { name: 'Program', cat: 'N/A' };
 const subPts = window.appState.points.filter(pt => pt.progId === progId).sort((a,b)=>b.score - a.score);
@@ -2443,7 +2288,6 @@ ${subPts.map((s, idx) => `<tr><td>${idx+1}</td><td>${s.student}</td><td>${s.team
 `;
 triggerCustomPrint('pt-print-area');
 }
-
 window.printAllPointRecords = function() {
 const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
 const target = document.getElementById('pt-print-area');
@@ -2462,7 +2306,6 @@ html += `
 target.innerHTML = html;
 triggerCustomPrint('pt-print-area');
 }
-
 window.deletePtGroup = function(progId) {
 if(confirm("Delete records?")) {
 window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
@@ -2470,7 +2313,6 @@ saveKey('points', window.appState.points);
 renderPtList();
 }
 }
-
 window.renderJudgeLeaderboard = function() {
 const tbody = document.getElementById('judge-leaderboard-body');
 if(!tbody) return;
@@ -2495,7 +2337,6 @@ tbody.innerHTML = sorted.map(s => `
 </tr>
 `).join('') || '<tr><td colspan="4">No scores accumulated.</td></tr>';
 }
-
 window.viewCandidateBreakdown = function(sName, team) {
 const studentPts = window.appState.points.filter(pt => pt.student === sName && pt.team === team);
 let content = '<table style="width:100%; border-collapse:collapse;"><thead><tr><th>Program</th><th>Score</th></tr></thead><tbody>';
@@ -2510,7 +2351,6 @@ document.getElementById('det-modal-title').innerText = `${sName} (${team}) - Pro
 document.getElementById('det-modal-content').innerHTML = content;
 document.getElementById('detail-modal-overlay').style.display = 'flex';
 }
-
 window.renderStatesDashboard = function() {
 const tbody = document.getElementById('states-table-body');
 if(!tbody) return;
@@ -2531,7 +2371,6 @@ if(teamDrop && teamDrop.children.length === 1) {
 teamDrop.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
 }
 }
-
 window.viewTeamBreakdown = function(tName) {
 const teamPts = window.appState.points.filter(pt => pt.team === tName);
 let content = '<table style="width:100%; border-collapse:collapse;"><thead><tr><th>Student</th><th>Program</th><th>Score</th></tr></thead><tbody>';
@@ -2546,7 +2385,6 @@ document.getElementById('det-modal-title').innerText = `Team Breakdown - ${tName
 document.getElementById('det-modal-content').innerHTML = content;
 document.getElementById('detail-modal-overlay').style.display = 'flex';
 }
-
 window.renderRankWinnersList = function() {
 const tbody = document.getElementById('rank-winners-body');
 if(!tbody) return;
@@ -2581,13 +2419,11 @@ tbody.innerHTML = allRows.map(row => `
 </tr>
 `).join('') || '<tr><td colspan="6">No winners matching position criteria.</td></tr>';
 }
-
 window.toggleRegLock = function() { 
 window.appState.portalOpen = !window.appState.portalOpen; 
 saveKey('portalOpen', window.appState.portalOpen); 
 syncControlPanelViews();
 }
-
 window.addTeamMaster = function(e) {
 e.preventDefault();
 window.appState.teams.push({ user: document.getElementById('m-team-user').value.trim(), pass: document.getElementById('m-team-pass').value.trim() });
@@ -2595,13 +2431,11 @@ saveKey('teams', window.appState.teams);
 syncControlPanelViews();
 e.target.reset();
 }
-
 window.deleteTeamMaster = function(idx) { 
 window.appState.teams.splice(idx, 1); 
 saveKey('teams', window.appState.teams);
 syncControlPanelViews();
 }
-
 window.addProgramMaster = function(e) {
 e.preventDefault();
 window.appState.programs.push({
@@ -2616,13 +2450,11 @@ saveKey('programs', window.appState.programs);
 syncControlPanelViews();
 e.target.reset();
 }
-
 window.deleteProgramMaster = function(id) { 
 window.appState.programs = window.appState.programs.filter(p => p.id !== id); 
 saveKey('programs', window.appState.programs);
 syncControlPanelViews();
 }
-
 window.uploadTeamStatusPoster = async function(e) {
 e.preventDefault();
 const btn = document.getElementById('btn-up-status');
@@ -2644,7 +2476,6 @@ btn.disabled = false;
 e.target.reset();
 }
 }
-
 window.deleteStatusItem = function(id) {
 if(!window.appState.teamStatusList) return;
 window.appState.teamStatusList = window.appState.teamStatusList.filter(item => item.id !== id);
@@ -2654,14 +2485,12 @@ saveKey('teamStatusUrl', window.appState.teamStatusUrl);
 syncControlPanelViews();
 renderResultPhaseFeeds();
 }
-
 window.populateResProgDropdown = function() {
 const cat = document.getElementById('res-upload-cat').value;
 const drop = document.getElementById('res-upload-prog');
 const matched = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
 drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
 }
-
 window.uploadProgramResult = async function(e) {
 e.preventDefault();
 const btn = document.getElementById('btn-up-res');
@@ -2682,7 +2511,6 @@ btn.innerText = "Upload Result";
 btn.disabled = false;
 }
 }
-
 window.setResultPublished = function(progId, shouldPublish) {
 const item = (window.appState.results || []).find(r => r.progId === progId);
 if(!item) return;
@@ -2692,7 +2520,6 @@ renderPublishPanel();
 filterResultPrograms();
 syncControlPanelViews();
 }
-
 window.setStatusPublished = function(id, shouldPublish) {
 const item = (window.appState.teamStatusList || []).find(r => r.id === id);
 if(!item) return;
@@ -2702,7 +2529,6 @@ renderPublishPanel();
 renderResultPhaseFeeds();
 syncControlPanelViews();
 }
-
 window.renderPublishPanel = function() {
 const resBox = document.getElementById('publish-results-list');
 if(resBox) {
@@ -2742,14 +2568,12 @@ return `
 }).join('') : '<div style="color:var(--text-sub); text-align:center; padding:12px;">No uploaded posters yet.</div>';
 }
 }
-
 window.deleteResultMaster = function(progId) { 
 window.appState.results = window.appState.results.filter(r => r.progId !== progId); 
 saveKey('results', window.appState.results);
 syncControlPanelViews();
 filterResultPrograms();
 }
-
 window.toggleUpdateVideoUrl = function() {
 const type = document.getElementById('up-type').value;
 const linkInput = document.getElementById('up-video-link');
@@ -2760,7 +2584,6 @@ linkInput.style.display = 'block'; linkInput.required = true; lblFile.innerText 
 linkInput.style.display = 'none'; linkInput.required = false; lblFile.innerText = "Choose Photo";
 }
 }
-
 window.uploadUpdateFeed = async function(e) {
 e.preventDefault();
 const btn = document.getElementById('btn-up-feed');
@@ -2787,14 +2610,12 @@ window.toggleUpdateVideoUrl();
 btn.innerText = "Upload & Publish"; btn.disabled = false; alert("Failed to upload media.");
 }
 }
-
 window.deleteUpdateMaster = function(id) { 
 window.appState.updates = window.appState.updates.filter(u => u.id !== id); 
 saveKey('updates', window.appState.updates);
 syncControlPanelViews();
 renderPinterestUpdates('all');
 }
-
 window.uploadStreamLinks = async function(e) {
 e.preventDefault();
 const btn = document.getElementById('btn-up-stream');
@@ -2815,7 +2636,6 @@ syncControlPanelViews();
 btn.innerText = "Add Stream"; btn.disabled = false; e.target.reset(); alert("Stream Added.");
 }
 }
-
 window.deleteStreamMaster = function(id, mode) {
 if(mode === 'live') {
 window.appState.livelinks = window.appState.livelinks.filter(l => l.id !== id); saveKey('livelinks', window.appState.livelinks);
@@ -2825,7 +2645,6 @@ window.appState.highlights = window.appState.highlights.filter(h => h.id !== id)
 syncControlPanelViews();
 renderResultPhaseFeeds();
 }
-
 function populateReportProgDropdown() {
 const cat = document.getElementById('rep-cat').value;
 const drop = document.getElementById('rep-prog');
@@ -2833,7 +2652,6 @@ if(!drop) return;
 const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
 drop.innerHTML = '<option value="">All Programs (A-Z)</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
 }
-
 function syncControlPanelViews() {
 const btn = document.getElementById('lock-reg-btn');
 if(btn) {
@@ -2911,7 +2729,6 @@ rTeam.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.
 }
 renderReportTable();
 }
-
 window.renderReportTable = function() {
 const fTeam = document.getElementById('rep-team') ? document.getElementById('rep-team').value : '';
 const fCat = document.getElementById('rep-cat') ? document.getElementById('rep-cat').value : '';
@@ -2940,7 +2757,6 @@ rows += `<tr>
 });
 tbody.innerHTML = rows || '<tr><td colspan="5" style="text-align:center;">No entries found.</td></tr>';
 }
-
 window.populateEsProgs = function() {
 const cat = document.getElementById('es-cat-select').value;
 const drop = document.getElementById('es-prog-select');
@@ -2948,7 +2764,6 @@ if(!drop) return;
 const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
 drop.innerHTML = '<option value="">All Programs</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
 };
-
 window.renderEntrySignTable = function() {
 const fCat = document.getElementById('es-cat-select') ? document.getElementById('es-cat-select').value : '';
 const fProg = document.getElementById('es-prog-select') ? document.getElementById('es-prog-select').value : '';
@@ -2982,7 +2797,6 @@ rows += '<tr>' +
 });
 tbody.innerHTML = rows || '<tr><td colspan="4" style="text-align:center;">No entries found.</td></tr>';
 };
-
 function renderResultPhaseFeeds() {
 const statusBox = document.getElementById('team-status-poster-box');
 if(statusBox) {
@@ -3025,7 +2839,6 @@ hlFeed.innerHTML = window.appState.highlights.map(h => `
 `).join('') || '<p style="grid-column: 1/-1;">No Highlights Cataloged.</p>';
 }
 }
-
 window.filterResultPrograms = function() {
 const catEl = document.getElementById('res-search-cat');
 const searchEl = document.getElementById('res-prog-search');
@@ -3033,9 +2846,7 @@ const container = document.getElementById('results-display-list');
 if(!container) return;
 const cat = catEl ? catEl.value : '';
 const searchQ = searchEl ? searchEl.value.toLowerCase().trim() : '';
-
 const sortedResults = [...(window.appState.results || [])].sort((a,b) => Number(a.number || 999999) - Number(b.number || 999999));
-
 const matchedResults = sortedResults.filter(r => r.published === true).filter(r => {
 const p = window.appState.programs.find(pr => pr.id === r.progId);
 if(!p) return false;
@@ -3047,7 +2858,6 @@ if(!matchProgName && !matchResultNum) return false;
 }
 return true;
 });
-
 container.innerHTML = matchedResults.map(r => {
 const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Program', cat: 'N/A' };
 return `
@@ -3062,7 +2872,6 @@ ${r.youtube ? `<div style="margin-top:6px;"><a href="${r.youtube}" target="_blan
 `;
 }).join('') || '<p style="text-align:center; color:var(--text-sub); margin-top:15px;">No published results matching filter.</p>';
 }
-
 window.toggleInlineResultView = function(progId, posterData) {
 const box = document.getElementById(`inline-res-box-${progId}`);
 const btn = document.getElementById(`btn-toggle-res-${progId}`);
@@ -3086,7 +2895,6 @@ btn.innerText = "Result View";
 btn.className = "btn btn-sm btn-success";
 }
 }
-
 window.renderPinterestUpdates = function(filterMode) {
 const feed = document.getElementById('live-updates-feed');
 if(!feed) return;
@@ -3101,7 +2909,6 @@ ${u.type === 'photo'
 </div>
 `).join('') || '<p style="grid-column: 1/-1;">No updates cataloged.</p>';
 }
-
 window.openMediaViewer = function(mediaUrl, type) {
 const container = document.getElementById('media-viewer-container');
 const dBtn = document.getElementById('btn-media-download');
@@ -3124,13 +2931,11 @@ shareMediaDirectly(mediaUrl, type);
 };
 document.getElementById('media-viewer-modal').style.display = 'flex';
 }
-
 window.closeMediaViewer = function() {
 const container = document.getElementById('media-viewer-container');
 container.innerHTML = '';
 document.getElementById('media-viewer-modal').style.display = 'none';
 }
-
 window.shareMediaDirectly = async function(mediaUrl, type) {
 try {
 if (navigator.share) {
@@ -3161,13 +2966,11 @@ alert("Link copied to clipboard!");
 console.log("Sharing cancelled or unsupported:", err);
 }
 }
-
 applyGlobalWebsiteTheme(window.appState.theme || 'dark');
 applyLogoView();
 applyVisualCustomizations();
 applyFooterVisuals();
 render3DotMenu();
-
 // Keep both submitted-list searches ready for instant filtering.
 document.addEventListener('DOMContentLoaded', function() {
 try {
@@ -3175,7 +2978,6 @@ renderPtList();
 renderCodeFormsList();
 } catch(e) { console.warn('Search list initialization:', e); }
 });
-
 </script>
 </body>
 </html>
