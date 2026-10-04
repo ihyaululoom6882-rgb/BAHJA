@@ -4,20 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-site-verification" content="K0YX288iRLa7GMBEpmHSKSX3m4PstPfpNqivkCpqQsU" />
-
 <!-- SEO Meta Tags -->
 <title>Bahija Fest | Official Fest Control & Registration Portal</title>
 <meta name="description" content="Official portal for Bahija Fest. Register for competitions, view event schedules, check scores, and track fest updates.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://ihyaululoom6882-rgb.github.io/BAHJA/v">
-
 <!-- Open Graph / Social Media Meta Tags -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Bahija Fest | Official Fest Control & Registration Portal">
 <meta property="og:description" content="Official portal for Bahija Fest. Register for competitions, view event schedules, check scores, and track fest updates.">
 <meta property="og:url" content="https://ihyaululoom6882-rgb.github.io/BAHJA/v">
 <meta property="og:image" content="https://ihyaululoom6882-rgb.github.io/BAHJA/v/logo.png">
-
 <link rel="icon" type="image/png" sizes="144x144" href="logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -215,14 +212,11 @@ max-height: 90vh; display: flex; flex-direction: column;
 font-size: 1.8rem; font-weight: 800; text-align: center; font-family: monospace;
 background: rgba(0, 0, 0, 0.1); padding: 10px; border-radius: 12px; margin: 10px 0; color: #d4af37; border: 1px solid var(--border-color);
 }
-
 .timer-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
 .judge-mark-entry { display:flex; align-items:center; gap:6px; width:100%; }
 .judge-mark-entry .ej-score-field { flex:1; min-width:0; }
 .judge-mark-eye { width:42px; min-width:42px; height:42px; border:1px solid var(--border-color); border-radius:10px; background:var(--input-bg); color:var(--text-sub); cursor:pointer; display:flex; align-items:center; justify-content:center; }
 .judge-mark-eye:hover { color:#d4af37; border-color:#d4af37; }
-
-
 /* MINIMAL CENTERED FOOTER */
 .site-footer {
 background-color: var(--footer-bg);
@@ -233,6 +227,91 @@ margin-top: auto;
 text-align: center;
 border-top: 1px solid var(--border-color);
 transition: all 0.3s ease;
+}
+
+/* STRICT PRINT STYLES - CLEAN CONTENT ONLY WITH TIMESTAMP */
+@media print {
+  @page {
+    size: auto;
+    margin: 15mm;
+  }
+  
+  /* Hide all UI elements, navigation, site headers, footers, control buttons */
+  body * {
+    visibility: hidden !important;
+  }
+  
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .corner-logo, .header-title, .menu-btn-container, .site-footer, 
+  .no-print, button, input, select, textarea, .dropdown-menu {
+    display: none !important;
+  }
+  
+  /* Make the target container and its children visible */
+  .print-target, .print-target * {
+    visibility: visible !important;
+  }
+  
+  .print-target {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  /* Force single log display when printing single entry */
+  .print-target.single-log-print .point-log-card {
+    display: block !important;
+    page-break-inside: avoid;
+  }
+  .print-target.single-log-print .point-log-card ~ .point-log-card {
+    display: none !important;
+  }
+
+  /* Table styling for crisp printout */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    color: #000000 !important;
+  }
+  
+  th, td {
+    border: 1px solid #000000 !important;
+    padding: 6px 10px !important;
+    color: #000000 !important;
+  }
+  
+  th {
+    background-color: #f0f0f0 !important;
+    font-weight: bold !important;
+  }
+
+  /* Header timestamp styling */
+  .print-header-meta {
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #000;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    font-size: 0.85rem !important;
+    color: #000 !important;
+    visibility: visible !important;
+  }
+  .print-header-meta * {
+    visibility: visible !important;
+  }
 }
 </style>
 </head>
@@ -304,13 +383,11 @@ transition: all 0.3s ease;
 </div>
 </div>
 </div>
-
 <div id="section-team-states" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Team Status</h3>
 <div id="team-status-poster-box" class="team-status-grid"></div>
 </div>
-
 <div id="section-results-view" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Program Results</h3>
@@ -327,7 +404,6 @@ transition: all 0.3s ease;
 </div>
 <div id="results-display-list"></div>
 </div>
-
 <div id="section-updates" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Updates & Gallery</h3>
@@ -338,19 +414,16 @@ transition: all 0.3s ease;
 </div>
 <div id="live-updates-feed" class="pinterest-masonry"></div>
 </div>
-
 <div id="section-livelink" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Live Streams</h3>
 <div id="livelink-feed" class="pinterest-masonry"></div>
 </div>
-
 <div id="section-highlights" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()" style="margin-bottom: 12px;"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-bottom: 12px;">Highlights</h3>
 <div id="highlights-feed" class="pinterest-masonry"></div>
 </div>
-
 <div id="panel-participants-entry" class="view-panel card">
 <button class="btn btn-warning btn-sm" onclick="navHome()"><i class="fa-solid fa-arrow-left"></i> Back</button>
 <h3 style="color: #d4af37; margin-top: 12px;">Add Team Participants</h3>
@@ -380,7 +453,6 @@ transition: all 0.3s ease;
 <div id="team-students-list" style="margin-top:15px;"></div>
 </div>
 </div>
-
 <!-- ENTRY JUDGE PANEL -->
 <div id="panel-entry-judge" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -426,7 +498,6 @@ transition: all 0.3s ease;
 <div id="ej-submitted-list" style="display:none;"></div>
 </div>
 </div>
-
 <!-- SETTINGS PANEL -->
 <div id="panel-settings" class="view-panel card">
 <h3 style="color: #d4af37; margin-bottom: 15px;">Settings</h3>
@@ -450,7 +521,6 @@ transition: all 0.3s ease;
 </select>
 </div>
 </div>
-
 <div class="collapsible-header" onclick="toggleAccordion('set-box-logo')">
 <span>Logo Placement Settings</span> <i class="fa-solid fa-chevron-down"></i>
 </div>
@@ -474,7 +544,6 @@ transition: all 0.3s ease;
 <input type="range" min="30" max="120" value="60" id="sys-logo-size" class="form-control" oninput="updateLogoStylesLocally()">
 </div>
 </div>
-
 <button type="submit" class="btn btn-block btn-success" style="margin-top:15px;"><i class="fa-solid fa-floppy-disk"></i> Save System Configurations</button>
 </form>
 <div id="logo-manage-box" style="margin-top:12px; display:none;">
@@ -483,7 +552,6 @@ transition: all 0.3s ease;
 <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
 <button class="btn btn-danger btn-block" onclick="clearAllDataSystem()">Clear All System Data</button>
 </div>
-
 <!-- POINTROOM PORTAL -->
 <div id="panel-pointroom" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -525,7 +593,6 @@ transition: all 0.3s ease;
 </div>
 <div id="pt-print-area" class="print-target" style="display:none;"></div>
 </div>
-
 <!-- CODE PORTAL -->
 <div id="panel-pointroom-copy" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -569,12 +636,11 @@ transition: all 0.3s ease;
 <div id="box-code-forms-content"></div>
 </div>
 </div>
-
 <!-- CANDIDATE STANDING -->
 <div id="panel-judge" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
 <h3>Candidate's Standing</h3>
-<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('judge-print-container')"><i class="fa-solid fa-print"></i> Print Leaderboard</button>
+<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('judge-print-container', 'Candidate Standing Leaderboard')"><i class="fa-solid fa-print"></i> Print Leaderboard</button>
 </div>
 <div id="judge-print-container" class="print-target">
 <div class="form-group no-print" style="margin-top:12px;">
@@ -593,12 +659,11 @@ transition: all 0.3s ease;
 </div>
 </div>
 </div>
-
 <!-- LEAD ZONE -->
 <div id="panel-states-control" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
 <h3>Lead Zone</h3>
-<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('states-print-container')"><i class="fa-solid fa-print"></i> Print Large Standings</button>
+<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('states-print-container', 'Team Standings Report')"><i class="fa-solid fa-print"></i> Print Large Standings</button>
 </div>
 <div id="states-print-container" class="print-target">
 <div class="table-responsive" style="margin-top:12px;">
@@ -611,7 +676,7 @@ transition: all 0.3s ease;
 <hr style="margin:20px 0; border:0; border-top:1px solid var(--border-color);">
 <div style="display:flex; justify-content:space-between; align-items:center;">
 <h4>Rank-wise Winners Filter</h4>
-<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('rank-print-container')"><i class="fa-solid fa-print"></i> Print Rank List</button>
+<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('rank-print-container', 'Rank-wise Winners Report')"><i class="fa-solid fa-print"></i> Print Rank List</button>
 </div>
 <div class="no-print" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
 <select id="rank-team-filter" class="form-control" onchange="renderRankWinnersList()"><option value="">All Teams</option></select>
@@ -630,12 +695,11 @@ transition: all 0.3s ease;
 </table>
 </div>
 </div>
-
 <!-- SIGN PORTAL -->
 <div id="panel-entry-sign" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
 <h3>Sign Portal</h3>
-<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('entry-sign-print-container')"><i class="fa-solid fa-print"></i> Print</button>
+<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('entry-sign-print-container', 'Entry Sign Sheet')"><i class="fa-solid fa-print"></i> Print</button>
 </div>
 <div class="form-group no-print" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
 <select id="es-cat-select" class="form-control" onchange="populateEsProgs(); renderEntrySignTable();">
@@ -660,7 +724,6 @@ transition: all 0.3s ease;
 </div>
 </div>
 </div>
-
 <!-- LAUNCH PAD -->
 <div id="panel-publish" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -687,7 +750,6 @@ transition: all 0.3s ease;
 </div>
 </div>
 </div>
-
 <!-- SECURITY VAULT -->
 <div id="panel-protection" class="view-panel card">
 <h3>Security Vault</h3>
@@ -711,12 +773,10 @@ transition: all 0.3s ease;
 <div id="sub-panel-pass-managers-container" style="margin-top:8px; display:flex; flex-direction:column; gap:10px;"></div>
 </div>
 </div>
-
 <!-- LAYOUT STUDIO -->
 <div id="panel-modify" class="view-panel card">
 <h3>Layout Studio</h3>
 <div style="margin-top:12px; display:flex; flex-direction:column; gap:12px;">
-
 <div class="collapsible-header" onclick="toggleAccordion('mod-box-header')">
 <span>1. Header & Title Styling</span> <i class="fa-solid fa-chevron-down"></i>
 </div>
@@ -738,41 +798,18 @@ transition: all 0.3s ease;
 <div class="form-group"><label>Banner Color</label><input type="color" id="mod-banner-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;"></div>
 <div class="form-group"><label>Title Color</label><input type="color" id="mod-title-color" class="form-control" onchange="liveUpdateVisuals()" style="height:40px;"></div>
 </div>
-
-<div class="collapsible-header" onclick="toggleAccordion('mod-box-footer')">
-<span>2. Footer Styling Controls</span> <i class="fa-solid fa-chevron-down"></i>
-</div>
-<div id="mod-box-footer" class="collapsible-box show" style="padding:10px 0;">
-<div class="form-group"><label>Footer Text Content</label><input type="text" id="mod-ft-text" class="form-control" value="© 2026 BAHJA Media . All rights reserved." oninput="liveUpdateFooterVisuals()"></div>
-<div class="form-group">
-<label><input type="checkbox" id="mod-ft-transparent" onchange="liveUpdateFooterVisuals()"> Remove / Transparent Background</label>
-</div>
-<div class="form-group"><label>Footer Background Color</label><input type="color" id="mod-ft-bg" class="form-control" value="#111315" onchange="liveUpdateFooterVisuals()" style="height:40px;"></div>
-<div class="form-group"><label>Footer Text Color</label><input type="color" id="mod-ft-text-color" class="form-control" value="#94a3b8" onchange="liveUpdateFooterVisuals()" style="height:40px;"></div>
-<div class="form-group">
-<label>Footer / Text Opacity: <span id="ft-opacity-val">100</span>%</label>
-<input type="range" min="10" max="100" value="100" id="mod-ft-opacity" class="form-control" oninput="liveUpdateFooterVisuals()">
-</div>
-<div class="form-group">
-<label>Footer Font Size (rem): <span id="ft-size-val">0.85</span>rem</label>
-<input type="range" min="0.6" max="1.3" step="0.05" value="0.85" id="mod-ft-size" class="form-control" oninput="liveUpdateFooterVisuals()">
-</div>
-</div>
-
 <div class="collapsible-header" onclick="toggleAccordion('mod-box-public')">
-<span>3. Public Access Controls</span> <i class="fa-solid fa-chevron-down"></i>
+<span>2. Public Access Controls</span> <i class="fa-solid fa-chevron-down"></i>
 </div>
-<div id="mod-box-public" class="collapsible-box" style="padding:10px 0;">
+<div id="mod-box-public" class="collapsible-box show" style="padding:10px 0;">
 <div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:12px; border-radius:12px;">
 <div style="font-size:0.7rem; color:var(--text-sub); margin-bottom:10px;">Select which Main Login menu panels can also be opened without Main Login.</div>
 <div id="layout-public-panels" style="display:flex; flex-direction:column; gap:6px;"></div>
 </div>
 </div>
-
 <button class="btn btn-success btn-block" style="margin-top:10px;" onclick="saveVisualLayoutState()"><i class="fa-solid fa-floppy-disk"></i> Save Appearance Layout</button>
 </div>
 </div>
-
 <!-- CONTROL DECK -->
 <div id="panel-control-panel" class="view-panel card">
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -817,7 +854,7 @@ transition: all 0.3s ease;
 <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:8px;">
 <div style="display:flex; justify-content:space-between; align-items:center;">
 <h4>Registration Report</h4>
-<button class="btn btn-warning btn-sm" onclick="triggerCustomPrint('print-exact-report-area')">Print Report Sheet</button>
+<button class="btn btn-warning btn-sm" onclick="triggerCustomPrint('print-exact-report-area', 'Registration Report Sheet')">Print Report Sheet</button>
 </div>
 <div class="no-print" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; margin-top:8px; margin-bottom:8px;">
 <select id="rep-team" class="form-control" onchange="renderReportTable()"><option value="">All Teams</option></select>
@@ -899,12 +936,10 @@ transition: all 0.3s ease;
 </div>
 </div>
 </div>
-
-<!-- CENTERED SIMPLE FOOTER -->
+<!-- CENTERED FIXED FOOTER -->
 <footer class="site-footer" id="site-footer-element">
 <p id="ft-display-text">&copy; 2026 BAHJA Media . All rights reserved.</p>
 </footer>
-
 <!-- MODALS -->
 <div id="modal-overlay" class="modal-overlay">
 <div id="modal-login" class="modal-box" style="text-align: center;">
@@ -925,7 +960,6 @@ transition: all 0.3s ease;
 </div>
 </div>
 </div>
-
 <div id="gatekeeper-modal-overlay" class="modal-overlay">
 <div class="modal-box">
 <h3 id="gk-title" style="color:#ef4444; margin-bottom:10px; font-size:1.1rem;">Security Lock Required</h3>
@@ -934,7 +968,6 @@ transition: all 0.3s ease;
 <button class="btn btn-block" style="margin-top:6px; background:transparent; border:1px solid var(--border-color); color:var(--text-main);" onclick="closeGatekeeper()">Cancel</button>
 </div>
 </div>
-
 <div id="detail-modal-overlay" class="modal-overlay" onclick="this.style.display='none'">
 <div class="modal-box" onclick="event.stopPropagation()">
 <h3 id="det-modal-title" style="color:#d4af37; margin-bottom:10px; font-size:1.1rem;"></h3>
@@ -942,7 +975,6 @@ transition: all 0.3s ease;
 <button class="btn btn-block" style="margin-top:10px;" onclick="document.getElementById('detail-modal-overlay').style.display='none'">Close</button>
 </div>
 </div>
-
 <div id="media-viewer-modal" class="modal-overlay" onclick="closeMediaViewer()">
 <div class="modal-box" onclick="event.stopPropagation()" style="max-width:550px; text-align:center;">
 <div id="media-viewer-container" style="max-height:60vh; overflow:hidden; border-radius:12px; margin-bottom:15px; display:flex; justify-content:center; align-items:center; background:#000;"></div>
@@ -953,7 +985,6 @@ transition: all 0.3s ease;
 <button class="btn btn-block" style="margin-top:10px; background:transparent; border:1px solid var(--border-color); color:var(--text-main);" onclick="closeMediaViewer()">Close</button>
 </div>
 </div>
-
 <script>
 (function() {
 try {
@@ -967,18 +998,16 @@ cached.subLocks = { settings:'', control_panel:'', publish:'', pointroom:'', ent
 cached.publicAccess = { panels:{}, ...(cached.publicAccess || {}) };
 cached.publicAccess.panels = { settings:{register:false,result:false},control_panel:{register:false,result:false},publish:{register:false,result:false},pointroom:{register:false,result:false},entry_judge:{register:false,result:false},judge:{register:false,result:false},states:{register:false,result:false},code_portal:{register:false,result:false},entry_sign:{register:false,result:false},protection:{register:false,result:false},modify:{register:false,result:false}, ...(cached.publicAccess.panels || {}) };
 if(!Array.isArray(cached.judgeSubmissions)) cached.judgeSubmissions = [];
-if(!cached.footer) cached.footer = { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textColor:'#94a3b8', opacity:100, fontSize:0.85, transparentBg: false };
+cached.footer = { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textColor:'#94a3b8', opacity:100, fontSize:0.85, transparentBg: false };
 localStorage.setItem('bahja_full_state', JSON.stringify(cached));
 window.appState = cached;
 }
 } catch(e) { console.error("Cache error: ", e); }
 window.addEventListener('DOMContentLoaded', () => {
-// Secondary list searches are independent: they only filter the already-saved lists.
 const ptLogsSearch = document.getElementById('pt-logs-search');
 if(ptLogsSearch) ptLogsSearch.addEventListener('input', () => renderPtList());
 const ptSavedCodeSearch = document.getElementById('pt-saved-code-search');
 if(ptSavedCodeSearch) ptSavedCodeSearch.addEventListener('input', () => renderCodeFormsList());
-
 if (window.appState && window.appState.visuals) {
 const vis = window.appState.visuals;
 if (vis.fontFamily) document.documentElement.style.setProperty('--main-font', vis.fontFamily);
@@ -1005,7 +1034,6 @@ logoEl.style.display = 'block';
 });
 })();
 </script>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -1021,37 +1049,6 @@ measurementId: "G-SX6NX5K314"
 };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
-function compressImage(file, maxWidth = 800, quality = 0.6) {
-return new Promise((resolve) => {
-if (!file.type.startsWith('image/')) {
-const reader = new FileReader();
-reader.onload = (e) => resolve(e.target.result);
-reader.readAsDataURL(file);
-return;
-}
-const reader = new FileReader();
-reader.onload = (event) => {
-const img = new Image();
-img.onload = () => {
-let width = img.width;
-let height = img.height;
-if (width > maxWidth) {
-height = Math.round((height * maxWidth) / width);
-width = maxWidth;
-}
-const canvas = document.createElement('canvas');
-canvas.width = width;
-canvas.height = height;
-const ctx = canvas.getContext('2d');
-ctx.drawImage(img, 0, 0, width, height);
-resolve(canvas.toDataURL('image/jpeg', quality));
-};
-img.src = event.target.result;
-};
-reader.readAsDataURL(file);
-});
-}
 
 const SECURITY_SCHEMA_VERSION = 2;
 const EMPTY_SUB_LOCKS = { settings:'', control_panel:'', publish:'', pointroom:'', entry_judge:'', judge:'', states:'', code_portal:'', entry_sign:'', protection:'', modify:'' };
@@ -1090,9 +1087,7 @@ if(!state.mainCreds || typeof state.mainCreds !== 'object') state.mainCreds = { 
 if(!state.subLocks || typeof state.subLocks !== 'object') state.subLocks = { ...EMPTY_SUB_LOCKS };
 Object.keys(EMPTY_SUB_LOCKS).forEach(k => { if(typeof state.subLocks[k] !== 'string') state.subLocks[k] = EMPTY_SUB_LOCKS[k]; });
 if(!Array.isArray(state.judgeSubmissions)) state.judgeSubmissions = [];
-if(!state.footer || typeof state.footer !== 'object') {
 state.footer = { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textColor:'#94a3b8', opacity:100, fontSize:0.85, transparentBg: false };
-}
 return state;
 }
 
@@ -1210,75 +1205,31 @@ mTitle.style.color = isDark ? (vis.titleColorDark || '#ffffff') : (vis.titleColo
 }
 
 function applyFooterVisuals() {
-const ft = window.appState.footer || {};
-const isDark = (window.appState.theme || 'dark') === 'dark';
 const fEl = document.getElementById('site-footer-element');
 const txtEl = document.getElementById('ft-display-text');
-
-if(txtEl) txtEl.innerText = ft.text || '© 2026 BAHJA Media . All rights reserved.';
-
+if(txtEl) txtEl.innerText = '© 2026 BAHJA Media . All rights reserved.';
 if(fEl) {
-const defaultBg = isDark ? '#111315' : '#ffffff';
-const defaultTxt = isDark ? '#94a3b8' : '#475569';
-const hex = ft.bg || defaultBg;
-const opVal = (ft.opacity !== undefined ? ft.opacity : 100) / 100;
-
-if (ft.transparentBg) {
-fEl.style.backgroundColor = 'transparent';
-fEl.style.borderTop = 'none';
-} else {
-fEl.style.backgroundColor = hex;
+const isDark = (window.appState.theme || 'dark') === 'dark';
+fEl.style.backgroundColor = isDark ? '#111315' : '#ffffff';
 fEl.style.borderTop = '1px solid var(--border-color)';
+fEl.style.color = isDark ? '#94a3b8' : '#475569';
+fEl.style.opacity = '1';
+fEl.style.fontSize = '0.85rem';
 }
-fEl.style.color = ft.textColor || defaultTxt;
-fEl.style.opacity = opVal;
-fEl.style.fontSize = `${ft.fontSize || 0.85}rem`;
-}
-}
-
-window.liveUpdateFooterVisuals = function() {
-const text = document.getElementById('mod-ft-text')?.value;
-const bg = document.getElementById('mod-ft-bg')?.value;
-const textColor = document.getElementById('mod-ft-text-color')?.value;
-const opacity = document.getElementById('mod-ft-opacity')?.value;
-const fontSize = document.getElementById('mod-ft-size')?.value;
-const isTransparent = document.getElementById('mod-ft-transparent')?.checked;
-
-if(document.getElementById('ft-opacity-val')) document.getElementById('ft-opacity-val').innerText = opacity;
-if(document.getElementById('ft-size-val')) document.getElementById('ft-size-val').innerText = fontSize;
-
-const fEl = document.getElementById('site-footer-element');
-if(fEl) {
-if(isTransparent) {
-fEl.style.backgroundColor = 'transparent';
-fEl.style.borderTop = 'none';
-} else {
-fEl.style.backgroundColor = bg;
-fEl.style.borderTop = '1px solid var(--border-color)';
-}
-fEl.style.color = textColor;
-fEl.style.opacity = (opacity / 100);
-fEl.style.fontSize = `${fontSize}rem`;
-}
-if(document.getElementById('ft-display-text')) document.getElementById('ft-display-text').innerText = text;
 }
 
 window.populatePtProgs = function() {
 const cat = document.getElementById('pt-cat-select').value;
 const query = (document.getElementById('pt-search')?.value || '').toLowerCase().trim();
 const drop = document.getElementById('pt-prog-select');
-
 let matched = window.appState.programs || [];
 if(cat) matched = matched.filter(p => p.cat === cat);
 if(query) matched = matched.filter(p => p.name.toLowerCase().includes(query) || (p.cat && p.cat.toLowerCase().includes(query)));
-
 matched.sort((a,b)=>a.name.localeCompare(b.name));
 drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
-
 if (query && matched.length === 1) {
 drop.value = matched[0].id;
 }
-
 if(drop.value) { loadPtParticipants(); } 
 else { 
 document.getElementById('pt-candidates-inputs').innerHTML = ''; 
@@ -1290,18 +1241,14 @@ window.populatePtProgsCopy = function() {
 const cat = document.getElementById('pt-cat-select-copy').value;
 const query = (document.getElementById('pt-search-copy')?.value || '').toLowerCase().trim();
 const drop = document.getElementById('pt-prog-select-copy');
-
 let matched = window.appState.programs || [];
 if(cat) matched = matched.filter(p => p.cat === cat);
 if(query) matched = matched.filter(p => p.name.toLowerCase().includes(query) || (p.cat && p.cat.toLowerCase().includes(query)));
-
 matched.sort((a,b)=>a.name.localeCompare(b.name));
 drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name} (${p.cat})</option>`).join('');
-
 if (query && matched.length === 1) {
 drop.value = matched[0].id;
 }
-
 if(drop.value) { loadPtParticipantsCopy(); }
 else {
 document.getElementById('pt-candidates-inputs-copy').innerHTML = '';
@@ -1383,8 +1330,6 @@ saveKey('points', window.appState.points);
 alert("Points recorded.");
 loadPtParticipants();
 renderPtList();
-const ptLogSearch = document.getElementById('pt-logs-search');
-if(ptLogSearch) renderPtList();
 }
 
 window.savePointroomCopyEntry = function(e) {
@@ -1413,8 +1358,6 @@ saveKey('points', window.appState.points);
 alert("Code Letters & Topic updated! Active program sent to Judge Portal.");
 loadPtParticipantsCopy();
 renderCodeFormsList();
-const ptSavedCodeSearch = document.getElementById('pt-saved-code-search');
-if(ptSavedCodeSearch) renderCodeFormsList();
 renderEjActiveProgram();
 }
 
@@ -1504,1678 +1447,1238 @@ html += `
 <button onclick="interceptRoute('panel-pointroom-copy', 'code_portal')"><i class="fa-solid fa-copy"></i> Code Portal</button>
 <button onclick="interceptRoute('panel-entry-sign', 'entry_sign')"><i class="fa-solid fa-signature"></i> Sign Portal</button>
 <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Security Vault</button>
-<button onclick="interceptRoute('panel-modify', 'modify')"><i class="fa-solid fa-pen-to-square"></i> Layout Studio</button>
-<button onclick="logoutMain()" style="color:#ef4444;"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+<button onclick="interceptRoute('panel-modify', 'modify')"><i class="fa-solid fa-palette"></i> Layout Studio</button>
+<button onclick="logoutMain()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
 `;
 }
 menuContainer.innerHTML = html;
 }
 
-window.interceptRoute = function(panelId, key) {
-document.getElementById("mainDropdown").classList.remove("show");
-if(!key || !window.appState.subLocks[key]) {
-showPanel(panelId);
-return;
-}
-window.gatekeeperTargetPanel = { id: panelId, lockKey: key };
-document.getElementById('gk-pass-field').value = '';
-document.getElementById('gk-title').innerText = `Access Security Code Required`;
-document.getElementById('gatekeeper-modal-overlay').style.display = 'flex';
+window.toggleDropdown = function() {
+const dropdown = document.getElementById('mainDropdown');
+if(dropdown) dropdown.classList.toggle('show');
 }
 
-window.commitGatekeeperVerification = function() {
-const fieldVal = document.getElementById('gk-pass-field').value;
-const targetKey = window.gatekeeperTargetPanel.lockKey;
-if(fieldVal === window.appState.subLocks[targetKey]) {
-document.getElementById('gatekeeper-modal-overlay').style.display = 'none';
-showPanel(window.gatekeeperTargetPanel.id);
-} else {
-alert("Incorrect Security Code.");
-}
-}
-
-window.closeGatekeeper = function() { document.getElementById('gatekeeper-modal-overlay').style.display = 'none'; }
-window.toggleLaunchSection = function(bodyId, headerEl) {
-const body = document.getElementById(bodyId);
-if(!body) return;
-const opening = body.style.display === 'none' || !body.style.display;
-body.style.display = opening ? 'block' : 'none';
-const icon = headerEl ? headerEl.querySelector('i') : null;
-if(icon) icon.className = opening ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down';
-}
-
-window.toggleDropdown = function() { document.getElementById("mainDropdown").classList.toggle("show"); }
-window.onclick = (e) => { 
-if (!e.target.closest('.menu-btn-container')) {
-const md = document.getElementById("mainDropdown");
-if(md) md.classList.remove("show"); 
-}
-};
-
-window.openPublicPanel = function(panelId) {
-ensurePublicAccessState();
-const item = PUBLIC_PANEL_SCHEMA.find(x => x.panel === panelId);
-const phase = window.appState.phase === 'register' ? 'register' : 'result';
-if(!item || !isPublicPanelAllowed(item.key, phase)) { alert('This panel is not enabled for public access in the current phase.'); return; }
-document.getElementById('mainDropdown').classList.remove('show');
-showPanel(panelId);
+window.navHome = function() {
+history.pushState({ panel: 'panel-home' }, '', '#home');
+document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
+const homePanel = document.getElementById('panel-home');
+if(homePanel) homePanel.classList.add('active-panel');
+const dropdown = document.getElementById('mainDropdown');
+if(dropdown) dropdown.classList.remove('show');
+renderHomePhase();
 }
 
 window.showPanel = function(panelId) {
 document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
-const p = document.getElementById(panelId);
-if(p) {
-p.classList.add('active-panel');
-if(!history.state || history.state.panel !== panelId) {
-history.pushState({ panel: panelId }, "", `#${panelId}`);
-if(panelId === 'panel-publish') renderPublishPanel();
-if(panelId === 'panel-entry-judge') renderEjActiveProgram();
-if(panelId === 'panel-pointroom-copy') renderCodeFormsList();
-}
-}
+const target = document.getElementById(panelId);
+if(target) target.classList.add('active-panel');
+history.pushState({ panel: panelId }, '', `#${panelId}`);
 }
 
-window.openSection = function(secId) { showPanel(secId); }
-window.navHome = function() { 
-renderHomePhase(); 
-showPanel('panel-home'); 
+window.openPublicPanel = function(panelId) {
+document.getElementById('mainDropdown').classList.remove('show');
+showPanel(panelId);
 }
 
-window.addEventListener('popstate', function(event) {
-if(event.state && event.state.panel && event.state.panel !== 'panel-home') {
-document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
-const p = document.getElementById(event.state.panel);
-if(p) p.classList.add('active-panel');
+window.interceptRoute = function(panelId, subLockKey) {
+document.getElementById('mainDropdown').classList.remove('show');
+const lockPass = (window.appState.subLocks || {})[subLockKey];
+if(lockPass && lockPass.trim() !== '') {
+window.gatekeeperTargetPanel = panelId;
+document.getElementById('gk-pass-field').value = '';
+document.getElementById('gatekeeper-modal-overlay').style.display = 'flex';
 } else {
-renderHomePhase();
-document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
-document.getElementById('panel-home').classList.add('active-panel');
+showPanel(panelId);
 }
-});
-history.replaceState({ panel: 'panel-home' }, "", window.location.pathname);
-scheduleAppRender(true);
+}
 
-window.toggleAccordion = function(boxId) {
-const el = document.getElementById(boxId); 
-if(el) el.classList.toggle('show');
+window.closeGatekeeper = function() {
+document.getElementById('gatekeeper-modal-overlay').style.display = 'none';
+window.gatekeeperTargetPanel = null;
+}
+
+window.commitGatekeeperVerification = function() {
+const entered = document.getElementById('gk-pass-field').value;
+const panelId = window.gatekeeperTargetPanel;
+const keyMap = {
+'panel-settings':'settings', 'panel-control-panel':'control_panel', 'panel-publish':'publish',
+'panel-pointroom':'pointroom', 'panel-entry-judge':'entry_judge', 'panel-judge':'judge',
+'panel-states-control':'states', 'panel-pointroom-copy':'code_portal', 'panel-entry-sign':'entry_sign',
+'panel-protection':'protection', 'panel-modify':'modify'
+};
+const key = keyMap[panelId];
+const targetPass = (window.appState.subLocks || {})[key];
+if(entered === targetPass) {
+document.getElementById('gatekeeper-modal-overlay').style.display = 'none';
+showPanel(panelId);
+} else {
+alert("Invalid Access Passcode!");
+}
 }
 
 window.openLoginModal = function() {
-document.getElementById('modal-overlay').style.display = 'flex';
-syncMainLoginSetupUI();
+document.getElementById('mainDropdown').classList.remove('show');
+const mainCreds = window.appState.mainCreds || { user:'', pass:'' };
+if(!mainCreds.user || !mainCreds.pass) {
+document.getElementById('first-admin-setup-btn').style.display = 'block';
+} else {
+document.getElementById('first-admin-setup-btn').style.display = 'none';
 }
-window.closeModal = function() { document.getElementById('modal-overlay').style.display = 'none'; }
+document.getElementById('first-admin-setup').style.display = 'none';
+document.getElementById('modal-overlay').style.display = 'flex';
+}
 
-function syncMainLoginSetupUI() {
-const hasCreds = !!(window.appState.mainCreds && window.appState.mainCreds.user && window.appState.mainCreds.pass);
-const setupBtn = document.getElementById('first-admin-setup-btn');
-const loginBtn = document.getElementById('main-login-submit');
-if(setupBtn) setupBtn.style.display = hasCreds ? 'none' : 'block';
-if(loginBtn) loginBtn.innerText = hasCreds ? 'Sign In' : 'Sign In (Credentials Not Set)';
+window.closeModal = function() {
+document.getElementById('modal-overlay').style.display = 'none';
 }
 
 window.openFirstAdminSetup = function() {
 document.getElementById('first-admin-setup').style.display = 'block';
-document.getElementById('first-admin-user').focus();
 }
 
 window.saveFirstAdminSetup = function() {
 const u = document.getElementById('first-admin-user').value.trim();
-const p = document.getElementById('first-admin-pass').value;
-const cp = document.getElementById('first-admin-pass-confirm').value;
-if(!u || !p) { alert('Enter a username and password.'); return; }
-if(p !== cp) { alert('Passwords do not match.'); return; }
-window.appState.mainCreds = { user:u, pass:p };
-window.appState.securitySchemaVersion = SECURITY_SCHEMA_VERSION;
+const p = document.getElementById('first-admin-pass').value.trim();
+const pc = document.getElementById('first-admin-pass-confirm').value.trim();
+if(!u || !p) { alert("Enter username and password"); return; }
+if(p !== pc) { alert("Passwords do not match"); return; }
+window.appState.mainCreds = { user: u, pass: p };
 saveKey('mainCreds', window.appState.mainCreds);
-saveKey('securitySchemaVersion', SECURITY_SCHEMA_VERSION);
-alert('Admin login created. You can now sign in.');
+alert("Admin credentials created! You can now Sign In.");
 document.getElementById('first-admin-setup').style.display = 'none';
-document.getElementById('main-user-input').value = u;
-document.getElementById('main-pass-input').value = '';
-syncMainLoginSetupUI();
+document.getElementById('first-admin-setup-btn').style.display = 'none';
 }
 
 window.handleMainLogin = function(e) {
 e.preventDefault();
 const u = document.getElementById('main-user-input').value.trim();
 const p = document.getElementById('main-pass-input').value.trim();
-const creds = window.appState.mainCreds || {};
-if(!creds.user || !creds.pass) {
-alert('No admin credentials are set. Use Create New Admin Login.');
-syncMainLoginSetupUI();
-return;
-}
-if(u === creds.user && p === creds.pass) {
+const mainCreds = window.appState.mainCreds || { user:'', pass:'' };
+if(u === mainCreds.user && p === mainCreds.pass) {
 window.isMainLoggedIn = true;
-closeModal(); render3DotMenu();
-showPanel('panel-control-panel');
-} else { alert("Invalid Credentials!"); }
-}
-
-window.logoutMain = function() { window.isMainLoggedIn = false; render3DotMenu(); navHome(); }
-
-window.triggerCustomPrint = function(targetId) {
-const target = document.getElementById(targetId);
-if(!target) return;
-const now = new Date();
-const timeDateStr = now.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-let printStamp = target.querySelector('.dynamic-print-stamp');
-if(!printStamp) {
-printStamp = document.createElement('div');
-printStamp.className = 'dynamic-print-stamp';
-printStamp.style.cssText = 'display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:bold; border-bottom:2px solid #000; padding-bottom:4px; margin-bottom:8px; width:100%; color:#000;';
-target.insertBefore(printStamp, target.firstChild);
-}
-printStamp.innerHTML = `<span>BAHJA 2K26 OFFICIAL REPORT</span><span>PRINTED: ${timeDateStr}</span>`;
-const originalParent = target.parentNode;
-const originalNextSibling = target.nextSibling;
-const originalDisplay = target.style.display;
-document.querySelectorAll('.print-target').forEach(p => { if(p !== target) p.style.display = 'none'; });
-target.style.display = 'block';
-target.classList.add('active-print-target');
-document.body.classList.add('printing');
-document.body.appendChild(target);
-let restored = false;
-const restoreAfterPrint = function() {
-if(restored) return;
-restored = true;
-document.body.classList.remove('printing');
-target.classList.remove('active-print-target');
-target.style.display = originalDisplay;
-if(originalNextSibling && originalNextSibling.parentNode === originalParent) {
-originalParent.insertBefore(target, originalNextSibling);
+closeModal();
+render3DotMenu();
+alert("Main Login Successful!");
 } else {
-originalParent.appendChild(target);
-}
-document.querySelectorAll('.print-target').forEach(p => { if(p !== target) p.style.removeProperty('display'); });
-window.removeEventListener('afterprint', restoreAfterPrint);
-};
-window.addEventListener('afterprint', restoreAfterPrint);
-requestAnimationFrame(() => {
-requestAnimationFrame(() => {
-window.print();
-setTimeout(restoreAfterPrint, 1500);
-});
-});
-}
-
-function renderEjActiveProgram() {
-const activeProgId = window.appState.activeEjProgId;
-renderEjSubmittedMarks();
-const titleEl = document.getElementById('ej-active-prog-title');
-const topicBox = document.getElementById('ej-topic-display-box');
-const container = document.getElementById('ej-candidates-inputs');
-if(!activeProgId) {
-if(titleEl) titleEl.innerText = "No Program Assigned";
-if(topicBox) topicBox.innerText = "Topic will appear here when a program is assigned in Code Portal...";
-if(container) container.innerHTML = '<tr><td colspan="2" style="text-align:center;">No active program assigned from Code Portal.</td></tr>';
-return;
-}
-const targetProg = window.appState.programs.find(p => p.id === activeProgId);
-if(!targetProg) {
-if(titleEl) titleEl.innerText = "Program Not Found";
-if(topicBox) topicBox.innerText = "No Topic";
-if(container) container.innerHTML = '<tr><td colspan="2" style="text-align:center;">Program error.</td></tr>';
-return;
-}
-if(titleEl) titleEl.innerText = `${targetProg.name} (${targetProg.cat})`;
-if(topicBox) topicBox.innerText = targetProg.topic || "No Topic Specified";
-const matchedPts = window.appState.points.filter(pt => pt.progId === activeProgId && pt.codeLetter && pt.codeLetter.trim() !== '');
-if(matchedPts.length === 0) {
-if(container) container.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#ef4444;">No code letters configured for this program in Code Portal.</td></tr>';
-return;
-}
-let html = '';
-matchedPts.forEach(pt => {
-html += `
-<tr>
-<td style="text-align:center; font-weight:bold; font-size:1.2rem; color:#d4af37;">${pt.codeLetter}</td>
-<td>
-<div class="judge-mark-entry">
-<input type="password" inputmode="decimal" pattern="[0-9.]*" min="0" class="form-control ej-score-field" data-code="${pt.codeLetter}" data-team="${pt.team}" data-student="${pt.student}" value="${pt.score || 0}" autocomplete="off" aria-label="Enter mark">
-<button type="button" class="judge-mark-eye" onclick="toggleJudgeMarkVisibility(this)" aria-label="Show or hide mark"><i class="fa-solid fa-eye"></i></button>
-</div>
-</td>
-</tr>
-`;
-});
-if(container) container.innerHTML = html;
-}
-
-
-window.toggleJudgeMarkVisibility = function(button) {
-const wrap = button ? button.closest('.judge-mark-entry') : null;
-const input = wrap ? wrap.querySelector('.ej-score-field') : null;
-const icon = button ? button.querySelector('i') : null;
-if(!input) return;
-if(input.type === 'password') {
-input.type = 'text';
-if(icon) icon.className = 'fa-solid fa-eye-slash';
-} else {
-input.type = 'password';
-if(icon) icon.className = 'fa-solid fa-eye';
-}
-};
-
-window.saveEjMarks = function() {
-const activeProgId = window.appState.activeEjProgId;
-if(!activeProgId) { alert("No active program to submit marks for!"); return; }
-const scoreFields = document.querySelectorAll('.ej-score-field');
-if(!scoreFields.length) { alert("No marks found to submit."); return; }
-
-scoreFields.forEach(f => {
-const team = f.getAttribute('data-team');
-const student = f.getAttribute('data-student');
-const score = parseFloat(f.value) || 0;
-const existingPt = window.appState.points.find(pt => pt.progId === activeProgId && pt.team === team && pt.student === student);
-if(existingPt) {
-existingPt.score = score;
-} else {
-window.appState.points.push({
-progId: activeProgId,
-cat: (window.appState.programs.find(p => p.id === activeProgId) || {}).cat || '',
-team,
-student,
-score,
-codeLetter: f.getAttribute('data-code') || ''
-});
-}
-});
-saveKey('points', window.appState.points);
-
-if(!Array.isArray(window.appState.judgeSubmissions)) window.appState.judgeSubmissions = [];
-const activeProg = window.appState.programs.find(p => p.id === activeProgId);
-const submittedMarks = Array.from(scoreFields).map(f => ({
-codeLetter: f.getAttribute('data-code') || '',
-score: parseFloat(f.value) || 0
-}));
-
-// One saved submission per program: first submit creates it; later submits update it.
-const existingSubmissionIndex = window.appState.judgeSubmissions.findIndex(s => s.progId === activeProgId);
-const isChange = existingSubmissionIndex !== -1;
-const submissionData = {
-id: isChange ? window.appState.judgeSubmissions[existingSubmissionIndex].id : 'js_' + Date.now(),
-progId: activeProgId,
-programName: activeProg ? activeProg.name : 'Unknown Program',
-category: activeProg ? activeProg.cat : '',
-submittedAt: new Date().toISOString(),
-marks: submittedMarks
-};
-
-if(isChange) {
-window.appState.judgeSubmissions[existingSubmissionIndex] = submissionData;
-} else {
-window.appState.judgeSubmissions.unshift(submissionData);
-}
-window.appState.judgeSubmissions = window.appState.judgeSubmissions.slice(0, 50);
-saveKey('judgeSubmissions', window.appState.judgeSubmissions);
-
-// Do not show submitted-mark history below the Judge Portal.
-const submittedBox = document.getElementById('ej-submitted-list');
-if(submittedBox) submittedBox.innerHTML = '';
-
-alert(isChange ? "Changes submitted successfully!" : "Marks submitted successfully!");
-renderPtList();
-renderJudgeLeaderboard();
-renderStatesDashboard();
-}
-
-function renderEjSubmittedMarks() {
-const box = document.getElementById('ej-submitted-list');
-if(!box) return;
-const activeId = window.appState.activeEjProgId;
-const list = (window.appState.judgeSubmissions || []).filter(s => !activeId || s.progId === activeId).slice(0, 20);
-if(!list.length) {
-box.innerHTML = '<div style="color:var(--text-sub); font-size:0.82rem;">No judge marks submitted yet.</div>';
-return;
-}
-box.innerHTML = list.map(s => {
-const when = new Date(s.submittedAt);
-const stamp = isNaN(when.getTime()) ? '' : when.toLocaleString();
-return `<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); border-radius:9px; padding:9px;">
-<div style="display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:5px;">
-<strong style="color:#d4af37;">${s.programName} (${s.category})</strong>
-<span style="font-size:0.72rem; color:var(--text-sub);">${stamp}</span>
-</div>
-<div style="font-size:0.85rem; color:var(--text-main);">${(s.marks || []).map(m => `<span style="display:inline-block; margin:2px 10px 2px 0;">Code <strong style="color:#d4af37;">${m.codeLetter}</strong> : <strong>${m.score} Marks</strong></span>`).join('')}</div>
-</div>`;
-}).join('');
-}
-
-let ejTimerInterval = null;
-let ejStartTime = 0;
-let ejElapsedTime = 0;
-let ejTimerDurationMs = 0;
-let ejTimerRemainingMs = 0;
-let ejTimerCountdownMode = false;
-let ejTimerLastTick = 0;
-
-function playLoudAlarmSound() {
-try {
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-const playBeep = (freq, startTime, duration) => {
-const osc = audioCtx.createOscillator();
-const gain = audioCtx.createGain();
-osc.type = 'sawtooth';
-osc.frequency.setValueAtTime(freq, startTime);
-gain.gain.setValueAtTime(0.8, startTime);
-gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-osc.connect(gain);
-gain.connect(audioCtx.destination);
-osc.start(startTime);
-osc.stop(startTime + duration);
-};
-const now = audioCtx.currentTime;
-for (let i = 0; i < 4; i++) {
-playBeep(880, now + (i * 0.25), 0.15);
-playBeep(1200, now + (i * 0.25) + 0.1, 0.12);
-}
-} catch(e) { console.error("Audio Alarm Error:", e); }
-}
-
-function formatEjTimer(ms) {
-ms = Math.max(0, Math.round(ms));
-const hrs = String(Math.floor(ms / 3600000)).padStart(2, '0');
-const mins = String(Math.floor((ms % 3600000) / 60000)).padStart(2, '0');
-const secs = String(Math.floor((ms % 60000) / 1000)).padStart(2, '0');
-const rem = String(ms % 1000).padStart(3, '0');
-return `${hrs}:${mins}:${secs}:${rem}`;
-}
-
-window.updateEjTimerDisplay = function() {
-let totalMs;
-if(ejTimerCountdownMode) {
-totalMs = ejTimerRemainingMs;
-if(ejTimerInterval) totalMs = Math.max(0, ejTimerRemainingMs - (Date.now() - ejTimerLastTick));
-} else {
-totalMs = ejElapsedTime;
-if(ejTimerInterval) totalMs += Date.now() - ejStartTime;
-}
-const timerEl = document.getElementById('ej-timer-display');
-if(timerEl) timerEl.innerText = formatEjTimer(totalMs);
-}
-
-window.setEjTimer = function() {
-const mins = Math.max(0, parseInt(document.getElementById('ej-timer-minutes')?.value || 0, 10) || 0);
-const secs = Math.min(59, Math.max(0, parseInt(document.getElementById('ej-timer-seconds')?.value || 0, 10) || 0));
-if(ejTimerInterval) { clearInterval(ejTimerInterval); ejTimerInterval = null; }
-ejTimerDurationMs = (mins * 60 + secs) * 1000;
-ejTimerRemainingMs = ejTimerDurationMs;
-ejTimerCountdownMode = ejTimerDurationMs > 0;
-ejStartTime = 0; ejElapsedTime = 0; ejTimerLastTick = 0;
-const status = document.getElementById('ej-timer-status');
-if(status) status.innerText = ejTimerCountdownMode ? `Countdown set: ${formatEjTimer(ejTimerDurationMs)}` : 'Stopwatch mode';
-updateEjTimerDisplay();
-}
-
-window.addEjTimerTime = function() {
-const mins = Math.max(0, parseInt(document.getElementById('ej-timer-minutes')?.value || 0, 10) || 0);
-const secs = Math.min(59, Math.max(0, parseInt(document.getElementById('ej-timer-seconds')?.value || 0, 10) || 0));
-const addMs = (mins * 60 + secs) * 1000;
-if(addMs <= 0) return;
-if(ejTimerCountdownMode) {
-ejTimerRemainingMs += addMs;
-ejTimerDurationMs += addMs;
-} else {
-ejTimerDurationMs = addMs;
-ejTimerRemainingMs = addMs;
-ejTimerCountdownMode = true;
-}
-const status = document.getElementById('ej-timer-status');
-if(status) status.innerText = `Added ${formatEjTimer(addMs)} to timer`;
-updateEjTimerDisplay();
-}
-
-window.startEjTimer = function() {
-if(ejTimerInterval) return;
-if(ejTimerCountdownMode && ejTimerRemainingMs <= 0) {
-if(ejTimerDurationMs > 0) ejTimerRemainingMs = ejTimerDurationMs;
-else return;
-}
-if(ejTimerCountdownMode) {
-ejTimerLastTick = Date.now();
-ejTimerInterval = setInterval(() => {
-const now = Date.now();
-const elapsed = now - ejTimerLastTick;
-ejTimerLastTick = now;
-ejTimerRemainingMs -= elapsed;
-if(ejTimerRemainingMs <= 0) {
-ejTimerRemainingMs = 0;
-clearInterval(ejTimerInterval); ejTimerInterval = null;
-const status = document.getElementById('ej-timer-status');
-if(status) status.innerText = '⏰ Time finished';
-updateEjTimerDisplay();
-playLoudAlarmSound();
-} else updateEjTimerDisplay();
-}, 30);
-} else {
-ejStartTime = Date.now();
-ejTimerInterval = setInterval(updateEjTimerDisplay, 30);
+alert("Invalid Main Credentials!");
 }
 }
 
-window.pauseEjTimer = function() {
-if(!ejTimerInterval) return;
-if(ejTimerCountdownMode) {
-ejTimerRemainingMs = Math.max(0, ejTimerRemainingMs - (Date.now() - ejTimerLastTick));
-} else {
-ejElapsedTime += Date.now() - ejStartTime;
-}
-clearInterval(ejTimerInterval); ejTimerInterval = null;
-updateEjTimerDisplay();
-const status = document.getElementById('ej-timer-status');
-if(status) status.innerText = 'Paused';
-}
-
-window.resetEjTimer = function() {
-if(ejTimerInterval) clearInterval(ejTimerInterval);
-ejTimerInterval = null;
-ejElapsedTime = 0; ejStartTime = 0;
-ejTimerRemainingMs = ejTimerCountdownMode ? ejTimerDurationMs : 0;
-ejTimerLastTick = 0;
-const status = document.getElementById('ej-timer-status');
-if(status) status.innerText = ejTimerCountdownMode ? 'Timer reset to set time' : 'Reset';
-updateEjTimerDisplay();
-}
-
-function renderCodeFormsList() {
-const container = document.getElementById('box-code-forms-content');
-if(!container) return;
-const searchInput = document.getElementById('pt-saved-code-search');
-const searchQ = searchInput ? searchInput.value.toLowerCase().trim() : '';
-
-let codedProgs = [...new Set((window.appState.points || [])
-.filter(pt => pt.codeLetter && pt.codeLetter.trim() !== '')
-.map(pt => pt.progId))];
-
-if(searchQ) {
-codedProgs = codedProgs.filter(pid => {
-const prog = (window.appState.programs || []).find(p => p.id === pid);
-const pts = (window.appState.points || []).filter(pt =>
-pt.progId === pid && pt.codeLetter && pt.codeLetter.trim() !== ''
-);
-const progText = prog ? `${prog.name || ''} ${prog.cat || ''} ${prog.topic || ''}`.toLowerCase() : '';
-const detailText = pts.map(pt =>
-`${pt.student || ''} ${pt.team || ''} ${pt.cat || ''} ${pt.codeLetter || ''}`
-).join(' ').toLowerCase();
-return `${progText} ${detailText}`.includes(searchQ);
-});
-
-codedProgs.sort((a,b) => {
-const pa = (window.appState.programs || []).find(p => p.id === a);
-const pb = (window.appState.programs || []).find(p => p.id === b);
-const strA = pa ? `${pa.name || ''} ${pa.cat || ''}`.toLowerCase() : '';
-const strB = pb ? `${pb.name || ''} ${pb.cat || ''}`.toLowerCase() : '';
-const matchA = strA.startsWith(searchQ);
-const matchB = strB.startsWith(searchQ);
-if(matchA && !matchB) return -1;
-if(!matchA && matchB) return 1;
-return strA.localeCompare(strB);
-});
-} else {
-codedProgs.sort((a,b) => {
-const pa = (window.appState.programs || []).find(p => p.id === a);
-const pb = (window.appState.programs || []).find(p => p.id === b);
-return `${pa?.name || ''}`.localeCompare(`${pb?.name || ''}`);
-});
-}
-
-if(codedProgs.length === 0) {
-container.innerHTML = '<p style="padding:10px 0; color:var(--text-sub);">No code forms saved matching search query.</p>';
-return;
-}
-
-container.innerHTML = codedProgs.map(pid => {
-const prog = (window.appState.programs || []).find(p => p.id === pid) || { name:'Unknown Program', cat:'N/A', topic:'' };
-const subPts = (window.appState.points || []).filter(pt => pt.progId === pid && pt.codeLetter && pt.codeLetter.trim() !== '');
-const isActive = window.appState.activeEjProgId === pid;
-return `
-<div style="background:rgba(0,0,0,0.05); border:1px solid ${isActive ? '#d4af37' : 'var(--border-color)'}; padding:12px; border-radius:12px; margin-bottom:10px;">
-<div style="display:flex; justify-content:space-between; align-items:center;">
-<div>
-<strong style="font-size:1rem; color:#d4af37;">${prog.name} (${prog.cat})</strong>
-${isActive ? '<span style="background:#d4af37; color:#000; font-size:0.7rem; padding:2px 6px; border-radius:4px; margin-left:8px; font-weight:bold;">ACTIVE IN JUDGE PORTAL</span>' : ''}
-</div>
-<button class="btn btn-sm btn-primary" onclick="loadCodeFormToEdit('${prog.cat}', '${pid}')">Edit / Send to Judge</button>
-</div>
-${prog.topic ? `<div style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;"><strong>Topic:</strong> ${prog.topic}</div>` : ''}
-<div style="margin-top:8px; font-size:0.85rem; background:rgba(0,0,0,0.05); padding:8px; border-radius:8px;">
-${subPts.map(s => `<span style="display:inline-block; margin-right:12px; margin-bottom:4px;">Code: <strong style="color:#d4af37;">${s.codeLetter}</strong> (${s.student} - ${s.team})</span>`).join('')}
-</div>
-</div>
-`;
-}).join('');
-}
-
-window.loadCodeFormToEdit = function(cat, progId) {
-document.getElementById('pt-cat-select-copy').value = cat;
-populatePtProgsCopy();
-document.getElementById('pt-prog-select-copy').value = progId;
-loadPtParticipantsCopy();
-window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function syncProtectionFields() {
-const container = document.getElementById('sub-panel-pass-managers-container');
-if(!container) return;
-const schema = [
-{ key: 'settings', name: 'Settings Lock' },
-{ key: 'control_panel', name: 'Control Deck Lock' },
-{ key: 'publish', name: 'Launch Pad Lock' },
-{ key: 'pointroom', name: 'Record Terminal Input Lock' },
-{ key: 'entry_judge', name: 'Judge Portal Lock' },
-{ key: 'judge', name: "Candidate's Standing Lock" },
-{ key: 'states', name: 'Lead Zone Lock' },
-{ key: 'code_portal', name: 'Code Portal Lock' },
-{ key: 'entry_sign', name: 'Sign Portal Lock' },
-{ key: 'protection', name: 'Security Vault Lock' },
-{ key: 'modify', name: 'Layout Studio Lock' }
-];
-container.innerHTML = schema.map(s => {
-const val = window.appState.subLocks[s.key] || '';
-return `
-<div style="background:rgba(0,0,0,0.05); padding:10px; border:1px solid var(--border-color); border-radius:8px;">
-<label style="font-weight:bold; font-size:0.8rem;">${s.name}</label>
-<div style="display:flex; gap:6px; margin-top:4px;">
-<input type="text" id="pass-field-input-${s.key}" class="form-control" value="${val}" style="margin-bottom:0; font-size:0.85rem;">
-<button class="btn btn-sm btn-success" onclick="updateSubLockKey('${s.key}')">Save</button>
-</div>
-</div>
-`;
-}).join('');
-}
-
-window.updateSubLockKey = function(key) {
-window.appState.subLocks[key] = document.getElementById(`pass-field-input-${key}`).value.trim();
-saveKey('subLocks', window.appState.subLocks);
-alert("Lock Code Saved.");
-}
-
-function syncModifyConfigInputs() {
-const vis = window.appState.visuals;
-const ft = window.appState.footer || {};
-const isDark = (window.appState.theme || 'dark') === 'dark';
-if(!document.getElementById('mod-banner-text')) return;
-document.getElementById('mod-banner-text').value = vis.bannerText || '';
-document.getElementById('mod-title-text').value = vis.titleText || '';
-document.getElementById('mod-banner-color').value = isDark ? (vis.bannerColorDark || '#cbd5e1') : (vis.bannerColorLight || '#475569');
-document.getElementById('mod-title-color').value = isDark ? (vis.titleColorDark || '#ffffff') : (vis.titleColorLight || '#0f172a');
-if(document.getElementById('mod-font-family')) document.getElementById('mod-font-family').value = vis.fontFamily || "'Poppins', sans-serif";
-if(document.getElementById('mod-header-align')) document.getElementById('mod-header-align').value = vis.headerAlign || 'center';
-
-if(document.getElementById('mod-ft-text')) document.getElementById('mod-ft-text').value = ft.text || '© 2026 BAHJA Media . All rights reserved.';
-if(document.getElementById('mod-ft-bg')) document.getElementById('mod-ft-bg').value = ft.bg || (isDark ? '#111315' : '#ffffff');
-if(document.getElementById('mod-ft-text-color')) document.getElementById('mod-ft-text-color').value = ft.textColor || (isDark ? '#94a3b8' : '#475569');
-if(document.getElementById('mod-ft-opacity')) document.getElementById('mod-ft-opacity').value = ft.opacity !== undefined ? ft.opacity : 100;
-if(document.getElementById('mod-ft-size')) document.getElementById('mod-ft-size').value = ft.fontSize || 0.85;
-if(document.getElementById('mod-ft-transparent')) document.getElementById('mod-ft-transparent').checked = ft.transparentBg === true;
-}
-
-window.liveUpdateVisuals = function() {
-const bTxt = document.getElementById('txt-welcome-banner');
-const mTitle = document.getElementById('txt-main-title');
-const ff = document.getElementById('mod-font-family');
-const ha = document.getElementById('mod-header-align');
-const bc = document.getElementById('mod-banner-color');
-const tc = document.getElementById('mod-title-color');
-const bt = document.getElementById('mod-banner-text');
-const mt = document.getElementById('mod-title-text');
-if(ff) document.documentElement.style.setProperty('--main-font', ff.value);
-if(ha) document.documentElement.style.setProperty('--header-align', ha.value);
-if(bTxt && bt && bc) {
-bTxt.innerText = bt.value;
-bTxt.style.color = bc.value;
-}
-if(mTitle && mt && tc) {
-mTitle.innerText = mt.value;
-mTitle.style.color = tc.value;
-}
-}
-
-window.saveVisualLayoutState = function() {
-const isDark = (window.appState.theme || 'dark') === 'dark';
-const bColor = document.getElementById('mod-banner-color').value;
-const tColor = document.getElementById('mod-title-color').value;
-window.appState.visuals.bannerText = document.getElementById('mod-banner-text').value;
-window.appState.visuals.titleText = document.getElementById('mod-title-text').value;
-window.appState.visuals.fontFamily = document.getElementById('mod-font-family').value;
-window.appState.visuals.headerAlign = document.getElementById('mod-header-align').value;
-
-if(isDark) {
-window.appState.visuals.bannerColorDark = bColor;
-window.appState.visuals.titleColorDark = tColor;
-} else {
-window.appState.visuals.bannerColorLight = bColor;
-window.appState.visuals.titleColorLight = tColor;
-}
-
-window.appState.footer = {
-text: document.getElementById('mod-ft-text').value,
-bg: document.getElementById('mod-ft-bg').value,
-textColor: document.getElementById('mod-ft-text-color').value,
-opacity: parseInt(document.getElementById('mod-ft-opacity').value) || 100,
-fontSize: parseFloat(document.getElementById('mod-ft-size').value) || 0.85,
-transparentBg: document.getElementById('mod-ft-transparent').checked
-};
-
-saveKey('visuals', window.appState.visuals);
-saveKey('footer', window.appState.footer);
-applyVisualCustomizations();
-applyFooterVisuals();
-alert("Visual & Footer Layout Saved."); 
-navHome();
-}
-
-window.saveMaxLimitMaster = function() {
-window.appState.maxProgLimit = parseInt(document.getElementById('m-max-limit-input').value) || 3;
-saveKey('maxProgLimit', window.appState.maxProgLimit);
-alert("Limit saved.");
-}
-
-window.togglePhaseControl = function(selectedPhase) {
-document.getElementById('phase-reg-radio').checked = selectedPhase === 'register';
-document.getElementById('phase-res-radio').checked = selectedPhase === 'result';
-}
-
-window.applyPhaseSettings = async function(e) {
-e.preventDefault();
-const selectedPhase = document.querySelector('input[name="phase-toggle"]:checked').value;
-window.appState.phase = selectedPhase;
-localStorage.setItem('bahja_current_phase', selectedPhase);
-window.appState.logoPos = document.getElementById('sys-logo-pos').value;
-window.appState.logoSize = document.getElementById('sys-logo-size').value;
-
-const logoF = document.getElementById('sys-logo-input').files[0];
-if(logoF) {
-window.appState.logoUrl = await compressImage(logoF, 500, 0.8);
-}
-
-saveData(); 
-applyLogoView();
-alert("System Configurations saved!"); 
-navHome();
-}
-
-window.clearAllDataSystem = function() {
-if(!confirm("Clear all system data?")) return;
-const preservedLogo = {
-logoUrl: window.appState.logoUrl || '',
-logoPos: window.appState.logoPos || 'logo-top-left',
-logoSize: window.appState.logoSize || '60'
-};
-window.appState = buildCleanState(preservedLogo);
-window.loggedTeamUser = null;
-window.activePartTeam = null;
+window.logoutMain = function() {
 window.isMainLoggedIn = false;
-try {
-localStorage.clear();
-localStorage.setItem('bahja_full_state', JSON.stringify(window.appState));
-localStorage.setItem('bahja_current_phase', window.appState.phase);
-localStorage.setItem('bahja_theme', window.appState.theme);
-} catch(e) {}
-set(dbRef, window.appState);
-applyLogoView();
 render3DotMenu();
 navHome();
-alert("System data cleared.");
+alert("Signed Out.");
 }
 
-window.renderHomePhase = function() {
-const regEl = document.getElementById('home-phase-register');
-const resEl = document.getElementById('home-phase-result');
-if(window.appState.phase === 'register') {
-if(regEl) regEl.style.display = 'block';
-if(resEl) resEl.style.display = 'none';
-if(window.loggedTeamUser) {
-document.getElementById('team-login-block').style.display = 'none';
-document.getElementById('team-portal-block').style.display = 'block';
-document.getElementById('logged-team-name').innerText = window.loggedTeamUser;
+function renderHomePhase() {
+const phase = window.appState.phase || 'result';
+const regBlock = document.getElementById('home-phase-register');
+const resBlock = document.getElementById('home-phase-result');
+if(phase === 'register') {
+if(regBlock) regBlock.style.display = 'block';
+if(resBlock) resBlock.style.display = 'none';
 } else {
-document.getElementById('team-login-block').style.display = 'block';
-document.getElementById('team-portal-block').style.display = 'none';
-}
-} else {
-if(regEl) regEl.style.display = 'none';
-if(resEl) resEl.style.display = 'block';
-applySectionVisibilityUI();
+if(regBlock) regBlock.style.display = 'none';
+if(resBlock) resBlock.style.display = 'block';
 renderResultPhaseFeeds();
 }
 }
-
-function applySectionVisibilityUI() {
-const v = window.appState.visibilities || {};
-for(let key in v) {
-const btn = document.getElementById(`pill-sec-${key}`);
-if(btn) btn.style.display = v[key] ? 'flex' : 'none';
-}
-}
-
-window.updateSectionVisibilities = function() {
-window.appState.visibilities = {
-'team-states': document.getElementById('toggle-vis-team-states').checked,
-'results-view': document.getElementById('toggle-vis-results-view').checked,
-'updates': document.getElementById('toggle-vis-updates').checked,
-'livelink': document.getElementById('toggle-vis-livelink').checked,
-'highlights': document.getElementById('toggle-vis-highlights').checked
-};
-saveKey('visibilities', window.appState.visibilities);
-applySectionVisibilityUI();
-}
-
-window.handlePartLogin = function(e) {
-e.preventDefault();
-const u = document.getElementById('part-user').value.trim();
-const p = document.getElementById('part-pass').value.trim();
-const found = window.appState.teams.find(t => t.user === u && t.pass === p);
-if(found) {
-window.activePartTeam = u;
-document.getElementById('part-login-block').style.display = 'none';
-document.getElementById('part-manage-block').style.display = 'block';
-document.getElementById('part-active-team').innerText = u;
-renderTeamStudentsList();
-} else alert("Invalid Credentials!");
-}
-
-window.addTeamParticipant = function(e) {
-e.preventDefault();
-const cat = document.getElementById('part-cat').value;
-const name = document.getElementById('part-name').value.trim().toUpperCase();
-window.appState.students.push({ id:'st_'+Date.now(), name, cat, team: window.activePartTeam });
-saveKey('students', window.appState.students);
-document.getElementById('part-name').value = ''; 
-renderTeamStudentsList();
-}
-
-window.renderTeamStudentsList = function() {
-const filtered = window.appState.students.filter(s => s.team === window.activePartTeam);
-document.getElementById('team-students-list').innerHTML = filtered.map(s => `
-<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:rgba(0,0,0,0.05); margin-bottom:6px; border-radius:8px; border:1px solid var(--border-color);">
-<span><strong>${s.name}</strong> (${s.cat})</span>
-<button class="btn btn-danger btn-sm" onclick="deleteStudent('${s.id}')">Delete</button>
-</div>
-`).join('') || '<p>No students recorded.</p>';
-}
-
-window.deleteStudent = function(id) {
-window.appState.students = window.appState.students.filter(s => s.id !== id); 
-saveKey('students', window.appState.students);
-renderTeamStudentsList();
-}
-
-window.handleTeamLogin = function(e) {
-e.preventDefault();
-const u = document.getElementById('login-team-user').value.trim();
-const p = document.getElementById('login-team-pass').value.trim();
-const found = window.appState.teams.find(t => t.user === u && t.pass === p);
-if(found) { window.loggedTeamUser = u; renderHomePhase(); } else alert("Invalid Credentials");
-}
-
-window.logoutTeam = function() { window.loggedTeamUser = null; renderHomePhase(); }
-
-window.loadCategoryPrograms = function() {
-const cat = document.getElementById('reg-cat-select').value;
-const container = document.getElementById('category-programs-container');
-if(!cat) { container.innerHTML = ''; return; }
-const filtered = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
-if(filtered.length === 0) { container.innerHTML = '<p>No programs in category.</p>'; return; }
-const allowedStudents = window.appState.students.filter(s => s.team === window.loggedTeamUser && s.cat === cat);
-container.innerHTML = filtered.map(p => {
-const reg = window.appState.registrations.find(r => r.team === window.loggedTeamUser && r.progId === p.id) || { participants: [] };
-let selectors = '';
-for(let i=0; i < p.limit; i++) {
-if(cat === 'GENERAL') {
-selectors += `<input type="text" class="form-control prog-input-${p.id}" value="${reg.participants[i] || ''}" placeholder="Enter Name Manually" style="margin-top:5px; text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">`;
-} else {
-selectors += `<select class="form-control prog-input-${p.id}" style="margin-top:5px;">
-<option value="">-- Choose Student --</option>
-${allowedStudents.map(st => `<option value="${st.name}" ${reg.participants[i] === st.name ? 'selected':''}>${st.name}</option>`).join('')}
-</select>`;
-}
-}
-return `
-<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-bottom:10px;">
-<strong>${p.name} (${p.stage})</strong>
-<div>${selectors}</div>
-<button class="btn btn-success btn-sm btn-block" style="margin-top:8px;" onclick="saveRegistrationItem('${p.id}', '${cat}')">Submit Entry</button>
-</div>
-`;
-}).join('');
-}
-
-window.saveRegistrationItem = function(progId, cat) {
-if(!window.appState.portalOpen) { alert("Registration Locked!"); return; }
-const fields = document.querySelectorAll(`.prog-input-${progId}`);
-const names = Array.from(fields).map(f => f.value.trim().toUpperCase()).filter(n => n !== '');
-if(cat !== 'GENERAL') {
-for (let sName of names) {
-const matchCount = window.appState.registrations.filter(r => r.team === window.loggedTeamUser && r.cat !== 'GENERAL' && r.progId !== progId && r.participants.includes(sName)).length;
-if(matchCount >= window.appState.maxProgLimit) {
-alert(`Limit violation! Student "${sName}" already registered for ${matchCount} items.`);
-return;
-}
-}
-}
-window.appState.registrations = window.appState.registrations.filter(r => !(r.team === window.loggedTeamUser && r.progId === progId));
-if(names.length > 0) window.appState.registrations.push({ team: window.loggedTeamUser, cat, progId, participants: names });
-saveKey('registrations', window.appState.registrations);
-alert("Registration updated.");
-}
-
-function renderPtList() {
-const containerContent = document.getElementById('box-pt-list-content');
-if(!containerContent) return;
-const searchInput = document.getElementById('pt-logs-search');
-const searchQ = searchInput ? searchInput.value.toLowerCase().trim() : '';
-
-let distinctProgs = [...new Set((window.appState.points || []).map(p => p.progId))];
-
-if(searchQ) {
-distinctProgs = distinctProgs.filter(pid => {
-const prog = (window.appState.programs || []).find(p => p.id === pid);
-const pts = (window.appState.points || []).filter(pt => pt.progId === pid);
-const progText = prog ? `${prog.name || ''} ${prog.cat || ''}`.toLowerCase() : '';
-const detailText = pts.map(pt =>
-`${pt.student || ''} ${pt.team || ''} ${pt.cat || ''} ${pt.codeLetter || ''} ${pt.score ?? ''}`
-).join(' ').toLowerCase();
-return `${progText} ${detailText}`.includes(searchQ);
-});
-
-distinctProgs.sort((a, b) => {
-const progA = (window.appState.programs || []).find(p => p.id === a);
-const progB = (window.appState.programs || []).find(p => p.id === b);
-const strA = progA ? `${progA.name || ''} ${progA.cat || ''}`.toLowerCase() : '';
-const strB = progB ? `${progB.name || ''} ${progB.cat || ''}`.toLowerCase() : '';
-const matchA = strA.startsWith(searchQ);
-const matchB = strB.startsWith(searchQ);
-if(matchA && !matchB) return -1;
-if(!matchA && matchB) return 1;
-return strA.localeCompare(strB);
-});
-} else {
-distinctProgs.sort((a,b) => {
-const pa = (window.appState.programs || []).find(p => p.id === a);
-const pb = (window.appState.programs || []).find(p => p.id === b);
-return `${pa?.name || ''}`.localeCompare(`${pb?.name || ''}`);
-});
-}
-
-if(distinctProgs.length === 0) {
-containerContent.innerHTML = '<p style="padding:8px 0; color:var(--text-sub);">No marks processed matching search query.</p>';
-return;
-}
-
-const htmlContent = distinctProgs.map(pid => {
-const prog = (window.appState.programs || []).find(p => p.id === pid) || { name:'Unknown', cat:'N/A' };
-const subPts = (window.appState.points || []).filter(pt => pt.progId === pid).sort((a,b)=>(Number(b.score)||0)-(Number(a.score)||0));
-return `
-<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:10px; border-radius:8px; margin-bottom:6px;">
-<div style="display:flex; justify-content:space-between; align-items:center;">
-<strong>${prog.name} <span style="color:#d4af37;">(${prog.cat})</span></strong>
-<div>
-<button class="btn btn-warning btn-sm no-print" onclick="printIndividualPointRecord('${pid}')"><i class="fa-solid fa-print"></i> Print</button>
-<button class="btn btn-danger btn-sm no-print" onclick="deletePtGroup('${pid}')">Delete</button>
-</div>
-</div>
-<div style="font-size:0.8rem; color:var(--text-sub); margin-top:4px;">
-${subPts.map(s => `${s.student} (${s.team}): <strong>${s.score}</strong>`).join(' | ')}
-</div>
-</div>
-`;
-}).join('');
-containerContent.innerHTML = htmlContent;
-}
-
-window.printIndividualPointRecord = function(progId) {
-const prog = window.appState.programs.find(p => p.id === progId) || { name: 'Program', cat: 'N/A' };
-const subPts = window.appState.points.filter(pt => pt.progId === progId).sort((a,b)=>b.score - a.score);
-const target = document.getElementById('pt-print-area');
-target.innerHTML = `
-<div class="bahja-sheet-header">
-<h2>BAHJA 2K26 - ${prog.name.toUpperCase()} (${prog.cat})</h2>
-</div>
-<table class="bahja-sheet-table">
-<thead><tr><th>#</th><th>Student Name</th><th>Team</th><th>Score</th><th>Rank</th></tr></thead>
-<tbody>
-${subPts.map((s, idx) => `<tr><td>${idx+1}</td><td>${s.student}</td><td>${s.team}</td><td><strong>${s.score}</strong></td><td>Rank ${idx+1}</td></tr>`).join('')}
-</tbody>
-</table>
-`;
-triggerCustomPrint('pt-print-area');
-}
-
-window.printAllPointRecords = function() {
-const distinctProgs = [...new Set(window.appState.points.map(p => p.progId))];
-const target = document.getElementById('pt-print-area');
-let html = `<div class="bahja-sheet-header"><h2>BAHJA 2K26 - ALL POINT EVALUATION LOGS</h2></div>`;
-distinctProgs.forEach(pid => {
-const prog = window.appState.programs.find(p => p.id === pid) || { name: 'Unknown', cat: 'N/A' };
-const subPts = window.appState.points.filter(pt => pt.progId === pid).sort((a,b)=>b.score - a.score);
-html += `
-<h4 style="margin-top:10px; font-size:12px;">${prog.name} (${prog.cat})</h4>
-<table class="bahja-sheet-table" style="margin-bottom:8px;">
-<thead><tr><th>#</th><th>Student Name</th><th>Team</th><th>Score</th></tr></thead>
-<tbody>${subPts.map((s, idx) => `<tr><td>${idx+1}</td><td>${s.student}</td><td>${s.team}</td><td>${s.score}</td></tr>`).join('')}</tbody>
-</table>
-`;
-});
-target.innerHTML = html;
-triggerCustomPrint('pt-print-area');
-}
-
-window.deletePtGroup = function(progId) {
-if(confirm("Delete records?")) {
-window.appState.points = window.appState.points.filter(pt => pt.progId !== progId);
-saveKey('points', window.appState.points);
-renderPtList();
-}
-}
-
-window.renderJudgeLeaderboard = function() {
-const tbody = document.getElementById('judge-leaderboard-body');
-if(!tbody) return;
-const filterStage = document.getElementById('jd-filter-stage').value;
-const aggregate = {};
-window.appState.points.forEach(pt => {
-if(pt.cat === 'GENERAL') return;
-const prog = window.appState.programs.find(p => p.id === pt.progId);
-if(!prog) return;
-if(filterStage !== 'all' && prog.stage !== filterStage) return;
-const key = `${pt.team}_${pt.student}`;
-if(!aggregate[key]) aggregate[key] = { name: pt.student, team: pt.team, cat: pt.cat, total: 0 };
-aggregate[key].total += pt.score;
-});
-const sorted = Object.values(aggregate).sort((a,b) => b.total - a.total);
-tbody.innerHTML = sorted.map(s => `
-<tr onclick="viewCandidateBreakdown('${s.name}', '${s.team}')" style="cursor:pointer;">
-<td><strong>${s.name}</strong></td>
-<td>${s.team}</td>
-<td>${s.cat}</td>
-<td><strong style="color:#d4af37;">${s.total}</strong></td>
-</tr>
-`).join('') || '<tr><td colspan="4">No scores accumulated.</td></tr>';
-}
-
-window.viewCandidateBreakdown = function(sName, team) {
-const studentPts = window.appState.points.filter(pt => pt.student === sName && pt.team === team);
-let content = '<table style="width:100%; border-collapse:collapse;"><thead><tr><th>Program</th><th>Score</th></tr></thead><tbody>';
-let total = 0;
-studentPts.forEach(pt => {
-const prog = window.appState.programs.find(p => p.id === pt.progId) || { name: 'Unknown' };
-content += `<tr><td>${prog.name}</td><td><strong>${pt.score}</strong></td></tr>`;
-total += pt.score;
-});
-content += `</tbody></table><div style="margin-top:10px; font-weight:bold; text-align:right;">Total Points: <span style="color:#d4af37;">${total}</span></div>`;
-document.getElementById('det-modal-title').innerText = `${sName} (${team}) - Program Breakdown`;
-document.getElementById('det-modal-content').innerHTML = content;
-document.getElementById('detail-modal-overlay').style.display = 'flex';
-}
-
-window.renderStatesDashboard = function() {
-const tbody = document.getElementById('states-table-body');
-if(!tbody) return;
-const teamTotals = {};
-window.appState.teams.forEach(t => teamTotals[t.user] = 0);
-window.appState.points.forEach(pt => {
-if(teamTotals[pt.team] !== undefined) teamTotals[pt.team] += pt.score;
-});
-const sortedTeams = Object.entries(teamTotals).sort((a,b) => b[1] - a[1]);
-tbody.innerHTML = sortedTeams.map(([tName, total]) => `
-<tr onclick="viewTeamBreakdown('${tName}')" style="cursor:pointer;">
-<td><strong>${tName}</strong></td>
-<td><strong style="color:#d4af37;">${total}</strong></td>
-</tr>
-`).join('') || '<tr><td colspan="2">No data.</td></tr>';
-const teamDrop = document.getElementById('rank-team-filter');
-if(teamDrop && teamDrop.children.length === 1) {
-teamDrop.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
-}
-}
-
-window.viewTeamBreakdown = function(tName) {
-const teamPts = window.appState.points.filter(pt => pt.team === tName);
-let content = '<table style="width:100%; border-collapse:collapse;"><thead><tr><th>Student</th><th>Program</th><th>Score</th></tr></thead><tbody>';
-let total = 0;
-teamPts.forEach(pt => {
-const prog = window.appState.programs.find(p => p.id === pt.progId) || { name: 'Unknown' };
-content += `<tr><td>${pt.student}</td><td>${prog.name}</td><td><strong>${pt.score}</strong></td></tr>`;
-total += pt.score;
-});
-content += `</tbody></table><div style="margin-top:10px; font-weight:bold; text-align:right;">Aggregated Team Score: <span style="color:#d4af37;">${total}</span></div>`;
-document.getElementById('det-modal-title').innerText = `Team Breakdown - ${tName}`;
-document.getElementById('det-modal-content').innerHTML = content;
-document.getElementById('detail-modal-overlay').style.display = 'flex';
-}
-
-window.renderRankWinnersList = function() {
-const tbody = document.getElementById('rank-winners-body');
-if(!tbody) return;
-const teamFilter = document.getElementById('rank-team-filter');
-const posFilter = document.getElementById('rank-pos-filter');
-const fTeam = teamFilter ? teamFilter.value : '';
-const fPos = posFilter ? posFilter.value : 'all';
-const allRows = [];
-const distinctProgs = [...new Set((window.appState.points || []).map(p => p.progId))];
-distinctProgs.forEach(pid => {
-const prog = window.appState.programs.find(p => p.id === pid) || { name: 'N/A' };
-const subPts = window.appState.points
-.filter(pt => pt.progId === pid)
-.sort((a,b) => Number(b.score || 0) - Number(a.score || 0));
-subPts.forEach((pt, idx) => {
-const rank = idx + 1;
-if(fTeam && pt.team !== fTeam) return;
-if(fPos !== 'all' && rank !== parseInt(fPos, 10)) return;
-allRows.push({ rank, student: pt.student || '', team: pt.team || '', program: prog.name || 'N/A', score: Number(pt.score || 0) });
-});
-});
-allRows.sort((a,b) => a.rank - b.rank);
-let count = 1;
-tbody.innerHTML = allRows.map(row => `
-<tr>
-<td>${count++}</td>
-<td><strong>${row.student}</strong></td>
-<td>${row.team}</td>
-<td>${row.program}</td>
-<td>${row.score}</td>
-<td><span style="font-weight:bold; color:#d4af37;">Rank ${row.rank}</span></td>
-</tr>
-`).join('') || '<tr><td colspan="6">No winners matching position criteria.</td></tr>';
-}
-
-window.toggleRegLock = function() { 
-window.appState.portalOpen = !window.appState.portalOpen; 
-saveKey('portalOpen', window.appState.portalOpen); 
-syncControlPanelViews();
-}
-
-window.addTeamMaster = function(e) {
-e.preventDefault();
-window.appState.teams.push({ user: document.getElementById('m-team-user').value.trim(), pass: document.getElementById('m-team-pass').value.trim() });
-saveKey('teams', window.appState.teams);
-syncControlPanelViews();
-e.target.reset();
-}
-
-window.deleteTeamMaster = function(idx) { 
-window.appState.teams.splice(idx, 1); 
-saveKey('teams', window.appState.teams);
-syncControlPanelViews();
-}
-
-window.addProgramMaster = function(e) {
-e.preventDefault();
-window.appState.programs.push({
-id: 'pr_'+Date.now(),
-name: document.getElementById('m-prog-name').value.trim(),
-cat: document.getElementById('m-prog-cat').value,
-stage: document.getElementById('m-prog-stage').value,
-limit: parseInt(document.getElementById('m-prog-limit').value),
-topic: ''
-});
-saveKey('programs', window.appState.programs);
-syncControlPanelViews();
-e.target.reset();
-}
-
-window.deleteProgramMaster = function(id) { 
-window.appState.programs = window.appState.programs.filter(p => p.id !== id); 
-saveKey('programs', window.appState.programs);
-syncControlPanelViews();
-}
-
-window.uploadTeamStatusPoster = async function(e) {
-e.preventDefault();
-const btn = document.getElementById('btn-up-status');
-const f = document.getElementById('status-file').files[0];
-if(f) {
-btn.innerText = "Processing...";
-btn.disabled = true;
-const compressed = await compressImage(f, 800, 0.6);
-if(!window.appState.teamStatusList) window.appState.teamStatusList = [];
-const newStatusItem = { id: 'ts_'+Date.now(), url: compressed, published: false };
-window.appState.teamStatusList.unshift(newStatusItem);
-window.appState.teamStatusUrl = compressed;
-renderResultPhaseFeeds();
-syncControlPanelViews();
-saveKey('teamStatusList', window.appState.teamStatusList);
-saveKey('teamStatusUrl', compressed);
-btn.innerText = "Upload Status Poster";
-btn.disabled = false;
-e.target.reset();
-}
-}
-
-window.deleteStatusItem = function(id) {
-if(!window.appState.teamStatusList) return;
-window.appState.teamStatusList = window.appState.teamStatusList.filter(item => item.id !== id);
-window.appState.teamStatusUrl = window.appState.teamStatusList.length > 0 ? window.appState.teamStatusList[0].url : '';
-saveKey('teamStatusList', window.appState.teamStatusList);
-saveKey('teamStatusUrl', window.appState.teamStatusUrl);
-syncControlPanelViews();
-renderResultPhaseFeeds();
-}
-
-window.populateResProgDropdown = function() {
-const cat = document.getElementById('res-upload-cat').value;
-const drop = document.getElementById('res-upload-prog');
-const matched = window.appState.programs.filter(p => p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
-drop.innerHTML = '<option value="">-- Choose Program --</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-}
-
-window.uploadProgramResult = async function(e) {
-e.preventDefault();
-const btn = document.getElementById('btn-up-res');
-const progId = document.getElementById('res-upload-prog').value;
-const customNum = document.getElementById('res-custom-number').value.trim();
-const yt = document.getElementById('res-yt-url').value.trim();
-const fileEl = document.getElementById('res-file').files[0];
-if(fileEl && progId) {
-btn.innerText = "Uploading...";
-btn.disabled = true;
-const compressed = await compressImage(fileEl, 800, 0.6);
-window.appState.results = window.appState.results.filter(r => r.progId !== progId);
-window.appState.results.push({ progId, number: customNum, poster: compressed, youtube: yt, published: false });
-filterResultPrograms();
-syncControlPanelViews();
-saveKey('results', window.appState.results);
-btn.innerText = "Upload Result";
-btn.disabled = false;
-}
-}
-
-window.setResultPublished = function(progId, shouldPublish) {
-const item = (window.appState.results || []).find(r => r.progId === progId);
-if(!item) return;
-item.published = !!shouldPublish;
-saveKey('results', window.appState.results);
-renderPublishPanel();
-filterResultPrograms();
-syncControlPanelViews();
-}
-
-window.setStatusPublished = function(id, shouldPublish) {
-const item = (window.appState.teamStatusList || []).find(r => r.id === id);
-if(!item) return;
-item.published = !!shouldPublish;
-saveKey('teamStatusList', window.appState.teamStatusList);
-renderPublishPanel();
-renderResultPhaseFeeds();
-syncControlPanelViews();
-}
-
-window.renderPublishPanel = function() {
-const resBox = document.getElementById('publish-results-list');
-if(resBox) {
-const results = [...(window.appState.results || [])].sort((a,b) => Number(a.number || 999999) - Number(b.number || 999999));
-resBox.innerHTML = results.length ? results.map(r => {
-const p = window.appState.programs.find(pr => pr.id === r.progId) || { name:'Unknown Program', cat:'' };
-const pub = r.published === true;
-return `
-<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:10px; background:rgba(0,0,0,0.03);">
-<div style="min-width:0;">
-<div style="font-weight:800;">Result ${r.number || ''} — ${p.name}</div>
-<div style="font-size:0.75rem; color:var(--text-sub);">${p.cat || ''} • ${pub ? 'Published to public site' : 'Stored only'}</div>
-</div>
-<label style="display:flex; align-items:center; gap:7px; white-space:nowrap; font-size:0.78rem; font-weight:800;">
-<input type="checkbox" ${pub ? 'checked' : ''} onchange="setResultPublished('${r.progId}', this.checked)" style="width:20px;height:20px;">
-<span style="color:${pub ? '#10b981' : '#f59e0b'}">${pub ? '✅ Published' : '❌ Not Published'}</span>
-</label>
-</div>`;
-}).join('') : '<div style="color:var(--text-sub); text-align:center; padding:12px;">No uploaded results yet.</div>';
-}
-const stBox = document.getElementById('publish-status-list');
-if(stBox) {
-const items = window.appState.teamStatusList || [];
-stBox.innerHTML = items.length ? items.map((item,idx) => {
-const pub = item.published === true;
-return `
-<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:10px; background:rgba(0,0,0,0.03);">
-<div style="display:flex; align-items:center; gap:10px; min-width:0;">
-<img src="${item.url}" style="width:56px;height:40px;border-radius:6px;object-fit:cover;">
-<div><div style="font-weight:800;">Result Poster #${idx+1}</div><div style="font-size:0.75rem;color:var(--text-sub);">${pub ? 'Visible publicly' : 'Stored only'}</div></div>
-</div>
-<label style="display:flex; align-items:center; gap:7px; white-space:nowrap; font-size:0.78rem; font-weight:800;">
-<input type="checkbox" ${pub ? 'checked' : ''} onchange="setStatusPublished('${item.id}', this.checked)" style="width:20px;height:20px;">
-<span style="color:${pub ? '#10b981' : '#f59e0b'}">${pub ? '✅ Published' : '❌ Not Published'}</span>
-</label>
-</div>`;
-}).join('') : '<div style="color:var(--text-sub); text-align:center; padding:12px;">No uploaded posters yet.</div>';
-}
-}
-
-window.deleteResultMaster = function(progId) { 
-window.appState.results = window.appState.results.filter(r => r.progId !== progId); 
-saveKey('results', window.appState.results);
-syncControlPanelViews();
-filterResultPrograms();
-}
-
-window.toggleUpdateVideoUrl = function() {
-const type = document.getElementById('up-type').value;
-const linkInput = document.getElementById('up-video-link');
-const lblFile = document.getElementById('lbl-up-file');
-if(type === 'video') {
-linkInput.style.display = 'block'; linkInput.required = true; lblFile.innerText = "Choose Video Thumbnail Image";
-} else {
-linkInput.style.display = 'none'; linkInput.required = false; lblFile.innerText = "Choose Photo";
-}
-}
-
-window.uploadUpdateFeed = async function(e) {
-e.preventDefault();
-const btn = document.getElementById('btn-up-feed');
-const type = document.getElementById('up-type').value;
-const f = document.getElementById('up-file').files[0];
-const vLink = document.getElementById('up-video-link').value.trim();
-if(!f) return;
-btn.innerText = "Uploading..."; btn.disabled = true;
-try {
-const compressedImage = await compressImage(f, 800, 0.6);
-if(!window.appState.updates) window.appState.updates = [];
-if (type === 'photo') {
-window.appState.updates.unshift({ id:'up_'+Date.now(), type: 'photo', url: compressedImage });
-} else {
-window.appState.updates.unshift({ id:'up_'+Date.now(), type: 'video', url: vLink, thumb: compressedImage });
-}
-renderPinterestUpdates('all');
-syncControlPanelViews();
-saveKey('updates', window.appState.updates);
-btn.innerText = "Upload & Publish"; btn.disabled = false;
-e.target.reset();
-window.toggleUpdateVideoUrl();
-} catch(err) {
-btn.innerText = "Upload & Publish"; btn.disabled = false; alert("Failed to upload media.");
-}
-}
-
-window.deleteUpdateMaster = function(id) { 
-window.appState.updates = window.appState.updates.filter(u => u.id !== id); 
-saveKey('updates', window.appState.updates);
-syncControlPanelViews();
-renderPinterestUpdates('all');
-}
-
-window.uploadStreamLinks = async function(e) {
-e.preventDefault();
-const btn = document.getElementById('btn-up-stream');
-const title = document.getElementById('st-title').value.trim();
-const url = document.getElementById('st-url').value.trim();
-const mode = document.getElementById('st-mode').value;
-const thumbFile = document.getElementById('st-thumb').files[0];
-if(thumbFile) {
-btn.innerText = "Adding..."; btn.disabled = true;
-const thumbData = await compressImage(thumbFile, 600, 0.6);
-const obj = { id: 'st_'+Date.now(), title, url, thumb: thumbData, mode };
-if(mode === 'live') {
-window.appState.livelinks.push(obj); renderResultPhaseFeeds(); saveKey('livelinks', window.appState.livelinks);
-} else {
-window.appState.highlights.push(obj); renderResultPhaseFeeds(); saveKey('highlights', window.appState.highlights);
-}
-syncControlPanelViews();
-btn.innerText = "Add Stream"; btn.disabled = false; e.target.reset(); alert("Stream Added.");
-}
-}
-
-window.deleteStreamMaster = function(id, mode) {
-if(mode === 'live') {
-window.appState.livelinks = window.appState.livelinks.filter(l => l.id !== id); saveKey('livelinks', window.appState.livelinks);
-} else {
-window.appState.highlights = window.appState.highlights.filter(h => h.id !== id); saveKey('highlights', window.appState.highlights);
-}
-syncControlPanelViews();
-renderResultPhaseFeeds();
-}
-
-function populateReportProgDropdown() {
-const cat = document.getElementById('rep-cat').value;
-const drop = document.getElementById('rep-prog');
-if(!drop) return;
-const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
-drop.innerHTML = '<option value="">All Programs (A-Z)</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-}
-
-function syncControlPanelViews() {
-const btn = document.getElementById('lock-reg-btn');
-if(btn) {
-btn.innerText = window.appState.portalOpen ? "Lock Reg" : "Unlock Reg";
-btn.className = window.appState.portalOpen ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
-}
-if(document.getElementById('m-max-limit-input')) {
-document.getElementById('m-max-limit-input').value = window.appState.maxProgLimit;
-}
-const v = window.appState.visibilities || {};
-for(let key in v) {
-const el = document.getElementById(`toggle-vis-${key}`);
-if(el) el.checked = !!v[key];
-}
-const mTeams = document.getElementById('master-teams-list');
-if(mTeams) {
-mTeams.innerHTML = window.appState.teams.map((t, idx) => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-<span>${t.user}</span> <button class="btn btn-danger btn-sm" onclick="deleteTeamMaster(${idx})">x</button>
-</div>
-`).join('');
-}
-const mProgs = document.getElementById('master-progs-list');
-if(mProgs) {
-mProgs.innerHTML = window.appState.programs.sort((a,b)=>a.name.localeCompare(b.name)).map(p => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-<span><strong>${p.name}</strong> (${p.cat})</span> <button class="btn btn-danger btn-sm" onclick="deleteProgramMaster('${p.id}')">x</button>
-</div>
-`).join('');
-}
-const mStatus = document.getElementById('master-status-preview');
-if(mStatus) {
-const list = window.appState.teamStatusList || [];
-mStatus.innerHTML = list.map((item, idx) => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; border-radius:6px; font-size:0.85rem;">
-<img src="${item.url}" style="height:40px; border-radius:4px; object-fit:contain;">
-<span>Poster #${idx+1} — ${item.published === true ? '✅ Published' : '❌ Not Published'}</span>
-<button class="btn btn-danger btn-sm" onclick="deleteStatusItem('${item.id}')">Delete</button>
-</div>
-`).join('');
-}
-const mRes = document.getElementById('master-results-list');
-if(mRes) {
-mRes.innerHTML = window.appState.results.map(r => {
-const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Unknown' };
-return `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-<span>Result ${r.number || ''}: ${p.name} — ${r.published === true ? '✅ Published' : '❌ Not Published'}</span> <button class="btn btn-danger btn-sm" onclick="deleteResultMaster('${r.progId}')">x</button>
-</div>
-`;
-}).join('');
-}
-const mUpdates = document.getElementById('master-updates-list');
-if(mUpdates) {
-mUpdates.innerHTML = (window.appState.updates || []).map(u => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-<span>Update (${u.type})</span> <button class="btn btn-danger btn-sm" onclick="deleteUpdateMaster('${u.id}')">x</button>
-</div>
-`).join('');
-}
-const mStreams = document.getElementById('master-streams-list');
-if(mStreams) {
-mStreams.innerHTML = [
-...window.appState.livelinks.map(l => ({ ...l, mode:'live' })),
-...window.appState.highlights.map(h => ({ ...h, mode:'highlight' }))
-].map(s => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px; font-size:0.85rem;">
-<span>${s.mode.toUpperCase()}: ${s.title}</span> <button class="btn btn-danger btn-sm" onclick="deleteStreamMaster('${s.id}', '${s.mode}')">x</button>
-</div>
-`).join('');
-}
-const rTeam = document.getElementById('rep-team');
-if(rTeam && rTeam.children.length === 1) {
-rTeam.innerHTML = '<option value="">All Teams</option>' + window.appState.teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
-}
-renderReportTable();
-}
-
-window.renderReportTable = function() {
-const fTeam = document.getElementById('rep-team') ? document.getElementById('rep-team').value : '';
-const fCat = document.getElementById('rep-cat') ? document.getElementById('rep-cat').value : '';
-const fProg = document.getElementById('rep-prog') ? document.getElementById('rep-prog').value : '';
-const searchQ = document.getElementById('rep-prog-search') ? document.getElementById('rep-prog-search').value.toLowerCase().trim() : '';
-const tbody = document.getElementById('report-table-body');
-if(!tbody) return;
-let rows = '';
-let count = 1;
-window.appState.registrations.forEach(r => {
-const p = window.appState.programs.find(pr => pr.id === r.progId);
-if(!p) return;
-if(fTeam && r.team !== fTeam) return;
-if(fCat && r.cat !== fCat) return;
-if(fProg && r.progId !== fProg) return;
-if(searchQ && !p.name.toLowerCase().includes(searchQ)) return;
-r.participants.forEach(name => {
-rows += `<tr>
-<td style="text-align:center;">${count++}</td>
-<td><strong>${name}</strong></td>
-<td>${r.team}</td>
-<td>${r.cat}</td>
-<td>${p.name}</td>
-</tr>`;
-});
-});
-tbody.innerHTML = rows || '<tr><td colspan="5" style="text-align:center;">No entries found.</td></tr>';
-}
-
-window.populateEsProgs = function() {
-const cat = document.getElementById('es-cat-select').value;
-const drop = document.getElementById('es-prog-select');
-if(!drop) return;
-const matched = window.appState.programs.filter(p => !cat || p.cat === cat).sort((a,b)=>a.name.localeCompare(b.name));
-drop.innerHTML = '<option value="">All Programs</option>' + matched.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-};
-
-window.renderEntrySignTable = function() {
-const fCat = document.getElementById('es-cat-select') ? document.getElementById('es-cat-select').value : '';
-const fProg = document.getElementById('es-prog-select') ? document.getElementById('es-prog-select').value : '';
-const tbody = document.getElementById('entry-sign-table-body');
-const title = document.getElementById('es-print-title');
-if(!tbody) return;
-let printTitle = 'ENTRY SIGN';
-if(fProg) {
-const p = window.appState.programs.find(pr => pr.id === fProg);
-if(p) printTitle += ' - ' + p.name;
-} else if (fCat) {
-printTitle += ' - ' + fCat;
-}
-if(title) title.innerText = printTitle;
-let rows = '';
-window.appState.registrations.forEach(r => {
-const p = window.appState.programs.find(pr => pr.id === r.progId);
-if(!p) return;
-if(fCat && r.cat !== fCat) return;
-if(fProg && r.progId !== fProg) return;
-r.participants.forEach(name => {
-const savedPt = window.appState.points.find(pt => pt.progId === r.progId && pt.team === r.team && pt.student === name);
-const codeLet = savedPt ? (savedPt.codeLetter || '') : '';
-rows += '<tr>' +
-'<td style="text-align:center; font-weight:bold;">' + codeLet + '</td>' +
-'<td><strong>' + name + '</strong>' + (!fProg ? '<br><small style="color:gray;">' + p.name + '</small>' : '') + '</td>' +
-'<td>' + r.team + '</td>' +
-'<td></td>' +
-'</tr>';
-});
-});
-tbody.innerHTML = rows || '<tr><td colspan="4" style="text-align:center;">No entries found.</td></tr>';
-};
 
 function renderResultPhaseFeeds() {
-const statusBox = document.getElementById('team-status-poster-box');
-if(statusBox) {
-const list = (window.appState.teamStatusList || []).filter(item => item.published === true);
-if(list.length > 0) {
-statusBox.innerHTML = list.map((item, index) => `
-<div class="masonry-item ${index === 0 ? 'team-status-featured' : 'team-status-regular'}" onclick="openMediaViewer('${item.url}', 'photo')">
-<img src="${item.url}" loading="${index === 0 ? 'eager' : 'lazy'}" decoding="async" class="feed-media-img">
-<div class="media-click-overlay">
-<span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:6px; color:#cbd5e1;">
-<i class="fa-solid fa-image"></i> Click to Open
-</span>
+renderTeamStatusPosters();
+renderResultProgramsList();
+renderPinterestUpdates('all');
+renderLiveLinks();
+renderHighlights();
+}
+
+window.openSection = function(sectionId) {
+showPanel(sectionId);
+}
+
+function renderTeamStatusPosters() {
+const box = document.getElementById('team-status-poster-box');
+if(!box) return;
+const list = window.appState.teamStatusList || [];
+if(list.length === 0) {
+box.innerHTML = '<p style="color:var(--text-sub); text-align:center; grid-column:1/-1;">No Team Status posters uploaded.</p>';
+return;
+}
+box.innerHTML = list.map((item, idx) => `
+<div class="masonry-item ${idx === 0 ? 'team-status-featured' : 'team-status-regular'}" onclick="openMediaViewer('${item.url}', 'image')">
+<img src="${item.url}" alt="Team Status Poster" loading="lazy">
+</div>
+`).join('');
+}
+
+function renderResultProgramsList() {
+const display = document.getElementById('results-display-list');
+if(!display) return;
+const catFilter = document.getElementById('res-search-cat')?.value || '';
+const query = (document.getElementById('res-prog-search')?.value || '').toLowerCase().trim();
+let results = window.appState.results || [];
+if(catFilter) results = results.filter(r => r.cat === catFilter);
+if(query) results = results.filter(r => r.progName.toLowerCase().includes(query) || (r.customNum && r.customNum.toString().includes(query)));
+if(results.length === 0) {
+display.innerHTML = '<p style="color:var(--text-sub); text-align:center;">No published results available.</p>';
+return;
+}
+display.innerHTML = results.map(r => `
+<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-bottom:10px;">
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<strong style="color:#d4af37;">#${r.customNum || ''} - ${r.progName}</strong>
+<span style="font-size:0.75rem; color:var(--text-sub);">${r.cat}</span>
+</div>
+<div style="margin-top:8px; display:flex; gap:8px;">
+${r.imageUrl ? `<button class="btn btn-sm btn-primary" onclick="openMediaViewer('${r.imageUrl}', 'image')"><i class="fa-solid fa-image"></i> View Poster</button>` : ''}
+${r.ytUrl ? `<a href="${r.ytUrl}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-solid fa-youtube"></i> Watch Video</a>` : ''}
 </div>
 </div>
 `).join('');
-} else {
-statusBox.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">No Team Status published.</p>';
-}
-}
-filterResultPrograms();
-renderPinterestUpdates('all');
-const liveFeed = document.getElementById('livelink-feed');
-if(liveFeed) {
-liveFeed.innerHTML = window.appState.livelinks.map(l => `
-<div class="masonry-item">
-<img src="${l.thumb}" loading="lazy" decoding="async" class="feed-media-img">
-<h5 style="margin-top:6px; font-size:0.9rem;">${l.title}</h5>
-<a href="${l.url}" target="_blank" class="btn btn-sm btn-danger btn-block" style="margin-top:6px;"><i class="fa-solid fa-play"></i> Watch Stream</a>
-</div>
-`).join('') || '<p style="grid-column: 1/-1;">No Active Live Streams.</p>';
-}
-const hlFeed = document.getElementById('highlights-feed');
-if(hlFeed) {
-hlFeed.innerHTML = window.appState.highlights.map(h => `
-<div class="masonry-item">
-<img src="${h.thumb}" loading="lazy" decoding="async" class="feed-media-img">
-<h5 style="margin-top:6px; font-size:0.9rem;">${h.title}</h5>
-<a href="${h.url}" target="_blank" class="btn btn-sm btn-block" style="margin-top:6px;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open</a>
-</div>
-`).join('') || '<p style="grid-column: 1/-1;">No Highlights Cataloged.</p>';
-}
 }
 
 window.filterResultPrograms = function() {
-const catEl = document.getElementById('res-search-cat');
-const searchEl = document.getElementById('res-prog-search');
-const container = document.getElementById('results-display-list');
-if(!container) return;
-const cat = catEl ? catEl.value : '';
-const searchQ = searchEl ? searchEl.value.toLowerCase().trim() : '';
-
-const sortedResults = [...(window.appState.results || [])].sort((a,b) => Number(a.number || 999999) - Number(b.number || 999999));
-
-const matchedResults = sortedResults.filter(r => r.published === true).filter(r => {
-const p = window.appState.programs.find(pr => pr.id === r.progId);
-if(!p) return false;
-if(cat && p.cat !== cat) return false;
-if(searchQ) {
-const matchProgName = p.name.toLowerCase().includes(searchQ);
-const matchResultNum = String(r.number || '').toLowerCase() === searchQ || String(r.number || '').toLowerCase().includes(searchQ);
-if(!matchProgName && !matchResultNum) return false;
-}
-return true;
-});
-
-container.innerHTML = matchedResults.map(r => {
-const p = window.appState.programs.find(pr => pr.id === r.progId) || { name: 'Program', cat: 'N/A' };
-return `
-<div style="background:rgba(0,0,0,0.05); padding:14px; border:1px solid var(--border-color); margin-bottom:10px; border-radius:16px;">
-<h4>${p.name} <span style="font-size:0.75rem; color:var(--text-sub);">(${p.cat})</span> - <span style="color:#d4af37;">Result ${r.number || ''}</span></h4>
-<div style="margin-top:8px;">
-<button class="btn btn-sm btn-success" id="btn-toggle-res-${r.progId}" onclick="toggleInlineResultView('${r.progId}', '${r.poster}')">Result View</button>
-<div id="inline-res-box-${r.progId}" style="display:none; margin-top:10px; text-align:center;"></div>
-${r.youtube ? `<div style="margin-top:6px;"><a href="${r.youtube}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-brands fa-youtube"></i> Watch Video</a></div>` : ''}
-</div>
-</div>
-`;
-}).join('') || '<p style="text-align:center; color:var(--text-sub); margin-top:15px;">No published results matching filter.</p>';
+renderResultProgramsList();
 }
 
-window.toggleInlineResultView = function(progId, posterData) {
-const box = document.getElementById(`inline-res-box-${progId}`);
-const btn = document.getElementById(`btn-toggle-res-${progId}`);
-if(!box || !btn) return;
-if(box.style.display === 'none') {
-confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
-box.innerHTML = `
-<img src="${posterData}" style="width:100%; border-radius:10px; cursor:pointer;" onclick="openMediaViewer('${posterData}', 'photo')">
-<div style="margin-top:8px; display:flex; justify-content:center; gap:8px;">
-<a href="${posterData}" download="Result_${progId}.png" class="btn btn-sm"><i class="fa-solid fa-download"></i> Download</a>
-<button class="btn btn-sm btn-warning" onclick="shareMediaDirectly('${posterData}', 'photo')"><i class="fa-solid fa-share-nodes"></i> Share</button>
-</div>
-`;
-box.style.display = 'block';
-btn.innerText = "Hide Result";
-btn.className = "btn btn-sm btn-danger";
-} else {
-box.style.display = 'none';
-box.innerHTML = '';
-btn.innerText = "Result View";
-btn.className = "btn btn-sm btn-success";
-}
-}
-
-window.renderPinterestUpdates = function(filterMode) {
+function renderPinterestUpdates(type = 'all') {
 const feed = document.getElementById('live-updates-feed');
 if(!feed) return;
-const targetUpdates = (window.appState.updates || []).filter(u => filterMode === 'all' || u.type === filterMode);
-feed.innerHTML = targetUpdates.map(u => `
-<div class="masonry-item" ${u.type === 'photo' ? `onclick="openMediaViewer('${u.url}', 'photo')"` : ''}>
-${u.type === 'photo' 
-? `<img src="${u.url}" loading="lazy">
-<div class="media-click-overlay"><span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:2px 8px; border-radius:6px; color:#cbd5e1;"><i class="fa-solid fa-image"></i> Click to Open</span></div>` 
-: `<img src="${u.thumb}" loading="lazy">
-<a href="${u.url}" target="_blank" class="btn btn-sm btn-danger btn-block" style="margin-top:8px;"><i class="fa-solid fa-play"></i> Watch Video</a>`}
+let list = window.appState.updates || [];
+if(type !== 'all') list = list.filter(u => u.type === type);
+if(list.length === 0) {
+feed.innerHTML = '<p style="color:var(--text-sub); text-align:center; grid-column:1/-1;">No updates posted.</p>';
+return;
+}
+feed.innerHTML = list.map(u => `
+<div class="masonry-item" onclick="openMediaViewer('${u.fileUrl}', '${u.type}')">
+${u.type === 'photo' ? `<img src="${u.fileUrl}" loading="lazy">` : `<video src="${u.fileUrl}"></video>`}
 </div>
-`).join('') || '<p style="grid-column: 1/-1;">No updates cataloged.</p>';
+`).join('');
 }
 
-window.openMediaViewer = function(mediaUrl, type) {
-const container = document.getElementById('media-viewer-container');
-const dBtn = document.getElementById('btn-media-download');
-const sBtn = document.getElementById('btn-media-share');
-if(type === 'photo') {
-container.innerHTML = `<img src="${mediaUrl}" style="max-width:100%; max-height:60vh; border-radius:8px; object-fit:contain;">`;
-} else {
-container.innerHTML = `<video src="${mediaUrl}" controls autoplay playsinline style="max-width:100%; max-height:60vh; border-radius:8px;"></video>`;
+function renderLiveLinks() {
+const feed = document.getElementById('livelink-feed');
+if(!feed) return;
+const list = window.appState.livelinks || [];
+if(list.length === 0) {
+feed.innerHTML = '<p style="color:var(--text-sub); text-align:center; grid-column:1/-1;">No Live Streams available.</p>';
+return;
 }
-dBtn.onclick = () => {
-const a = document.createElement('a');
-a.href = mediaUrl;
-a.download = type === 'photo' ? `Bahja_Photo_${Date.now()}.jpg` : `Bahja_Video_${Date.now()}.mp4`;
-document.body.appendChild(a);
-a.click();
-document.body.removeChild(a);
-};
-sBtn.onclick = () => {
-shareMediaDirectly(mediaUrl, type);
+feed.innerHTML = list.map(l => `
+<div class="masonry-item" onclick="window.open('${l.url}', '_blank')">
+<img src="${l.thumbUrl}" loading="lazy">
+<div style="padding:6px; text-align:center; font-weight:bold; font-size:0.85rem;">${l.title}</div>
+</div>
+`).join('');
+}
+
+function renderHighlights() {
+const feed = document.getElementById('highlights-feed');
+if(!feed) return;
+const list = window.appState.highlights || [];
+if(list.length === 0) {
+feed.innerHTML = '<p style="color:var(--text-sub); text-align:center; grid-column:1/-1;">No Highlights available.</p>';
+return;
+}
+feed.innerHTML = list.map(h => `
+<div class="masonry-item" onclick="window.open('${h.url}', '_blank')">
+<img src="${h.thumbUrl}" loading="lazy">
+<div style="padding:6px; text-align:center; font-weight:bold; font-size:0.85rem;">${h.title}</div>
+</div>
+`).join('');
+}
+
+window.openMediaViewer = function(url, type) {
+const container = document.getElementById('media-viewer-container');
+if(type === 'photo' || type === 'image') {
+container.innerHTML = `<img src="${url}" style="max-width:100%; max-height:60vh; object-fit:contain;">`;
+} else {
+container.innerHTML = `<video src="${url}" controls style="max-width:100%; max-height:60vh;"></video>`;
+}
+document.getElementById('btn-media-download').onclick = () => window.open(url, '_blank');
+document.getElementById('btn-media-share').onclick = () => {
+if(navigator.share) navigator.share({ title: 'Bahja Fest Media', url: url });
+else alert("Sharing URL copied to clipboard: " + url);
 };
 document.getElementById('media-viewer-modal').style.display = 'flex';
 }
 
 window.closeMediaViewer = function() {
-const container = document.getElementById('media-viewer-container');
-container.innerHTML = '';
 document.getElementById('media-viewer-modal').style.display = 'none';
 }
 
-window.shareMediaDirectly = async function(mediaUrl, type) {
-try {
-if (navigator.share) {
-const response = await fetch(mediaUrl);
-const blob = await response.blob();
-const ext = type === 'photo' ? 'jpg' : 'mp4';
-const file = new File([blob], `bahja_${Date.now()}.${ext}`, { type: blob.type });
-if (navigator.canShare && navigator.canShare({ files: [file] })) {
-await navigator.share({
-files: [file],
-title: 'BAHJA FEST 2026',
-text: `Check this out from BAHJA Fest! ${window.location.href}`
+/* PRINT HELPER FUNCTION WITH TIME STAMP & EXACT CONTENT ONLY */
+function printContainerWithHeader(containerId, docTitle) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  
+  // Format local Malayalam/Indian standard time
+  const now = new Date();
+  const timeStr = now.toLocaleString('en-IN', {
+    dateStyle: 'medium',
+    timeStyle: 'medium'
+  });
+  
+  // Create or update printable meta header
+  let metaHeader = container.querySelector('.print-header-meta');
+  if (!metaHeader) {
+    metaHeader = document.createElement('div');
+    metaHeader.className = 'print-header-meta';
+    container.insertBefore(metaHeader, container.firstChild);
+  }
+  
+  metaHeader.innerHTML = `
+    <div><strong>${docTitle || 'BAHJA FEST REPORT'}</strong></div>
+    <div>Printed On: ${timeStr}</div>
+  `;
+  
+  window.print();
+}
+
+window.triggerCustomPrint = function(containerId, title) {
+  printContainerWithHeader(containerId, title || 'BAHJA FEST 2026');
+}
+
+window.printSinglePointLog = function(logIdx) {
+  const container = document.getElementById('pt-print-area');
+  const logs = window.appState.points || [];
+  
+  // Filter uniquely or fetch target log group
+  const filtered = window.appState.filteredPtLogs || logs;
+  const targetLog = filtered[logIdx];
+  if(!targetLog) return;
+
+  const prog = (window.appState.programs || []).find(p => p.id === targetLog.progId) || { name: targetLog.progId };
+
+  container.className = "print-target single-log-print";
+  container.style.display = 'block';
+  
+  container.innerHTML = `
+    <div style="padding: 10px; border: 2px solid #000; border-radius: 8px;">
+      <h2 style="text-align:center; margin-bottom: 10px; text-transform: uppercase;">Bahja Fest - Point Record</h2>
+      <table style="margin-top: 10px; width: 100%;">
+        <tr><td><strong>Category:</strong> ${targetLog.cat || 'N/A'}</td><td><strong>Program:</strong> ${prog.name || 'N/A'}</td></tr>
+        <tr><td><strong>Participant:</strong> ${targetLog.student || 'N/A'}</td><td><strong>Team:</strong> ${targetLog.team || 'N/A'}</td></tr>
+        <tr><td><strong>Code Letter:</strong> ${targetLog.codeLetter || 'N/A'}</td><td><strong>Awarded Marks:</strong> ${targetLog.score || 0}</td></tr>
+      </table>
+    </div>
+  `;
+  
+  printContainerWithHeader('pt-print-area', 'Point Evaluation Single Record');
+  container.style.display = 'none';
+}
+
+window.printAllPointRecords = function() {
+  const container = document.getElementById('pt-print-area');
+  const logs = window.appState.points || [];
+  
+  if(logs.length === 0) {
+    alert("No point evaluation logs to print.");
+    return;
+  }
+
+  container.className = "print-target";
+  container.style.display = 'block';
+
+  let tableRows = logs.map((pt, i) => {
+    const prog = (window.appState.programs || []).find(p => p.id === pt.progId) || { name: pt.progId };
+    return `
+      <tr>
+        <td>${i+1}</td>
+        <td>${prog.name}</td>
+        <td>${pt.cat}</td>
+        <td>${pt.student}</td>
+        <td>${pt.team}</td>
+        <td>${pt.codeLetter || '-'}</td>
+        <td>${pt.score}</td>
+      </tr>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <h2 style="text-align:center; margin-bottom: 15px;">BAHJA FEST - ALL POINT RECORDS</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Program</th><th>Category</th><th>Student</th><th>Team</th><th>Code</th><th>Score</th>
+        </tr>
+      </thead>
+      <tbody>${tableRows}</tbody>
+    </table>
+  `;
+
+  printContainerWithHeader('pt-print-area', 'All Point Records Log');
+  container.style.display = 'none';
+}
+
+function renderPtList() {
+const contentBox = document.getElementById('box-pt-list-content');
+if(!contentBox) return;
+const query = (document.getElementById('pt-logs-search')?.value || '').toLowerCase().trim();
+let logs = window.appState.points || [];
+
+if(query) {
+logs = logs.filter(pt => {
+const prog = (window.appState.programs || []).find(p => p.id === pt.progId) || { name: '' };
+return prog.name.toLowerCase().includes(query) || 
+pt.cat.toLowerCase().includes(query) || 
+pt.student.toLowerCase().includes(query) || 
+pt.team.toLowerCase().includes(query);
 });
+}
+
+window.appState.filteredPtLogs = logs;
+
+if(logs.length === 0) {
+contentBox.innerHTML = '<p style="color:var(--text-sub); text-align:center; padding:10px;">No point records match.</p>';
 return;
 }
+
+contentBox.innerHTML = logs.map((pt, idx) => {
+const prog = (window.appState.programs || []).find(p => p.id === pt.progId) || { name: pt.progId };
+return `
+<div class="point-log-card" style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:10px 14px; border-radius:10px; margin-bottom:8px;">
+<div>
+<div style="font-weight:bold; color:#d4af37;">${prog.name} (${pt.cat})</div>
+<div style="font-size:0.85rem; color:var(--text-main);">${pt.student} - <strong>${pt.team}</strong></div>
+<div style="font-size:0.75rem; color:var(--text-sub);">Code: ${pt.codeLetter || 'N/A'} | Mark: ${pt.score}</div>
+</div>
+<button class="btn btn-warning btn-sm no-print" onclick="printSinglePointLog(${idx})"><i class="fa-solid fa-print"></i> Print Result</button>
+</div>
+`;
+}).join('');
 }
-if (navigator.share) {
-await navigator.share({
-title: 'BAHJA FEST 2026',
-text: `Check this out from BAHJA Fest! ${window.location.href}`,
-url: window.location.href
+
+function renderCodeFormsList() {
+const contentBox = document.getElementById('box-code-forms-content');
+if(!contentBox) return;
+const query = (document.getElementById('pt-saved-code-search')?.value || '').toLowerCase().trim();
+let logs = window.appState.points || [];
+
+if(query) {
+logs = logs.filter(pt => {
+const prog = (window.appState.programs || []).find(p => p.id === pt.progId) || { name: '' };
+return prog.name.toLowerCase().includes(query) || 
+pt.cat.toLowerCase().includes(query) || 
+(pt.codeLetter && pt.codeLetter.toLowerCase().includes(query)) || 
+pt.student.toLowerCase().includes(query);
 });
+}
+
+if(logs.length === 0) {
+contentBox.innerHTML = '<p style="color:var(--text-sub); text-align:center; padding:10px;">No code letter records match.</p>';
+return;
+}
+
+contentBox.innerHTML = logs.map(pt => {
+const prog = (window.appState.programs || []).find(p => p.id === pt.progId) || { name: pt.progId };
+return `
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:8px 12px; border-radius:8px; margin-bottom:6px;">
+<div>
+<div style="font-weight:bold; color:#d4af37;">${prog.name} (${pt.cat})</div>
+<div style="font-size:0.85rem;">${pt.student} (${pt.team})</div>
+</div>
+<div style="font-weight:bold; font-size:1.1rem; color:#10b981;">Code: ${pt.codeLetter || '-'}</div>
+</div>
+`;
+}).join('');
+}
+
+function renderEjActiveProgram() {
+const activeId = window.appState.activeEjProgId;
+const titleEl = document.getElementById('ej-active-prog-title');
+const topicEl = document.getElementById('ej-topic-display-box');
+const tbody = document.getElementById('ej-candidates-inputs');
+if(!titleEl || !topicEl || !tbody) return;
+
+if(!activeId) {
+titleEl.innerText = "No Active Program Loaded";
+topicEl.innerText = "Topic will appear here...";
+tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;">Select or configure a program in Code Portal to view.</td></tr>';
+return;
+}
+
+const activeProg = window.appState.programs.find(p => p.id === activeId);
+if(!activeProg) return;
+
+titleEl.innerText = `${activeProg.name} (${activeProg.cat})`;
+topicEl.innerText = activeProg.topic || "No topic specified.";
+
+const activePts = window.appState.points.filter(pt => pt.progId === activeId && pt.codeLetter);
+if(activePts.length === 0) {
+tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#ef4444;">No code letters assigned for this active program yet.</td></tr>';
+return;
+}
+
+tbody.innerHTML = activePts.map(pt => `
+<tr>
+<td style="font-weight:bold; font-size:1.1rem; color:#d4af37;">Code ${pt.codeLetter}</td>
+<td>
+<div class="judge-mark-entry">
+<input type="number" min="0" max="100" class="form-control ej-score-field" data-code="${pt.codeLetter}" data-team="${pt.team}" data-student="${pt.student}" value="${pt.score || ''}" placeholder="Mark">
+</div>
+</td>
+</tr>
+`).join('');
+}
+
+window.saveEjMarks = function() {
+const activeId = window.appState.activeEjProgId;
+if(!activeId) { alert("No active program selected!"); return; }
+
+document.querySelectorAll('.ej-score-field').forEach(f => {
+const score = parseFloat(f.value) || 0;
+const team = f.getAttribute('data-team');
+const student = f.getAttribute('data-student');
+let existingPt = window.appState.points.find(pt => pt.progId === activeId && pt.team === team && pt.student === student);
+if(existingPt) existingPt.score = score;
+});
+
+saveKey('points', window.appState.points);
+alert("Judge marks submitted successfully!");
+renderEjActiveProgram();
+}
+
+let timerInterval = null;
+let timerSecondsTotal = 0;
+
+window.setEjTimer = function() {
+const m = parseInt(document.getElementById('ej-timer-minutes').value) || 0;
+const s = parseInt(document.getElementById('ej-timer-seconds').value) || 0;
+timerSecondsTotal = (m * 60) + s;
+updateEjTimerDisplay();
+}
+
+window.addEjTimerTime = function() {
+const m = parseInt(document.getElementById('ej-timer-minutes').value) || 0;
+const s = parseInt(document.getElementById('ej-timer-seconds').value) || 0;
+timerSecondsTotal += (m * 60) + s;
+updateEjTimerDisplay();
+}
+
+window.startEjTimer = function() {
+if(timerInterval) clearInterval(timerInterval);
+timerInterval = setInterval(() => {
+if(timerSecondsTotal > 0) {
+timerSecondsTotal--;
+updateEjTimerDisplay();
 } else {
-navigator.clipboard.writeText(`Check this out from BAHJA Fest! ${window.location.href}`);
-alert("Link copied to clipboard!");
+clearInterval(timerInterval);
+document.getElementById('ej-timer-status').innerText = "Time Up!";
 }
-} catch (err) {
-console.log("Sharing cancelled or unsupported:", err);
-}
+}, 1000);
+document.getElementById('ej-timer-status').innerText = "Running...";
 }
 
-applyGlobalWebsiteTheme(window.appState.theme || 'dark');
-applyLogoView();
-applyVisualCustomizations();
-applyFooterVisuals();
-render3DotMenu();
+window.pauseEjTimer = function() {
+if(timerInterval) clearInterval(timerInterval);
+document.getElementById('ej-timer-status').innerText = "Paused";
+}
 
-// Keep both submitted-list searches ready for instant filtering.
-document.addEventListener('DOMContentLoaded', function() {
-try {
-renderPtList();
-renderCodeFormsList();
-} catch(e) { console.warn('Search list initialization:', e); }
+window.resetEjTimer = function() {
+if(timerInterval) clearInterval(timerInterval);
+timerSecondsTotal = 0;
+updateEjTimerDisplay();
+document.getElementById('ej-timer-status').innerText = "Reset";
+}
+
+function updateEjTimerDisplay() {
+const hrs = Math.floor(timerSecondsTotal / 3600);
+const mins = Math.floor((timerSecondsTotal % 3600) / 60);
+const secs = timerSecondsTotal % 60;
+const pad = (n) => n.toString().padStart(2, '0');
+document.getElementById('ej-timer-display').innerText = `${pad(hrs)}:${pad(mins)}:${pad(secs)}:000`;
+}
+
+function renderJudgeLeaderboard() {
+const tbody = document.getElementById('judge-leaderboard-body');
+if(!tbody) return;
+const stageFilter = document.getElementById('jd-filter-stage')?.value || 'all';
+
+let studentScores = {};
+(window.appState.points || []).forEach(pt => {
+const prog = (window.appState.programs || []).find(p => p.id === pt.progId);
+if(stageFilter !== 'all' && prog && prog.stage !== stageFilter) return;
+
+const key = `${pt.student}_${pt.team}_${pt.cat}`;
+if(!studentScores[key]) studentScores[key] = { student: pt.student, team: pt.team, cat: pt.cat, points: 0 };
+studentScores[key].points += (pt.score || 0);
 });
 
+let sorted = Object.values(studentScores).sort((a,b) => b.points - a.points);
+if(sorted.length === 0) {
+tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No candidate standings logged yet.</td></tr>';
+return;
+}
+
+tbody.innerHTML = sorted.map(s => `
+<tr>
+<td><strong>${s.student}</strong></td>
+<td>${s.team}</td>
+<td>${s.cat}</td>
+<td style="font-weight:bold; color:#d4af37;">${s.points}</td>
+</tr>
+`).join('');
+}
+
+function renderStatesDashboard() {
+const tbody = document.getElementById('states-table-body');
+if(!tbody) return;
+
+let teamTotals = {};
+(window.appState.points || []).forEach(pt => {
+if(!teamTotals[pt.team]) teamTotals[pt.team] = 0;
+teamTotals[pt.team] += (pt.score || 0);
+});
+
+let sortedTeams = Object.keys(teamTotals).sort((a,b) => teamTotals[b] - teamTotals[a]);
+if(sortedTeams.length === 0) {
+tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;">No team standings found.</td></tr>';
+return;
+}
+
+tbody.innerHTML = sortedTeams.map(t => `
+<tr>
+<td style="font-weight:bold; color:#d4af37;">${t}</td>
+<td style="font-weight:bold; font-size:1.1rem;">${teamTotals[t]}</td>
+</tr>
+`).join('');
+}
+
+function renderRankWinnersList() {
+const tbody = document.getElementById('rank-winners-body');
+if(!tbody) return;
+const posFilter = document.getElementById('rank-pos-filter')?.value || 'all';
+const teamFilter = document.getElementById('rank-team-filter')?.value || '';
+
+const rankTeamSelect = document.getElementById('rank-team-filter');
+if(rankTeamSelect && rankTeamSelect.options.length <= 1) {
+const teams = window.appState.teams || [];
+rankTeamSelect.innerHTML = '<option value="">All Teams</option>' + teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
+}
+
+let points = [...(window.appState.points || [])];
+if(teamFilter) points = points.filter(p => p.team === teamFilter);
+
+points.sort((a,b) => (b.score || 0) - (a.score || 0));
+
+if(points.length === 0) {
+tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No positions awarded yet.</td></tr>';
+return;
+}
+
+tbody.innerHTML = points.map((pt, idx) => {
+const rank = idx + 1;
+if(posFilter !== 'all' && parseInt(posFilter) !== rank) return '';
+const prog = (window.appState.programs || []).find(p => p.id === pt.progId) || { name: pt.progId };
+return `
+<tr>
+<td>${rank}</td>
+<td><strong>${pt.student}</strong></td>
+<td>${pt.team}</td>
+<td>${prog.name}</td>
+<td>${pt.score}</td>
+<td style="font-weight:bold; color:#d4af37;">Rank ${rank}</td>
+</tr>
+`;
+}).join('');
+}
+
+window.populateEsProgs = function() {
+const cat = document.getElementById('es-cat-select').value;
+const drop = document.getElementById('es-prog-select');
+let progs = window.appState.programs || [];
+if(cat) progs = progs.filter(p => p.cat === cat);
+drop.innerHTML = '<option value="">All Programs</option>' + progs.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+}
+
+window.renderEntrySignTable = function() {
+const tbody = document.getElementById('entry-sign-table-body');
+if(!tbody) return;
+const cat = document.getElementById('es-cat-select').value;
+const progId = document.getElementById('es-prog-select').value;
+
+let pts = window.appState.points || [];
+if(cat) pts = pts.filter(p => p.cat === cat);
+if(progId) pts = pts.filter(p => p.progId === progId);
+
+if(pts.length === 0) {
+tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No sign sheet entries found.</td></tr>';
+return;
+}
+
+tbody.innerHTML = pts.map(p => `
+<tr>
+<td style="font-weight:bold; color:#d4af37;">Code ${p.codeLetter || '-'}</td>
+<td>${p.student}</td>
+<td>${p.team}</td>
+<td style="border-bottom:1px solid #000;"></td>
+</tr>
+`).join('');
+}
+
+function syncControlPanelViews() {
+const lockBtn = document.getElementById('lock-reg-btn');
+if(lockBtn) {
+const isLocked = !window.appState.portalOpen;
+lockBtn.innerText = isLocked ? "Locked (Open)" : "Open (Lock)";
+lockBtn.className = isLocked ? "btn btn-sm btn-danger" : "btn btn-sm btn-success";
+}
+renderMasterTeamsList();
+renderMasterProgsList();
+renderReportTable();
+}
+
+window.toggleRegLock = function() {
+window.appState.portalOpen = !window.appState.portalOpen;
+saveKey('portalOpen', window.appState.portalOpen);
+syncControlPanelViews();
+}
+
+window.saveMaxLimitMaster = function() {
+const val = parseInt(document.getElementById('m-max-limit-input').value) || 3;
+window.appState.maxProgLimit = val;
+saveKey('maxProgLimit', val);
+alert("Max limit updated.");
+}
+
+window.addTeamMaster = function(e) {
+e.preventDefault();
+const user = document.getElementById('m-team-user').value.trim();
+const pass = document.getElementById('m-team-pass').value.trim();
+if(!user || !pass) return;
+window.appState.teams.push({ user, pass });
+saveKey('teams', window.appState.teams);
+renderMasterTeamsList();
+document.getElementById('m-team-user').value = '';
+document.getElementById('m-team-pass').value = '';
+}
+
+function renderMasterTeamsList() {
+const box = document.getElementById('master-teams-list');
+if(!box) return;
+const teams = window.appState.teams || [];
+box.innerHTML = teams.map((t, idx) => `
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px;">
+<span><strong>${t.user}</strong> (Pass: ${t.pass})</span>
+<button class="btn btn-sm btn-danger" onclick="deleteTeamMaster(${idx})"><i class="fa-solid fa-trash"></i></button>
+</div>
+`).join('');
+}
+
+window.deleteTeamMaster = function(idx) {
+window.appState.teams.splice(idx, 1);
+saveKey('teams', window.appState.teams);
+renderMasterTeamsList();
+}
+
+window.addProgramMaster = function(e) {
+e.preventDefault();
+const name = document.getElementById('m-prog-name').value.trim();
+const cat = document.getElementById('m-prog-cat').value;
+const stage = document.getElementById('m-prog-stage').value;
+const limit = parseInt(document.getElementById('m-prog-limit').value) || 1;
+if(!name) return;
+const id = 'prog_' + Date.now();
+window.appState.programs.push({ id, name, cat, stage, limit });
+saveKey('programs', window.appState.programs);
+renderMasterProgsList();
+document.getElementById('m-prog-name').value = '';
+}
+
+function renderMasterProgsList() {
+const box = document.getElementById('master-progs-list');
+if(!box) return;
+const progs = window.appState.programs || [];
+box.innerHTML = progs.map((p, idx) => `
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px;">
+<span><strong>${p.name}</strong> [${p.cat}] (${p.stage}) - Max: ${p.limit}</span>
+<button class="btn btn-sm btn-danger" onclick="deleteProgramMaster(${idx})"><i class="fa-solid fa-trash"></i></button>
+</div>
+`).join('');
+}
+
+window.deleteProgramMaster = function(idx) {
+window.appState.programs.splice(idx, 1);
+saveKey('programs', window.appState.programs);
+renderMasterProgsList();
+}
+
+function populateReportProgDropdown() {
+const cat = document.getElementById('rep-cat')?.value || '';
+const drop = document.getElementById('rep-prog');
+if(!drop) return;
+let progs = window.appState.programs || [];
+if(cat) progs = progs.filter(p => p.cat === cat);
+progs.sort((a,b) => a.name.localeCompare(b.name));
+drop.innerHTML = '<option value="">All Programs (A-Z)</option>' + progs.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+}
+
+function renderReportTable() {
+const tbody = document.getElementById('report-table-body');
+if(!tbody) return;
+const team = document.getElementById('rep-team')?.value || '';
+const cat = document.getElementById('rep-cat')?.value || '';
+const progId = document.getElementById('rep-prog')?.value || '';
+const query = (document.getElementById('rep-prog-search')?.value || '').toLowerCase().trim();
+
+let regs = window.appState.registrations || [];
+if(team) regs = regs.filter(r => r.team === team);
+if(cat) regs = regs.filter(r => r.cat === cat);
+if(progId) regs = regs.filter(r => r.progId === progId);
+
+let flatList = [];
+regs.forEach(r => {
+const prog = window.appState.programs.find(p => p.id === r.progId) || { name: r.progId };
+if(query && !prog.name.toLowerCase().includes(query)) return;
+
+r.participants.forEach(pName => {
+flatList.push({ student: pName, team: r.team, cat: r.cat, progName: prog.name });
+});
+});
+
+if(flatList.length === 0) {
+tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No registration entries found.</td></tr>';
+return;
+}
+
+tbody.innerHTML = flatList.map((item, idx) => `
+<tr>
+<td>${idx+1}</td>
+<td><strong>${item.student}</strong></td>
+<td>${item.team}</td>
+<td>${item.cat}</td>
+<td>${item.progName}</td>
+</tr>
+`).join('');
+}
+
+function renderPublishPanel() {
+renderPublishResultsList();
+renderPublishStatusList();
+}
+
+function renderPublishResultsList() {
+const box = document.getElementById('publish-results-list');
+if(!box) return;
+const list = window.appState.results || [];
+box.innerHTML = list.map((r, idx) => `
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:8px 12px; border-radius:8px;">
+<span>#${r.customNum} - ${r.progName} (${r.cat})</span>
+<button class="btn btn-sm btn-danger" onclick="deletePublishResult(${idx})"><i class="fa-solid fa-trash"></i></button>
+</div>
+`).join('');
+}
+
+window.deletePublishResult = function(idx) {
+window.appState.results.splice(idx, 1);
+saveKey('results', window.appState.results);
+renderPublishResultsList();
+}
+
+function renderPublishStatusList() {
+const box = document.getElementById('publish-status-list');
+if(!box) return;
+const list = window.appState.teamStatusList || [];
+box.innerHTML = list.map((item, idx) => `
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:8px 12px; border-radius:8px;">
+<span>Poster #${idx+1}</span>
+<button class="btn btn-sm btn-danger" onclick="deletePublishStatus(${idx})"><i class="fa-solid fa-trash"></i></button>
+</div>
+`).join('');
+}
+
+window.deletePublishStatus = function(idx) {
+window.appState.teamStatusList.splice(idx, 1);
+saveKey('teamStatusList', window.appState.teamStatusList);
+renderPublishStatusList();
+}
+
+function syncProtectionFields() {
+const subContainer = document.getElementById('sub-panel-pass-managers-container');
+if(!subContainer) return;
+
+subContainer.innerHTML = PUBLIC_PANEL_SCHEMA.map(item => {
+const currentPass = (window.appState.subLocks || {})[item.key] || '';
+return `
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:8px; border-radius:8px; border:1px solid var(--border-color);">
+<span style="font-size:0.85rem; font-weight:bold;">${item.name}</span>
+<input type="password" class="form-control sub-pass-field" data-key="${item.key}" value="${currentPass}" placeholder="Passcode" style="width:140px; padding:4px 8px; font-size:0.8rem;">
+</div>
+`;
+}).join('') + `<button class="btn btn-sm btn-success btn-block" style="margin-top:8px;" onclick="saveSubPanelLocks()"><i class="fa-solid fa-lock"></i> Save Access Passcodes</button>`;
+}
+
+window.saveSubPanelLocks = function() {
+document.querySelectorAll('.sub-pass-field').forEach(f => {
+const key = f.getAttribute('data-key');
+window.appState.subLocks[key] = f.value.trim();
+});
+saveKey('subLocks', window.appState.subLocks);
+alert("Sub-panel access passcodes updated!");
+}
+
+window.verifyAndOpenMainCredShift = function() {
+const oldU = document.getElementById('prot-old-main-u').value.trim();
+const oldP = document.getElementById('prot-old-main-p').value.trim();
+const mainCreds = window.appState.mainCreds || { user:'', pass:'' };
+
+if(oldU === mainCreds.user && oldP === mainCreds.pass) {
+document.getElementById('prot-new-main-block').style.display = 'block';
+alert("Credentials verified! Enter new username and password below.");
+} else {
+alert("Current credentials incorrect!");
+}
+}
+
+window.commitMainCredShift = function() {
+const newU = document.getElementById('prot-new-main-u').value.trim();
+const newP = document.getElementById('prot-new-main-p').value.trim();
+if(!newU || !newP) { alert("Fields cannot be empty!"); return; }
+
+window.appState.mainCreds = { user: newU, pass: newP };
+saveKey('mainCreds', window.appState.mainCreds);
+alert("Main Login Credentials updated!");
+document.getElementById('prot-new-main-block').style.display = 'none';
+}
+
+function syncModifyConfigInputs() {
+const vis = window.appState.visuals || {};
+if(document.getElementById('mod-banner-text')) document.getElementById('mod-banner-text').value = vis.bannerText || 'WELCOME TO BAHJA FEST';
+if(document.getElementById('mod-title-text')) document.getElementById('mod-title-text').value = vis.titleText || 'BAHJA 2026';
+if(document.getElementById('mod-header-align')) document.getElementById('mod-header-align').value = vis.headerAlign || 'center';
+if(document.getElementById('mod-font-family')) document.getElementById('mod-font-family').value = vis.fontFamily || "'Poppins', sans-serif";
+}
+
+window.liveUpdateVisuals = function() {
+const bannerText = document.getElementById('mod-banner-text').value;
+const titleText = document.getElementById('mod-title-text').value;
+const headerAlign = document.getElementById('mod-header-align').value;
+const fontFamily = document.getElementById('mod-font-family').value;
+
+document.getElementById('txt-welcome-banner').innerText = bannerText;
+document.getElementById('txt-main-title').innerText = titleText;
+document.documentElement.style.setProperty('--header-align', headerAlign);
+document.documentElement.style.setProperty('--main-font', fontFamily);
+}
+
+window.saveVisualLayoutState = function() {
+const isDark = (window.appState.theme || 'dark') === 'dark';
+window.appState.visuals = {
+bannerText: document.getElementById('mod-banner-text').value,
+titleText: document.getElementById('mod-title-text').value,
+headerAlign: document.getElementById('mod-header-align').value,
+fontFamily: document.getElementById('mod-font-family').value,
+bannerColorDark: isDark ? document.getElementById('mod-banner-color').value : window.appState.visuals.bannerColorDark,
+titleColorDark: isDark ? document.getElementById('mod-title-color').value : window.appState.visuals.titleColorDark,
+bannerColorLight: !isDark ? document.getElementById('mod-banner-color').value : window.appState.visuals.bannerColorLight,
+titleColorLight: !isDark ? document.getElementById('mod-title-color').value : window.appState.visuals.titleColorLight
+};
+saveKey('visuals', window.appState.visuals);
+alert("Visual Layout settings saved!");
+}
+
+window.toggleAccordion = function(id) {
+const box = document.getElementById(id);
+if(box) box.classList.toggle('show');
+}
+
+window.toggleLaunchSection = function(id, el) {
+const box = document.getElementById(id);
+if(box) {
+const isHidden = box.style.display === 'none';
+box.style.display = isHidden ? 'block' : 'none';
+if(el) {
+const icon = el.querySelector('i');
+if(icon) icon.className = isHidden ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down';
+}
+}
+}
+
+window.handleTeamLogin = function(e) {
+e.preventDefault();
+const user = document.getElementById('login-team-user').value.trim();
+const pass = document.getElementById('login-team-pass').value.trim();
+const matchedTeam = (window.appState.teams || []).find(t => t.user === user && t.pass === pass);
+if(matchedTeam) {
+window.loggedTeamUser = user;
+document.getElementById('team-login-block').style.display = 'none';
+document.getElementById('team-portal-block').style.display = 'block';
+document.getElementById('logged-team-name').innerText = user;
+} else {
+alert("Invalid Team Login!");
+}
+}
+
+window.logoutTeam = function() {
+window.loggedTeamUser = null;
+document.getElementById('team-login-block').style.display = 'block';
+document.getElementById('team-portal-block').style.display = 'none';
+}
+
+window.handlePartLogin = function(e) {
+e.preventDefault();
+const user = document.getElementById('part-user').value.trim();
+const pass = document.getElementById('part-pass').value.trim();
+const matchedTeam = (window.appState.teams || []).find(t => t.user === user && t.pass === pass);
+if(matchedTeam) {
+window.activePartTeam = user;
+document.getElementById('part-login-block').style.display = 'none';
+document.getElementById('part-manage-block').style.display = 'block';
+document.getElementById('part-active-team').innerText = user;
+renderTeamStudentsList();
+} else {
+alert("Invalid credentials!");
+}
+}
+
+window.addTeamParticipant = function(e) {
+e.preventDefault();
+const cat = document.getElementById('part-cat').value;
+const name = document.getElementById('part-name').value.toUpperCase().trim();
+const team = window.activePartTeam;
+if(!name || !team) return;
+
+window.appState.students.push({ name, team, cat });
+saveKey('students', window.appState.students);
+document.getElementById('part-name').value = '';
+renderTeamStudentsList();
+}
+
+function renderTeamStudentsList() {
+const box = document.getElementById('team-students-list');
+if(!box) return;
+const team = window.activePartTeam;
+const students = (window.appState.students || []).filter(s => s.team === team);
+
+box.innerHTML = students.map((s, idx) => `
+<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px;">
+<span><strong>${s.name}</strong> (${s.cat})</span>
+<button class="btn btn-sm btn-danger" onclick="deleteTeamStudent(${idx})"><i class="fa-solid fa-trash"></i></button>
+</div>
+`).join('');
+}
+
+window.deleteTeamStudent = function(idx) {
+const team = window.activePartTeam;
+let count = 0;
+window.appState.students = window.appState.students.filter(s => {
+if(s.team === team) {
+if(count === idx) { count++; return false; }
+count++;
+}
+return true;
+});
+saveKey('students', window.appState.students);
+renderTeamStudentsList();
+}
+
+window.applyPhaseSettings = function(e) {
+e.preventDefault();
+const phase = document.querySelector('input[name="phase-toggle"]:checked')?.value || 'result';
+window.appState.phase = phase;
+saveKey('phase', phase);
+alert("Festival Phase updated!");
+renderHomePhase();
+}
+
+window.togglePhaseControl = function(phase) {
+window.appState.phase = phase;
+saveKey('phase', phase);
+renderHomePhase();
+}
+
+window.updateSectionVisibilities = function() {
+window.appState.visibilities = {
+'team-states': document.getElementById('toggle-vis-team-states')?.checked,
+'results-view': document.getElementById('toggle-vis-results-view')?.checked,
+'updates': document.getElementById('toggle-vis-updates')?.checked,
+'livelink': document.getElementById('toggle-vis-livelink')?.checked,
+'highlights': document.getElementById('toggle-vis-highlights')?.checked
+};
+saveKey('visibilities', window.appState.visibilities);
+}
+
+window.clearAllDataSystem = function() {
+if(confirm("Are you sure you want to CLEAR ALL SYSTEM DATA? This cannot be undone.")) {
+window.appState = buildCleanState();
+saveData();
+alert("System data cleared.");
+location.reload();
+}
+}
+
+window.loadCategoryPrograms = function() {
+const cat = document.getElementById('reg-cat-select').value;
+const container = document.getElementById('category-programs-container');
+if(!cat) { container.innerHTML = ''; return; }
+
+const progs = (window.appState.programs || []).filter(p => p.cat === cat);
+if(progs.length === 0) {
+container.innerHTML = '<p style="color:var(--text-sub);">No programs available for this category.</p>';
+return;
+}
+
+container.innerHTML = progs.map(p => `
+<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:10px; border-radius:10px; margin-bottom:8px;">
+<div style="font-weight:bold; color:#d4af37;">${p.name}</div>
+<div style="font-size:0.8rem; color:var(--text-sub);">Stage: ${p.stage} | Max Spots: ${p.limit}</div>
+<button class="btn btn-sm btn-success" style="margin-top:6px;" onclick="registerTeamProgram('${p.id}', '${p.cat}')">Register Team</button>
+</div>
+`).join('');
+}
+
+window.registerTeamProgram = function(progId, cat) {
+const team = window.loggedTeamUser;
+if(!team) { alert("Please login first!"); return; }
+if(!window.appState.portalOpen) { alert("Registration portal is currently locked!"); return; }
+
+let existing = window.appState.registrations.find(r => r.progId === progId && r.team === team);
+if(existing) {
+alert("Already registered for this program!");
+return;
+}
+
+const teamStudents = (window.appState.students || []).filter(s => s.team === team && s.cat === cat);
+if(teamStudents.length === 0) {
+alert("No students added under this category yet. Please add students first via Participants Entry.");
+return;
+}
+
+const pName = teamStudents[0].name;
+window.appState.registrations.push({
+progId, cat, team, participants: [pName]
+});
+saveKey('registrations', window.appState.registrations);
+alert(`Registered student ${pName} for program!`);
+}
+
+function compressImage(file, maxWidth = 800, quality = 0.6) {
+return new Promise((resolve) => {
+if (!file.type.startsWith('image/')) {
+const reader = new FileReader();
+reader.onload = (e) => resolve(e.target.result);
+reader.readAsDataURL(file);
+return;
+}
+const reader = new FileReader();
+reader.onload = (event) => {
+const img = new Image();
+img.onload = () => {
+let width = img.width;
+let height = img.height;
+if (width > maxWidth) {
+height = Math.round((height * maxWidth) / width);
+width = maxWidth;
+}
+const canvas = document.createElement('canvas');
+canvas.width = width;
+canvas.height = height;
+const ctx = canvas.getContext('2d');
+ctx.drawImage(img, 0, 0, width, height);
+resolve(canvas.toDataURL('image/jpeg', quality));
+};
+img.src = event.target.result;
+};
+reader.readAsDataURL(file);
+});
+}
+
+window.uploadTeamStatusPoster = async function(e) {
+e.preventDefault();
+const file = document.getElementById('status-file').files[0];
+if(!file) return;
+const compressed = await compressImage(file);
+window.appState.teamStatusList.unshift({ url: compressed, date: Date.now() });
+saveKey('teamStatusList', window.appState.teamStatusList);
+alert("Poster uploaded!");
+renderPublishStatusList();
+renderTeamStatusPosters();
+}
+
+window.populateResProgDropdown = function() {
+const cat = document.getElementById('res-upload-cat').value;
+const drop = document.getElementById('res-upload-prog');
+const progs = (window.appState.programs || []).filter(p => p.cat === cat);
+drop.innerHTML = '<option value="">-- Select Program --</option>' + progs.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+}
+
+window.uploadProgramResult = async function(e) {
+e.preventDefault();
+const cat = document.getElementById('res-upload-cat').value;
+const progId = document.getElementById('res-upload-prog').value;
+const num = document.getElementById('res-custom-number').value;
+const file = document.getElementById('res-file').files[0];
+const ytUrl = document.getElementById('res-yt-url').value.trim();
+
+if(!progId || !file) return;
+const prog = window.appState.programs.find(p => p.id === progId);
+const compressed = await compressImage(file);
+
+window.appState.results.unshift({
+progId, progName: prog ? prog.name : '', cat, customNum: num, imageUrl: compressed, ytUrl
+});
+saveKey('results', window.appState.results);
+alert("Result uploaded!");
+renderPublishResultsList();
+renderResultProgramsList();
+}
+
+window.toggleUpdateVideoUrl = function() {
+const type = document.getElementById('up-type').value;
+const linkInput = document.getElementById('up-video-link');
+const fileLabel = document.getElementById('lbl-up-file');
+if(type === 'video') {
+linkInput.style.display = 'block';
+fileLabel.innerText = "Choose Video File / Thumbnail";
+} else {
+linkInput.style.display = 'none';
+fileLabel.innerText = "Choose Photo";
+}
+}
+
+window.uploadUpdateFeed = async function(e) {
+e.preventDefault();
+const type = document.getElementById('up-type').value;
+const file = document.getElementById('up-file').files[0];
+const videoLink = document.getElementById('up-video-link').value.trim();
+
+if(!file) return;
+const compressed = await compressImage(file);
+const url = type === 'video' && videoLink ? videoLink : compressed;
+
+window.appState.updates.unshift({
+type, fileUrl: url, date: Date.now()
+});
+saveKey('updates', window.appState.updates);
+alert("Update published!");
+renderPinterestUpdates('all');
+}
+
+window.uploadStreamLinks = async function(e) {
+e.preventDefault();
+const title = document.getElementById('st-title').value.trim();
+const url = document.getElementById('st-url').value.trim();
+const thumbFile = document.getElementById('st-thumb').files[0];
+const mode = document.getElementById('st-mode').value;
+
+if(!title || !url || !thumbFile) return;
+const compressed = await compressImage(thumbFile);
+
+if(mode === 'live') {
+window.appState.livelinks.unshift({ title, url, thumbUrl: compressed });
+saveKey('livelinks', window.appState.livelinks);
+renderLiveLinks();
+} else {
+window.appState.highlights.unshift({ title, url, thumbUrl: compressed });
+saveKey('highlights', window.appState.highlights);
+renderHighlights();
+}
+alert("Stream link added!");
+}
 </script>
 </body>
 </html>
