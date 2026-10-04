@@ -229,88 +229,38 @@ border-top: 1px solid var(--border-color);
 transition: all 0.3s ease;
 }
 
-/* STRICT PRINT STYLES - CLEAN CONTENT ONLY WITH TIMESTAMP */
+/* STRICT PRINT STYLES - HIDES ENTIRE PAGE CONTENT EXCEPT THE ACTIVE PRINT TARGET */
 @media print {
-  @page {
-    size: auto;
-    margin: 15mm;
-  }
-  
-  /* Hide all UI elements, navigation, site headers, footers, control buttons */
   body * {
     visibility: hidden !important;
   }
-  
-  body {
-    background: #ffffff !important;
-    color: #000000 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-  
-  .corner-logo, .header-title, .menu-btn-container, .site-footer, 
-  .no-print, button, input, select, textarea, .dropdown-menu {
-    display: none !important;
-  }
-  
-  /* Make the target container and its children visible */
-  .print-target, .print-target * {
+  .active-print-target, .active-print-target * {
     visibility: visible !important;
   }
-  
-  .print-target {
+  .active-print-target {
     position: absolute !important;
     left: 0 !important;
     top: 0 !important;
     width: 100% !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 10px !important;
+    background: #fff !important;
+    color: #000 !important;
     box-shadow: none !important;
     border: none !important;
-    background: transparent !important;
   }
-
-  /* Force single log display when printing single entry */
-  .print-target.single-log-print .point-log-card {
-    display: block !important;
-    page-break-inside: avoid;
-  }
-  .print-target.single-log-print .point-log-card ~ .point-log-card {
+  .no-print {
     display: none !important;
   }
-
-  /* Table styling for crisp printout */
-  table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    color: #000000 !important;
-  }
-  
-  th, td {
-    border: 1px solid #000000 !important;
-    padding: 6px 10px !important;
-    color: #000000 !important;
-  }
-  
-  th {
-    background-color: #f0f0f0 !important;
-    font-weight: bold !important;
-  }
-
-  /* Header timestamp styling */
-  .print-header-meta {
-    margin-bottom: 15px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #000;
+  .dynamic-print-stamp {
     display: flex !important;
     justify-content: space-between !important;
-    align-items: center !important;
-    font-size: 0.85rem !important;
+    font-size: 11px !important;
+    font-weight: bold !important;
+    border-bottom: 2px solid #000 !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 12px !important;
     color: #000 !important;
-    visibility: visible !important;
-  }
-  .print-header-meta * {
-    visibility: visible !important;
   }
 }
 </style>
@@ -640,7 +590,7 @@ transition: all 0.3s ease;
 <div id="panel-judge" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
 <h3>Candidate's Standing</h3>
-<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('judge-print-container', 'Candidate Standing Leaderboard')"><i class="fa-solid fa-print"></i> Print Leaderboard</button>
+<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('judge-print-container')"><i class="fa-solid fa-print"></i> Print Leaderboard</button>
 </div>
 <div id="judge-print-container" class="print-target">
 <div class="form-group no-print" style="margin-top:12px;">
@@ -663,7 +613,7 @@ transition: all 0.3s ease;
 <div id="panel-states-control" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
 <h3>Lead Zone</h3>
-<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('states-print-container', 'Team Standings Report')"><i class="fa-solid fa-print"></i> Print Large Standings</button>
+<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('states-print-container')"><i class="fa-solid fa-print"></i> Print Large Standings</button>
 </div>
 <div id="states-print-container" class="print-target">
 <div class="table-responsive" style="margin-top:12px;">
@@ -673,10 +623,10 @@ transition: all 0.3s ease;
 </table>
 </div>
 </div>
-<hr style="margin:20px 0; border:0; border-top:1px solid var(--border-color);">
-<div style="display:flex; justify-content:space-between; align-items:center;">
+<hr style="margin:20px 0; border:0; border-top:1px solid var(--border-color);" class="no-print">
+<div style="display:flex; justify-content:space-between; align-items:center;" class="no-print">
 <h4>Rank-wise Winners Filter</h4>
-<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('rank-print-container', 'Rank-wise Winners Report')"><i class="fa-solid fa-print"></i> Print Rank List</button>
+<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('rank-print-container')"><i class="fa-solid fa-print"></i> Print Rank List</button>
 </div>
 <div class="no-print" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
 <select id="rank-team-filter" class="form-control" onchange="renderRankWinnersList()"><option value="">All Teams</option></select>
@@ -699,7 +649,7 @@ transition: all 0.3s ease;
 <div id="panel-entry-sign" class="view-panel card">
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
 <h3>Sign Portal</h3>
-<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('entry-sign-print-container', 'Entry Sign Sheet')"><i class="fa-solid fa-print"></i> Print</button>
+<button class="btn btn-warning btn-sm no-print" onclick="triggerCustomPrint('entry-sign-print-container')"><i class="fa-solid fa-print"></i> Print</button>
 </div>
 <div class="form-group no-print" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
 <select id="es-cat-select" class="form-control" onchange="populateEsProgs(); renderEntrySignTable();">
@@ -854,7 +804,7 @@ transition: all 0.3s ease;
 <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:8px;">
 <div style="display:flex; justify-content:space-between; align-items:center;">
 <h4>Registration Report</h4>
-<button class="btn btn-warning btn-sm" onclick="triggerCustomPrint('print-exact-report-area', 'Registration Report Sheet')">Print Report Sheet</button>
+<button class="btn btn-warning btn-sm" onclick="triggerCustomPrint('print-exact-report-area')">Print Report Sheet</button>
 </div>
 <div class="no-print" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; margin-top:8px; margin-bottom:8px;">
 <select id="rep-team" class="form-control" onchange="renderReportTable()"><option value="">All Teams</option></select>
@@ -936,7 +886,7 @@ transition: all 0.3s ease;
 </div>
 </div>
 </div>
-<!-- CENTERED FIXED FOOTER -->
+<!-- CENTERED SIMPLE FOOTER -->
 <footer class="site-footer" id="site-footer-element">
 <p id="ft-display-text">&copy; 2026 BAHJA Media . All rights reserved.</p>
 </footer>
@@ -1052,7 +1002,6 @@ const db = getDatabase(app);
 
 const SECURITY_SCHEMA_VERSION = 2;
 const EMPTY_SUB_LOCKS = { settings:'', control_panel:'', publish:'', pointroom:'', entry_judge:'', judge:'', states:'', code_portal:'', entry_sign:'', protection:'', modify:'' };
-
 function buildCleanState(preservedLogo) {
 const logo = preservedLogo || {};
 return {
@@ -1070,7 +1019,6 @@ footer: { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textC
 teams: [], programs: [], registrations: [], results: [], updates: [], livelinks: [], highlights: [], students: [], points: [], judgeSubmissions: []
 };
 }
-
 function sanitizeSecurityState(state) {
 if(!state || typeof state !== 'object') return state;
 if(state.securitySchemaVersion !== SECURITY_SCHEMA_VERSION) {
@@ -1090,12 +1038,10 @@ if(!Array.isArray(state.judgeSubmissions)) state.judgeSubmissions = [];
 state.footer = { text:'© 2026 BAHJA Media . All rights reserved.', bg:'#111315', textColor:'#94a3b8', opacity:100, fontSize:0.85, transparentBg: false };
 return state;
 }
-
 if (!window.appState) { window.appState = buildCleanState(); } else { window.appState = sanitizeSecurityState(window.appState); }
 window.loggedTeamUser = null; window.activePartTeam = null; window.isMainLoggedIn = false; window.gatekeeperTargetPanel = null;
 const dbRef = ref(db, 'bahja_fest_data');
 let renderScheduled = false;
-
 function scheduleAppRender(force = false) {
 if (renderScheduled && !force) return;
 renderScheduled = true;
@@ -1122,7 +1068,6 @@ renderLayoutPublicAccessControls();
 populateReportProgDropdown();
 });
 }
-
 onValue(dbRef, (snapshot) => {
 const data = snapshot.val();
 if (data) {
@@ -1136,13 +1081,11 @@ localStorage.setItem('bahja_theme', window.appState.theme);
 }
 scheduleAppRender();
 });
-
 window.saveKey = function(key, value) { const updateObj = {}; updateObj[key] = value; update(dbRef, updateObj); }
 window.saveData = function() {
 try { localStorage.setItem('bahja_full_state', JSON.stringify(window.appState)); } catch(e){}
 set(dbRef, window.appState);
 }
-
 window.updateGlobalWebsiteTheme = function(themeName) {
 window.appState.theme = themeName;
 localStorage.setItem('bahja_theme', themeName);
@@ -1151,13 +1094,11 @@ applyGlobalWebsiteTheme(themeName);
 applyVisualCustomizations();
 applyFooterVisuals();
 }
-
 function applyGlobalWebsiteTheme(themeName) {
 document.documentElement.setAttribute('data-theme', themeName);
 const themeSel = document.getElementById('sys-theme-select');
 if(themeSel) themeSel.value = themeName;
 }
-
 function applyLogoView() {
 const el = document.getElementById('corner-logo-view');
 const manageBox = document.getElementById('logo-manage-box');
@@ -1172,7 +1113,6 @@ el.style.display = 'none';
 if(manageBox) manageBox.style.display = 'none';
 }
 }
-
 window.updateLogoStylesLocally = function() {
 const pos = document.getElementById('sys-logo-pos').value;
 const size = document.getElementById('sys-logo-size').value;
@@ -1181,14 +1121,12 @@ const el = document.getElementById('corner-logo-view');
 el.className = `corner-logo ${pos}`;
 el.style.height = `${size}px`;
 }
-
 window.deleteSysLogo = function() {
 window.appState.logoUrl = ''; 
 saveKey('logoUrl', '');
 applyLogoView();
 alert("Logo removed.");
 }
-
 function applyVisualCustomizations() {
 const vis = window.appState.visuals || {};
 const isDark = (window.appState.theme || 'dark') === 'dark';
@@ -1203,21 +1141,199 @@ mTitle.innerText = vis.titleText || 'BAHJA 2026';
 mTitle.style.color = isDark ? (vis.titleColorDark || '#ffffff') : (vis.titleColorLight || '#0f172a');
 }
 }
-
 function applyFooterVisuals() {
 const fEl = document.getElementById('site-footer-element');
 const txtEl = document.getElementById('ft-display-text');
 if(txtEl) txtEl.innerText = '© 2026 BAHJA Media . All rights reserved.';
 if(fEl) {
-const isDark = (window.appState.theme || 'dark') === 'dark';
-fEl.style.backgroundColor = isDark ? '#111315' : '#ffffff';
-fEl.style.borderTop = '1px solid var(--border-color)';
-fEl.style.color = isDark ? '#94a3b8' : '#475569';
-fEl.style.opacity = '1';
+fEl.style.backgroundColor = '#111315';
+fEl.style.color = '#94a3b8';
 fEl.style.fontSize = '0.85rem';
 }
 }
 
+/* SINGLE RESULT PRINT FUNCTION FOR RECORD TERMINAL */
+window.printSinglePointRecord = function(progId) {
+const targetProg = window.appState.programs.find(p => p.id === progId);
+if(!targetProg) return;
+
+const matchedPts = window.appState.points.filter(pt => pt.progId === progId);
+const printArea = document.getElementById('pt-print-area');
+if(!printArea) return;
+
+const now = new Date();
+const timeDateStr = now.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+
+let html = `
+<div class="dynamic-print-stamp">
+  <span>BAHJA 2K26 OFFICIAL RECORD TERMINAL</span>
+  <span>PRINTED: ${timeDateStr}</span>
+</div>
+<h2 style="text-align:center; margin-bottom:5px; color:#000;">BAHJA 2K26 - PROGRAM LOG</h2>
+<h4 style="text-align:center; margin-bottom:15px; color:#000;">Program: ${targetProg.name} (${targetProg.cat}) | Stage: ${targetProg.stage}</h4>
+<table class="bahja-sheet-table" style="width:100%; border-collapse:collapse; color:#000;">
+<thead>
+<tr style="border-bottom:2px solid #000;">
+<th style="padding:8px; text-align:left;">Student Name</th>
+<th style="padding:8px; text-align:left;">Team</th>
+<th style="padding:8px; text-align:center;">Code</th>
+<th style="padding:8px; text-align:right;">Score</th>
+</tr>
+</thead>
+<tbody>
+`;
+
+if(matchedPts.length === 0) {
+  html += `<tr><td colspan="4" style="padding:10px; text-align:center;">No records available for this program.</td></tr>`;
+} else {
+  matchedPts.forEach(pt => {
+    html += `
+    <tr style="border-bottom:1px solid #ccc;">
+      <td style="padding:8px;">${pt.student}</td>
+      <td style="padding:8px;">${pt.team}</td>
+      <td style="padding:8px; text-align:center;">${pt.codeLetter || '-'}</td>
+      <td style="padding:8px; text-align:right; font-weight:bold;">${pt.score}</td>
+    </tr>
+    `;
+  });
+}
+
+html += `</tbody></table>`;
+printArea.innerHTML = html;
+
+// Set up strict target isolation
+document.querySelectorAll('.print-target').forEach(p => p.classList.remove('active-print-target'));
+printArea.style.display = 'block';
+printArea.classList.add('active-print-target');
+
+window.print();
+
+setTimeout(() => {
+  printArea.style.display = 'none';
+  printArea.classList.remove('active-print-target');
+}, 500);
+}
+
+window.printAllPointRecords = function() {
+const printArea = document.getElementById('pt-print-area');
+if(!printArea) return;
+
+const now = new Date();
+const timeDateStr = now.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+
+let html = `
+<div class="dynamic-print-stamp">
+  <span>BAHJA 2K26 OFFICIAL RECORD TERMINAL</span>
+  <span>PRINTED: ${timeDateStr}</span>
+</div>
+<h2 style="text-align:center; margin-bottom:15px; color:#000;">BAHJA 2K26 - ALL POINT RECORDS</h2>
+`;
+
+window.appState.programs.forEach(prog => {
+  const matchedPts = window.appState.points.filter(pt => pt.progId === prog.id);
+  if(matchedPts.length > 0) {
+    html += `
+    <h3 style="margin-top:15px; margin-bottom:5px; border-bottom:1px solid #000; color:#000;">${prog.name} (${prog.cat})</h3>
+    <table class="bahja-sheet-table" style="width:100%; border-collapse:collapse; margin-bottom:15px; color:#000;">
+    <thead>
+    <tr style="border-bottom:1px solid #000;">
+      <th style="padding:6px; text-align:left;">Student</th>
+      <th style="padding:6px; text-align:left;">Team</th>
+      <th style="padding:6px; text-align:center;">Code</th>
+      <th style="padding:6px; text-align:right;">Score</th>
+    </tr>
+    </thead>
+    <tbody>
+    `;
+    matchedPts.forEach(pt => {
+      html += `
+      <tr style="border-bottom:1px solid #eee;">
+        <td style="padding:6px;">${pt.student}</td>
+        <td style="padding:6px;">${pt.team}</td>
+        <td style="padding:6px; text-align:center;">${pt.codeLetter || '-'}</td>
+        <td style="padding:6px; text-align:right;">${pt.score}</td>
+      </tr>
+      `;
+    });
+    html += `</tbody></table>`;
+  }
+});
+
+printArea.innerHTML = html;
+
+document.querySelectorAll('.print-target').forEach(p => p.classList.remove('active-print-target'));
+printArea.style.display = 'block';
+printArea.classList.add('active-print-target');
+
+window.print();
+
+setTimeout(() => {
+  printArea.style.display = 'none';
+  printArea.classList.remove('active-print-target');
+}, 500);
+}
+
+window.renderPtList = function() {
+const container = document.getElementById('box-pt-list-content');
+if(!container) return;
+
+const query = (document.getElementById('pt-logs-search')?.value || '').toLowerCase().trim();
+let html = '';
+
+window.appState.programs.forEach(prog => {
+  const matchedPts = window.appState.points.filter(pt => pt.progId === prog.id);
+  if(matchedPts.length > 0) {
+    const matchesQuery = !query || prog.name.toLowerCase().includes(query) || prog.cat.toLowerCase().includes(query) || matchedPts.some(p => p.student.toLowerCase().includes(query) || p.team.toLowerCase().includes(query));
+    if(matchesQuery) {
+      html += `
+      <div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); border-radius:12px; padding:12px; margin-top:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <h4 style="color:#d4af37;">${prog.name} (${prog.cat})</h4>
+          <button class="btn btn-warning btn-sm no-print" onclick="printSinglePointRecord('${prog.id}')"><i class="fa-solid fa-print"></i> Print Result</button>
+        </div>
+        <div class="table-responsive">
+          <table class="bahja-sheet-table">
+            <thead><tr><th>Student</th><th>Team</th><th>Code</th><th>Score</th></tr></thead>
+            <tbody>
+      `;
+      matchedPts.forEach(pt => {
+        html += `<tr><td>${pt.student}</td><td>${pt.team}</td><td>${pt.codeLetter || '-'}</td><td><strong>${pt.score}</strong></td></tr>`;
+      });
+      html += `</tbody></table></div></div>`;
+    }
+  }
+});
+
+container.innerHTML = html || '<p style="padding:10px; color:var(--text-sub);">No point records registered yet.</p>';
+}
+
+window.triggerCustomPrint = function(targetId) {
+const target = document.getElementById(targetId);
+if(!target) return;
+
+const now = new Date();
+const timeDateStr = now.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+
+let printStamp = target.querySelector('.dynamic-print-stamp');
+if(!printStamp) {
+  printStamp = document.createElement('div');
+  printStamp.className = 'dynamic-print-stamp';
+  target.insertBefore(printStamp, target.firstChild);
+}
+printStamp.innerHTML = `<span>BAHJA 2K26 OFFICIAL REPORT</span><span>PRINTED: ${timeDateStr}</span>`;
+
+document.querySelectorAll('.print-target').forEach(p => p.classList.remove('active-print-target'));
+target.style.display = 'block';
+target.classList.add('active-print-target');
+
+window.print();
+
+setTimeout(() => {
+  target.classList.remove('active-print-target');
+}, 500);
+}
+
+// Global functions for code functionality
 window.populatePtProgs = function() {
 const cat = document.getElementById('pt-cat-select').value;
 const query = (document.getElementById('pt-search')?.value || '').toLowerCase().trim();
@@ -1236,7 +1352,6 @@ document.getElementById('pt-candidates-inputs').innerHTML = '';
 document.getElementById('pt-stage-badge').innerText = ''; 
 }
 }
-
 window.populatePtProgsCopy = function() {
 const cat = document.getElementById('pt-cat-select-copy').value;
 const query = (document.getElementById('pt-search-copy')?.value || '').toLowerCase().trim();
@@ -1256,7 +1371,6 @@ document.getElementById('pt-stage-badge-copy').innerText = '';
 document.getElementById('pt-topic-copy').value = '';
 }
 }
-
 window.loadPtParticipants = function() {
 const progId = document.getElementById('pt-prog-select').value;
 const targetProg = window.appState.programs.find(p => p.id === progId);
@@ -1281,7 +1395,6 @@ html += `
 });
 container.innerHTML = html;
 }
-
 window.loadPtParticipantsCopy = function() {
 const progId = document.getElementById('pt-prog-select-copy').value;
 const targetProg = window.appState.programs.find(p => p.id === progId);
@@ -1309,7 +1422,6 @@ html += `
 });
 container.innerHTML = html;
 }
-
 window.savePointroomEntry = function(e) {
 e.preventDefault();
 const progId = document.getElementById('pt-prog-select').value;
@@ -1331,7 +1443,6 @@ alert("Points recorded.");
 loadPtParticipants();
 renderPtList();
 }
-
 window.savePointroomCopyEntry = function(e) {
 e.preventDefault();
 const progId = document.getElementById('pt-prog-select-copy').value;
@@ -1360,7 +1471,6 @@ loadPtParticipantsCopy();
 renderCodeFormsList();
 renderEjActiveProgram();
 }
-
 const PUBLIC_PANEL_SCHEMA = [
 { key:'settings', panel:'panel-settings', name:'Settings' },
 { key:'control_panel', panel:'panel-control-panel', name:'Control Deck' },
@@ -1374,7 +1484,6 @@ const PUBLIC_PANEL_SCHEMA = [
 { key:'protection', panel:'panel-protection', name:'Security Vault' },
 { key:'modify', panel:'panel-modify', name:'Layout Studio' }
 ];
-
 function ensurePublicAccessState() {
 if(!window.appState.publicAccess || typeof window.appState.publicAccess !== 'object') window.appState.publicAccess = {panels:{}};
 if(!window.appState.publicAccess.panels || typeof window.appState.publicAccess.panels !== 'object') window.appState.publicAccess.panels = {};
@@ -1385,13 +1494,11 @@ else if(!old || typeof old !== 'object') window.appState.publicAccess.panels[ite
 else window.appState.publicAccess.panels[item.key] = { register: old.register === true, result: old.result === true };
 });
 }
-
 function isPublicPanelAllowed(key, phase) {
 ensurePublicAccessState();
 const access = window.appState.publicAccess.panels[key];
 return !!(access && access[phase === 'register' ? 'register' : 'result']);
 }
-
 window.savePublicAccessSettings = function() {
 ensurePublicAccessState();
 const panels = {};
@@ -1406,7 +1513,6 @@ saveKey('publicAccess', window.appState.publicAccess);
 render3DotMenu();
 alert('Public Main Login access settings saved.');
 }
-
 function renderLayoutPublicAccessControls() {
 ensurePublicAccessState();
 const p = document.getElementById('layout-public-panels');
@@ -1420,7 +1526,6 @@ return `<div data-public-panel-key="${x.key}" style="display:grid; grid-template
 </div>`;
 }).join('') + `<button class="btn btn-success btn-sm" style="margin-top:4px;" onclick="savePublicAccessSettings()"><i class="fa-solid fa-unlock-keyhole"></i> Save Public Access</button>`;
 }
-
 window.render3DotMenu = function() {
 const menuContainer = document.getElementById('mainDropdown');
 if(!menuContainer) return;
@@ -1447,1238 +1552,159 @@ html += `
 <button onclick="interceptRoute('panel-pointroom-copy', 'code_portal')"><i class="fa-solid fa-copy"></i> Code Portal</button>
 <button onclick="interceptRoute('panel-entry-sign', 'entry_sign')"><i class="fa-solid fa-signature"></i> Sign Portal</button>
 <button onclick="interceptRoute('panel-protection', 'protection')"><i class="fa-solid fa-shield-halved"></i> Security Vault</button>
-<button onclick="interceptRoute('panel-modify', 'modify')"><i class="fa-solid fa-palette"></i> Layout Studio</button>
-<button onclick="logoutMain()"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
+<button onclick="interceptRoute('panel-modify', 'modify')"><i class="fa-solid fa-pen-to-square"></i> Layout Studio</button>
+<button onclick="logoutMain()" style="color:#ef4444;"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
 `;
 }
 menuContainer.innerHTML = html;
 }
-
-window.toggleDropdown = function() {
-const dropdown = document.getElementById('mainDropdown');
-if(dropdown) dropdown.classList.toggle('show');
+window.interceptRoute = function(panelId, key) {
+document.getElementById("mainDropdown").classList.remove("show");
+if(!key || !window.appState.subLocks[key]) {
+showPanel(panelId);
+return;
 }
-
-window.navHome = function() {
-history.pushState({ panel: 'panel-home' }, '', '#home');
-document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
-const homePanel = document.getElementById('panel-home');
-if(homePanel) homePanel.classList.add('active-panel');
-const dropdown = document.getElementById('mainDropdown');
-if(dropdown) dropdown.classList.remove('show');
-renderHomePhase();
+window.gatekeeperTargetPanel = { id: panelId, lockKey: key };
+document.getElementById('gk-pass-field').value = '';
+document.getElementById('gk-title').innerText = `Access Security Code Required`;
+document.getElementById('gatekeeper-modal-overlay').style.display = 'flex';
 }
-
+window.commitGatekeeperVerification = function() {
+const fieldVal = document.getElementById('gk-pass-field').value;
+const targetKey = window.gatekeeperTargetPanel.lockKey;
+if(fieldVal === window.appState.subLocks[targetKey]) {
+document.getElementById('gatekeeper-modal-overlay').style.display = 'none';
+showPanel(window.gatekeeperTargetPanel.id);
+} else {
+alert("Incorrect Security Code.");
+}
+}
+window.closeGatekeeper = function() { document.getElementById('gatekeeper-modal-overlay').style.display = 'none'; }
+window.toggleLaunchSection = function(bodyId, headerEl) {
+const body = document.getElementById(bodyId);
+if(!body) return;
+const opening = body.style.display === 'none' || !body.style.display;
+body.style.display = opening ? 'block' : 'none';
+const icon = headerEl ? headerEl.querySelector('i') : null;
+if(icon) icon.className = opening ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down';
+}
+window.toggleDropdown = function() { document.getElementById("mainDropdown").classList.toggle("show"); }
+window.onclick = (e) => { 
+if (!e.target.closest('.menu-btn-container')) {
+const md = document.getElementById("mainDropdown");
+if(md) md.classList.remove("show"); 
+}
+};
+window.openPublicPanel = function(panelId) {
+ensurePublicAccessState();
+const item = PUBLIC_PANEL_SCHEMA.find(x => x.panel === panelId);
+const phase = window.appState.phase === 'register' ? 'register' : 'result';
+if(!item || !isPublicPanelAllowed(item.key, phase)) { alert('This panel is not enabled for public access in the current phase.'); return; }
+document.getElementById('mainDropdown').classList.remove('show');
+showPanel(panelId);
+}
 window.showPanel = function(panelId) {
 document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
-const target = document.getElementById(panelId);
-if(target) target.classList.add('active-panel');
-history.pushState({ panel: panelId }, '', `#${panelId}`);
+const p = document.getElementById(panelId);
+if(p) {
+p.classList.add('active-panel');
+if(!history.state || history.state.panel !== panelId) {
+history.pushState({ panel: panelId }, "", `#${panelId}`);
+if(panelId === 'panel-publish') renderPublishPanel();
+if(panelId === 'panel-entry-judge') renderEjActiveProgram();
+if(panelId === 'panel-pointroom-copy') renderCodeFormsList();
 }
-
-window.openPublicPanel = function(panelId) {
-document.getElementById('mainDropdown').classList.remove('show');
-showPanel(panelId);
 }
-
-window.interceptRoute = function(panelId, subLockKey) {
-document.getElementById('mainDropdown').classList.remove('show');
-const lockPass = (window.appState.subLocks || {})[subLockKey];
-if(lockPass && lockPass.trim() !== '') {
-window.gatekeeperTargetPanel = panelId;
-document.getElementById('gk-pass-field').value = '';
-document.getElementById('gatekeeper-modal-overlay').style.display = 'flex';
+}
+window.openSection = function(secId) { showPanel(secId); }
+window.navHome = function() { 
+renderHomePhase(); 
+showPanel('panel-home'); 
+}
+window.addEventListener('popstate', function(event) {
+if(event.state && event.state.panel && event.state.panel !== 'panel-home') {
+document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
+const p = document.getElementById(event.state.panel);
+if(p) p.classList.add('active-panel');
 } else {
-showPanel(panelId);
+renderHomePhase();
+document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active-panel'));
+document.getElementById('panel-home').classList.add('active-panel');
 }
+});
+history.replaceState({ panel: 'panel-home' }, "", window.location.pathname);
+scheduleAppRender(true);
+window.toggleAccordion = function(boxId) {
+const el = document.getElementById(boxId); 
+if(el) el.classList.toggle('show');
 }
-
-window.closeGatekeeper = function() {
-document.getElementById('gatekeeper-modal-overlay').style.display = 'none';
-window.gatekeeperTargetPanel = null;
-}
-
-window.commitGatekeeperVerification = function() {
-const entered = document.getElementById('gk-pass-field').value;
-const panelId = window.gatekeeperTargetPanel;
-const keyMap = {
-'panel-settings':'settings', 'panel-control-panel':'control_panel', 'panel-publish':'publish',
-'panel-pointroom':'pointroom', 'panel-entry-judge':'entry_judge', 'panel-judge':'judge',
-'panel-states-control':'states', 'panel-pointroom-copy':'code_portal', 'panel-entry-sign':'entry_sign',
-'panel-protection':'protection', 'panel-modify':'modify'
-};
-const key = keyMap[panelId];
-const targetPass = (window.appState.subLocks || {})[key];
-if(entered === targetPass) {
-document.getElementById('gatekeeper-modal-overlay').style.display = 'none';
-showPanel(panelId);
-} else {
-alert("Invalid Access Passcode!");
-}
-}
-
 window.openLoginModal = function() {
-document.getElementById('mainDropdown').classList.remove('show');
-const mainCreds = window.appState.mainCreds || { user:'', pass:'' };
-if(!mainCreds.user || !mainCreds.pass) {
-document.getElementById('first-admin-setup-btn').style.display = 'block';
-} else {
-document.getElementById('first-admin-setup-btn').style.display = 'none';
-}
-document.getElementById('first-admin-setup').style.display = 'none';
 document.getElementById('modal-overlay').style.display = 'flex';
+syncMainLoginSetupUI();
 }
-
-window.closeModal = function() {
-document.getElementById('modal-overlay').style.display = 'none';
+window.closeModal = function() { document.getElementById('modal-overlay').style.display = 'none'; }
+function syncMainLoginSetupUI() {
+const hasCreds = !!(window.appState.mainCreds && window.appState.mainCreds.user && window.appState.mainCreds.pass);
+const setupBtn = document.getElementById('first-admin-setup-btn');
+const loginBtn = document.getElementById('main-login-submit');
+if(setupBtn) setupBtn.style.display = hasCreds ? 'none' : 'block';
+if(loginBtn) loginBtn.innerText = hasCreds ? 'Sign In' : 'Sign In (Credentials Not Set)';
 }
-
 window.openFirstAdminSetup = function() {
 document.getElementById('first-admin-setup').style.display = 'block';
+document.getElementById('first-admin-user').focus();
 }
-
 window.saveFirstAdminSetup = function() {
 const u = document.getElementById('first-admin-user').value.trim();
-const p = document.getElementById('first-admin-pass').value.trim();
-const pc = document.getElementById('first-admin-pass-confirm').value.trim();
-if(!u || !p) { alert("Enter username and password"); return; }
-if(p !== pc) { alert("Passwords do not match"); return; }
-window.appState.mainCreds = { user: u, pass: p };
+const p = document.getElementById('first-admin-pass').value;
+const cp = document.getElementById('first-admin-pass-confirm').value;
+if(!u || !p) { alert('Enter a username and password.'); return; }
+if(p !== cp) { alert('Passwords do not match.'); return; }
+window.appState.mainCreds = { user:u, pass:p };
+window.appState.securitySchemaVersion = SECURITY_SCHEMA_VERSION;
 saveKey('mainCreds', window.appState.mainCreds);
-alert("Admin credentials created! You can now Sign In.");
+saveKey('securitySchemaVersion', SECURITY_SCHEMA_VERSION);
+alert('Admin login created. You can now sign in.');
 document.getElementById('first-admin-setup').style.display = 'none';
-document.getElementById('first-admin-setup-btn').style.display = 'none';
+document.getElementById('main-user-input').value = u;
+document.getElementById('main-pass-input').value = '';
+syncMainLoginSetupUI();
 }
-
 window.handleMainLogin = function(e) {
 e.preventDefault();
 const u = document.getElementById('main-user-input').value.trim();
 const p = document.getElementById('main-pass-input').value.trim();
-const mainCreds = window.appState.mainCreds || { user:'', pass:'' };
-if(u === mainCreds.user && p === mainCreds.pass) {
+const creds = window.appState.mainCreds || {};
+if(!creds.user || !creds.pass) {
+alert('No admin credentials are set. Use Create New Admin Login.');
+syncMainLoginSetupUI();
+return;
+}
+if(u === creds.user && p === creds.pass) {
 window.isMainLoggedIn = true;
-closeModal();
-render3DotMenu();
-alert("Main Login Successful!");
-} else {
-alert("Invalid Main Credentials!");
+closeModal(); render3DotMenu();
+showPanel('panel-control-panel');
+} else { alert("Invalid Credentials!"); }
 }
-}
-
-window.logoutMain = function() {
-window.isMainLoggedIn = false;
-render3DotMenu();
-navHome();
-alert("Signed Out.");
-}
+window.logoutMain = function() { window.isMainLoggedIn = false; render3DotMenu(); navHome(); }
 
 function renderHomePhase() {
-const phase = window.appState.phase || 'result';
-const regBlock = document.getElementById('home-phase-register');
-const resBlock = document.getElementById('home-phase-result');
-if(phase === 'register') {
-if(regBlock) regBlock.style.display = 'block';
-if(resBlock) resBlock.style.display = 'none';
-} else {
-if(regBlock) regBlock.style.display = 'none';
-if(resBlock) resBlock.style.display = 'block';
-renderResultPhaseFeeds();
-}
-}
-
-function renderResultPhaseFeeds() {
-renderTeamStatusPosters();
-renderResultProgramsList();
-renderPinterestUpdates('all');
-renderLiveLinks();
-renderHighlights();
-}
-
-window.openSection = function(sectionId) {
-showPanel(sectionId);
-}
-
-function renderTeamStatusPosters() {
-const box = document.getElementById('team-status-poster-box');
-if(!box) return;
-const list = window.appState.teamStatusList || [];
-if(list.length === 0) {
-box.innerHTML = '<p style="color:var(--text-sub); text-align:center; grid-column:1/-1;">No Team Status posters uploaded.</p>';
-return;
-}
-box.innerHTML = list.map((item, idx) => `
-<div class="masonry-item ${idx === 0 ? 'team-status-featured' : 'team-status-regular'}" onclick="openMediaViewer('${item.url}', 'image')">
-<img src="${item.url}" alt="Team Status Poster" loading="lazy">
-</div>
-`).join('');
-}
-
-function renderResultProgramsList() {
-const display = document.getElementById('results-display-list');
-if(!display) return;
-const catFilter = document.getElementById('res-search-cat')?.value || '';
-const query = (document.getElementById('res-prog-search')?.value || '').toLowerCase().trim();
-let results = window.appState.results || [];
-if(catFilter) results = results.filter(r => r.cat === catFilter);
-if(query) results = results.filter(r => r.progName.toLowerCase().includes(query) || (r.customNum && r.customNum.toString().includes(query)));
-if(results.length === 0) {
-display.innerHTML = '<p style="color:var(--text-sub); text-align:center;">No published results available.</p>';
-return;
-}
-display.innerHTML = results.map(r => `
-<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:12px; border-radius:12px; margin-bottom:10px;">
-<div style="display:flex; justify-content:space-between; align-items:center;">
-<strong style="color:#d4af37;">#${r.customNum || ''} - ${r.progName}</strong>
-<span style="font-size:0.75rem; color:var(--text-sub);">${r.cat}</span>
-</div>
-<div style="margin-top:8px; display:flex; gap:8px;">
-${r.imageUrl ? `<button class="btn btn-sm btn-primary" onclick="openMediaViewer('${r.imageUrl}', 'image')"><i class="fa-solid fa-image"></i> View Poster</button>` : ''}
-${r.ytUrl ? `<a href="${r.ytUrl}" target="_blank" class="btn btn-sm btn-danger"><i class="fa-solid fa-youtube"></i> Watch Video</a>` : ''}
-</div>
-</div>
-`).join('');
-}
-
-window.filterResultPrograms = function() {
-renderResultProgramsList();
-}
-
-function renderPinterestUpdates(type = 'all') {
-const feed = document.getElementById('live-updates-feed');
-if(!feed) return;
-let list = window.appState.updates || [];
-if(type !== 'all') list = list.filter(u => u.type === type);
-if(list.length === 0) {
-feed.innerHTML = '<p style="color:var(--text-sub); text-align:center; grid-column:1/-1;">No updates posted.</p>';
-return;
-}
-feed.innerHTML = list.map(u => `
-<div class="masonry-item" onclick="openMediaViewer('${u.fileUrl}', '${u.type}')">
-${u.type === 'photo' ? `<img src="${u.fileUrl}" loading="lazy">` : `<video src="${u.fileUrl}"></video>`}
-</div>
-`).join('');
-}
-
-function renderLiveLinks() {
-const feed = document.getElementById('livelink-feed');
-if(!feed) return;
-const list = window.appState.livelinks || [];
-if(list.length === 0) {
-feed.innerHTML = '<p style="color:var(--text-sub); text-align:center; grid-column:1/-1;">No Live Streams available.</p>';
-return;
-}
-feed.innerHTML = list.map(l => `
-<div class="masonry-item" onclick="window.open('${l.url}', '_blank')">
-<img src="${l.thumbUrl}" loading="lazy">
-<div style="padding:6px; text-align:center; font-weight:bold; font-size:0.85rem;">${l.title}</div>
-</div>
-`).join('');
-}
-
-function renderHighlights() {
-const feed = document.getElementById('highlights-feed');
-if(!feed) return;
-const list = window.appState.highlights || [];
-if(list.length === 0) {
-feed.innerHTML = '<p style="color:var(--text-sub); text-align:center; grid-column:1/-1;">No Highlights available.</p>';
-return;
-}
-feed.innerHTML = list.map(h => `
-<div class="masonry-item" onclick="window.open('${h.url}', '_blank')">
-<img src="${h.thumbUrl}" loading="lazy">
-<div style="padding:6px; text-align:center; font-weight:bold; font-size:0.85rem;">${h.title}</div>
-</div>
-`).join('');
-}
-
-window.openMediaViewer = function(url, type) {
-const container = document.getElementById('media-viewer-container');
-if(type === 'photo' || type === 'image') {
-container.innerHTML = `<img src="${url}" style="max-width:100%; max-height:60vh; object-fit:contain;">`;
-} else {
-container.innerHTML = `<video src="${url}" controls style="max-width:100%; max-height:60vh;"></video>`;
-}
-document.getElementById('btn-media-download').onclick = () => window.open(url, '_blank');
-document.getElementById('btn-media-share').onclick = () => {
-if(navigator.share) navigator.share({ title: 'Bahja Fest Media', url: url });
-else alert("Sharing URL copied to clipboard: " + url);
-};
-document.getElementById('media-viewer-modal').style.display = 'flex';
-}
-
-window.closeMediaViewer = function() {
-document.getElementById('media-viewer-modal').style.display = 'none';
-}
-
-/* PRINT HELPER FUNCTION WITH TIME STAMP & EXACT CONTENT ONLY */
-function printContainerWithHeader(containerId, docTitle) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  
-  // Format local Malayalam/Indian standard time
-  const now = new Date();
-  const timeStr = now.toLocaleString('en-IN', {
-    dateStyle: 'medium',
-    timeStyle: 'medium'
-  });
-  
-  // Create or update printable meta header
-  let metaHeader = container.querySelector('.print-header-meta');
-  if (!metaHeader) {
-    metaHeader = document.createElement('div');
-    metaHeader.className = 'print-header-meta';
-    container.insertBefore(metaHeader, container.firstChild);
-  }
-  
-  metaHeader.innerHTML = `
-    <div><strong>${docTitle || 'BAHJA FEST REPORT'}</strong></div>
-    <div>Printed On: ${timeStr}</div>
-  `;
-  
-  window.print();
-}
-
-window.triggerCustomPrint = function(containerId, title) {
-  printContainerWithHeader(containerId, title || 'BAHJA FEST 2026');
-}
-
-window.printSinglePointLog = function(logIdx) {
-  const container = document.getElementById('pt-print-area');
-  const logs = window.appState.points || [];
-  
-  // Filter uniquely or fetch target log group
-  const filtered = window.appState.filteredPtLogs || logs;
-  const targetLog = filtered[logIdx];
-  if(!targetLog) return;
-
-  const prog = (window.appState.programs || []).find(p => p.id === targetLog.progId) || { name: targetLog.progId };
-
-  container.className = "print-target single-log-print";
-  container.style.display = 'block';
-  
-  container.innerHTML = `
-    <div style="padding: 10px; border: 2px solid #000; border-radius: 8px;">
-      <h2 style="text-align:center; margin-bottom: 10px; text-transform: uppercase;">Bahja Fest - Point Record</h2>
-      <table style="margin-top: 10px; width: 100%;">
-        <tr><td><strong>Category:</strong> ${targetLog.cat || 'N/A'}</td><td><strong>Program:</strong> ${prog.name || 'N/A'}</td></tr>
-        <tr><td><strong>Participant:</strong> ${targetLog.student || 'N/A'}</td><td><strong>Team:</strong> ${targetLog.team || 'N/A'}</td></tr>
-        <tr><td><strong>Code Letter:</strong> ${targetLog.codeLetter || 'N/A'}</td><td><strong>Awarded Marks:</strong> ${targetLog.score || 0}</td></tr>
-      </table>
-    </div>
-  `;
-  
-  printContainerWithHeader('pt-print-area', 'Point Evaluation Single Record');
-  container.style.display = 'none';
-}
-
-window.printAllPointRecords = function() {
-  const container = document.getElementById('pt-print-area');
-  const logs = window.appState.points || [];
-  
-  if(logs.length === 0) {
-    alert("No point evaluation logs to print.");
-    return;
-  }
-
-  container.className = "print-target";
-  container.style.display = 'block';
-
-  let tableRows = logs.map((pt, i) => {
-    const prog = (window.appState.programs || []).find(p => p.id === pt.progId) || { name: pt.progId };
-    return `
-      <tr>
-        <td>${i+1}</td>
-        <td>${prog.name}</td>
-        <td>${pt.cat}</td>
-        <td>${pt.student}</td>
-        <td>${pt.team}</td>
-        <td>${pt.codeLetter || '-'}</td>
-        <td>${pt.score}</td>
-      </tr>
-    `;
-  }).join('');
-
-  container.innerHTML = `
-    <h2 style="text-align:center; margin-bottom: 15px;">BAHJA FEST - ALL POINT RECORDS</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>#</th><th>Program</th><th>Category</th><th>Student</th><th>Team</th><th>Code</th><th>Score</th>
-        </tr>
-      </thead>
-      <tbody>${tableRows}</tbody>
-    </table>
-  `;
-
-  printContainerWithHeader('pt-print-area', 'All Point Records Log');
-  container.style.display = 'none';
-}
-
-function renderPtList() {
-const contentBox = document.getElementById('box-pt-list-content');
-if(!contentBox) return;
-const query = (document.getElementById('pt-logs-search')?.value || '').toLowerCase().trim();
-let logs = window.appState.points || [];
-
-if(query) {
-logs = logs.filter(pt => {
-const prog = (window.appState.programs || []).find(p => p.id === pt.progId) || { name: '' };
-return prog.name.toLowerCase().includes(query) || 
-pt.cat.toLowerCase().includes(query) || 
-pt.student.toLowerCase().includes(query) || 
-pt.team.toLowerCase().includes(query);
-});
-}
-
-window.appState.filteredPtLogs = logs;
-
-if(logs.length === 0) {
-contentBox.innerHTML = '<p style="color:var(--text-sub); text-align:center; padding:10px;">No point records match.</p>';
-return;
-}
-
-contentBox.innerHTML = logs.map((pt, idx) => {
-const prog = (window.appState.programs || []).find(p => p.id === pt.progId) || { name: pt.progId };
-return `
-<div class="point-log-card" style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:10px 14px; border-radius:10px; margin-bottom:8px;">
-<div>
-<div style="font-weight:bold; color:#d4af37;">${prog.name} (${pt.cat})</div>
-<div style="font-size:0.85rem; color:var(--text-main);">${pt.student} - <strong>${pt.team}</strong></div>
-<div style="font-size:0.75rem; color:var(--text-sub);">Code: ${pt.codeLetter || 'N/A'} | Mark: ${pt.score}</div>
-</div>
-<button class="btn btn-warning btn-sm no-print" onclick="printSinglePointLog(${idx})"><i class="fa-solid fa-print"></i> Print Result</button>
-</div>
-`;
-}).join('');
-}
-
-function renderCodeFormsList() {
-const contentBox = document.getElementById('box-code-forms-content');
-if(!contentBox) return;
-const query = (document.getElementById('pt-saved-code-search')?.value || '').toLowerCase().trim();
-let logs = window.appState.points || [];
-
-if(query) {
-logs = logs.filter(pt => {
-const prog = (window.appState.programs || []).find(p => p.id === pt.progId) || { name: '' };
-return prog.name.toLowerCase().includes(query) || 
-pt.cat.toLowerCase().includes(query) || 
-(pt.codeLetter && pt.codeLetter.toLowerCase().includes(query)) || 
-pt.student.toLowerCase().includes(query);
-});
-}
-
-if(logs.length === 0) {
-contentBox.innerHTML = '<p style="color:var(--text-sub); text-align:center; padding:10px;">No code letter records match.</p>';
-return;
-}
-
-contentBox.innerHTML = logs.map(pt => {
-const prog = (window.appState.programs || []).find(p => p.id === pt.progId) || { name: pt.progId };
-return `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:8px 12px; border-radius:8px; margin-bottom:6px;">
-<div>
-<div style="font-weight:bold; color:#d4af37;">${prog.name} (${pt.cat})</div>
-<div style="font-size:0.85rem;">${pt.student} (${pt.team})</div>
-</div>
-<div style="font-weight:bold; font-size:1.1rem; color:#10b981;">Code: ${pt.codeLetter || '-'}</div>
-</div>
-`;
-}).join('');
-}
-
-function renderEjActiveProgram() {
-const activeId = window.appState.activeEjProgId;
-const titleEl = document.getElementById('ej-active-prog-title');
-const topicEl = document.getElementById('ej-topic-display-box');
-const tbody = document.getElementById('ej-candidates-inputs');
-if(!titleEl || !topicEl || !tbody) return;
-
-if(!activeId) {
-titleEl.innerText = "No Active Program Loaded";
-topicEl.innerText = "Topic will appear here...";
-tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;">Select or configure a program in Code Portal to view.</td></tr>';
-return;
-}
-
-const activeProg = window.appState.programs.find(p => p.id === activeId);
-if(!activeProg) return;
-
-titleEl.innerText = `${activeProg.name} (${activeProg.cat})`;
-topicEl.innerText = activeProg.topic || "No topic specified.";
-
-const activePts = window.appState.points.filter(pt => pt.progId === activeId && pt.codeLetter);
-if(activePts.length === 0) {
-tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#ef4444;">No code letters assigned for this active program yet.</td></tr>';
-return;
-}
-
-tbody.innerHTML = activePts.map(pt => `
-<tr>
-<td style="font-weight:bold; font-size:1.1rem; color:#d4af37;">Code ${pt.codeLetter}</td>
-<td>
-<div class="judge-mark-entry">
-<input type="number" min="0" max="100" class="form-control ej-score-field" data-code="${pt.codeLetter}" data-team="${pt.team}" data-student="${pt.student}" value="${pt.score || ''}" placeholder="Mark">
-</div>
-</td>
-</tr>
-`).join('');
-}
-
-window.saveEjMarks = function() {
-const activeId = window.appState.activeEjProgId;
-if(!activeId) { alert("No active program selected!"); return; }
-
-document.querySelectorAll('.ej-score-field').forEach(f => {
-const score = parseFloat(f.value) || 0;
-const team = f.getAttribute('data-team');
-const student = f.getAttribute('data-student');
-let existingPt = window.appState.points.find(pt => pt.progId === activeId && pt.team === team && pt.student === student);
-if(existingPt) existingPt.score = score;
-});
-
-saveKey('points', window.appState.points);
-alert("Judge marks submitted successfully!");
-renderEjActiveProgram();
-}
-
-let timerInterval = null;
-let timerSecondsTotal = 0;
-
-window.setEjTimer = function() {
-const m = parseInt(document.getElementById('ej-timer-minutes').value) || 0;
-const s = parseInt(document.getElementById('ej-timer-seconds').value) || 0;
-timerSecondsTotal = (m * 60) + s;
-updateEjTimerDisplay();
-}
-
-window.addEjTimerTime = function() {
-const m = parseInt(document.getElementById('ej-timer-minutes').value) || 0;
-const s = parseInt(document.getElementById('ej-timer-seconds').value) || 0;
-timerSecondsTotal += (m * 60) + s;
-updateEjTimerDisplay();
-}
-
-window.startEjTimer = function() {
-if(timerInterval) clearInterval(timerInterval);
-timerInterval = setInterval(() => {
-if(timerSecondsTotal > 0) {
-timerSecondsTotal--;
-updateEjTimerDisplay();
-} else {
-clearInterval(timerInterval);
-document.getElementById('ej-timer-status').innerText = "Time Up!";
-}
-}, 1000);
-document.getElementById('ej-timer-status').innerText = "Running...";
-}
-
-window.pauseEjTimer = function() {
-if(timerInterval) clearInterval(timerInterval);
-document.getElementById('ej-timer-status').innerText = "Paused";
-}
-
-window.resetEjTimer = function() {
-if(timerInterval) clearInterval(timerInterval);
-timerSecondsTotal = 0;
-updateEjTimerDisplay();
-document.getElementById('ej-timer-status').innerText = "Reset";
-}
-
-function updateEjTimerDisplay() {
-const hrs = Math.floor(timerSecondsTotal / 3600);
-const mins = Math.floor((timerSecondsTotal % 3600) / 60);
-const secs = timerSecondsTotal % 60;
-const pad = (n) => n.toString().padStart(2, '0');
-document.getElementById('ej-timer-display').innerText = `${pad(hrs)}:${pad(mins)}:${pad(secs)}:000`;
-}
-
-function renderJudgeLeaderboard() {
-const tbody = document.getElementById('judge-leaderboard-body');
-if(!tbody) return;
-const stageFilter = document.getElementById('jd-filter-stage')?.value || 'all';
-
-let studentScores = {};
-(window.appState.points || []).forEach(pt => {
-const prog = (window.appState.programs || []).find(p => p.id === pt.progId);
-if(stageFilter !== 'all' && prog && prog.stage !== stageFilter) return;
-
-const key = `${pt.student}_${pt.team}_${pt.cat}`;
-if(!studentScores[key]) studentScores[key] = { student: pt.student, team: pt.team, cat: pt.cat, points: 0 };
-studentScores[key].points += (pt.score || 0);
-});
-
-let sorted = Object.values(studentScores).sort((a,b) => b.points - a.points);
-if(sorted.length === 0) {
-tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No candidate standings logged yet.</td></tr>';
-return;
-}
-
-tbody.innerHTML = sorted.map(s => `
-<tr>
-<td><strong>${s.student}</strong></td>
-<td>${s.team}</td>
-<td>${s.cat}</td>
-<td style="font-weight:bold; color:#d4af37;">${s.points}</td>
-</tr>
-`).join('');
-}
-
-function renderStatesDashboard() {
-const tbody = document.getElementById('states-table-body');
-if(!tbody) return;
-
-let teamTotals = {};
-(window.appState.points || []).forEach(pt => {
-if(!teamTotals[pt.team]) teamTotals[pt.team] = 0;
-teamTotals[pt.team] += (pt.score || 0);
-});
-
-let sortedTeams = Object.keys(teamTotals).sort((a,b) => teamTotals[b] - teamTotals[a]);
-if(sortedTeams.length === 0) {
-tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;">No team standings found.</td></tr>';
-return;
-}
-
-tbody.innerHTML = sortedTeams.map(t => `
-<tr>
-<td style="font-weight:bold; color:#d4af37;">${t}</td>
-<td style="font-weight:bold; font-size:1.1rem;">${teamTotals[t]}</td>
-</tr>
-`).join('');
-}
-
-function renderRankWinnersList() {
-const tbody = document.getElementById('rank-winners-body');
-if(!tbody) return;
-const posFilter = document.getElementById('rank-pos-filter')?.value || 'all';
-const teamFilter = document.getElementById('rank-team-filter')?.value || '';
-
-const rankTeamSelect = document.getElementById('rank-team-filter');
-if(rankTeamSelect && rankTeamSelect.options.length <= 1) {
-const teams = window.appState.teams || [];
-rankTeamSelect.innerHTML = '<option value="">All Teams</option>' + teams.map(t => `<option value="${t.user}">${t.user}</option>`).join('');
-}
-
-let points = [...(window.appState.points || [])];
-if(teamFilter) points = points.filter(p => p.team === teamFilter);
-
-points.sort((a,b) => (b.score || 0) - (a.score || 0));
-
-if(points.length === 0) {
-tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No positions awarded yet.</td></tr>';
-return;
-}
-
-tbody.innerHTML = points.map((pt, idx) => {
-const rank = idx + 1;
-if(posFilter !== 'all' && parseInt(posFilter) !== rank) return '';
-const prog = (window.appState.programs || []).find(p => p.id === pt.progId) || { name: pt.progId };
-return `
-<tr>
-<td>${rank}</td>
-<td><strong>${pt.student}</strong></td>
-<td>${pt.team}</td>
-<td>${prog.name}</td>
-<td>${pt.score}</td>
-<td style="font-weight:bold; color:#d4af37;">Rank ${rank}</td>
-</tr>
-`;
-}).join('');
-}
-
-window.populateEsProgs = function() {
-const cat = document.getElementById('es-cat-select').value;
-const drop = document.getElementById('es-prog-select');
-let progs = window.appState.programs || [];
-if(cat) progs = progs.filter(p => p.cat === cat);
-drop.innerHTML = '<option value="">All Programs</option>' + progs.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-}
-
-window.renderEntrySignTable = function() {
-const tbody = document.getElementById('entry-sign-table-body');
-if(!tbody) return;
-const cat = document.getElementById('es-cat-select').value;
-const progId = document.getElementById('es-prog-select').value;
-
-let pts = window.appState.points || [];
-if(cat) pts = pts.filter(p => p.cat === cat);
-if(progId) pts = pts.filter(p => p.progId === progId);
-
-if(pts.length === 0) {
-tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No sign sheet entries found.</td></tr>';
-return;
-}
-
-tbody.innerHTML = pts.map(p => `
-<tr>
-<td style="font-weight:bold; color:#d4af37;">Code ${p.codeLetter || '-'}</td>
-<td>${p.student}</td>
-<td>${p.team}</td>
-<td style="border-bottom:1px solid #000;"></td>
-</tr>
-`).join('');
-}
-
-function syncControlPanelViews() {
-const lockBtn = document.getElementById('lock-reg-btn');
-if(lockBtn) {
-const isLocked = !window.appState.portalOpen;
-lockBtn.innerText = isLocked ? "Locked (Open)" : "Open (Lock)";
-lockBtn.className = isLocked ? "btn btn-sm btn-danger" : "btn btn-sm btn-success";
-}
-renderMasterTeamsList();
-renderMasterProgsList();
-renderReportTable();
-}
-
-window.toggleRegLock = function() {
-window.appState.portalOpen = !window.appState.portalOpen;
-saveKey('portalOpen', window.appState.portalOpen);
-syncControlPanelViews();
-}
-
-window.saveMaxLimitMaster = function() {
-const val = parseInt(document.getElementById('m-max-limit-input').value) || 3;
-window.appState.maxProgLimit = val;
-saveKey('maxProgLimit', val);
-alert("Max limit updated.");
-}
-
-window.addTeamMaster = function(e) {
-e.preventDefault();
-const user = document.getElementById('m-team-user').value.trim();
-const pass = document.getElementById('m-team-pass').value.trim();
-if(!user || !pass) return;
-window.appState.teams.push({ user, pass });
-saveKey('teams', window.appState.teams);
-renderMasterTeamsList();
-document.getElementById('m-team-user').value = '';
-document.getElementById('m-team-pass').value = '';
-}
-
-function renderMasterTeamsList() {
-const box = document.getElementById('master-teams-list');
-if(!box) return;
-const teams = window.appState.teams || [];
-box.innerHTML = teams.map((t, idx) => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px;">
-<span><strong>${t.user}</strong> (Pass: ${t.pass})</span>
-<button class="btn btn-sm btn-danger" onclick="deleteTeamMaster(${idx})"><i class="fa-solid fa-trash"></i></button>
-</div>
-`).join('');
-}
-
-window.deleteTeamMaster = function(idx) {
-window.appState.teams.splice(idx, 1);
-saveKey('teams', window.appState.teams);
-renderMasterTeamsList();
-}
-
-window.addProgramMaster = function(e) {
-e.preventDefault();
-const name = document.getElementById('m-prog-name').value.trim();
-const cat = document.getElementById('m-prog-cat').value;
-const stage = document.getElementById('m-prog-stage').value;
-const limit = parseInt(document.getElementById('m-prog-limit').value) || 1;
-if(!name) return;
-const id = 'prog_' + Date.now();
-window.appState.programs.push({ id, name, cat, stage, limit });
-saveKey('programs', window.appState.programs);
-renderMasterProgsList();
-document.getElementById('m-prog-name').value = '';
-}
-
-function renderMasterProgsList() {
-const box = document.getElementById('master-progs-list');
-if(!box) return;
-const progs = window.appState.programs || [];
-box.innerHTML = progs.map((p, idx) => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px;">
-<span><strong>${p.name}</strong> [${p.cat}] (${p.stage}) - Max: ${p.limit}</span>
-<button class="btn btn-sm btn-danger" onclick="deleteProgramMaster(${idx})"><i class="fa-solid fa-trash"></i></button>
-</div>
-`).join('');
-}
-
-window.deleteProgramMaster = function(idx) {
-window.appState.programs.splice(idx, 1);
-saveKey('programs', window.appState.programs);
-renderMasterProgsList();
-}
-
-function populateReportProgDropdown() {
-const cat = document.getElementById('rep-cat')?.value || '';
-const drop = document.getElementById('rep-prog');
-if(!drop) return;
-let progs = window.appState.programs || [];
-if(cat) progs = progs.filter(p => p.cat === cat);
-progs.sort((a,b) => a.name.localeCompare(b.name));
-drop.innerHTML = '<option value="">All Programs (A-Z)</option>' + progs.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-}
-
-function renderReportTable() {
-const tbody = document.getElementById('report-table-body');
-if(!tbody) return;
-const team = document.getElementById('rep-team')?.value || '';
-const cat = document.getElementById('rep-cat')?.value || '';
-const progId = document.getElementById('rep-prog')?.value || '';
-const query = (document.getElementById('rep-prog-search')?.value || '').toLowerCase().trim();
-
-let regs = window.appState.registrations || [];
-if(team) regs = regs.filter(r => r.team === team);
-if(cat) regs = regs.filter(r => r.cat === cat);
-if(progId) regs = regs.filter(r => r.progId === progId);
-
-let flatList = [];
-regs.forEach(r => {
-const prog = window.appState.programs.find(p => p.id === r.progId) || { name: r.progId };
-if(query && !prog.name.toLowerCase().includes(query)) return;
-
-r.participants.forEach(pName => {
-flatList.push({ student: pName, team: r.team, cat: r.cat, progName: prog.name });
-});
-});
-
-if(flatList.length === 0) {
-tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No registration entries found.</td></tr>';
-return;
-}
-
-tbody.innerHTML = flatList.map((item, idx) => `
-<tr>
-<td>${idx+1}</td>
-<td><strong>${item.student}</strong></td>
-<td>${item.team}</td>
-<td>${item.cat}</td>
-<td>${item.progName}</td>
-</tr>
-`).join('');
-}
-
-function renderPublishPanel() {
-renderPublishResultsList();
-renderPublishStatusList();
-}
-
-function renderPublishResultsList() {
-const box = document.getElementById('publish-results-list');
-if(!box) return;
-const list = window.appState.results || [];
-box.innerHTML = list.map((r, idx) => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:8px 12px; border-radius:8px;">
-<span>#${r.customNum} - ${r.progName} (${r.cat})</span>
-<button class="btn btn-sm btn-danger" onclick="deletePublishResult(${idx})"><i class="fa-solid fa-trash"></i></button>
-</div>
-`).join('');
-}
-
-window.deletePublishResult = function(idx) {
-window.appState.results.splice(idx, 1);
-saveKey('results', window.appState.results);
-renderPublishResultsList();
-}
-
-function renderPublishStatusList() {
-const box = document.getElementById('publish-status-list');
-if(!box) return;
-const list = window.appState.teamStatusList || [];
-box.innerHTML = list.map((item, idx) => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:8px 12px; border-radius:8px;">
-<span>Poster #${idx+1}</span>
-<button class="btn btn-sm btn-danger" onclick="deletePublishStatus(${idx})"><i class="fa-solid fa-trash"></i></button>
-</div>
-`).join('');
-}
-
-window.deletePublishStatus = function(idx) {
-window.appState.teamStatusList.splice(idx, 1);
-saveKey('teamStatusList', window.appState.teamStatusList);
-renderPublishStatusList();
-}
-
-function syncProtectionFields() {
-const subContainer = document.getElementById('sub-panel-pass-managers-container');
-if(!subContainer) return;
-
-subContainer.innerHTML = PUBLIC_PANEL_SCHEMA.map(item => {
-const currentPass = (window.appState.subLocks || {})[item.key] || '';
-return `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:8px; border-radius:8px; border:1px solid var(--border-color);">
-<span style="font-size:0.85rem; font-weight:bold;">${item.name}</span>
-<input type="password" class="form-control sub-pass-field" data-key="${item.key}" value="${currentPass}" placeholder="Passcode" style="width:140px; padding:4px 8px; font-size:0.8rem;">
-</div>
-`;
-}).join('') + `<button class="btn btn-sm btn-success btn-block" style="margin-top:8px;" onclick="saveSubPanelLocks()"><i class="fa-solid fa-lock"></i> Save Access Passcodes</button>`;
-}
-
-window.saveSubPanelLocks = function() {
-document.querySelectorAll('.sub-pass-field').forEach(f => {
-const key = f.getAttribute('data-key');
-window.appState.subLocks[key] = f.value.trim();
-});
-saveKey('subLocks', window.appState.subLocks);
-alert("Sub-panel access passcodes updated!");
-}
-
-window.verifyAndOpenMainCredShift = function() {
-const oldU = document.getElementById('prot-old-main-u').value.trim();
-const oldP = document.getElementById('prot-old-main-p').value.trim();
-const mainCreds = window.appState.mainCreds || { user:'', pass:'' };
-
-if(oldU === mainCreds.user && oldP === mainCreds.pass) {
-document.getElementById('prot-new-main-block').style.display = 'block';
-alert("Credentials verified! Enter new username and password below.");
-} else {
-alert("Current credentials incorrect!");
-}
-}
-
-window.commitMainCredShift = function() {
-const newU = document.getElementById('prot-new-main-u').value.trim();
-const newP = document.getElementById('prot-new-main-p').value.trim();
-if(!newU || !newP) { alert("Fields cannot be empty!"); return; }
-
-window.appState.mainCreds = { user: newU, pass: newP };
-saveKey('mainCreds', window.appState.mainCreds);
-alert("Main Login Credentials updated!");
-document.getElementById('prot-new-main-block').style.display = 'none';
-}
-
-function syncModifyConfigInputs() {
-const vis = window.appState.visuals || {};
-if(document.getElementById('mod-banner-text')) document.getElementById('mod-banner-text').value = vis.bannerText || 'WELCOME TO BAHJA FEST';
-if(document.getElementById('mod-title-text')) document.getElementById('mod-title-text').value = vis.titleText || 'BAHJA 2026';
-if(document.getElementById('mod-header-align')) document.getElementById('mod-header-align').value = vis.headerAlign || 'center';
-if(document.getElementById('mod-font-family')) document.getElementById('mod-font-family').value = vis.fontFamily || "'Poppins', sans-serif";
-}
-
-window.liveUpdateVisuals = function() {
-const bannerText = document.getElementById('mod-banner-text').value;
-const titleText = document.getElementById('mod-title-text').value;
-const headerAlign = document.getElementById('mod-header-align').value;
-const fontFamily = document.getElementById('mod-font-family').value;
-
-document.getElementById('txt-welcome-banner').innerText = bannerText;
-document.getElementById('txt-main-title').innerText = titleText;
-document.documentElement.style.setProperty('--header-align', headerAlign);
-document.documentElement.style.setProperty('--main-font', fontFamily);
-}
-
-window.saveVisualLayoutState = function() {
-const isDark = (window.appState.theme || 'dark') === 'dark';
-window.appState.visuals = {
-bannerText: document.getElementById('mod-banner-text').value,
-titleText: document.getElementById('mod-title-text').value,
-headerAlign: document.getElementById('mod-header-align').value,
-fontFamily: document.getElementById('mod-font-family').value,
-bannerColorDark: isDark ? document.getElementById('mod-banner-color').value : window.appState.visuals.bannerColorDark,
-titleColorDark: isDark ? document.getElementById('mod-title-color').value : window.appState.visuals.titleColorDark,
-bannerColorLight: !isDark ? document.getElementById('mod-banner-color').value : window.appState.visuals.bannerColorLight,
-titleColorLight: !isDark ? document.getElementById('mod-title-color').value : window.appState.visuals.titleColorLight
-};
-saveKey('visuals', window.appState.visuals);
-alert("Visual Layout settings saved!");
-}
-
-window.toggleAccordion = function(id) {
-const box = document.getElementById(id);
-if(box) box.classList.toggle('show');
-}
-
-window.toggleLaunchSection = function(id, el) {
-const box = document.getElementById(id);
-if(box) {
-const isHidden = box.style.display === 'none';
-box.style.display = isHidden ? 'block' : 'none';
-if(el) {
-const icon = el.querySelector('i');
-if(icon) icon.className = isHidden ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down';
-}
-}
-}
-
-window.handleTeamLogin = function(e) {
-e.preventDefault();
-const user = document.getElementById('login-team-user').value.trim();
-const pass = document.getElementById('login-team-pass').value.trim();
-const matchedTeam = (window.appState.teams || []).find(t => t.user === user && t.pass === pass);
-if(matchedTeam) {
-window.loggedTeamUser = user;
-document.getElementById('team-login-block').style.display = 'none';
-document.getElementById('team-portal-block').style.display = 'block';
-document.getElementById('logged-team-name').innerText = user;
-} else {
-alert("Invalid Team Login!");
-}
-}
-
-window.logoutTeam = function() {
-window.loggedTeamUser = null;
-document.getElementById('team-login-block').style.display = 'block';
-document.getElementById('team-portal-block').style.display = 'none';
-}
-
-window.handlePartLogin = function(e) {
-e.preventDefault();
-const user = document.getElementById('part-user').value.trim();
-const pass = document.getElementById('part-pass').value.trim();
-const matchedTeam = (window.appState.teams || []).find(t => t.user === user && t.pass === pass);
-if(matchedTeam) {
-window.activePartTeam = user;
-document.getElementById('part-login-block').style.display = 'none';
-document.getElementById('part-manage-block').style.display = 'block';
-document.getElementById('part-active-team').innerText = user;
-renderTeamStudentsList();
-} else {
-alert("Invalid credentials!");
-}
-}
-
-window.addTeamParticipant = function(e) {
-e.preventDefault();
-const cat = document.getElementById('part-cat').value;
-const name = document.getElementById('part-name').value.toUpperCase().trim();
-const team = window.activePartTeam;
-if(!name || !team) return;
-
-window.appState.students.push({ name, team, cat });
-saveKey('students', window.appState.students);
-document.getElementById('part-name').value = '';
-renderTeamStudentsList();
-}
-
-function renderTeamStudentsList() {
-const box = document.getElementById('team-students-list');
-if(!box) return;
-const team = window.activePartTeam;
-const students = (window.appState.students || []).filter(s => s.team === team);
-
-box.innerHTML = students.map((s, idx) => `
-<div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.05); padding:6px 10px; margin-bottom:4px; border-radius:6px;">
-<span><strong>${s.name}</strong> (${s.cat})</span>
-<button class="btn btn-sm btn-danger" onclick="deleteTeamStudent(${idx})"><i class="fa-solid fa-trash"></i></button>
-</div>
-`).join('');
-}
-
-window.deleteTeamStudent = function(idx) {
-const team = window.activePartTeam;
-let count = 0;
-window.appState.students = window.appState.students.filter(s => {
-if(s.team === team) {
-if(count === idx) { count++; return false; }
-count++;
-}
-return true;
-});
-saveKey('students', window.appState.students);
-renderTeamStudentsList();
-}
-
-window.applyPhaseSettings = function(e) {
-e.preventDefault();
-const phase = document.querySelector('input[name="phase-toggle"]:checked')?.value || 'result';
-window.appState.phase = phase;
-saveKey('phase', phase);
-alert("Festival Phase updated!");
-renderHomePhase();
-}
-
-window.togglePhaseControl = function(phase) {
-window.appState.phase = phase;
-saveKey('phase', phase);
-renderHomePhase();
-}
-
-window.updateSectionVisibilities = function() {
-window.appState.visibilities = {
-'team-states': document.getElementById('toggle-vis-team-states')?.checked,
-'results-view': document.getElementById('toggle-vis-results-view')?.checked,
-'updates': document.getElementById('toggle-vis-updates')?.checked,
-'livelink': document.getElementById('toggle-vis-livelink')?.checked,
-'highlights': document.getElementById('toggle-vis-highlights')?.checked
-};
-saveKey('visibilities', window.appState.visibilities);
-}
-
-window.clearAllDataSystem = function() {
-if(confirm("Are you sure you want to CLEAR ALL SYSTEM DATA? This cannot be undone.")) {
-window.appState = buildCleanState();
-saveData();
-alert("System data cleared.");
-location.reload();
-}
-}
-
-window.loadCategoryPrograms = function() {
-const cat = document.getElementById('reg-cat-select').value;
-const container = document.getElementById('category-programs-container');
-if(!cat) { container.innerHTML = ''; return; }
-
-const progs = (window.appState.programs || []).filter(p => p.cat === cat);
-if(progs.length === 0) {
-container.innerHTML = '<p style="color:var(--text-sub);">No programs available for this category.</p>';
-return;
-}
-
-container.innerHTML = progs.map(p => `
-<div style="background:rgba(0,0,0,0.05); border:1px solid var(--border-color); padding:10px; border-radius:10px; margin-bottom:8px;">
-<div style="font-weight:bold; color:#d4af37;">${p.name}</div>
-<div style="font-size:0.8rem; color:var(--text-sub);">Stage: ${p.stage} | Max Spots: ${p.limit}</div>
-<button class="btn btn-sm btn-success" style="margin-top:6px;" onclick="registerTeamProgram('${p.id}', '${p.cat}')">Register Team</button>
-</div>
-`).join('');
-}
-
-window.registerTeamProgram = function(progId, cat) {
-const team = window.loggedTeamUser;
-if(!team) { alert("Please login first!"); return; }
-if(!window.appState.portalOpen) { alert("Registration portal is currently locked!"); return; }
-
-let existing = window.appState.registrations.find(r => r.progId === progId && r.team === team);
-if(existing) {
-alert("Already registered for this program!");
-return;
-}
-
-const teamStudents = (window.appState.students || []).filter(s => s.team === team && s.cat === cat);
-if(teamStudents.length === 0) {
-alert("No students added under this category yet. Please add students first via Participants Entry.");
-return;
-}
-
-const pName = teamStudents[0].name;
-window.appState.registrations.push({
-progId, cat, team, participants: [pName]
-});
-saveKey('registrations', window.appState.registrations);
-alert(`Registered student ${pName} for program!`);
-}
-
-function compressImage(file, maxWidth = 800, quality = 0.6) {
-return new Promise((resolve) => {
-if (!file.type.startsWith('image/')) {
-const reader = new FileReader();
-reader.onload = (e) => resolve(e.target.result);
-reader.readAsDataURL(file);
-return;
-}
-const reader = new FileReader();
-reader.onload = (event) => {
-const img = new Image();
-img.onload = () => {
-let width = img.width;
-let height = img.height;
-if (width > maxWidth) {
-height = Math.round((height * maxWidth) / width);
-width = maxWidth;
-}
-const canvas = document.createElement('canvas');
-canvas.width = width;
-canvas.height = height;
-const ctx = canvas.getContext('2d');
-ctx.drawImage(img, 0, 0, width, height);
-resolve(canvas.toDataURL('image/jpeg', quality));
-};
-img.src = event.target.result;
-};
-reader.readAsDataURL(file);
-});
-}
-
-window.uploadTeamStatusPoster = async function(e) {
-e.preventDefault();
-const file = document.getElementById('status-file').files[0];
-if(!file) return;
-const compressed = await compressImage(file);
-window.appState.teamStatusList.unshift({ url: compressed, date: Date.now() });
-saveKey('teamStatusList', window.appState.teamStatusList);
-alert("Poster uploaded!");
-renderPublishStatusList();
-renderTeamStatusPosters();
-}
-
-window.populateResProgDropdown = function() {
-const cat = document.getElementById('res-upload-cat').value;
-const drop = document.getElementById('res-upload-prog');
-const progs = (window.appState.programs || []).filter(p => p.cat === cat);
-drop.innerHTML = '<option value="">-- Select Program --</option>' + progs.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-}
-
-window.uploadProgramResult = async function(e) {
-e.preventDefault();
-const cat = document.getElementById('res-upload-cat').value;
-const progId = document.getElementById('res-upload-prog').value;
-const num = document.getElementById('res-custom-number').value;
-const file = document.getElementById('res-file').files[0];
-const ytUrl = document.getElementById('res-yt-url').value.trim();
-
-if(!progId || !file) return;
-const prog = window.appState.programs.find(p => p.id === progId);
-const compressed = await compressImage(file);
-
-window.appState.results.unshift({
-progId, progName: prog ? prog.name : '', cat, customNum: num, imageUrl: compressed, ytUrl
-});
-saveKey('results', window.appState.results);
-alert("Result uploaded!");
-renderPublishResultsList();
-renderResultProgramsList();
-}
-
-window.toggleUpdateVideoUrl = function() {
-const type = document.getElementById('up-type').value;
-const linkInput = document.getElementById('up-video-link');
-const fileLabel = document.getElementById('lbl-up-file');
-if(type === 'video') {
-linkInput.style.display = 'block';
-fileLabel.innerText = "Choose Video File / Thumbnail";
-} else {
-linkInput.style.display = 'none';
-fileLabel.innerText = "Choose Photo";
-}
-}
-
-window.uploadUpdateFeed = async function(e) {
-e.preventDefault();
-const type = document.getElementById('up-type').value;
-const file = document.getElementById('up-file').files[0];
-const videoLink = document.getElementById('up-video-link').value.trim();
-
-if(!file) return;
-const compressed = await compressImage(file);
-const url = type === 'video' && videoLink ? videoLink : compressed;
-
-window.appState.updates.unshift({
-type, fileUrl: url, date: Date.now()
-});
-saveKey('updates', window.appState.updates);
-alert("Update published!");
-renderPinterestUpdates('all');
-}
-
-window.uploadStreamLinks = async function(e) {
-e.preventDefault();
-const title = document.getElementById('st-title').value.trim();
-const url = document.getElementById('st-url').value.trim();
-const thumbFile = document.getElementById('st-thumb').files[0];
-const mode = document.getElementById('st-mode').value;
-
-if(!title || !url || !thumbFile) return;
-const compressed = await compressImage(thumbFile);
-
-if(mode === 'live') {
-window.appState.livelinks.unshift({ title, url, thumbUrl: compressed });
-saveKey('livelinks', window.appState.livelinks);
-renderLiveLinks();
-} else {
-window.appState.highlights.unshift({ title, url, thumbUrl: compressed });
-saveKey('highlights', window.appState.highlights);
-renderHighlights();
-}
-alert("Stream link added!");
-}
+const isReg = window.appState.phase === 'register';
+document.getElementById('home-phase-register').style.display = isReg ? 'block' : 'none';
+document.getElementById('home-phase-result').style.display = isReg ? 'none' : 'block';
+}
+function renderResultPhaseFeeds() { renderPtList(); }
+function syncControlPanelViews() {}
+function renderPublishPanel() {}
+function renderCodeFormsList() {}
+function renderEjActiveProgram() {}
+function renderJudgeLeaderboard() {}
+function renderStatesDashboard() {}
+ exemption: window.renderRankWinnersList = function() {}
+function syncProtectionFields() {}
+function syncModifyConfigInputs() {}
+function populateReportProgDropdown() {}
 </script>
+</div>
 </body>
 </html>
