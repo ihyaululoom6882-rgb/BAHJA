@@ -228,6 +228,12 @@ text-align: center;
 border-top: 1px solid var(--border-color);
 transition: all 0.3s ease;
 }
+
+/* PRINT MEDIA RULES - CLEAN CONTENT PRINT ONLY */
+@media print {
+  body * { display: none !important; }
+  iframe#print_frame_bahja { display: block !important; position: static !important; width: 100% !important; height: 100% !important; }
+}
 </style>
 </head>
 <body data-theme="dark">
@@ -1564,47 +1570,65 @@ window.logoutMain = function() { window.isMainLoggedIn = false; render3DotMenu()
 window.triggerCustomPrint = function(targetId) {
 const target = document.getElementById(targetId);
 if(!target) return;
+
 const now = new Date();
 const timeDateStr = now.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-let printStamp = target.querySelector('.dynamic-print-stamp');
-if(!printStamp) {
-printStamp = document.createElement('div');
-printStamp.className = 'dynamic-print-stamp';
-printStamp.style.cssText = 'display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:bold; border-bottom:2px solid #000; padding-bottom:4px; margin-bottom:8px; width:100%; color:#000;';
-target.insertBefore(printStamp, target.firstChild);
+
+// Clone the element to prevent modifying the actual DOM
+const clone = target.cloneNode(true);
+
+// Remove any unwanted elements inside the clone (.no-print)
+clone.querySelectorAll('.no-print').forEach(el => el.remove());
+
+// Remove old print frame if exists
+let oldFrame = document.getElementById('print_frame_bahja');
+if(oldFrame) document.body.removeChild(oldFrame);
+
+// Create an isolated iframe for printing
+let printFrame = document.createElement('iframe');
+printFrame.id = "print_frame_bahja";
+printFrame.name = "print_frame_bahja";
+printFrame.style.position = "absolute";
+printFrame.style.top = "-10000px";
+printFrame.style.left = "-10000px";
+printFrame.style.width = "0px";
+printFrame.style.height = "0px";
+document.body.appendChild(printFrame);
+
+let frameDoc = printFrame.contentWindow ? printFrame.contentWindow : printFrame.contentDocument.document ? printFrame.contentDocument.document : printFrame.contentDocument;
+
+frameDoc.document.open();
+frameDoc.document.write('<!DOCTYPE html><html><head><title>BAHJA 2K26 OFFICIAL REPORT</title>');
+frameDoc.document.write('<style>');
+frameDoc.document.write(`
+    @page { margin: 15mm; size: auto; }
+    body { font-family: 'Arial', sans-serif; padding: 0; margin: 0; color: #000; background: #fff; }
+    .dynamic-print-stamp { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 12px; color: #000; }
+    .bahja-sheet-header { text-align: center; margin-bottom: 15px; }
+    .bahja-sheet-header h2 { font-size: 20px; font-weight: 800; margin: 0; color: #000; text-transform: uppercase; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; page-break-inside: auto; }
+    tr { page-break-inside: avoid; page-break-after: auto; }
+    th, td { border: 1px solid #000 !important; padding: 8px; font-size: 12px; color: #000 !important; text-align: left; }
+    th { background-color: #e2e8f0 !important; font-weight: bold; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .no-print { display: none !important; }
+    strong { font-weight: bold; color: #000 !important; }
+    span { color: #000 !important; }
+    /* Reset any inherited theme colors from inline styles */
+    * { text-shadow: none !important; color: #000 !important; }
+`);
+frameDoc.document.write('</style></head><body>');
+frameDoc.document.write('<div class="dynamic-print-stamp"><span>BAHJA 2K26 OFFICIAL REPORT</span><span>PRINTED: ' + timeDateStr + '</span></div>');
+frameDoc.document.write(clone.innerHTML);
+frameDoc.document.write('</body></html>');
+frameDoc.document.close();
+
+// Trigger print process
+setTimeout(function() {
+    window.frames["print_frame_bahja"].focus();
+    window.frames["print_frame_bahja"].print();
+}, 500);
 }
-printStamp.innerHTML = `<span>BAHJA 2K26 OFFICIAL REPORT</span><span>PRINTED: ${timeDateStr}</span>`;
-const originalParent = target.parentNode;
-const originalNextSibling = target.nextSibling;
-const originalDisplay = target.style.display;
-document.querySelectorAll('.print-target').forEach(p => { if(p !== target) p.style.display = 'none'; });
-target.style.display = 'block';
-target.classList.add('active-print-target');
-document.body.classList.add('printing');
-document.body.appendChild(target);
-let restored = false;
-const restoreAfterPrint = function() {
-if(restored) return;
-restored = true;
-document.body.classList.remove('printing');
-target.classList.remove('active-print-target');
-target.style.display = originalDisplay;
-if(originalNextSibling && originalNextSibling.parentNode === originalParent) {
-originalParent.insertBefore(target, originalNextSibling);
-} else {
-originalParent.appendChild(target);
-}
-document.querySelectorAll('.print-target').forEach(p => { if(p !== target) p.style.removeProperty('display'); });
-window.removeEventListener('afterprint', restoreAfterPrint);
-};
-window.addEventListener('afterprint', restoreAfterPrint);
-requestAnimationFrame(() => {
-requestAnimationFrame(() => {
-window.print();
-setTimeout(restoreAfterPrint, 1500);
-});
-});
-}
+
 function renderEjActiveProgram() {
 const activeProgId = window.appState.activeEjProgId;
 renderEjSubmittedMarks();
